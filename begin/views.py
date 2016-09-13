@@ -9,21 +9,12 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 
 
+
+
 import iss.settings
 
+@csrf_protect
+def Begin(request):
 
-class Begin(TemplateView):
-
-    template_name = "index.html"
-
-    @csrf_protect
-    def get_context_data(self, **kwargs):
-        context = super(Begin, self).get_context_data(**kwargs)
-        context['STATIC_URL'] = iss.settings.STATIC_URL
-        return context
-
-
-    def get(self, request, *args, **kwargs):
-        c = {}
-        return render_to_response(self.template_name, c)
-
+    c = RequestContext(request, {"STATIC_URL":iss.settings.STATIC_URL})
+    return render_to_response("index.html", c)
