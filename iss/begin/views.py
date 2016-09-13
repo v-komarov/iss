@@ -16,5 +16,5 @@ import iss.settings
 @csrf_protect
 def Begin(request):
 
-    c = RequestContext(request, {"STATIC_URL":iss.settings.STATIC_URL})
-    return render_to_response("index.html", c)
+    c = RequestContext(request, {"ROOT_URL":iss.settings.ROOT_URL})
+    return render_to_response("index.html",c)

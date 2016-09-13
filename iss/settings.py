@@ -136,7 +136,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = iss.settings_local.ROOT_URL
+ROOT_URL = iss.settings_local.ROOT_URL
+STATIC_URL = '/static/'
 
 
+INSTALLED_APPS = (
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'iss.localdicts',
+    'iss.begin',
+)
 
+ADMIN_MEDIA_PREFIX = ''
