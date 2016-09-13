@@ -25,12 +25,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 
-PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-PROJECT_PATH = str(os.path.split(PROJECT_PATH)[0])
-
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -70,7 +64,9 @@ ROOT_URLCONF = 'iss.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+                os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +77,7 @@ TEMPLATES = [
             ],
         },
     },
+
 ]
 
 
@@ -110,6 +107,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+)
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -127,9 +136,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = iss.settings_local.ROOT_URL
 
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, "templates/"),
-)
+
