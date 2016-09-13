@@ -9,11 +9,9 @@ DATABASES = {
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_iss',
+        'NAME': 'iss',
         'USER': 'iss',
-        'PASSWORD': 'iss',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+	'PASSWORD':'iss',
     },
 
 }
