@@ -16,10 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from iss.begin.views import Begin
+from iss.begin.views import Begin,MainMenu
 
 urlpatterns = [
-    url(r'^$', Begin, name='Begin'),
+    url(r'^begin/', Begin.as_view(), name='Begin'),
+    url(r'^mainmenu/', MainMenu.as_view(), name='MainMenu'),
     url(r'^admin/', admin.site.urls),
 ]
 
