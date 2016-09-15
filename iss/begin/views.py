@@ -60,10 +60,10 @@ def Begin(request):
 
     if request.method == "POST":
         if form.is_valid():
-            login = form.cleaned_data["login"]
+            log_in = form.cleaned_data["login"]
             passwd = form.cleaned_data["passwd"]
             tz = form.cleaned_data["tz"]
-            user = authenticate(username=login, password=passwd)
+            user = authenticate(username=log_in, password=passwd)
 
             if user is not None and user.is_active:
                 login(request,user)
@@ -82,7 +82,7 @@ def MainMenu(request):
 
     template_name = "mainmenu.html"
 
-    c = RequestContext(request,{"ROOT_URL":iss.settings.ROOT_URL})
+    c = RequestContext(request,{"ROOT_URL": iss.settings.ROOT_URL})
     return render_to_response(template_name, c)
 
 
