@@ -1,3 +1,5 @@
+#coding:utf-8
+
 """iss URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -15,7 +17,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from iss.begin.views import Begin,MainMenu
 
 urlpatterns = [
+    url(r'^$', Begin, name='Begin'),
+    url(r'^mainmenu/', MainMenu, name='MainMenu'),
     url(r'^admin/', admin.site.urls),
 ]
