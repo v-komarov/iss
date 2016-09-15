@@ -1,7 +1,7 @@
 """iss URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.10/topics/http/urls/
+    https://docs.djangoproject.com/en/1.9/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -16,11 +16,6 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from iss.begin.views import Begin,MainMenu
-
 urlpatterns = [
-    url(r'^begin/', Begin.as_view(), name='Begin'),
-    url(r'^mainmenu/', MainMenu.as_view(), name='MainMenu'),
     url(r'^admin/', admin.site.urls),
 ]
-
