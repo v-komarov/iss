@@ -82,7 +82,7 @@ def MainMenu(request):
 
     template_name = "mainmenu.html"
 
-    c = RequestContext(request,{"ROOT_URL": iss.settings.ROOT_URL})
+    c = RequestContext(request,{})
     return render_to_response(template_name, c)
 
 

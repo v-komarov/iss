@@ -67,6 +67,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.csrf',
+                'django.template.context_processors.static',
+                'iss.context_processors.my_static_url',
             ],
         },
     },
@@ -131,3 +134,4 @@ STATIC_URL = '/static/'
 
 ROOT_URL = 'http://127.0.0.1:10000/'
 
+MY_STATIC_URL = 'http://127.0.0.1:10000/'
