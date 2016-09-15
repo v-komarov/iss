@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseRedirect
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,login,logout
 
 from iss.begin.forms import LoginForm
 
@@ -64,14 +64,15 @@ def Begin(request):
             passwd = form.cleaned_data["passwd"]
             tz = form.cleaned_data["tz"]
             user = authenticate(username=login, password=passwd)
-            print(request.POST,user)
-            if user is not None:
+
+            if user is not None and user.is_active:
+                login(request,user)
                 request.session['timezone'] = tz
                 return HttpResponseRedirect('/mainmenu/')
 
 
     c = RequestContext(request, {"ROOT_URL": iss.settings.ROOT_URL, 'form': form})
-    return render_to_response("index.html", c)
+    return render_to_response("begin.html", c)
 
 
 
@@ -83,3 +84,12 @@ def MainMenu(request):
 
     c = RequestContext(request,{"ROOT_URL":iss.settings.ROOT_URL})
     return render_to_response(template_name, c)
+
+
+
+
+def LogOut(request):
+
+    logout(request)
+
+    return HttpResponseRedirect('/')
