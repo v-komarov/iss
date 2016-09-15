@@ -7,7 +7,7 @@ from django.db import models
 
 
 class TzList(models.Model):
-    tz_id = models.CharField(max_length=30,verbose_name='Значение')
+    tz_id = models.CharField(max_length=30,verbose_name='Значение',unique=True)
     tz_label = models.CharField(max_length=30,verbose_name='Видимое для выбора значение')
 
     def __unicode__(self):

@@ -71,7 +71,7 @@ def Begin(request):
                 return HttpResponseRedirect('/mainmenu/')
 
 
-    c = RequestContext(request, {"ROOT_URL": iss.settings.ROOT_URL, 'form': form})
+    c = RequestContext(request, {'form': form})
     return render_to_response("begin.html", c)
 
 

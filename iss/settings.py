@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.csrf',
                 'django.template.context_processors.static',
                 'iss.context_processors.my_static_url',
+                'iss.context_processors.user_tz',
             ],
         },
     },
