@@ -1,0 +1,61 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<vid class="container" style="padding:0;">
+
+    {% include "menu.html" %}
+
+</vid>
+
+
+<div class="row col-sx-offset-1 col-md-12">
+
+    <table class="table table-bordered">
+            <thead>
+                <th>uuid</th>
+                <th>first_seen</th>
+                <th>update_time</th>
+                <th>last_seen</th>
+                <th>EventClass</th>
+                <th>severity_id</th>
+                <th>Manager</th>
+                <th>DeviceSystem</th>
+                <th>DeviceGroup</th>
+                <th>DeviceClass</th>
+                <th>DeviceNetAddress</th>
+                <th>DeviceLocation</th>
+                <th>ElementIdentifier</th>
+                <th>ElementSubIdentifier</th>
+                <th>StatusId</th>
+            </thead>
+        {% for row in data %}
+            <tr class="small">
+                <td style="padding:0;">{{ row.uuid }}</td>
+                <td style="padding:0;">{{ row.first_seen }}</td>
+                <td style="padding:0;">{{ row.update_time }}</td>
+                <td style="padding:0;">{{ row.last_seen }}</td>
+                <td style="padding:0;">{{ row.event_class }}</td>
+                <td style="padding:0;">{{ row.severity_id }}</td>
+                <td style="padding:0;">{{ row.manager }}</td>
+                <td style="padding:0;">{{ row.device_system }}</td>
+                <td style="padding:0;">{{ row.device_group }}</td>
+                <td style="padding:0;">{{ row.device_class }}</td>
+                <td style="padding:0;">{{ row.device_net_address }}</td>
+                <td style="padding:0;">{{ row.device_location }}</td>
+                <td style="padding:0;">{{ row.element_identifier }}</td>
+                <td style="padding:0;">{{ row.element_sub_identifier }}</td>
+                <td style="padding:0;">{{ row.status_id }}</td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+
+
+
+{% endblock %}
+

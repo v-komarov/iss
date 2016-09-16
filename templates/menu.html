@@ -5,9 +5,10 @@
 <div class="row col-md-offset-1">
 
     <ul class="nav nav-pills">
-      <li role="presentation" class="active"><a href="#">Оперативный журнал</a></li>
-      <li role="presentation"><a href="#">Profile</a></li>
+      <li role="presentation" {% if request.path == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events">Оперативный журнал</a></li>
       <li role="presentation"><a href="/logout">Выход</a></li>
     </ul>
+
+
 
 </div>

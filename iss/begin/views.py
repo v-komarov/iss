@@ -1,5 +1,6 @@
 #coding:utf-8
 
+from pytz import timezone
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -9,6 +10,8 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
+from django.utils.timezone import activate
+
 
 from iss.begin.forms import LoginForm
 
@@ -67,11 +70,12 @@ def Begin(request):
 
             if user is not None and user.is_active:
                 login(request,user)
+                activate(timezone(tz))
                 request.session['timezone'] = tz
                 return HttpResponseRedirect('/mainmenu/')
 
 
-    c = RequestContext(request, {'form': form})
+    c = RequestContext(request, locals())
     return render_to_response("begin.html", c)
 
 
@@ -82,7 +86,7 @@ def MainMenu(request):
 
     template_name = "mainmenu.html"
 
-    c = RequestContext(request,{})
+    c = RequestContext(request,locals())
     return render_to_response(template_name, c)
 
 
