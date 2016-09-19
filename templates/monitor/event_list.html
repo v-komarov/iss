@@ -3,52 +3,120 @@
 
 {% block content %}
 
-<vid class="container" style="padding:0;">
+
+<link href="{{ MY_STATIC_URL }}monitor/monitor.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/monitor.js"></script>
+
+
+<div class="container" style="padding:0;">
 
     {% include "menu.html" %}
 
-</vid>
+</div>
 
 
-<div class="row col-sx-offset-1 col-md-12">
 
-    <table class="table table-bordered">
-            <thead>
-                <th>uuid</th>
-                <th>first_seen</th>
-                <th>update_time</th>
-                <th>last_seen</th>
-                <th>EventClass</th>
-                <th>severity_id</th>
-                <th>Manager</th>
-                <th>DeviceSystem</th>
-                <th>DeviceGroup</th>
-                <th>DeviceClass</th>
-                <th>DeviceNetAddress</th>
-                <th>DeviceLocation</th>
-                <th>ElementIdentifier</th>
-                <th>ElementSubIdentifier</th>
-                <th>StatusId</th>
-            </thead>
-        {% for row in data %}
-            <tr class="small">
-                <td style="padding:0;">{{ row.uuid }}</td>
-                <td style="padding:0;">{{ row.first_seen }}</td>
-                <td style="padding:0;">{{ row.update_time }}</td>
-                <td style="padding:0;">{{ row.last_seen }}</td>
-                <td style="padding:0;">{{ row.event_class }}</td>
-                <td style="padding:0;">{{ row.severity_id }}</td>
-                <td style="padding:0;">{{ row.manager }}</td>
-                <td style="padding:0;">{{ row.device_system }}</td>
-                <td style="padding:0;">{{ row.device_group }}</td>
-                <td style="padding:0;">{{ row.device_class }}</td>
-                <td style="padding:0;">{{ row.device_net_address }}</td>
-                <td style="padding:0;">{{ row.device_location }}</td>
-                <td style="padding:0;">{{ row.element_identifier }}</td>
-                <td style="padding:0;">{{ row.element_sub_identifier }}</td>
-                <td style="padding:0;">{{ row.status_id }}</td>
 
+<div class="row" style="margin:0; padding-top:10px; padding-bottom:10px;">
+
+        <div class="col-md-2">
+            <small>
+                <button type="button" class="btn btn-warning btn-xs">Объединить</button>
+                <button type="button" class="btn btn-info btn-xs">Разъединить</button>
+                <button type="button" class="btn btn-success btn-xs">Создать</button>
+            </small>
+        </div>
+
+
+
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="status"><small>Status</small></label>
+                <select id="status" class="form-control input-sm" style="padding:0; width:100px;">
+                    <option value="0" selected>Все</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="manager"><small>Manager</small></label>
+                <select id="manager" class="form-control input-sm" style="padding:0;width:200px;">
+                    <option value="0" selected>Все</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="uuid"><small><small>Uudi</small></small></label>
+            <small>
+                <input type="text" style="height:28px;padding-left:2px;" id="uuid" placeholder="">
+                <button id="clearuuid" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            </small>
+            </div>
+        </form>
+
+</div>
+
+
+
+
+
+<div class="row" style="margin:0;">
+
+    <table group="events" class="table table-bordered" width="100%">
+            <thead class="small">
+            <tr style="background-color:gainsboro;">
+                <th style="padding:0;"></th>
+                <th style="padding:0;">uuid</th>
+                <th style="padding:0;">first_seen</th>
+                <th style="padding:0;">update_time</th>
+                <th style="padding:0;">last_seen</th>
+                <th style="padding:0;">EventClass</th>
+                <th style="padding:0;">Severity</th>
+                <th style="padding:0;">Manager</th>
+                <th style="padding:0;">DeviceSystem</th>
+                <th style="padding:0;">DeviceGroup</th>
+                <th style="padding:0;">DeviceClass</th>
+                <th style="padding:0;">DeviceNetAddress</th>
+                <th style="padding:0;">DeviceLocation</th>
+                <th style="padding:0;">ElementIdentifier</th>
+                <th style="padding:0;">ElementSubIdentifier</th>
+                <th style="padding:0;">Status</th>
             </tr>
+            </thead>
+        {% for row in object_list %}
+            <tbody>
+                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }}>
+                    <td style="padding:0;"><input type="checkbox" class="input"></td>
+                    <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
+                    <td style="padding:0;">{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
+                    <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td>
+                    <td style="padding:0;">{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
+                    <td style="padding:0;">{{ row.event_class }}</td>
+                    <td style="padding:0;">{{ row.severity_id }}</td>
+                    <td style="padding:0;">{{ row.manager }}</td>
+                    <td style="padding:0;">{{ row.device_system }}</td>
+                    <td style="padding:0;">{{ row.device_group }}</td>
+                    <td style="padding:0;">{{ row.device_class }}</td>
+                    <td style="padding:0;">{{ row.device_net_address }}</td>
+                    <td style="padding:0;">{{ row.device_location }}</td>
+                    <td style="padding:0;">{{ row.element_identifier }}</td>
+                    <td style="padding:0;">{{ row.element_sub_identifier }}</td>
+                    <td style="padding:0;">
+                        {% if row.status_id == 1 %}
+                            New
+                        {% elif row.status_id == 2 %}
+                            Acknowledged
+                        {% elif row.status_id == 3 %}
+                            Suppressed
+                        {% elif row.status_id == 4 %}
+                            Closed
+                        {% elif row.status_id == 5 %}
+                            Cleared
+                        {% elif row.status_id == 6 %}
+                            Aged
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+            </tbody>
         {% endfor %}
     </table>
 

@@ -2,9 +2,9 @@
 
 
 from django.conf.urls import url
-from iss.monitor.views import event_list
+from iss.monitor.views import EventList
 
 
 urlpatterns = [
-    url(r'events/$', event_list),
+    url(r'events/$', EventList.as_view()),
 ]
