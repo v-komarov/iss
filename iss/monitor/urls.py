@@ -6,5 +6,5 @@ from iss.monitor.views import EventList
 
 
 urlpatterns = [
-    url(r'events/$', EventList.as_view()),
+    url(r'events/page/(?P<page>\d+)/$', EventList.as_view()),
 ]

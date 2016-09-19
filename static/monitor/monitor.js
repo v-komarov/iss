@@ -8,7 +8,24 @@ $(document).ready(function() {
    $("#uuid").bind("keyup",FindUuid);
    $("table[group=events] tbody tr").bind("click",ClickEventRow);
 
+   RowColor();
+
 });
+
+
+
+
+
+function RowColor() {
+    $("table[group=events] tbody tr[severity_id=0]").css("color","red");
+    $("table[group=events] tbody tr[severity_id=1]").css("color","brown");
+    $("table[group=events] tbody tr[severity_id=2]").css("color","#B8860B");
+    $("table[group=events] tbody tr[severity_id=3]").css("color","#00008B");
+    $("table[group=events] tbody tr[severity_id=4]").css("color","#006400");
+}
+
+
+
 
 
 

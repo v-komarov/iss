@@ -5,10 +5,9 @@
 <div class="row" >
 
     <ul class="nav nav-pills">
-      <li role="presentation" {% if request.path == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events">Оперативный журнал</a></li>
+      <li role="presentation" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
       <li role="presentation"><a href="/logout">Выход</a></li>
     </ul>
-
 
 
 </div>

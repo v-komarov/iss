@@ -13,11 +13,11 @@ class EventList(ListView):
 
     model = events
     template_name = "monitor/event_list.html"
+    paginate_by = 50
+
 
 
     def get_queryset(self):
-
-        #return events.objects.filter(status_id=1)
 
 
         return events.objects.all()
