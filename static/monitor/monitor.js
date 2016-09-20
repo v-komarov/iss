@@ -1,14 +1,29 @@
 $(document).ready(function() {
 
 
-
+    $("#first_seen").datepicker($.datepicker.regional['ru']);
+    $("#last_seen").datepicker($.datepicker.regional['ru']);
 
     //setInterval('UpdateData();',5000);
-   $("#clearuuid").bind("click",ClearUuid);
-   $("#uuid").bind("keyup",FindUuid);
-   $("table[group=events] tbody tr").bind("click",ClickEventRow);
+    $("#clearuuid").bind("click",ClearUuid);
+    $("#uuid").bind("keyup",FindUuid);
+    $("table[group=events] tbody tr").bind("click",ClickEventRow);
 
-   RowColor();
+    RowColor();
+
+/*
+    $("#filter-status").multiselect({
+        header:true,
+        noneSelectedText:"Выбор типов статусов",
+        minWidth:500,
+        selectedText: "# из # выбрано",
+        uncheckAllText:"Сбросить все",
+        checkAllText:"Отметить все"
+    });
+
+*/
+
+
 
 });
 

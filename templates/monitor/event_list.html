@@ -4,8 +4,13 @@
 {% block content %}
 
 
+{% load tz %}
+
+
 <link href="{{ MY_STATIC_URL }}monitor/monitor.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/monitor.js"></script>
+
+
 
 
 <div class="container" style="padding:0;">
@@ -31,8 +36,8 @@
 
         <form class="form-inline">
             <div class="form-group">
-                <label for="status"><small>Status</small></label>
-                <select id="status" class="form-control input-sm" style="padding:0; width:100px;">
+                <label for="filter-status"><small>Status</small></label>
+                <select id="filter-status" class="form-control input-sm" style="padding:0; width:100px;">
                     <option value="999" selected>Все</option>
                     <option value="1" selected>New</option>
                     <option value="2" selected>Acknowledged</option>
@@ -55,11 +60,23 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="uuid"><small><small>Uudi</small></small></label>
+                <label for="uuid"><small>Uudi</small></label>
             <small>
                 <input type="text" style="height:28px;padding-left:2px;" id="uuid" placeholder="">
                 <button id="clearuuid" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
             </small>
+            </div>
+            <div class="form-group">
+                <label for="first_seen"><small>first_seen</small></label>
+                <small>
+                    <input type="text" style="height:28px;padding-left:2px;" id="first_seen" placeholder="">
+                </small>
+            </div>
+            <div class="form-group">
+                <label for="last_seen"><small>last_seen</small></label>
+                <small>
+                    <input type="text" style="height:28px;padding-left:2px;" id="last_seen" placeholder="">
+                </small>
             </div>
         </form>
 
@@ -88,6 +105,7 @@
             <thead class="small">
             <tr style="background-color:gainsboro;">
                 <th style="padding:0;"></th>
+                <th style="padding:0;"></th>
                 <th style="padding:0;">uuid</th>
                 <th style="padding:0;">first_seen</th>
                 <th style="padding:0;">update_time</th>
@@ -108,6 +126,7 @@
         {% for row in object_list %}
             <tbody>
                 <tr class="small" row_id={{ row.id }} status_id={{ row.status_id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id }}>
+                    <td style="padding:0;"></td>
                     <td style="padding:0;"><input type="checkbox" class="input"></td>
                     <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
                     <td style="padding:0;">{{ row.first_seen|date:"d.m.Y H:i e" }}</td>

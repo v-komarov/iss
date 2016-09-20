@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
@@ -10,8 +11,8 @@ import datetime
 
 class events(models.Model):
 
+    id = models.CharField(max_length=255,primary_key=True, default=uuid.uuid4, editable=False)
     source = models.CharField(max_length=255,db_index=True,default="")
-
     datetime_evt = models.DateTimeField(db_index=True,null=True)
     uuid = models.CharField(max_length=255,unique=True,db_index=True,null=True)
     first_seen = models.DateTimeField(db_index=True,null=True)
@@ -31,4 +32,6 @@ class events(models.Model):
     update_row = models.DateTimeField(auto_now=True,null=True)
 
     data = JSONField(default={})
+    agragator = models.BooleanField(db_index=True,default=False)
+    agragation = models.BooleanField(db_index=True,default=False)
 

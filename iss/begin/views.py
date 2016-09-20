@@ -71,7 +71,7 @@ def Begin(request):
             if user is not None and user.is_active:
                 login(request,user)
                 activate(timezone(tz))
-                request.session['timezone'] = tz
+                request.session['tz'] = tz
                 return HttpResponseRedirect('/mainmenu/')
 
 

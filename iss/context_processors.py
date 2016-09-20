@@ -20,8 +20,8 @@ def user_tz(request):
 
            context = {
                'MY_USER_NAME' : request.user.get_full_name(),
-               'MY_USER_TZ' : request.session["timezone"],
-               'MY_USER_TZ_NAME' : TzList.objects.get(tz_id=request.session["timezone"]),
+               'MY_USER_TZ' : request.session["tz"],
+               'MY_USER_TZ_NAME' : TzList.objects.get(tz_id=request.session["tz"]),
            }
 
         except:

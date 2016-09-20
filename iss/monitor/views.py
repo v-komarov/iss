@@ -1,5 +1,7 @@
 #coding:utf-8
 
+from django.contrib.sessions.backends.db import SessionStore
+
 from django.shortcuts import render
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -20,4 +22,4 @@ class EventList(ListView):
     def get_queryset(self):
 
 
-        return events.objects.all()
+        return events.objects.all().order_by('-update_time')
