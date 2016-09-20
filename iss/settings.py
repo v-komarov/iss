@@ -128,3 +128,5 @@ STATIC_URL = '/static/'
 ROOT_URL = 'http://127.0.0.1:10000/'
 
 MY_STATIC_URL = 'http://127.0.0.1:10000/'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'

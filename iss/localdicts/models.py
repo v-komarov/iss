@@ -18,3 +18,31 @@ class TzList(models.Model):
         verbose_name = 'Часовой пояс'
         verbose_name_plural = 'Часовые пояса'
 
+
+
+class Status(models.Model):
+    name = models.CharField(max_length=30,verbose_name='Статуса')
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Статус'
+        verbose_name_plural = 'Статусы'
+
+
+
+class Severity(models.Model):
+    name = models.CharField(max_length=30,verbose_name='Важность')
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Важность'
+        verbose_name_plural = 'Важность'
+

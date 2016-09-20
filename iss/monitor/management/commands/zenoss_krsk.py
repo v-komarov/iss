@@ -10,6 +10,7 @@ import time
 import datetime
 import binascii
 from pytz import timezone
+from iss.localdicts.models import Status,Severity
 
 
 tz = 'Asia/Krasnoyarsk'
@@ -74,7 +75,7 @@ class Command(BaseCommand):
                         update_time = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[1]) / 1000)),
                         last_seen = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[2]) / 1000)),
                         event_class = row[6],
-                        severity_id = row[7],
+                        severity_id = Severity.objects.get(pk=row[7]),
                         manager = manager,
                         device_net_address = device_net_address,
                         device_location = device_location,
@@ -83,7 +84,7 @@ class Command(BaseCommand):
                         device_system = device_system,
                         element_identifier = row[9],
                         element_sub_identifier = row[10],
-                        status_id = row[11]
+                        status_id = Status.objects.get(pk=row[11])
                     )
 
 
@@ -96,7 +97,7 @@ class Command(BaseCommand):
                     evt.update_time = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[1]) / 1000))
                     evt.last_seen = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[2]) / 1000))
                     evt.event_class = row[6]
-                    evt.severity_id = row[7]
+                    evt.severity_id = Severity.objects.get(pk=row[7])
                     evt.manager = manager
                     evt.device_net_address = device_net_address
                     evt.device_location = device_location
@@ -105,7 +106,7 @@ class Command(BaseCommand):
                     evt.device_system = device_system
                     evt.element_identifier = row[9]
                     evt.element_sub_identifier = row[10]
-                    evt.status_id = row[11]
+                    evt.status_id = Status.objects.get(pk=row[11])
                     evt.save()
 
         print "ok"

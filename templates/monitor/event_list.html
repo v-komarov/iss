@@ -38,25 +38,31 @@
             <div class="form-group">
                 <label for="filter-status"><small>Status</small></label>
                 <select id="filter-status" class="form-control input-sm" style="padding:0; width:100px;">
-                    <option value="999" selected>Все</option>
-                    <option value="1" selected>New</option>
-                    <option value="2" selected>Acknowledged</option>
-                    <option value="3" selected>Suppressed</option>
-                    <option value="4" selected>Closed</option>
-                    <option value="5" selected>Cleared</option>
-                    <option value="6" selected>Aged</option>
+                    <option value="">Все</option>
+                    <option value="1">New</option>
+                    <option value="2">Acknowledged</option>
+                    <option value="3">Suppressed</option>
+                    <option value="4">Closed</option>
+                    <option value="5">Cleared</option>
+                    <option value="6">Aged</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="filter-severity"><small>Status</small></label>
+                <select id="filter-severity" class="form-control input-sm" style="padding:0; width:100px;">
+                    <option value="">Все</option>
+                    <option value="0">Critical</option>
+                    <option value="1">Error</option>
+                    <option value="2">Warning</option>
+                    <option value="3">Info</option>
+                    <option value="4">Debug</option>
+                    <option value="5">Clear</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="manager"><small>Manager</small></label>
                 <select id="manager" class="form-control input-sm" style="padding:0;width:200px;">
-                    <option value="999" selected>Все</option>
-                    <option value="0" selected>Critical</option>
-                    <option value="1" selected>Error</option>
-                    <option value="2" selected>Warning</option>
-                    <option value="3" selected>Info</option>
-                    <option value="4" selected>Debug</option>
-                    <option value="5" selected>Clear</option>
+                    <option value="" selected>Все</option>
                 </select>
             </div>
             <div class="form-group">
@@ -81,8 +87,6 @@
         </form>
 
 </div>
-
-
 
 
 
@@ -125,7 +129,7 @@
             </thead>
         {% for row in object_list %}
             <tbody>
-                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id }}>
+                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }}>
                     <td style="padding:0;"></td>
                     <td style="padding:0;"><input type="checkbox" class="input"></td>
                     <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
@@ -133,21 +137,7 @@
                     <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td>
                     <td style="padding:0;">{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
                     <td style="padding:0;">{{ row.event_class }}</td>
-                    <td style="padding:0;">
-                        {% if row.severity_id == 0 %}
-                            Critical
-                        {% elif row.severity_id == 1 %}
-                            Error
-                        {% elif row.severity_id == 2 %}
-                            Warning
-                        {% elif row.severity_id == 3 %}
-                            Info
-                        {% elif row.severity_id == 4 %}
-                            Debug
-                        {% elif row.severity_id == 5 %}
-                            Clear
-                        {% endif %}
-                    </td>
+                    <td style="padding:0;">{{ row.severity_id }}</td>
                     <td style="padding:0;">{{ row.manager }}</td>
                     <td style="padding:0;">{{ row.device_system }}</td>
                     <td style="padding:0;">{{ row.device_group }}</td>
@@ -156,22 +146,7 @@
                     <td style="padding:0;">{{ row.device_location }}</td>
                     <td style="padding:0;">{{ row.element_identifier }}</td>
                     <td style="padding:0;">{{ row.element_sub_identifier }}</td>
-                    <td style="padding:0;">
-                        {% if row.status_id == 1 %}
-                            New
-                        {% elif row.status_id == 2 %}
-                            Acknowledged
-                        {% elif row.status_id == 3 %}
-                            Suppressed
-                        {% elif row.status_id == 4 %}
-                            Closed
-                        {% elif row.status_id == 5 %}
-                            Cleared
-                        {% elif row.status_id == 6 %}
-                            Aged
-                        {% endif %}
-
-                    </td>
+                    <td style="padding:0;">{{ row.status_id }}</td>
 
                 </tr>
             </tbody>

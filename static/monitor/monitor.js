@@ -10,6 +10,7 @@ $(document).ready(function() {
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
 
     RowColor();
+    //LoadSettings();
 
 /*
     $("#filter-status").multiselect({
@@ -22,11 +23,39 @@ $(document).ready(function() {
     });
 
 */
+     // Установка выбранного статуса
+     $( "#filter-status" ).change(function() {
+        var status_id = $("#filter-status").val();
+        var jqxhr = $.getJSON("/monitor/events/jsondata?status="+status_id,
+            function(data) {
 
-
+            })
+     });
 
 });
 
+
+
+// Загрузка настроек
+function LoadSettings() {
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?settings=get",
+    function(data) {
+        // status
+        $('#filter-status option:selected').each(function(){
+            this.selected=false;
+        });
+        $("#filter-status [value='"+data['settings']['status']+"']").attr("selected", "selected");
+        // severity
+        $('#filter-severity option:selected').each(function(){
+            this.selected=false;
+        });
+        $("#filter-severity [value='"+data['settings']['status']+"']").attr("selected", "selected");
+
+
+    })
+
+}
 
 
 
