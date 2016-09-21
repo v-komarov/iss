@@ -72,12 +72,14 @@
                 <label for="first_seen"><small>first_seen</small></label>
                 <small>
                     <input type="text" style="height:28px;padding-left:2px;" id="first_seen" placeholder="{{ first_seen }}">
+                <button id="clearfirstseen" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                 </small>
             </div>
             <div class="form-group">
                 <label for="last_seen"><small>last_seen</small></label>
                 <small>
                     <input type="text" style="height:28px;padding-left:2px;" id="last_seen" placeholder="{{ last_seen }}">
+                <button id="clearlastseen" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                 </small>
             </div>
         </form>
@@ -108,7 +110,7 @@
                 <th style="padding:0;"></th>
                 <th style="padding:0;">uuid</th>
                 <th style="padding:0;">first_seen</th>
-                <th style="padding:0;">update_time</th>
+                {# <th style="padding:0;">update_time</th> #}
                 <th style="padding:0;">last_seen</th>
                 <th style="padding:0;">EventClass</th>
                 <th style="padding:0;">Severity</th>
@@ -131,7 +133,7 @@
                     <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
                     {% timezone tz %}
                     <td style="padding:0;">{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
-                    <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td>
+                    {# <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td> #}
                     <td style="padding:0;">{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
                     {% endtimezone %}
                     <td style="padding:0;">{{ row.event_class }}</td>

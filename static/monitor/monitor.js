@@ -10,6 +10,10 @@ $(document).ready(function() {
     $("#uuid").bind("keyup",FindUuid);
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
 
+    $("#clearfirstseen").bind("click",ClearFirstSeen);
+    $("#clearlastseen").bind("click",ClearLastSeen);
+
+
     RowColor();
 
 
@@ -141,6 +145,35 @@ function ClearSearch(e) {
 
     var search = "xxxxx";
     var jqxhr = $.getJSON("/monitor/events/jsondata?search="+search,
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+}
+
+
+
+// Отмена FirstSeen
+function ClearFirstSeen(e) {
+    $("#first_seen").val("");
+    $("#first_seen").attr("placeholder","");
+
+    var value = "";
+    var jqxhr = $.getJSON("/monitor/events/jsondata?first_seen="+value,
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+}
+
+
+
+
+// Отмена FirstSeen
+function ClearLastSeen(e) {
+    $("#last_seen").val("");
+    $("#last_seen").attr("placeholder","");
+
+    var value = "";
+    var jqxhr = $.getJSON("/monitor/events/jsondata?last_seen="+value,
         function(data) {
             window.location=$("#menumonitor a").attr("href");
         })

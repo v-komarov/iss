@@ -26,10 +26,10 @@ def get_json(request):
     if r.has_key("manager") and rg("manager") != '':
         request.session['manager'] = request.GET["manager"]
 
-    if r.has_key("first_seen") and rg("first_seen") != '':
+    if r.has_key("first_seen"):
         request.session['first_seen'] = request.GET["first_seen"]
 
-    if r.has_key("last_seen") and rg("last_seen") != '':
+    if r.has_key("last_seen"):
         request.session['last_seen'] = request.GET["last_seen"]
 
     if r.has_key("search") and rg("search") != '':

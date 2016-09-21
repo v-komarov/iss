@@ -60,16 +60,18 @@ class EventList(ListView):
                 q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s'))" % (self.session["search"],self.session["search"],self.session["search"],self.session["search"],self.session["search"],self.session["search"]))
 
         if self.session.has_key("first_seen"):
-            try:
-                q.append("Q(first_seen__gte='%s')" % datetime.datetime.strptime(self.session["first_seen"],"%d.%m.%Y").replace(tzinfo=timezone('UTC')))
-            except:
-                pass
+            if self.session["first_seen"] != "":
+                try:
+                    q.append("Q(first_seen__gte='%s')" % datetime.datetime.strptime(self.session["first_seen"],"%d.%m.%Y").replace(tzinfo=timezone('UTC')))
+                except:
+                    pass
 
         if self.session.has_key("last_seen"):
-            try:
-                q.append("Q(last_seen__lte='%s')" % datetime.datetime.strptime(self.session["last_seen"],"%d.%m.%Y").replace(tzinfo=timezone('UTC')))
-            except:
-                pass
+            if self.session["last_seen"] != "":
+                try:
+                    q.append("Q(last_seen__lte='%s')" % datetime.datetime.strptime(self.session["last_seen"],"%d.%m.%Y").replace(tzinfo=timezone('UTC')))
+                except:
+                    pass
 
         if len(q) == 0:
             return events.objects.all().order_by('-update_time')
@@ -78,6 +80,13 @@ class EventList(ListView):
             str_sql = "events.objects.filter(%s).order_by('-update_time')" % str_q
             print str_sql
             return eval(str_sql)
+
+
+
+
+
+
+
 
 
 
