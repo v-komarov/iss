@@ -16,34 +16,28 @@ def get_json(request):
     r = request.GET
     rg = request.GET.get
 
-    # Отправка параметров
-    if r.has_key("settings") and rg("settings") != '':
-
-        response_data['settings'] = {}
-        if request.session.has_key("status_id"):
-            response_data['settings']['status'] = request.session["status_id"]
-        else:
-            response_data['settings']['status'] = ""
-        if request.session.has_key("severity_id"):
-            response_data['settings']['severity'] = request.session["severity_id"]
-        else:
-            response_data['settings']['severity'] = ""
-        if request.session.has_key("manager"):
-            response_data['settings']['manager'] = request.session["manager"]
-        else:
-            response_data['settings']['manager'] = ""
-        if request.session.has_key("first_seen"):
-            response_data['settings']['first_seen'] = request.session["first_seen"]
-        else:
-            response_data['settings']['first_seen'] = ""
-        if request.session.has_key("last_seen"):
-            response_data['settings']['last_seen'] = request.session["last_seen"]
-        else:
-            response_data['settings']['last_seen'] = ""
 
     if r.has_key("status") and rg("status") != '':
         request.session['status_id'] = request.GET["status"]
-        print request.session['status_id']
+
+    if r.has_key("severity") and rg("severity") != '':
+        request.session['severity_id'] = request.GET["severity"]
+
+    if r.has_key("manager") and rg("manager") != '':
+        request.session['manager'] = request.GET["manager"]
+
+    if r.has_key("first_seen") and rg("first_seen") != '':
+        request.session['first_seen'] = request.GET["first_seen"]
+
+    if r.has_key("last_seen") and rg("last_seen") != '':
+        request.session['last_seen'] = request.GET["last_seen"]
+
+    if r.has_key("search") and rg("search") != '':
+        if request.GET["search"] == "xxxxx":
+            request.session['search'] = ""
+        else:
+            request.session['search'] = request.GET["search"]
+
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
     response['Access-Control-Allow-Origin'] = "*"

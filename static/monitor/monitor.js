@@ -5,12 +5,12 @@ $(document).ready(function() {
     $("#last_seen").datepicker($.datepicker.regional['ru']);
 
     //setInterval('UpdateData();',5000);
-    $("#clearuuid").bind("click",ClearUuid);
+    $("#clearsearch").bind("click",ClearSearch);
     $("#uuid").bind("keyup",FindUuid);
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
 
     RowColor();
-    //LoadSettings();
+
 
 /*
     $("#filter-status").multiselect({
@@ -32,30 +32,56 @@ $(document).ready(function() {
             })
      });
 
+     // Установка выбранной важности
+     $( "#filter-severity" ).change(function() {
+        var severity_id = $("#filter-severity").val();
+        var jqxhr = $.getJSON("/monitor/events/jsondata?severity="+severity_id,
+            function(data) {
+
+            })
+     });
+
+     // Установка manager
+     $( "#manager" ).change(function() {
+        var manager = $("#manager").val();
+        var jqxhr = $.getJSON("/monitor/events/jsondata?manager="+manager,
+            function(data) {
+
+            })
+     });
+
+     // Установка first_seen
+     $( "#first_seen" ).bind("change paste keyup", function() {
+        var first_seen = $("#first_seen").val();
+        var jqxhr = $.getJSON("/monitor/events/jsondata?first_seen="+first_seen,
+            function(data) {
+
+            })
+     });
+
+     // Установка last_seen
+     $( "#last_seen" ).bind("change paste keyup", function() {
+        var last_seen = $("#last_seen").val();
+        var jqxhr = $.getJSON("/monitor/events/jsondata?last_seen="+last_seen,
+            function(data) {
+
+            })
+     });
+
+     // Установка search
+     $( "#search" ).bind("change paste keyup", function() {
+        var search = $("#search").val();
+        var jqxhr = $.getJSON("/monitor/events/jsondata?search="+search,
+            function(data) {
+
+            })
+     });
+
+
+
 });
 
 
-
-// Загрузка настроек
-function LoadSettings() {
-
-    var jqxhr = $.getJSON("/monitor/events/jsondata?settings=get",
-    function(data) {
-        // status
-        $('#filter-status option:selected').each(function(){
-            this.selected=false;
-        });
-        $("#filter-status [value='"+data['settings']['status']+"']").attr("selected", "selected");
-        // severity
-        $('#filter-severity option:selected').each(function(){
-            this.selected=false;
-        });
-        $("#filter-severity [value='"+data['settings']['status']+"']").attr("selected", "selected");
-
-
-    })
-
-}
 
 
 
@@ -101,10 +127,16 @@ function FindUuid(e) {
 
 
 
-// Отмена фильтрации
-function ClearUuid(e) {
-    $("#uuid").val("");
-    $("table[group=events] tbody tr").show();
+// Отмена Search
+function ClearSearch(e) {
+    $("#search").val("");
+    $("#search").attr("placeholder","");
+
+    var search = "xxxxx";
+    var jqxhr = $.getJSON("/monitor/events/jsondata?search="+search,
+        function(data) {
+
+        })
 }
 
 

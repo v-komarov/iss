@@ -24,9 +24,10 @@
 
 <div class="row" style="margin:0; padding-top:10px; padding-bottom:10px;">
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <small>
                 <button type="button" class="btn btn-warning btn-xs">Объединить</button>
+                <button type="button" class="btn btn-warning btn-xs">Объединить +</button>
                 <button type="button" class="btn btn-info btn-xs">Разъединить</button>
                 <button type="button" class="btn btn-success btn-xs">Создать</button>
             </small>
@@ -38,50 +39,44 @@
             <div class="form-group">
                 <label for="filter-status"><small>Status</small></label>
                 <select id="filter-status" class="form-control input-sm" style="padding:0; width:100px;">
-                    <option value="">Все</option>
-                    <option value="1">New</option>
-                    <option value="2">Acknowledged</option>
-                    <option value="3">Suppressed</option>
-                    <option value="4">Closed</option>
-                    <option value="5">Cleared</option>
-                    <option value="6">Aged</option>
+                    {% for item in status %}
+                        {{ item|safe }}
+                    {% endfor %}
                 </select>
             </div>
             <div class="form-group">
-                <label for="filter-severity"><small>Status</small></label>
+                <label for="filter-severity"><small>Severity</small></label>
                 <select id="filter-severity" class="form-control input-sm" style="padding:0; width:100px;">
-                    <option value="">Все</option>
-                    <option value="0">Critical</option>
-                    <option value="1">Error</option>
-                    <option value="2">Warning</option>
-                    <option value="3">Info</option>
-                    <option value="4">Debug</option>
-                    <option value="5">Clear</option>
+                    {% for item in severity %}
+                        {{ item|safe }}
+                    {% endfor %}
                 </select>
             </div>
             <div class="form-group">
                 <label for="manager"><small>Manager</small></label>
                 <select id="manager" class="form-control input-sm" style="padding:0;width:200px;">
-                    <option value="" selected>Все</option>
+                    {% for item in manager %}
+                        {{ item|safe }}
+                    {% endfor %}
                 </select>
             </div>
             <div class="form-group">
-                <label for="uuid"><small>Uudi</small></label>
+                <label for="search"><small>Search</small></label>
             <small>
-                <input type="text" style="height:28px;padding-left:2px;" id="uuid" placeholder="">
-                <button id="clearuuid" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <input type="text" style="height:28px;padding-left:2px;" id="search" placeholder="{{ search }}">
+                <button id="clearsearch" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
             </small>
             </div>
             <div class="form-group">
                 <label for="first_seen"><small>first_seen</small></label>
                 <small>
-                    <input type="text" style="height:28px;padding-left:2px;" id="first_seen" placeholder="">
+                    <input type="text" style="height:28px;padding-left:2px;" id="first_seen" placeholder="{{ first_seen }}">
                 </small>
             </div>
             <div class="form-group">
                 <label for="last_seen"><small>last_seen</small></label>
                 <small>
-                    <input type="text" style="height:28px;padding-left:2px;" id="last_seen" placeholder="">
+                    <input type="text" style="height:28px;padding-left:2px;" id="last_seen" placeholder="{{ last_seen }}">
                 </small>
             </div>
         </form>
@@ -133,9 +128,11 @@
                     <td style="padding:0;"></td>
                     <td style="padding:0;"><input type="checkbox" class="input"></td>
                     <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
+                    {% timezone tz %}
                     <td style="padding:0;">{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
                     <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td>
                     <td style="padding:0;">{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
+                    {% endtimezone %}
                     <td style="padding:0;">{{ row.event_class }}</td>
                     <td style="padding:0;">{{ row.severity_id }}</td>
                     <td style="padding:0;">{{ row.manager }}</td>
