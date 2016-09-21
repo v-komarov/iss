@@ -4,6 +4,8 @@ from importlib import import_module
 from django.conf import settings
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
+import datetime
+from pytz import timezone
 
 from django.db import connections
 from django.db.models import Q
@@ -40,9 +42,43 @@ class EventList(ListView):
 
     def get_queryset(self):
 
-        #client_bind.objects.filter(Q(console_number=term) | Q(client_object__address_building__name__icontains=term))
+        q = []
+        if self.session.has_key("status_id"):
+            if self.session["status_id"] != "xxxxx":
+                q.append("Q(status_id=Status.objects.get(pk=%s))" % self.session["status_id"])
 
-        return events.objects.all().order_by('-update_time')
+        if self.session.has_key("severity_id"):
+            if self.session["severity_id"] != "xxxxx":
+                q.append("Q(severity_id=Severity.objects.get(pk=%s))" % self.session["severity_id"])
+
+        if self.session.has_key("manager"):
+            if self.session["manager"] != "xxxxx":
+                q.append("Q(manager='%s')" % self.session["manager"])
+
+        if self.session.has_key("search"):
+            if len(self.session['search']) >= 3:
+                q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s'))" % (self.session["search"],self.session["search"],self.session["search"],self.session["search"],self.session["search"],self.session["search"]))
+
+        if self.session.has_key("first_seen"):
+            try:
+                q.append("Q(first_seen__gte='%s')" % datetime.datetime.strptime(self.session["first_seen"],"%d.%m.%Y").replace(tzinfo=timezone('UTC')))
+            except:
+                pass
+
+        if self.session.has_key("last_seen"):
+            try:
+                q.append("Q(last_seen__lte='%s')" % datetime.datetime.strptime(self.session["last_seen"],"%d.%m.%Y").replace(tzinfo=timezone('UTC')))
+            except:
+                pass
+
+        if len(q) == 0:
+            return events.objects.all().order_by('-update_time')
+        else:
+            str_q = " & ".join(q)
+            str_sql = "events.objects.filter(%s).order_by('-update_time')" % str_q
+            print str_sql
+            return eval(str_sql)
+
 
 
     def get_context_data(self, **kwargs):

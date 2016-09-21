@@ -6,6 +6,7 @@ $(document).ready(function() {
 
     //setInterval('UpdateData();',5000);
     $("#clearsearch").bind("click",ClearSearch);
+    $("#runsearch").bind("click",RunSearch);
     $("#uuid").bind("keyup",FindUuid);
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
 
@@ -28,7 +29,7 @@ $(document).ready(function() {
         var status_id = $("#filter-status").val();
         var jqxhr = $.getJSON("/monitor/events/jsondata?status="+status_id,
             function(data) {
-
+                window.location=$("#menumonitor a").attr("href");
             })
      });
 
@@ -37,7 +38,7 @@ $(document).ready(function() {
         var severity_id = $("#filter-severity").val();
         var jqxhr = $.getJSON("/monitor/events/jsondata?severity="+severity_id,
             function(data) {
-
+                window.location=$("#menumonitor a").attr("href");
             })
      });
 
@@ -46,7 +47,7 @@ $(document).ready(function() {
         var manager = $("#manager").val();
         var jqxhr = $.getJSON("/monitor/events/jsondata?manager="+manager,
             function(data) {
-
+                window.location=$("#menumonitor a").attr("href");
             })
      });
 
@@ -55,7 +56,7 @@ $(document).ready(function() {
         var first_seen = $("#first_seen").val();
         var jqxhr = $.getJSON("/monitor/events/jsondata?first_seen="+first_seen,
             function(data) {
-
+                window.location=$("#menumonitor a").attr("href");
             })
      });
 
@@ -64,16 +65,7 @@ $(document).ready(function() {
         var last_seen = $("#last_seen").val();
         var jqxhr = $.getJSON("/monitor/events/jsondata?last_seen="+last_seen,
             function(data) {
-
-            })
-     });
-
-     // Установка search
-     $( "#search" ).bind("change paste keyup", function() {
-        var search = $("#search").val();
-        var jqxhr = $.getJSON("/monitor/events/jsondata?search="+search,
-            function(data) {
-
+                window.location=$("#menumonitor a").attr("href");
             })
      });
 
@@ -127,6 +119,21 @@ function FindUuid(e) {
 
 
 
+
+
+
+// Поиск
+function RunSearch(e) {
+    console.log("working");
+    var search = $("#search").val();
+    var jqxhr = $.getJSON("/monitor/events/jsondata?search="+search,
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+}
+
+
+
 // Отмена Search
 function ClearSearch(e) {
     $("#search").val("");
@@ -135,7 +142,7 @@ function ClearSearch(e) {
     var search = "xxxxx";
     var jqxhr = $.getJSON("/monitor/events/jsondata?search="+search,
         function(data) {
-
+            window.location=$("#menumonitor a").attr("href");
         })
 }
 
