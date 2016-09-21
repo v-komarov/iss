@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    $("#floatingCirclesG").attr("hidden","hidden");
+    $("table[group=events]").removeAttr("hidden");
+
 
     $("#first_seen").datepicker($.datepicker.regional['ru']);
     $("#last_seen").datepicker($.datepicker.regional['ru']);
@@ -21,13 +24,13 @@ $(document).ready(function() {
     $("#filter-status").multiselect({
         header:true,
         noneSelectedText:"Выбор типов статусов",
-        minWidth:500,
+        minWidth:200,
         selectedText: "# из # выбрано",
         uncheckAllText:"Сбросить все",
         checkAllText:"Отметить все"
     });
-
 */
+
      // Установка выбранного статуса
      $( "#filter-status" ).change(function() {
         var status_id = $("#filter-status").val();
@@ -73,6 +76,8 @@ $(document).ready(function() {
             })
      });
 
+
+    $('table[group=events] tbody tr td input[type=checkbox]').on("click",CheckBoxRow);
 
 
 });
@@ -179,4 +184,19 @@ function ClearLastSeen(e) {
         })
 }
 
+
+
+
+// Строчные checkbox-ы
+function CheckBoxRow(e) {
+    console.log($(this));
+    if ($(this).prop('checked') == true) {
+        $(this).closest("tr").attr("group",true);
+        console.log($(this).closest("tr").attr("group"));
+    }
+    else {
+        $(this).closest("tr").attr("group",false);
+        console.log($(this).closest("tr").attr("group"));
+    }
+}
 

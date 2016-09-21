@@ -91,19 +91,32 @@
 <div class="row" style="margin:0;">
 
 
-        {% if paginator.num_pages > 1 %}
-            {% if page_obj.has_previous %}
-                <a href="/monitor/events/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
-            {% endif %}
-            <span class="current_page">Page {{ page_obj.number }}</span>
-            {% if page_obj.has_next %}
-                <a href="/monitor/events/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
-            {% endif %}
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/monitor/events/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
         {% endif %}
+        <span class="current_page">Page {{ page_obj.number }}</span>
+        {% if page_obj.has_next %}
+            <a href="/monitor/events/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+    <div id="floatingCirclesG">
+        <div class="f_circleG" id="frotateG_01"></div>
+        <div class="f_circleG" id="frotateG_02"></div>
+        <div class="f_circleG" id="frotateG_03"></div>
+        <div class="f_circleG" id="frotateG_04"></div>
+        <div class="f_circleG" id="frotateG_05"></div>
+        <div class="f_circleG" id="frotateG_06"></div>
+        <div class="f_circleG" id="frotateG_07"></div>
+        <div class="f_circleG" id="frotateG_08"></div>
+    </div>
 
 
 
-    <table group="events" class="table table-bordered" width="100%">
+
+    <table group="events" class="table table-bordered" width="100%" hidden>
             <thead class="small">
             <tr style="background-color:gainsboro;">
                 <th style="padding:0;"></th>
@@ -125,9 +138,11 @@
                 <th style="padding:0;">Status</th>
             </tr>
             </thead>
+
+
         {% for row in object_list %}
             <tbody>
-                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }}>
+                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false >
                     <td style="padding:0;"></td>
                     <td style="padding:0;"><input type="checkbox" class="input"></td>
                     <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
@@ -152,7 +167,6 @@
             </tbody>
         {% endfor %}
     </table>
-
 
 
         {% if paginator.num_pages > 1 %}
