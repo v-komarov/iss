@@ -19,42 +19,6 @@ from iss.begin.forms import LoginForm
 import iss.settings
 
 
-"""
-class Begin(TemplateView):
-
-    template_name = "index.html"
-    form_class = LoginForm
-
-    @csrf_protect
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        c = RequestContext(request,{"ROOT_URL":iss.settings.ROOT_URL,'form': form})
-        return render_to_response(self.template_name, c)
-
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        c = RequestContext(request,{"ROOT_URL":iss.settings.ROOT_URL,'form': form})
-        if form.is_valid():
-            login = form.cleaned_data["login"]
-            passwd = form.cleaned_data["passwd"]
-            tz = form.cleaned_data["tz"]
-            request.session['timezone'] = tz
-            print("tz",request.session['timezone'])
-            user = authenticate(username=login, password=passwd)
-            #print(request.POST,user)
-            #if user is not None:
-            return HttpResponseRedirect('/mainmenu/')
-
-        return render_to_response(self.template_name, c)
-
-
-    #@csrf_protect
-    #def dispatch(self, *args, **kwargs):
-    #    return super(Begin, self).dispatch(*args, **kwargs)
-
-
-"""
 
 
 def Begin(request):

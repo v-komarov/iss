@@ -21,6 +21,11 @@ $(document).ready(function() {
     $("#runmanager").bind("click",FilterManager);
 
 
+    $("#showgroup").bind("click",ShowContainer);
+    $("#hidegroup").bind("click",HideContainer);
+    $("#addgroup").bind("click",AddContainer);
+    $("#showmembers").bind("click",ShowMembers);
+
     RowColor();
 
 
@@ -96,14 +101,83 @@ $(document).ready(function() {
 
     $('table[group=events] tbody tr td input[type=checkbox]').on("click",CheckBoxRow);
 
-
-
     $('table[group=events]').tableScroll({height:700});
+
+    // Видимость кнопок
+    $("#showgroup").hide();
+    if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); }
+    else { $("#addgroup").hide(); $("#addrow").show(); }
+
+
+    // Сброс строковых checkbox-ов
+    $("table[group=events] tbody tr td input:checkbox").each(function(){
+        $(this).prop( "checked", false );
+    });
 
 });
 
 
 
+
+
+// Развернуть группировку
+function ShowMembers(e) {
+    var jqxhr = $.getJSON("/monitor/events/jsondata?getmembers=ok",
+        function(data) {
+            console.log(data);
+
+        })
+}
+
+
+
+
+
+
+
+// Добавление в группировку
+function AddContainer(e) {
+
+    var id = []
+    var row_list = $("table[group=events] tbody tr[group=true]");
+    $.each( row_list, function( key, value ) {
+        id.push("'"+$(value).attr("row_id")+"'");
+    });
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?addgroup=["+id+"]",
+        function(data) {
+            window.location.reload();
+        })
+
+}
+
+
+
+
+
+
+
+
+function ShowContainer(e) {
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?containergroup="+row_id,
+        function(data) {
+            window.location.reload();
+        })
+}
+
+
+
+
+function HideContainer(e) {
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?containergroup=_____",
+        function(data) {
+            window.location.reload();
+        })
+
+}
 
 
 
@@ -176,6 +250,9 @@ function ClickEventRow(e) {
         $(this).css("background-color","#F0E68C");
         $("table[group=events] tbody tr").attr("marked","no");
         $(this).attr("marked","yes");
+        if ($("#hidegroup").is(":visible") != true) {
+            $("#showgroup").show();
+        }
 
 }
 
@@ -258,14 +335,14 @@ function ClearLastSeen(e) {
 
 // Строчные checkbox-ы
 function CheckBoxRow(e) {
-    console.log($(this));
+    //console.log($(this));
     if ($(this).prop('checked') == true) {
         $(this).closest("tr").attr("group",true);
-        console.log($(this).closest("tr").attr("group"));
+        //console.log($(this).closest("tr").attr("group"));
     }
     else {
         $(this).closest("tr").attr("group",false);
-        console.log($(this).closest("tr").attr("group"));
+        //console.log($(this).closest("tr").attr("group"));
     }
 }
 

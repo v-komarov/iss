@@ -85,11 +85,11 @@ class EventList(ListView):
                     pass
 
         if len(q) == 0:
-            return events.objects.all().order_by('-update_time')
+            return events.objects.filter(agregation=False).order_by('-update_time')
         else:
             str_q = " & ".join(q)
-            str_sql = "events.objects.filter(%s).order_by('-update_time')" % str_q
-            print str_sql
+            str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-update_time')" % str_q
+
             return eval(str_sql)
 
 
@@ -170,6 +170,16 @@ class EventList(ListView):
         context['manager'] = manager_list
         context['selected_manager'] = manager
 
+        context['members'] = 0
+        if self.session.has_key('containergroup'):
+
+            g = events.objects.get(pk=self.session['containergroup'])
+            data = g.data
+            if data.has_key('containergroup'):
+                context['members'] = len(data['containergroup'])
+            context['containergroup'] = events.objects.get(pk=self.session['containergroup'])
+        else:
+            context['containergroup'] = False
 
 
 

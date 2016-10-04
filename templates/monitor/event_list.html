@@ -24,10 +24,9 @@
 
         <div>
             <small>
-                <button type="button" class="btn btn-warning btn-xs">Объединить</button>
-                <button type="button" class="btn btn-warning btn-xs">Группировка</button>
-                <button type="button" class="btn btn-info btn-xs">Разъединить</button>
-                <button type="button" class="btn btn-success btn-xs">Создать</button>
+                <button id="showgroup" title="Показать группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></button>
+                <button id="addgroup" title="Добавить в группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></button>
+                <button id="addrow" title="Создать" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
             </small>
         </div>
 
@@ -92,6 +91,9 @@
 </div>
 
 
+{% if containergroup != False %}
+    {% include "monitor/containergroup.html" %}
+{% endif %}
 
 <div class="row" style="margin:0;">
 
@@ -122,33 +124,18 @@
 
 
     <table group="events" class="table table-bordered" width="100%" hidden>
-            <thead class="small">
-            <tr style="background-color:gainsboro;">
-                <th style="padding:0;"></th>
-                <th style="padding:0;"></th>
-                <th style="padding:0;">uuid</th>
-                <th style="padding:0;">first_seen</th>
-                {# <th style="padding:0;">update_time</th> #}
-                <th style="padding:0;">last_seen</th>
-                <th style="padding:0;">Status</th>
-                <th style="padding:0;">Severity</th>
-                <th style="padding:0;">Manager</th>
-                <th style="padding:0;">EventClass</th>
-                <th style="padding:0;">DeviceSystem</th>
-                <th style="padding:0;">DeviceGroup</th>
-                <th style="padding:0;">DeviceClass</th>
-                <th style="padding:0;">DeviceNetAddress</th>
-                <th style="padding:0;">DeviceLocation</th>
-                <th style="padding:0;">ElementIdentifier</th>
-                <th style="padding:0;">ElementSubIdentifier</th>
-            </tr>
-            </thead>
 
+
+        {% include "monitor/tablehead.html" %}
 
         {% for row in object_list %}
             <tbody>
                 <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false >
-                    <td style="padding:0;"></td>
+                    {% if row.agregator == True %}
+                        <td style="padding:0;"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></td>
+                    {% else %}
+                        <td style="padding:0;"></td>
+                    {% endif %}
                     <td style="padding:0;"><input type="checkbox" class="input"></td>
                     <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
                     {% timezone tz %}

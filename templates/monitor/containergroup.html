@@ -1,0 +1,39 @@
+{% load tz %}
+
+<div class="row" style="margin:0;">
+<small>
+    <button id="hidegroup" title="Скрыть группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    <button id="showmembers" title="Развернуть группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon glyphicon-arrow-down" aria-hidden="true"></span></button>
+    Группировка {{ members }} элементов
+</small>
+        <table group="group" class="table table-bordered" width="100%" showmembers=false>
+            {% include "monitor/tablehead.html" %}
+
+            <tbody>
+                <tr class="small">
+                    <td style="padding:0;"></td>
+                    <td style="padding:0;"></td>
+                    <td style="padding:0;"><a id="tooltip" title="{{ containergroup.uuid }}">{{ containergroup.uuid|truncatechars:7 }}</a></td>
+                    {% timezone tz %}
+                    <td style="padding:0;">{{ containergroup.first_seen|date:"d.m.Y H:i e" }}</td>
+                    {# <td style="padding:0;">{{ containergroup.update_time|date:"d.m.Y H:i e" }}</td> #}
+                    <td style="padding:0;">{{ containergroup.last_seen|date:"d.m.Y H:i e" }}</td>
+                    {% endtimezone %}
+                    <td style="padding:0;">{{ containergroup.status_id }}</td>
+                    <td style="padding:0;">{{ containergroup.severity_id }}</td>
+                    <td style="padding:0;">{{ containergroup.manager }}</td>
+                    <td style="padding:0;">{{ containergroup.event_class }}</td>
+                    <td style="padding:0;">{{ containergroup.device_system }}</td>
+                    <td style="padding:0;">{{ containergroup.device_group }}</td>
+                    <td style="padding:0;">{{ containergroup.device_class }}</td>
+                    <td style="padding:0;">{{ containergroup.device_net_address }}</td>
+                    <td style="padding:0;">{{ containergroup.device_location }}</td>
+                    <td style="padding:0;">{{ containergroup.element_identifier }}</td>
+                    <td style="padding:0;">{{ containergroup.element_sub_identifier }}</td>
+                </tr>
+            </tbody>
+
+
+        </table>
+</div>
+

@@ -33,6 +33,6 @@ class events(models.Model):
     update_row = models.DateTimeField(auto_now=True,null=True)
 
     data = JSONField(default={})
-    agragator = models.BooleanField(db_index=True,default=False)
-    agragation = models.BooleanField(db_index=True,default=False)
+    agregator = models.BooleanField(db_index=True,default=False)
+    agregation = models.BooleanField(db_index=True,default=False)
 
