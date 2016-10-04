@@ -20,46 +20,51 @@
 </div>
 
 
+<div class="row" style="margin:0; padding-top:2px; padding-bottom:5px; padding-left:5px;">
 
-
-<div class="row" style="margin:0; padding-top:10px; padding-bottom:10px;">
-
-        <div class="col-md-3">
+        <div>
             <small>
                 <button type="button" class="btn btn-warning btn-xs">Объединить</button>
-                <button type="button" class="btn btn-warning btn-xs">Объединить +</button>
+                <button type="button" class="btn btn-warning btn-xs">Группировка</button>
                 <button type="button" class="btn btn-info btn-xs">Разъединить</button>
                 <button type="button" class="btn btn-success btn-xs">Создать</button>
             </small>
         </div>
 
+</div>
 
+
+
+<div class="row" style="margin:0; padding-bottom:5px; padding-left:5px;">
 
         <form class="form-inline">
             <div class="form-group">
                 <label for="filter-status"><small>Status</small></label>
-                <select id="filter-status" class="form-control input-sm" style="padding:0; width:100px;">
+                <select selected_value='{{ selected_status }}' id="filter-status" class="form-control input-sm" style="padding:0; width:100px;">
                     {% for item in status %}
                         {{ item|safe }}
                     {% endfor %}
                 </select>
             </div>
+            <button id="runstatus" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
             <div class="form-group">
                 <label for="filter-severity"><small>Severity</small></label>
-                <select id="filter-severity" class="form-control input-sm" style="padding:0; width:100px;">
+                <select selected_value='{{ selected_severity }}' id="filter-severity" class="form-control input-sm" style="padding:0; width:100px;">
                     {% for item in severity %}
                         {{ item|safe }}
                     {% endfor %}
                 </select>
             </div>
+            <button id="runseverity" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
             <div class="form-group">
                 <label for="manager"><small>Manager</small></label>
-                <select id="manager" class="form-control input-sm" style="padding:0;width:200px;">
+                <select selected_value='{{ selected_manager }}' id="manager" class="form-control input-sm" style="padding:0;width:200px;">
                     {% for item in manager %}
                         {{ item|safe }}
                     {% endfor %}
                 </select>
             </div>
+            <button id="runmanager" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
             <div class="form-group">
                 <label for="search"><small>Search</small></label>
             <small>
@@ -125,9 +130,10 @@
                 <th style="padding:0;">first_seen</th>
                 {# <th style="padding:0;">update_time</th> #}
                 <th style="padding:0;">last_seen</th>
-                <th style="padding:0;">EventClass</th>
+                <th style="padding:0;">Status</th>
                 <th style="padding:0;">Severity</th>
                 <th style="padding:0;">Manager</th>
+                <th style="padding:0;">EventClass</th>
                 <th style="padding:0;">DeviceSystem</th>
                 <th style="padding:0;">DeviceGroup</th>
                 <th style="padding:0;">DeviceClass</th>
@@ -135,7 +141,6 @@
                 <th style="padding:0;">DeviceLocation</th>
                 <th style="padding:0;">ElementIdentifier</th>
                 <th style="padding:0;">ElementSubIdentifier</th>
-                <th style="padding:0;">Status</th>
             </tr>
             </thead>
 
@@ -151,9 +156,10 @@
                     {# <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td> #}
                     <td style="padding:0;">{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
                     {% endtimezone %}
-                    <td style="padding:0;">{{ row.event_class }}</td>
+                    <td style="padding:0;">{{ row.status_id }}</td>
                     <td style="padding:0;">{{ row.severity_id }}</td>
                     <td style="padding:0;">{{ row.manager }}</td>
+                    <td style="padding:0;">{{ row.event_class }}</td>
                     <td style="padding:0;">{{ row.device_system }}</td>
                     <td style="padding:0;">{{ row.device_group }}</td>
                     <td style="padding:0;">{{ row.device_class }}</td>
@@ -161,7 +167,6 @@
                     <td style="padding:0;">{{ row.device_location }}</td>
                     <td style="padding:0;">{{ row.element_identifier }}</td>
                     <td style="padding:0;">{{ row.element_sub_identifier }}</td>
-                    <td style="padding:0;">{{ row.status_id }}</td>
 
                 </tr>
             </tbody>

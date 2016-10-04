@@ -16,47 +16,64 @@ $(document).ready(function() {
     $("#clearfirstseen").bind("click",ClearFirstSeen);
     $("#clearlastseen").bind("click",ClearLastSeen);
 
+    $("#runstatus").bind("click",FilterStatus);
+    $("#runseverity").bind("click",FilterSeverity);
+    $("#runmanager").bind("click",FilterManager);
+
 
     RowColor();
 
 
-/*
+    // Фильтр статусов
     $("#filter-status").multiselect({
         header:true,
-        noneSelectedText:"Выбор типов статусов",
-        minWidth:200,
+        noneSelectedText:"Выбор статусов",
+        minWidth:150,
         selectedText: "# из # выбрано",
         uncheckAllText:"Сбросить все",
         checkAllText:"Отметить все"
     });
-*/
+    $("#filter-status").multiselect("uncheckAll");
+    var status = eval($("#filter-status").attr("selected_value"));
+    status.forEach(function(item, i, arr) {
+        $("#filter-status").multiselect("widget").find(":checkbox[value='"+item+"']").click();
+    });
+    // Фильтр статусов конец
 
-     // Установка выбранного статуса
-     $( "#filter-status" ).change(function() {
-        var status_id = $("#filter-status").val();
-        var jqxhr = $.getJSON("/monitor/events/jsondata?status="+status_id,
-            function(data) {
-                window.location=$("#menumonitor a").attr("href");
-            })
-     });
 
-     // Установка выбранной важности
-     $( "#filter-severity" ).change(function() {
-        var severity_id = $("#filter-severity").val();
-        var jqxhr = $.getJSON("/monitor/events/jsondata?severity="+severity_id,
-            function(data) {
-                window.location=$("#menumonitor a").attr("href");
-            })
-     });
+    // Фильтр важности
+    $("#filter-severity").multiselect({
+        header:true,
+        noneSelectedText:"Выбор важности",
+        minWidth:150,
+        selectedText: "# из # выбрано",
+        uncheckAllText:"Сбросить все",
+        checkAllText:"Отметить все"
+    });
+    $("#filter-severity").multiselect("uncheckAll");
+    var severity = eval($("#filter-severity").attr("selected_value"));
+    severity.forEach(function(item, i, arr) {
+        $("#filter-severity").multiselect("widget").find(":checkbox[value='"+item+"']").click();
+    });
+    // Фильтр важности конец
 
-     // Установка manager
-     $( "#manager" ).change(function() {
-        var manager = $("#manager").val();
-        var jqxhr = $.getJSON("/monitor/events/jsondata?manager="+manager,
-            function(data) {
-                window.location=$("#menumonitor a").attr("href");
-            })
-     });
+
+    // Фильтр Менеджер
+    $("#manager").multiselect({
+        header:true,
+        noneSelectedText:"Выбор источников",
+        minWidth:150,
+        selectedText: "# из # выбрано",
+        uncheckAllText:"Сбросить все",
+        checkAllText:"Отметить все"
+    });
+    $("#manager").multiselect("uncheckAll");
+    var manager = eval($("#manager").attr("selected_value"));
+    manager.forEach(function(item, i, arr) {
+        $("#manager").multiselect("widget").find(":checkbox[value='"+item+"']").click();
+    });
+    // Фильтр Менеджер конец
+
 
      // Установка first_seen
      $( "#first_seen" ).bind("change paste keyup", function() {
@@ -81,6 +98,55 @@ $(document).ready(function() {
 
 
 });
+
+
+
+
+
+
+
+function FilterStatus() {
+
+    var message = $("#filter-status").multiselect("getChecked").map(function(){
+       return this.value;
+    }).get();
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?status=["+message+"]",
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+
+}
+
+
+
+function FilterSeverity() {
+
+    var message = $("#filter-severity").multiselect("getChecked").map(function(){
+       return this.value;
+    }).get();
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?severity=["+message+"]",
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+
+}
+
+
+
+function FilterManager() {
+
+    var message = $("#manager").multiselect("getChecked").map(function(){
+       return "'"+this.value+"'";
+    }).get();
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?manager=["+message+"]",
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+
+}
 
 
 

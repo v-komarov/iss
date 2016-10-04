@@ -3,6 +3,7 @@
 import datetime
 import json
 import time
+import pickle
 
 from django.http import HttpResponse
 
@@ -18,13 +19,14 @@ def get_json(request):
 
 
     if r.has_key("status") and rg("status") != '':
-        request.session['status_id'] = request.GET["status"]
+        request.session['status_id'] = pickle.dumps(eval(request.GET["status"]))
+
 
     if r.has_key("severity") and rg("severity") != '':
-        request.session['severity_id'] = request.GET["severity"]
+        request.session['severity_id'] = pickle.dumps(eval(request.GET["severity"]))
 
     if r.has_key("manager") and rg("manager") != '':
-        request.session['manager'] = request.GET["manager"]
+        request.session['manager'] = pickle.dumps(eval(request.GET["manager"]))
 
     if r.has_key("first_seen"):
         request.session['first_seen'] = request.GET["first_seen"]

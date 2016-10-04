@@ -1,5 +1,7 @@
 #coding:utf-8
 
+import pickle
+
 from importlib import import_module
 from django.conf import settings
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
@@ -44,16 +46,25 @@ class EventList(ListView):
 
         q = []
         if self.session.has_key("status_id"):
-            if self.session["status_id"] != "xxxxx":
-                q.append("Q(status_id=Status.objects.get(pk=%s))" % self.session["status_id"])
+            if pickle.loads(self.session["status_id"]) != []:
+                qs = []
+                for s in pickle.loads(self.session["status_id"]):
+                    qs.append("Q(status_id=Status.objects.get(pk=%s))" % s)
+                q.append("("+" | ".join(qs)+")")
 
         if self.session.has_key("severity_id"):
-            if self.session["severity_id"] != "xxxxx":
-                q.append("Q(severity_id=Severity.objects.get(pk=%s))" % self.session["severity_id"])
+            if pickle.loads(self.session["severity_id"]) != []:
+                qv = []
+                for v in pickle.loads(self.session["severity_id"]):
+                    qv.append("Q(severity_id=Severity.objects.get(pk=%s))" % v)
+                q.append("("+" | ".join(qv)+")")
 
         if self.session.has_key("manager"):
-            if self.session["manager"] != "xxxxx":
-                q.append("Q(manager='%s')" % self.session["manager"])
+            if pickle.loads(self.session["manager"]) != []:
+                qm = []
+                for m in pickle.loads(self.session["manager"]):
+                    qm.append("Q(manager='%s')" % m)
+                q.append("("+" | ".join(qm)+")")
 
         if self.session.has_key("search"):
             if len(self.session['search']) >= 3:
@@ -95,42 +106,33 @@ class EventList(ListView):
 
         # Статус
         if self.session.has_key('status_id'):
-            status = self.session['status_id']
+            status = pickle.loads(self.session['status_id'])
         else:
-            status = "xxxxx"
+            status = []
 
         # Список статусов
-        if status == "":
-            status_list = ["<option value='xxxxx' selected>Все</option>"]
-        else:
-            status_list = ["<option value='xxxxx'>Все</option>"]
+        status_list = []
         for row in Status.objects.all().order_by("id"):
-            if "%s" % row.id == status:
-                status_list.append("<option value='%s' selected>%s</option>" % (row.id,row.name))
-            else:
-                status_list.append("<option value='%s'>%s</option>" % (row.id,row.name))
+            status_list.append("<option value='%s'>%s</option>" % (row.id, row.name))
 
         context['status'] = status_list
+        context['selected_status'] = status
+
 
 
         # Важность
         if self.session.has_key('severity_id'):
-            severity = self.session['severity_id']
+            severity = pickle.loads(self.session['severity_id'])
         else:
-            severity = "xxxxx"
+            severity = []
 
         # Список важности
-        if severity == "":
-            severity_list = ["<option value='xxxxx' selected>Все</option>"]
-        else:
-            severity_list = ["<option value='xxxxx'>Все</option>"]
+        severity_list = []
         for row in Severity.objects.all().order_by("id"):
-            if "%s" % row.id == severity:
-                severity_list.append("<option value='%s' selected>%s</option>" % (row.id,row.name))
-            else:
-                severity_list.append("<option value='%s'>%s</option>" % (row.id,row.name))
+            severity_list.append("<option value='%s'>%s</option>" % (row.id,row.name))
 
         context['severity'] = severity_list
+        context['selected_severity'] = severity
 
 
         # last_seen
@@ -156,22 +158,20 @@ class EventList(ListView):
 
         # Manager
         if self.session.has_key('manager'):
-            manager = self.session['manager']
+            manager = pickle.loads(self.session['manager'])
         else:
-            manager = "xxxxx"
+            manager = []
 
         # Список manager
-        if manager == "xxxxx":
-            manager_list = ["<option value='xxxxx' selected>Все</option>"]
-        else:
-            manager_list = ["<option value='xxxxx'>Все</option>"]
+        manager_list = []
         for row in managers:
-            if row[0] == manager:
-                manager_list.append("<option value='%s' selected>%s</option>" % (row[0],row[0]))
-            else:
-                manager_list.append("<option value='%s'>%s</option>" % (row[0],row[0]))
+            manager_list.append("<option value='%s'>%s</option>" % (row[0],row[0]))
 
         context['manager'] = manager_list
+        context['selected_manager'] = manager
+
+
+
 
         if self.session.has_key('tz'):
             context['tz']= self.session['tz']
