@@ -25,6 +25,9 @@ $(document).ready(function() {
     $("#hidegroup").bind("click",HideContainer);
     $("#addgroup").bind("click",AddContainer);
     $("#showmembers").bind("click",ShowMembers);
+    $("#hidemembers").bind("click",HideMembers);
+    $("#deletemembers").bind("click",DeleteMembers);
+
 
     RowColor();
 
@@ -105,7 +108,7 @@ $(document).ready(function() {
 
     // Видимость кнопок
     $("#showgroup").hide();
-    if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); }
+    if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#hidemembers").hide(); $("#deletemembers").hide();}
     else { $("#addgroup").hide(); $("#addrow").show(); }
 
 
@@ -120,11 +123,82 @@ $(document).ready(function() {
 
 
 
+
+
+// Удаление выбранных элементов из контейнера
+function DeleteMembers(e) {
+
+    var id = [];
+    var i = $("table[group=group] tbody tr[group=members] td input:checked");
+    $.each( i, function( key, value ) {
+        id.push("'"+$(value).closest("tr").attr("row_id")+"'");
+    });
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?delgroup=["+id+"]",
+        function(data) {
+
+            $("table[group=group] tbody tr[group=members] td input:checked").closest("tr").empty();
+            $("info").text("Группировка "+$("table[group=group] tbody tr[group=members] td input").length+" элементов");
+        })
+
+}
+
+
+
+
+
+
+// Свернуть группировку
+function HideMembers(e) {
+
+    $("table[group=group] tbody tr[group=members]").empty();
+    $("#showmembers").show();
+    $("#hidemembers").hide();
+    $("#deletemembers").hide();
+    $("#addgroup").show();
+
+}
+
+
+
+
+
+
 // Развернуть группировку
 function ShowMembers(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?getmembers=ok",
         function(data) {
-            console.log(data);
+
+
+            data['members'].forEach(function(item,i,arr){
+
+                var t = "<tr group=members style=\"background-color:#C0C0C0;\" class=\"small\" row_id=\""+item["id"]+"\" >"
+                +"<td style=\"padding:0;\"></td>"
+                +"<td style=\"padding:0;\"><input type=\"checkbox\" class=\"input\"></td>"
+                +"<td style=\"padding:0;\"><a id=\"tooltip\" title='"+item['uuid']+"'>"+item['uuid'].substr(0,4)+"...</a></td>"
+                +"<td style=\"padding:0;\">"+item['first_seen']+"</td>"
+                +"<td style=\"padding:0;\">"+item['last_seen']+"</td>"
+                +"<td style=\"padding:0;\">"+item['status']+"</td>"
+                +"<td style=\"padding:0;\">"+item['severity']+"</td>"
+                +"<td style=\"padding:0;\">"+item['manager']+"</td>"
+                +"<td style=\"padding:0;\">"+item['event_class']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_system']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_group']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_class']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_net_address']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_location']+"</td>"
+                +"<td style=\"padding:0;\">"+item['element_identifier']+"</td>"
+                +"<td style=\"padding:0;\">"+item['element_sub_identifier']+"</td>"
+                +"</tr>";
+
+                $("table[group=group] tbody").append(t);
+
+            });
+
+            $("#showmembers").hide();
+            $("#hidemembers").show();
+            $("#deletemembers").show();
+            $("#addgroup").hide();
 
         })
 }

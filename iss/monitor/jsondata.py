@@ -4,6 +4,7 @@ import datetime
 import json
 import time
 import pickle
+import operator
 
 from pytz import timezone
 
@@ -84,9 +85,10 @@ def get_json(request):
             a.append(
                 {
                     'id':i.id,
+                    'dateorder':time.mktime(i.last_seen.timetuple()),
                     'uuid':i.uuid,
-                    'first_seen':i.first_seen.strftime("%d.%m.%Y %H:%M"),
-                    'last_seen':i.last_seen.strftime("%d.%m.%Y %H:%M"),
+                    'first_seen':i.first_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
+                    'last_seen':i.last_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
                     'status':i.status_id.name,
                     'severity':i.severity_id.name,
                     'manager':i.manager,
@@ -100,7 +102,27 @@ def get_json(request):
                     'element_sub_identifier':i.element_sub_identifier
                 }
             )
+
+        a = sorted(a, key=operator.itemgetter('dateorder'),reverse=True)
         response_data['members'] = a
+
+
+
+
+    if r.has_key("delgroup") and rg("delgroup") != '[]':
+        id_group = eval(request.GET["delgroup"])
+        e = events.objects.get(pk=request.session['containergroup'])
+        l = e.data['containergroup']
+        for item in id_group:
+            i=l.index(item)
+            del l[i]
+            a = events.objects.get(pk=item)
+            a.agregation = False
+            a.save()
+            del item
+
+        e.data['containergroup'] = l
+        e.save()
 
 
 

@@ -4,13 +4,15 @@
 <small>
     <button id="hidegroup" title="Скрыть группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
     <button id="showmembers" title="Развернуть группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon glyphicon-arrow-down" aria-hidden="true"></span></button>
-    Группировка {{ members }} элементов
+    <button id="hidemembers" title="Свернуть группировку" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon glyphicon-arrow-up" aria-hidden="true"></span></button>
+    <button id="deletemembers" title="Удалить" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+    <info>Группировка {{ members }} элементов</info>
 </small>
         <table group="group" class="table table-bordered" width="100%" showmembers=false>
             {% include "monitor/tablehead.html" %}
 
             <tbody>
-                <tr class="small">
+                <tr style="background-color:#8B4513;color:white;" class="small">
                     <td style="padding:0;"></td>
                     <td style="padding:0;"></td>
                     <td style="padding:0;"><a id="tooltip" title="{{ containergroup.uuid }}">{{ containergroup.uuid|truncatechars:7 }}</a></td>
