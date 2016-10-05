@@ -206,7 +206,10 @@ function AddRow(e) {
     $("#event").dialog({
         title:"Создание события",
         buttons:[{ text:"Сохранить",click: function() {
-        console.log("888888888888888888");
+            if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
+                console.log("888888888888888888");
+            }
+
         }},
             {text:"Закрыть",click: function() {
             $(this).dialog("close")}}
