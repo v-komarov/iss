@@ -27,6 +27,7 @@ $(document).ready(function() {
     $("#showmembers").bind("click",ShowMembers);
     $("#hidemembers").bind("click",HideMembers);
     $("#deletemembers").bind("click",DeleteMembers);
+    $("#addrow").bind("click",AddRow);
 
 
     RowColor();
@@ -117,7 +118,106 @@ $(document).ready(function() {
         $(this).prop( "checked", false );
     });
 
+
+
+
+
+
+    //// Валидация
+    $("#eventform").validate({
+        highlight: function(element, errorClass) {
+            $(element).add($(element).parent()).addClass("invalidElem");
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).add($(element).parent()).removeClass("invalidElem");
+        },
+
+        errorElement: "div",
+        errorClass: "errorMsg",
+
+          rules: {
+            event_class: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_system: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_group: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_class: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_net_address: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_location: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            element_identifier: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+          },
+
+    });// Валидация
+
+
+
+    $("#eventform table tbody tr td input").change(function(e) {
+        $("#eventform").validate().element($(e.target));
+    })
+
+
+
 });
+
+
+
+
+
+
+
+// Добавить строку события
+function AddRow(e) {
+
+    $("#event table tbody tr td input#event_class").val("");
+    $("#event table tbody tr td input#device_system").val("");
+    $("#event table tbody tr td input#device_group").val("");
+    $("#event table tbody tr td input#device_class").val("");
+    $("#event table tbody tr td input#device_net_address").val("");
+    $("#event table tbody tr td input#device_location").val("");
+    $("#event table tbody tr td input#element_identifier").val("");
+    $("#event table tbody tr td input#element_sub_identifier").val("");
+
+    $("#event").dialog({
+        title:"Создание события",
+        buttons:[{ text:"Сохранить",click: function() {
+        console.log("888888888888888888");
+        }},
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:400,
+        width:700
+
+    });
+
+}
 
 
 

@@ -176,3 +176,18 @@
 
 
 
+#event table tbody tr td input {
+    height: 30px;
+}
+
+#event table tbody tr td select {
+    height: 30px;
+}
+
+#event table tbody tr td {
+    padding-right:10px;
+}
+
+
+errorMsg {color: red;}
+.invalidElem {border: medium solid red;}

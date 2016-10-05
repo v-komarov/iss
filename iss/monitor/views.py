@@ -17,8 +17,12 @@ from django.shortcuts import render_to_response
 from django.db import connections
 from django.http import HttpResponse
 from django.views.generic import ListView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, permission_required
+
 from iss.monitor.models import events
 from iss.localdicts.models import Status,Severity
+
 
 
 cursor = connections["default"].cursor()
@@ -34,8 +38,10 @@ class EventList(ListView):
     model = events
     template_name = "monitor/event_list.html"
     paginate_by = 50
+    login_url = "/"
 
 
+    @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.session = request.session
         return super(ListView, self).dispatch(request, *args, **kwargs)
