@@ -190,6 +190,36 @@ $(document).ready(function() {
 
 
 
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+
+
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+
+
+
 
 // Добавить строку события
 function AddRow(e) {
@@ -207,7 +237,43 @@ function AddRow(e) {
         title:"Создание события",
         buttons:[{ text:"Сохранить",click: function() {
             if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
-                console.log("888888888888888888");
+                var status = $("#event table tbody tr td select#status").val();
+                var severity = $("#event table tbody tr td select#severity").val();
+
+                var event_class = $("#event table tbody tr td input#event_class").val();
+                var device_system = $("#event table tbody tr td input#device_system").val();
+                var device_group = $("#event table tbody tr td input#device_group").val();
+                var device_class = $("#event table tbody tr td input#device_class").val();
+                var device_net_address = $("#event table tbody tr td input#device_net_address").val();
+                var device_location = $("#event table tbody tr td input#device_location").val();
+                var element_identifier = $("#event table tbody tr td input#element_identifier").val();
+                var element_sub_identifier = $("#event table tbody tr td input#element_sub_identifier").val();
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+
+
+                $.ajax({
+                  url: "/monitor/events/jsondata/",
+                  type: "POST"
+                })
+
+                /*$.ajax({
+                  url: "/monitor/events/jsondata",
+                  type: "POST",
+                  data: data,
+                  success: success,
+                  dataType: dataType
+                });
+                */
             }
 
         }},
