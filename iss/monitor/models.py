@@ -15,7 +15,7 @@ class events(models.Model):
     id = models.CharField(max_length=255,primary_key=True, default=uuid.uuid4, editable=False)
     source = models.CharField(max_length=255,db_index=True,default="")
     datetime_evt = models.DateTimeField(db_index=True,null=True)
-    uuid = models.CharField(max_length=255,unique=True,db_index=True,null=True)
+    uuid = models.CharField(max_length=255,db_index=True,null=True,default=uuid.uuid4,)
     first_seen = models.DateTimeField(db_index=True,null=True)
     update_time = models.DateTimeField(db_index=True,null=True)
     last_seen = models.DateTimeField(db_index=True,null=True)
@@ -36,3 +36,4 @@ class events(models.Model):
     agregator = models.BooleanField(db_index=True,default=False)
     agregation = models.BooleanField(db_index=True,default=False)
 
+    byhand = models.BooleanField(db_index=True,default=False)

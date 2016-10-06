@@ -5,12 +5,14 @@ import json
 import time
 import pickle
 import operator
+import uuid
 
 from pytz import timezone
 
 from django.http import HttpResponse
 
 from iss.monitor.models import events
+from iss.localdicts.models import Severity,Status
 
 
 
@@ -128,17 +130,75 @@ def get_json(request):
 
 
 
+        if r.has_key("getevent") and rg("getevent") != '':
+            id_event = request.GET["getevent"]
+            e = events.objects.get(pk=id_event)
+            data = {
+                'id':e.id,
+                'event_class':e.event_class,
+                'severity':e.severity_id.id,
+                'device_system':e.device_system,
+                'device_group':e.device_group,
+                'device_class':e.device_class,
+                'device_net_address':e.device_net_address,
+                'device_location':e.device_location,
+                'element_identifier':e.element_identifier,
+                'element_sub_identifier':e.element_sub_identifier,
+                'status':e.status_id.id
+            }
+
+            response_data = data
+
+
+
+
     if request.method == "POST":
+        data = eval(request.body)
 
-        r = request.POST
-        rg = request.POST.get
+        if data.has_key("action") and data["action"] == 'create_event':
 
+            now = datetime.datetime.now(timezone('UTC'))
+            source = request.user.username
 
-        if r.has_key("addrow") and rg("addrow") != '':
-            pass
+            events.objects.create(
+                source = source,
+                datetime_evt = now,
+                first_seen = now,
+                update_time = now,
+                last_seen = now,
+                event_class = data["event_class"],
+                severity_id = Severity.objects.get(pk=data["severity"]),
+                manager = 'operator',
+                device_system = data["device_system"],
+                device_group = data["device_group"],
+                device_class = data["device_class"],
+                device_net_address = data["device_net_address"],
+                device_location = data["device_location"],
+                element_identifier = data["element_identifier"],
+                element_sub_identifier = data["element_sub_identifier"],
+                status_id = Status.objects.get(pk=data["status"]),
+                byhand = True
 
+            )
 
+        if data.has_key("action") and data["action"] == 'edit_event':
+            now = datetime.datetime.now(timezone('UTC'))
+            #source = request.user.username
 
+            e = events.objects.get(pk=data['event_id'])
+            e.update_time = now
+            e.last_seen = now
+            e.event_class = data["event_class"]
+            e.severity_id = Severity.objects.get(pk=data["severity"])
+            e.device_system = data["device_system"]
+            e.device_group = data["device_group"]
+            e.device_class = data["device_class"]
+            e.device_net_address = data["device_net_address"]
+            e.device_location = data["device_location"]
+            e.element_identifier = data["element_identifier"]
+            e.element_sub_identifier = data["element_sub_identifier"]
+            e.status_id=Status.objects.get(pk=data["status"])
+            e.save()
 
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
