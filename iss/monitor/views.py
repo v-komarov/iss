@@ -23,6 +23,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from iss.monitor.models import events
 from iss.localdicts.models import Status,Severity
 
+from iss.mydecorators import group_required,anonymous_required
 
 
 cursor = connections["default"].cursor()
@@ -41,7 +42,8 @@ class EventList(ListView):
     login_url = "/"
 
 
-    @method_decorator(login_required)
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='monitor',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.session = request.session
         return super(ListView, self).dispatch(request, *args, **kwargs)
