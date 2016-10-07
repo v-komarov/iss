@@ -31,7 +31,6 @@ $(document).ready(function() {
     $("#editrow").bind("click",EditRow);
     $("#editmail").bind("click",EditMail);
 
-
     RowColor();
 
 
@@ -253,6 +252,13 @@ $(document).ready(function() {
 
 
 
+    $("#listmail").change(function(e) {
+        console.log("it works!");
+
+    });
+
+
+
 });
 
 
@@ -290,6 +296,16 @@ function getCookie(name) {
 
 
 
+function ShowMail(e) {
+
+    console.log("it works!");
+
+}
+
+
+
+
+
 function EditMail(e) {
 
 
@@ -313,7 +329,10 @@ function EditMail(e) {
             $("#mail table tbody tr td input#element_sub_identifier").val(data['element_sub_identifier']);
 
 
+            data['list_mail'].forEach(function(item,i,arr){
+                $("#maillist").append($("<option value="+item['id_mail']+">"+item['label_mail']+"</option>"));
 
+            })
 
 
             $("#mail").dialog({

@@ -6,7 +6,9 @@ import time
 import pickle
 import operator
 import uuid
+import email
 
+from email.utils import parsedate_tz, mktime_tz, formatdate
 from pytz import timezone
 
 from django.http import HttpResponse
@@ -147,6 +149,7 @@ def get_json(request):
 
 
         if r.has_key("getevent") and rg("getevent") != '':
+            tz = request.session['tz']
             id_event = request.GET["getevent"]
             e = events.objects.get(pk=id_event)
             data = {
@@ -162,6 +165,21 @@ def get_json(request):
                 'element_sub_identifier':e.element_sub_identifier,
                 'status':e.status_id.id
             }
+
+            list_mail = []
+
+            # Если событие на основе почтового сообщения, то отправляем список почтовых сообщений
+            if e.bymail == True:
+                for m in e.data["mails"]:
+                    mail = pickle.loads(m)
+                    d = datetime.datetime.fromtimestamp(email.utils.mktime_tz(parsedate_tz(mail.get('Date'))))
+
+                    list_mail.append({
+                        'id_mail':mail.get('Message-ID')[1:-1],
+                        'label_mail':mail.get('X-Actual-From')+" ("+d.replace(tzinfo=timezone("UTC")).astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M:%S")+")"
+                    })
+
+                data["list_mail"] = list_mail
 
             response_data = data
 
