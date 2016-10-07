@@ -37,3 +37,4 @@ class events(models.Model):
     agregation = models.BooleanField(db_index=True,default=False)
 
     byhand = models.BooleanField(db_index=True,default=False)
+    bymail = models.BooleanField(db_index=True,default=False)

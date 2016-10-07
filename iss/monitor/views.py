@@ -39,7 +39,6 @@ class EventList(ListView):
     model = events
     template_name = "monitor/event_list.html"
     paginate_by = 50
-    login_url = "/"
 
 
     @method_decorator(login_required(login_url='/'))

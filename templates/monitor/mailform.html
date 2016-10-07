@@ -1,0 +1,71 @@
+<div id="mail" title="" hidden>
+    <form id="mailform">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="status">Status</label></td>
+                    <td>
+                    <select id="status" class="form-control input-sm" style="padding-right:10px;">
+                        {% for item in status %}
+                            {{ item|safe }}
+                        {% endfor %}
+                    </select>
+                    </td>
+                    <td><label for="severity">Severity</label></td>
+                    <td>
+                    <select id="severity" class="form-control input-sm">
+                        {% for item in severity %}
+                            {{ item|safe }}
+                        {% endfor %}
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="event_class">EventClass</label></td>
+                    <td><input type="text" class="form-control" id="event_class" name="event_class" placeholder="" /></td>
+                    <td><label for="device_system">DeviceSystem</label></td>
+                    <td><input type="text" class="form-control" id="device_system" name="device_system" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label for="device_group">DeviceGroup</label></td>
+                    <td><input type="text" class="form-control" id="device_group" name="device_group" placeholder="" /></td>
+                    <td><label for="device_class">DeviceClass</label></td>
+                    <td><input type="text" class="form-control" id="device_class" name="device_class" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label style="margin-right:10px;" for="device_net_address">DeviceNetAddress</label></td>
+                    <td><input type="text" class="form-control" id="device_net_address" name="device_net_address" placeholder="" /></td>
+                    <td><label for="device_location">DeviceLocation</label></td>
+                    <td><input type="text" class="form-control" id="device_location" name="device_location" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label for="element_identifier">ElementIdentifier</label></td>
+                    <td><input type="text" class="form-control" id="element_identifier" name="element_identifier" placeholder="" /></td>
+                    <td><label style="margin-right:10px;" for="element_sub_identifier">ElementSubIdentifier</label></td>
+                    <td><input type="text" class="form-control" id="element_sub_identifier" placeholder="" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+
+    <table style="margin-top:10px;">
+        <tbody>
+            <tr>
+                <td><label for="maillist">Выбрать сообщение</label></td>
+                <td>
+                    <select id="maillist" class="form-control input-sm" style="padding-right:10px; width:300px;">
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div  style="height:300px; overflow:scroll; padding: 5px; border: solid 1px black; margin-top:5px;">
+    </div>
+
+
+</div>
+
+

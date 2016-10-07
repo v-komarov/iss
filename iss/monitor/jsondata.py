@@ -63,7 +63,7 @@ def get_json(request):
                     g.append(item)
                     i = events.objects.get(pk=item)
                     i.agregation = True
-                    i.agregator = False
+                    #i.agregator = False
                     i.data['containergroup'] = []
                     i.save()
             e = events.objects.get(pk=request.session['containergroup'])
@@ -86,6 +86,19 @@ def get_json(request):
             a = []
             for item in l:
                 i = events.objects.get(pk=item)
+                if i.byhand == True:
+                    byhand = "yes"
+                else:
+                    byhand = "no"
+                if i.agregator == True:
+                    agregator = "yes"
+                else:
+                    agregator = "no"
+                if i.bymail == True:
+                    bymail = "yes"
+                else:
+                    bymail = "no"
+
                 a.append(
                     {
                         'id':i.id,
@@ -103,7 +116,10 @@ def get_json(request):
                         'device_net_address':i.device_net_address,
                         'device_location':i.device_location,
                         'element_identifier':i.element_identifier,
-                        'element_sub_identifier':i.element_sub_identifier
+                        'element_sub_identifier':i.element_sub_identifier,
+                        'byhand':byhand,
+                        'agregator':agregator,
+                        'bymail':bymail
                     }
                 )
 
@@ -154,6 +170,8 @@ def get_json(request):
 
     if request.method == "POST":
         data = eval(request.body)
+
+        print data
 
         if data.has_key("action") and data["action"] == 'create_event':
 

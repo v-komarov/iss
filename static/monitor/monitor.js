@@ -29,6 +29,7 @@ $(document).ready(function() {
     $("#deletemembers").bind("click",DeleteMembers);
     $("#addrow").bind("click",AddRow);
     $("#editrow").bind("click",EditRow);
+    $("#editmail").bind("click",EditMail);
 
 
     RowColor();
@@ -111,6 +112,8 @@ $(document).ready(function() {
     // Видимость кнопок
     $("#showgroup").hide();
     $("#editrow").hide();
+    $("#editmail").hide();
+
     if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#hidemembers").hide(); $("#deletemembers").hide();}
     else { $("#addgroup").hide(); $("#addrow").show(); }
 
@@ -185,6 +188,71 @@ $(document).ready(function() {
 
 
 
+
+
+    //// Валидация
+    $("#mailform").validate({
+        highlight: function(element, errorClass) {
+            $(element).add($(element).parent()).addClass("invalidElem");
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).add($(element).parent()).removeClass("invalidElem");
+        },
+
+        errorElement: "div",
+        errorClass: "errorMsg",
+
+          rules: {
+            event_class: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_system: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_group: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_class: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_net_address: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            device_location: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+            element_identifier: {
+                required: true,
+                minlength: 5,
+                maxlength: 30
+            },
+          },
+
+    });// Валидация
+
+
+
+    $("#mailform table tbody tr td input").change(function(e) {
+        $("#mailform").validate().element($(e.target));
+    })
+
+
+
+
+
+
 });
 
 
@@ -216,6 +284,118 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
+function EditMail(e) {
+
+
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?getevent="+row_id,
+        function(data) {
+
+            $("#mail table").attr("event_id",data['id']);
+
+            $("#mail table tbody tr td select#status").val(data['status']);
+            $("#mail table tbody tr td select#severity").val(data['severity']);
+
+            $("#mail table tbody tr td input#event_class").val(data['event_class']);
+            $("#mail table tbody tr td input#device_system").val(data['device_system']);
+            $("#mail table tbody tr td input#device_group").val(data['device_group']);
+            $("#mail table tbody tr td input#device_class").val(data['device_class']);
+            $("#mail table tbody tr td input#device_net_address").val(data['device_net_address']);
+            $("#mail table tbody tr td input#device_location").val(data['device_location']);
+            $("#mail table tbody tr td input#element_identifier").val(data['element_identifier']);
+            $("#mail table tbody tr td input#element_sub_identifier").val(data['element_sub_identifier']);
+
+
+
+
+
+            $("#mail").dialog({
+                title:"Почтовое сообщение",
+                buttons:[{ text:"Сохранить",click: function() {
+                    if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
+
+                        var event_id = $("#mail table").attr("event_id");
+
+                        var status = $("#mail table tbody tr td select#status").val();
+                        var severity = $("#mail table tbody tr td select#severity").val();
+
+                        var event_class = $("#mail table tbody tr td input#event_class").val();
+                        var device_system = $("#mail table tbody tr td input#device_system").val();
+                        var device_group = $("#mail table tbody tr td input#device_group").val();
+                        var device_class = $("#mail table tbody tr td input#device_class").val();
+                        var device_net_address = $("#mail table tbody tr td input#device_net_address").val();
+                        var device_location = $("#mail table tbody tr td input#device_location").val();
+                        var element_identifier = $("#mail table tbody tr td input#element_identifier").val();
+                        var element_sub_identifier = $("#mail table tbody tr td input#element_sub_identifier").val();
+
+                        var csrftoken = getCookie('csrftoken');
+
+                        $.ajaxSetup({
+                            beforeSend: function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
+                            }
+                        });
+
+
+
+                        $.ajax({
+                          url: "/monitor/events/jsondata/",
+                          type: "POST",
+                          dataType: 'text',
+                          data:"{"
+                            +"'event_id':'"+event_id+"',"
+                            +"'action':'edit_event',"
+                            +"'status':"+status+","
+                            +"'severity':"+severity+","
+                            +"'event_class':'"+event_class+"',"
+                            +"'device_system':'"+device_system+"',"
+                            +"'device_group':'"+device_group+"',"
+                            +"'device_class':'"+device_class+"',"
+                            +"'device_net_address':'"+device_net_address+"',"
+                            +"'device_location':'"+device_location+"',"
+                            +"'element_identifier':'"+element_identifier+"',"
+                            +"'element_sub_identifier':'"+element_sub_identifier+"'"
+                            +"}",
+                            success: function(result) {
+                                window.location=$("#menumonitor a").attr("href");
+                            }
+
+                        })
+
+                    }
+
+                }},
+                    {text:"Закрыть",click: function() {
+                    $(this).dialog("close")}}
+                ],
+                modal:true,
+                minWidth:400,
+                width:700
+
+            });
+
+
+
+
+
+
+
+        })
+
+
+}
+
+
+
 
 
 
@@ -458,13 +638,18 @@ function ShowMembers(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?getmembers=ok",
         function(data) {
 
-
             data['members'].forEach(function(item,i,arr){
 
-                var t = "<tr group=members style=\"background-color:#C0C0C0;\" class=\"small\" row_id=\""+item["id"]+"\" >"
-                +"<td style=\"padding:0;\"></td>"
+                var icon = "";
+
+                if (item["byhand"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>"; }
+                if (item["agregator"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-align-justify\" aria-hidden=\"true\"></span>"; }
+                if (item["bymail"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-envelope\" aria-hidden=\"true\"></span>"; }
+
+                var t = "<tr group=members style=\"background-color:#C0C0C0;\" class=\"small\" row_id=\""+item["id"]+"\" marked=\"no\">"
+                +"<td style=\"padding:0;\">"+icon+"</td>"
                 +"<td style=\"padding:0;\"><input type=\"checkbox\" class=\"input\"></td>"
-                +"<td style=\"padding:0;\"><a id=\"tooltip\" title='"+item['uuid']+"'>"+item['uuid'].substr(0,4)+"...</a></td>"
+                +"<td style=\"padding:0;\"><a id=\"tooltip\" title='"+item['uuid']+"'>"+escape(item['uuid']).substr(0,4)+"...</a></td>"
                 +"<td style=\"padding:0;\">"+item['first_seen']+"</td>"
                 +"<td style=\"padding:0;\">"+item['last_seen']+"</td>"
                 +"<td style=\"padding:0;\">"+item['status']+"</td>"
@@ -489,9 +674,24 @@ function ShowMembers(e) {
             $("#deletemembers").show();
             $("#addgroup").hide();
 
+            $("table[group=group] tbody tr[group=members]").bind("click",ClickGroupRow);
+
         })
 }
 
+
+
+
+
+
+// Выделение строки содержания контейнера
+function ClickGroupRow(e) {
+
+        $("table[group=group] tbody tr[group=members]").css("background-color","#C0C0C0");
+        $(this).css("background-color","#F0E68C");
+        $("table[group=group] tbody tr[group=members]").attr("marked","no");
+        $(this).attr("marked","yes");
+}
 
 
 
@@ -618,6 +818,9 @@ function ClickEventRow(e) {
         }
         if ($(this).attr("byhand") == "yes") { $("#editrow").show(); }
         else { $("#editrow").hide(); }
+        if ($(this).attr("bymail") == "yes") { $("#editmail").show(); }
+        else { $("#editmail").hide(); }
+
 }
 
 
