@@ -147,7 +147,7 @@ def get_json(request):
             e.save()
 
 
-
+        # Данные по событию для отображения в форме
         if r.has_key("getevent") and rg("getevent") != '':
             tz = request.session['tz']
             id_event = request.GET["getevent"]
@@ -171,15 +171,35 @@ def get_json(request):
             # Если событие на основе почтового сообщения, то отправляем список почтовых сообщений
             if e.bymail == True:
                 for m in e.data["mails"]:
-                    mail = pickle.loads(m)
-                    d = datetime.datetime.fromtimestamp(email.utils.mktime_tz(parsedate_tz(mail.get('Date'))))
-
+                    d = datetime.datetime.fromtimestamp(email.utils.mktime_tz(parsedate_tz(m["mail_date"])))
                     list_mail.append({
-                        'id_mail':mail.get('Message-ID')[1:-1],
-                        'label_mail':mail.get('X-Actual-From')+" ("+d.replace(tzinfo=timezone("UTC")).astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M:%S")+")"
+                        'id_mail':m["mail_id"].replace(">","").replace("<",""),
+                        'label_mail':m["mail_from"].replace(">","").replace("<","")+" ("+d.replace(tzinfo=timezone("UTC")).astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M:%S")+")"
                     })
 
                 data["list_mail"] = list_mail
+
+            response_data = data
+
+
+
+        ## Содержание письма
+        if r.has_key("getmail") and rg("getmail") != '':
+
+            data = {}
+            id_event = request.GET["event_id"]
+            id_mail = request.GET["mail_id"]
+            e = events.objects.get(pk=id_event)
+            for m in e.data["mails"]:
+                if m["mail_id"] == u"<%s>" % id_mail:
+                    files = []
+                    for a in m["attachment"]:
+                        files.append(a["file_name"])
+                    data = {
+                        'subject':m["subject"],
+                        'body':m["mail_body"],
+                        'files':files
+                    }
 
             response_data = data
 

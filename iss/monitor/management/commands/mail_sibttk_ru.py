@@ -9,7 +9,10 @@ from iss.monitor.models import events
 import pickle
 import datetime
 import binascii
+from StringIO import StringIO
 import poplib,getpass,email
+from email.header import decode_header
+
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
 
@@ -50,25 +53,78 @@ class Command(BaseCommand):
             sub = h[0][0].decode(h[0][1]) if h[0][1] else h[0][0]
             message_id = mail.get('Message-ID')
             message_from = mail.get('From')
+            message_from = message_from[message_from.find("<"):message_from.find(">")+1]
 
-            d = {}
-            d["mails"] = []
-            d["mails"].append(pickle.dumps(mail))
 
-            events.objects.create(
-                source=message_from,
-                uuid=message_id,
-                datetime_evt=now,
-                first_seen=now,
-                update_time=now,
-                last_seen=now,
-                severity_id=Severity.objects.get(pk=3),
-                manager="issmail@sibttk.ru",
-                status_id=Status.objects.get(pk=0),
-                bymail = True,
-                data = d
-            )
+            ### Тело письма
+            body = ""
+            if mail.is_multipart():
+                for part in mail.walk():
+                    ctype = part.get_content_type()
+                    cdispo = str(part.get('Content-Disposition'))
+
+                    # skip any text/plain (txt) attachments
+                    if ctype == 'text/plain' and 'attachment' not in cdispo:
+                        body = part.get_payload(decode=True)  # decode
+                        break
+            # not multipart - i.e. plain text, no attachments, keeping fingers crossed
+            else:
+                body = mail.get_payload(decode=True)
+
+            # Почтовое сообщение для хранения
+            m = {
+                'mail_id':message_id,
+                'mail_date':mail.get('Date'),
+                'mail_from':message_from,
+                'subject':sub,
+                'mail_body':body,
+                'attachment':[]
+
+            }
+
+            ## Вложение файлов
+            if mail.is_multipart():
+                for part in mail.walk():
+                    ctype = part.get_content_type()
+
+                    if ctype in ['image/jpeg', 'image/png', 'application/pdf', 'application/zip', 'application/gzip', 'application/msword', 'application/vnd.ms-excel']:
+                        file_data = StringIO(part.get_payload(decode=True))
+                        file_name = part.get_filename()
+                        if decode_header(file_name)[0][1] is not None:
+                            file_name = str(decode_header(file_name)[0][0]).decode(decode_header(file_name)[0][1]).replace(" ","_")
+                        m["attachment"].append({
+                            'file_name':file_name,
+                            'mime_type':ctype,
+                            'file_data':pickle.dumps(file_data)
+                        })
+
+            # Поиск в теле письма ISS-ID:
+            if body.find("ISS-ID:") > 0:
+                pass
+
+            else:
+                d = {}
+                d["mails"] = []
+                d["mails"].append(m)
+
+                events.objects.create(
+                    source=message_from,
+                    uuid=message_id,
+                    datetime_evt=now,
+                    first_seen=now,
+                    update_time=now,
+                    last_seen=now,
+                    severity_id=Severity.objects.get(pk=3),
+                    manager="issmail@sibttk.ru",
+                    status_id=Status.objects.get(pk=0),
+                    bymail = True,
+                    data = d
+                )
+
+
+
             M.dele(i + 1)
+
 
         M.quit()
 

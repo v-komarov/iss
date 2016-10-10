@@ -251,9 +251,31 @@ $(document).ready(function() {
 
 
 
+    // Выбор почтового сообщения для отображения
+    $("#maillist").change(function(e) {
+        var mail_id = $(this).val()
+        var event_id =  $("#mail table").attr("event_id");
+        // Отображение содержимого письма
+        if (mail_id != "") {
 
-    $("#listmail").change(function(e) {
-        console.log("it works!");
+            var jqxhr = $.getJSON("/monitor/events/jsondata?getmail=ok&mail_id="+mail_id+"&event_id="+event_id,
+                function(data) {
+                    $("#mailtext subj").text(data["subject"]);
+                    $("#mailtext mailtext").text(data["body"]);
+
+                        data['files'].forEach(function(item,i,arr){
+                            $("#mailtext dl attachement").append("<dd><a href=\"#\">"+item+"</a></dd>");
+                        })
+
+                })
+
+        }
+
+        else {
+            $("#mailtext subj").text("");
+            $("#mailtext mailtext").text("");
+            $("#mailtext dl attachement").empty();
+            }
 
     });
 
@@ -296,18 +318,15 @@ function getCookie(name) {
 
 
 
-function ShowMail(e) {
-
-    console.log("it works!");
-
-}
-
-
-
-
 
 function EditMail(e) {
 
+
+    $("#maillist").empty();
+    $("#maillist").append($("<option value=\"\" selected></option>"));
+    $("#mailtext subj").text("");
+    $("#mailtext mailtext").text("");
+    $("#mailtext dl attachement").empty();
 
     var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
 

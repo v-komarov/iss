@@ -55,7 +55,6 @@
                 <td><label for="maillist">Выбрать сообщение</label></td>
                 <td>
                     <select id="maillist" class="form-control input-sm" style="padding-right:10px; width:300px;">
-                        <option value="" selected></option>
                     </select>
                 </td>
             </tr>
@@ -63,7 +62,16 @@
     </table>
 
 
-    <div  style="height:300px; overflow:scroll; padding: 5px; border: solid 1px black; margin-top:5px;">
+    <div  id="mailtext" style="height:300px; overflow:scroll; padding: 5px; border: solid 1px black; margin-top:5px;">
+        <dl>
+            <dt>Тема:</dt>
+            <dd><subj></subj></dd>
+            <dt>Сообщение:</dt>
+            <dd><mailtext></mailtext></dd>
+            <dt>Приложение:</dt>
+            <attachement></attachement>
+        </dl>
+
     </div>
 
 
