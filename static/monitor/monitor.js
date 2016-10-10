@@ -264,7 +264,7 @@ $(document).ready(function() {
                     $("#mailtext mailtext").text(data["body"]);
 
                         data['files'].forEach(function(item,i,arr){
-                            $("#mailtext dl attachement").append("<dd><a href=\"#\">"+item+"</a></dd>");
+                            $("#mailtext dl attachement").append("<dd><a href=\"/monitor/events/filedata?event_id="+$("#mail table").attr("event_id")+"&filename="+item+"\">"+item+"</a></dd>");
                         })
 
                 })

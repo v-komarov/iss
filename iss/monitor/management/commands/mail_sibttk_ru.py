@@ -17,6 +17,9 @@ from pytz import timezone
 from iss.localdicts.models import Status,Severity
 
 
+from transliterate import translit
+from transliterate import detect_language
+
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
@@ -92,6 +95,8 @@ class Command(BaseCommand):
                         file_name = part.get_filename()
                         if decode_header(file_name)[0][1] is not None:
                             file_name = str(decode_header(file_name)[0][0]).decode(decode_header(file_name)[0][1]).replace(" ","_")
+                            if detect_language(file_name) == "ru":
+                                file_name = translit(file_name,reversed=True)
                         m["attachment"].append({
                             'file_name':file_name,
                             'mime_type':ctype,
@@ -99,7 +104,7 @@ class Command(BaseCommand):
                         })
 
             # Поиск в теле письма ISS-ID:
-            if body.find("ISS-ID:") > 0:
+            if body.find("ISS-ID:<") > 0:
                 pass
 
             else:

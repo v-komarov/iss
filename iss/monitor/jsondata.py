@@ -18,6 +18,9 @@ from iss.localdicts.models import Severity,Status
 
 
 
+
+
+
 def get_json(request):
 
     response_data = {}
