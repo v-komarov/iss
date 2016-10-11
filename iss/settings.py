@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'iss.localdicts',
     'iss.begin',
     'iss.monitor',
+    'iss.equipment',
 ]
 
 MIDDLEWARE_CLASSES = [

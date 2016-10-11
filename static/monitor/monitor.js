@@ -33,7 +33,6 @@ $(document).ready(function() {
 
     RowColor();
 
-
     // Фильтр статусов
     $("#filter-status").multiselect({
         header:true,

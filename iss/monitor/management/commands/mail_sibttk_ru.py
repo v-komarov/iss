@@ -25,8 +25,8 @@ krsk_tz = timezone(tz)
 
 
 class Command(BaseCommand):
-    args = '<zenoss message ...>'
-    help = 'saving zenoss message'
+    args = '<mail message ...>'
+    help = 'saving mail message'
 
 
 
