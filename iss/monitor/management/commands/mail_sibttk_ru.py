@@ -104,8 +104,19 @@ class Command(BaseCommand):
                         })
 
             # Поиск в теле письма ISS-ID:
-            if body.find("ISS-ID:<") > 0:
-                pass
+            start = body.find("ISS-ID:<")
+            if start > 0:
+                end = body.find(">",start)
+                mail_iss_id = body[start+7:end+1]
+
+                ### Поиск сообщения
+                if events.objects.filter(uuid=mail_iss_id).count() == 1:
+                    e = events.objects.get(uuid=mail_iss_id)
+                    d = e.data
+                    d["mails"].append(m)
+                    e.data = d
+                    e.save()
+
 
             else:
                 d = {}
