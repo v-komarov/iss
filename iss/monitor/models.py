@@ -38,3 +38,6 @@ class events(models.Model):
 
     byhand = models.BooleanField(db_index=True,default=False)
     bymail = models.BooleanField(db_index=True,default=False)
+
+    summary = models.CharField(max_length=255,db_index=True,null=True)
+

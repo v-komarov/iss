@@ -38,7 +38,7 @@ class EventList(ListView):
 
     model = events
     template_name = "monitor/event_list.html"
-    paginate_by = 50
+    paginate_by = 100
 
 
     @method_decorator(login_required(login_url='/'))
@@ -92,12 +92,12 @@ class EventList(ListView):
                     pass
 
         if len(q) == 0:
-            return events.objects.filter(agregation=False).order_by('-update_time')
+            return events.objects.filter(agregation=False).order_by('-update_time')[:1000]
         else:
             str_q = " & ".join(q)
             str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-update_time')" % str_q
 
-            return eval(str_sql)
+            return (eval(str_sql))[:1000]
 
 
 

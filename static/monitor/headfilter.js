@@ -1,16 +1,17 @@
 $(document).ready(function() {
 
-    $("table[group=events] thead tr th").bind("click",FirstSeenL);
-    //$("table[group=events] thead tr th #th_first_seen_i").bind("click",FirstSeenI);
+    $("#th_first_seen_i").hide();
+
+    //$("#th_first_seen_l").bind("click",FirstSeenL);
+    //$("#th_first_seen_i").bind("dbclick",FirstSeenI);
 
 });
 
 
 function FirstSeenL(e) {
 
-    console.log("dsfdfdf");
-    //$("table[group=events] thead tr th #th_first_seen_l").toggle(false);
-    //$("table[group=events] thead tr th #th_first_seen_i").toggle(true);
+    $("#th_first_seen_l").toggle(false);
+    $("#th_first_seen_i").toggle(true);
 
 }
 
@@ -18,7 +19,7 @@ function FirstSeenL(e) {
 
 function FirstSeenI(e) {
 
-    $("table[group=events] thead tr th div#th_first_seen_l").toggle(true);
-    $("table[group=events] thead tr th div#th_first_seen_i").toggle(false);
+    $("#th_first_seen_l").toggle(true);
+    $("#th_first_seen_i").toggle(false);
 
 }

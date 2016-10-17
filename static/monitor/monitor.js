@@ -10,8 +10,10 @@ $(document).ready(function() {
     //setInterval('UpdateData();',5000);
     $("#clearsearch").bind("click",ClearSearch);
     $("#runsearch").bind("click",RunSearch);
-    $("#uuid").bind("keyup",FindUuid);
+    //$("#uuid").bind("keyup",FindUuid);
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
+    $("table[group=events] tbody tr").bind("mouseenter",EnterRow);
+    $("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
 
     $("#clearfirstseen").bind("click",ClearFirstSeen);
     $("#clearlastseen").bind("click",ClearLastSeen);
@@ -24,14 +26,14 @@ $(document).ready(function() {
     $("#showgroup").bind("click",ShowContainer);
     $("#hidegroup").bind("click",HideContainer);
     $("#addgroup").bind("click",AddContainer);
-    $("#showmembers").bind("click",ShowMembers);
-    $("#hidemembers").bind("click",HideMembers);
+    //$("#showmembers").bind("click",ShowMembers);
+    //$("#hidemembers").bind("click",HideMembers);
     $("#deletemembers").bind("click",DeleteMembers);
     $("#addrow").bind("click",AddRow);
     $("#editrow").bind("click",EditRow);
     $("#editmail").bind("click",EditMail);
 
-    RowColor();
+    //RowColor();
 
     // Фильтр статусов
     $("#filter-status").multiselect({
@@ -112,8 +114,8 @@ $(document).ready(function() {
     $("#editrow").hide();
     $("#editmail").hide();
 
-    if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#hidemembers").hide(); $("#deletemembers").hide();}
-    else { $("#addgroup").hide(); $("#addrow").show(); }
+    if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#deletemembers").show();}
+    else { $("#addgroup").hide(); $("#addrow").show(); $("#deletemembers").hide();}
 
 
     // Сброс строковых checkbox-ов
@@ -122,7 +124,7 @@ $(document).ready(function() {
     });
 
 
-
+    $("#containertools").hide();
 
 
 });
@@ -139,17 +141,18 @@ $(document).ready(function() {
 // Удаление выбранных элементов из контейнера
 function DeleteMembers(e) {
 
+    var container_row = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
     var id = [];
-    var i = $("table[group=group] tbody tr[group=members] td input:checked");
+    var i = $("table[group=events] tbody tr[group=members] td input:checked");
     $.each( i, function( key, value ) {
         id.push("'"+$(value).closest("tr").attr("row_id")+"'");
     });
 
-    var jqxhr = $.getJSON("/monitor/events/jsondata?delgroup=["+id+"]",
+    var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+container_row+"&delgroup=["+id+"]",
         function(data) {
 
-            $("table[group=group] tbody tr[group=members] td input:checked").closest("tr").empty();
-            $("info").text("Группировка "+$("table[group=group] tbody tr[group=members] td input").length+" элементов");
+            ShowContainer();
+            ShowMembersCount();
         })
 
 }
@@ -157,24 +160,30 @@ function DeleteMembers(e) {
 
 
 
-
-
-// Свернуть группировку
-function HideMembers(e) {
-
-    $("table[group=group] tbody tr[group=members]").empty();
-    $("#showmembers").show();
-    $("#hidemembers").hide();
-    $("#deletemembers").hide();
-    $("#addgroup").show();
-
+function ShowMembersCount() {
+     $("info").text("Группировка "+$("table[group=events] tbody tr[group=members] td input").length+" элементов");
 }
 
 
 
 
+/*
+// Свернуть группировку
+function HideMembers(e) {
+
+    $("table[group=group] tbody tr[group=members]").empty();
+    //$("#showmembers").show();
+    //$("#hidemembers").hide();
+    $("#deletemembers").hide();
+    $("#addgroup").show();
+
+}
+*/
 
 
+
+
+/*
 // Развернуть группировку
 function ShowMembers(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?getmembers=ok",
@@ -218,7 +227,7 @@ function ShowMembers(e) {
 
         })
 }
-
+*/
 
 
 
@@ -228,15 +237,22 @@ function ShowMembers(e) {
 // Добавление в группировку
 function AddContainer(e) {
 
+    var container_row = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
     var id = []
     var row_list = $("table[group=events] tbody tr[group=true]");
     $.each( row_list, function( key, value ) {
         id.push("'"+$(value).attr("row_id")+"'");
     });
 
-    var jqxhr = $.getJSON("/monitor/events/jsondata?addgroup=["+id+"]",
+    var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+container_row+"&addgroup=["+id+"]",
         function(data) {
-            window.location.reload();
+            //window.location.reload();
+                // Скрываем добавленные события из общего списка
+                $.each( row_list, function( key, value ) {
+                    $(value).hide();
+                });
+            ShowContainer();
+            ShowMembersCount();
         })
 
 }
@@ -250,11 +266,49 @@ function AddContainer(e) {
 
 function ShowContainer(e) {
     var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    //$("table[group=events] tbody tr[marked=yes]").attr("container","yes");
+    $("#containertools").show();
+    $("table[group=events] tbody tr").unbind("click",ClickEventRow);
 
-    var jqxhr = $.getJSON("/monitor/events/jsondata?containergroup="+row_id,
+    var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+row_id+"&getmembers=ok",
         function(data) {
-            window.location.reload();
+            $("table tr[group=members]").empty();
+            data['members'].forEach(function(item,i,arr){
+
+                var icon = "";
+
+                if (item["byhand"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>"; }
+                if (item["agregator"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-align-justify\" aria-hidden=\"true\"></span>"; }
+                if (item["bymail"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-envelope\" aria-hidden=\"true\"></span>"; }
+
+                var t = "<tr group=members style=\"background-color:#F5DEB3;\" class=\"small\" row_id=\""+item["id"]+"\" marked=\"no\" bymail=\""+item["bymail"]+"\" >"
+                +"<td style=\"padding:0;\">"+icon+"</td>"
+                +"<td style=\"padding:0;\"><input type=\"checkbox\" class=\"input\"></td>"
+                +"<td style=\"padding:0;\">"+item['first_seen']+"</td>"
+                +"<td style=\"padding:0;\">"+item['last_seen']+"</td>"
+                +"<td style=\"padding:0;\">"+item['status']+"</td>"
+                +"<td style=\"padding:0;\">"+item['severity']+"</td>"
+                +"<td style=\"padding:0;\">"+item['manager']+"</td>"
+                +"<td style=\"padding:0;\">"+item['event_class']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_system']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_group']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_class']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_net_address']+"</td>"
+                +"<td style=\"padding:0;\">"+item['device_location']+"</td>"
+                +"<td style=\"padding:0;\">"+item['element_identifier']+"</td>"
+                +"<td style=\"padding:0;\">"+item['element_sub_identifier']+"</td>"
+                +"<td style=\"padding:0;\">"+item['summary']+"</td>"
+                +"</tr>";
+
+                $("table[group=events] tbody tr[marked=yes]").after(t);
+
+            });
+
+        ShowMembersCount();
+
         })
+
+
 }
 
 
@@ -262,10 +316,15 @@ function ShowContainer(e) {
 
 function HideContainer(e) {
 
+    $("table[group=events] tbody tr").bind("click",ClickEventRow);
+    $("#containertools").hide();
+    $("table tr[group=members]").empty();
+/*
     var jqxhr = $.getJSON("/monitor/events/jsondata?containergroup=_____",
         function(data) {
             window.location.reload();
         })
+*/
 
 }
 
@@ -319,7 +378,7 @@ function FilterManager() {
 
 
 
-
+/*
 function RowColor() {
     $("table[group=events] tbody tr[severity_id=0]").css("color","red");
     $("table[group=events] tbody tr[severity_id=1]").css("color","brown");
@@ -327,7 +386,7 @@ function RowColor() {
     $("table[group=events] tbody tr[severity_id=3]").css("color","#00008B");
     $("table[group=events] tbody tr[severity_id=4]").css("color","#006400");
 }
-
+*/
 
 
 
@@ -348,6 +407,22 @@ function ClickEventRow(e) {
         if ($(this).attr("bymail") == "yes") { $("#editmail").show(); }
         else { $("#editmail").hide(); }
 
+}
+
+
+
+
+function EnterRow(e) {
+    if ($(this).attr("marked") == "no") {
+        $(this).css("background-color"," #DCDCDC");
+    }
+}
+
+
+function LeaveRow(e) {
+    if ($(this).attr("marked") == "no") {
+        $(this).css("background-color","");
+    }
 }
 
 

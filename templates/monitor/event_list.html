@@ -11,7 +11,7 @@
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/monitor.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/dialogs.js"></script>
-<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/headfilter.js"></script>
+{# <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/headfilter.js"></script> #}
 
 
 
@@ -95,9 +95,10 @@
 </div>
 
 
-{% if containergroup != False %}
-    {% include "monitor/containergroup.html" %}
-{% endif %}
+
+{% include "monitor/containergroup.html" %}
+
+
 
 <div class="row" style="margin:0;">
 
@@ -127,7 +128,7 @@
 
 
 
-    <table group="events" class="table table-bordered" width="100%" hidden>
+    <table group="events" class="table table-bordered table-striped" width="100%" hidden>
 
 
         {% include "monitor/tablehead.html" %}
@@ -147,7 +148,6 @@
                         {% endif %}
                     </td>
                     <td style="padding:0;"><input type="checkbox" class="input"></td>
-                    <td style="padding:0;"><a id="tooltip" title="{{ row.uuid }}">{{ row.uuid|truncatechars:7 }}</a></td>
                     {% timezone tz %}
                     <td style="padding:0;">{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
                     {# <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td> #}
@@ -164,6 +164,7 @@
                     <td style="padding:0;">{{ row.device_location }}</td>
                     <td style="padding:0;">{{ row.element_identifier }}</td>
                     <td style="padding:0;">{{ row.element_sub_identifier }}</td>
+                    <td style="padding:0;">{{ row.summary }}</td>
 
                 </tr>
             </tbody>

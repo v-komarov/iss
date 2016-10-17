@@ -59,19 +59,20 @@ def get_json(request):
             else:
                 request.session['containergroup'] = request.GET["containergroup"]
 
-
+        # Добавление в группировку (контейнер)
         if r.has_key("addgroup") and rg("addgroup") != '[]':
+            container_row = request.GET["container_row"]
             id_group = eval(request.GET["addgroup"])
             g = []
             for item in id_group:
-                if request.session['containergroup'] != item:
+                if container_row != item:
                     g.append(item)
                     i = events.objects.get(pk=item)
                     i.agregation = True
                     #i.agregator = False
                     i.data['containergroup'] = []
                     i.save()
-            e = events.objects.get(pk=request.session['containergroup'])
+            e = events.objects.get(pk=container_row)
             data = e.data
             if data.has_key('containergroup'):
                 for a in g:
@@ -85,8 +86,9 @@ def get_json(request):
 
 
         if r.has_key("getmembers") and rg("getmembers") != '':
+            container_row = request.GET["container_row"]
             tz = request.session['tz']
-            e = events.objects.get(pk=request.session['containergroup'])
+            e = events.objects.get(pk=container_row)
             l = e.data['containergroup']
             a = []
             for item in l:
@@ -124,7 +126,8 @@ def get_json(request):
                         'element_sub_identifier':i.element_sub_identifier,
                         'byhand':byhand,
                         'agregator':agregator,
-                        'bymail':bymail
+                        'bymail':bymail,
+                        'summary':i.summary
                     }
                 )
 
@@ -133,18 +136,20 @@ def get_json(request):
 
 
 
-
+        # Удаление из группировки
         if r.has_key("delgroup") and rg("delgroup") != '[]':
+            container_row = request.GET["container_row"]
             id_group = eval(request.GET["delgroup"])
-            e = events.objects.get(pk=request.session['containergroup'])
+            e = events.objects.get(pk=container_row)
             l = e.data['containergroup']
             for item in id_group:
-                i=l.index(item)
-                del l[i]
-                a = events.objects.get(pk=item)
-                a.agregation = False
-                a.save()
-                del item
+                if item != container_row:
+                    i=l.index(item)
+                    del l[i]
+                    a = events.objects.get(pk=item)
+                    a.agregation = False
+                    a.save()
+                    del item
 
             e.data['containergroup'] = l
             e.save()

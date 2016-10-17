@@ -33,7 +33,8 @@ class Command(BaseCommand):
         for table in 'event_summary','event_archive':
 
             cursor = connections["zenoss_krsk"].cursor()
-            q = "SELECT first_seen,update_time,last_seen,summary,message,details_json,event_class.name,severity_id,uuid,element_identifier,element_sub_identifier,status_id FROM %s LEFT JOIN event_class ON %s.event_class_id=event_class.id WHERE update_time > %s ORDER BY first_seen;" % (table,table,timedelta)
+            q = "SELECT first_seen,update_time,last_seen,summary,message,details_json,event_class.name,severity_id,uuid,element_identifier,element_sub_identifier,status_id,summary FROM %s LEFT JOIN event_class ON %s.event_class_id=event_class.id WHERE update_time > %s ORDER BY first_seen;" % (table,table,timedelta)
+            #q = "SELECT first_seen,update_time,last_seen,summary,message,details_json,event_class.name,severity_id,uuid,element_identifier,element_sub_identifier,status_id,summary FROM %s LEFT JOIN event_class ON %s.event_class_id=event_class.id ORDER BY first_seen;" % (table,table)
 
             cursor.execute(q)
 
@@ -84,7 +85,9 @@ class Command(BaseCommand):
                         device_system = device_system,
                         element_identifier = row[9],
                         element_sub_identifier = row[10],
-                        status_id = Status.objects.get(pk=row[11])
+                        status_id = Status.objects.get(pk=row[11]),
+                        summary = row[12]
+
                     )
 
 
@@ -107,6 +110,7 @@ class Command(BaseCommand):
                     evt.element_identifier = row[9]
                     evt.element_sub_identifier = row[10]
                     evt.status_id = Status.objects.get(pk=row[11])
+                    evt.summary = row[12]
                     evt.save()
 
         print "ok"
