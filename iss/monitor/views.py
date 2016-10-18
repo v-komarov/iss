@@ -52,6 +52,9 @@ class EventList(ListView):
     def get_queryset(self):
 
         q = []
+        if self.session.has_key("filtergroup"):
+            q.append("Q(agregator=%s)" % True)
+
         if self.session.has_key("status_id"):
             if pickle.loads(self.session["status_id"]) != []:
                 qs = []
@@ -194,6 +197,14 @@ class EventList(ListView):
             context['tz']= self.session['tz']
         else:
             context['tz']= 'UTC'
+
+
+
+        if self.session.has_key('filtergroup'):
+            context["filtergroup"] = True
+        else:
+            context["filtergroup"] = False
+
 
 
         return context

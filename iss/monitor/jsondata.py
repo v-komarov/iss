@@ -53,11 +53,19 @@ def get_json(request):
             else:
                 request.session['search'] = request.GET["search"]
 
+        ### Показывать только группировки
+        if r.has_key("filtergroup") and rg("filtergroup") != '':
+            if request.session.has_key("filtergroup"):
+                del request.session['filtergroup']
+            else:
+                request.session['filtergroup'] = "ok"
+
         if r.has_key("containergroup") and rg("containergroup") != '':
             if request.GET["containergroup"] == "_____":
                 del request.session['containergroup']
             else:
                 request.session['containergroup'] = request.GET["containergroup"]
+
 
         # Добавление в группировку (контейнер)
         if r.has_key("addgroup") and rg("addgroup") != '[]':

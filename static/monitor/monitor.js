@@ -10,7 +10,6 @@ $(document).ready(function() {
     //setInterval('UpdateData();',5000);
     $("#clearsearch").bind("click",ClearSearch);
     $("#runsearch").bind("click",RunSearch);
-    //$("#uuid").bind("keyup",FindUuid);
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
     $("table[group=events] tbody tr").bind("mouseenter",EnterRow);
     $("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
@@ -21,19 +20,15 @@ $(document).ready(function() {
     $("#runstatus").bind("click",FilterStatus);
     $("#runseverity").bind("click",FilterSeverity);
     $("#runmanager").bind("click",FilterManager);
+    $("#filtergroup").bind("click",FilterGroup);
 
-
-    $("#showgroup").bind("click",ShowContainer);
-    $("#hidegroup").bind("click",HideContainer);
+    $("table[group=events] tbody tr td a").bind("click",ShowContainer);
     $("#addgroup").bind("click",AddContainer);
-    //$("#showmembers").bind("click",ShowMembers);
-    //$("#hidemembers").bind("click",HideMembers);
     $("#deletemembers").bind("click",DeleteMembers);
     $("#addrow").bind("click",AddRow);
     $("#editrow").bind("click",EditRow);
     $("#editmail").bind("click",EditMail);
 
-    //RowColor();
 
     // Фильтр статусов
     $("#filter-status").multiselect({
@@ -110,13 +105,13 @@ $(document).ready(function() {
     $('table[group=events]').tableScroll({height:700});
 
     // Видимость кнопок
-    $("#showgroup").hide();
     $("#editrow").hide();
     $("#editmail").hide();
 
+/*
     if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#deletemembers").show();}
     else { $("#addgroup").hide(); $("#addrow").show(); $("#deletemembers").hide();}
-
+*/
 
     // Сброс строковых checkbox-ов
     $("table[group=events] tbody tr td input:checkbox").each(function(){
@@ -151,7 +146,7 @@ function DeleteMembers(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+container_row+"&delgroup=["+id+"]",
         function(data) {
 
-            ShowContainer();
+            GetMemebersContainer();
             ShowMembersCount();
         })
 
@@ -167,67 +162,8 @@ function ShowMembersCount() {
 
 
 
-/*
-// Свернуть группировку
-function HideMembers(e) {
-
-    $("table[group=group] tbody tr[group=members]").empty();
-    //$("#showmembers").show();
-    //$("#hidemembers").hide();
-    $("#deletemembers").hide();
-    $("#addgroup").show();
-
-}
-*/
 
 
-
-
-/*
-// Развернуть группировку
-function ShowMembers(e) {
-    var jqxhr = $.getJSON("/monitor/events/jsondata?getmembers=ok",
-        function(data) {
-
-            data['members'].forEach(function(item,i,arr){
-
-                var icon = "";
-
-                if (item["byhand"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>"; }
-                if (item["agregator"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-align-justify\" aria-hidden=\"true\"></span>"; }
-                if (item["bymail"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-envelope\" aria-hidden=\"true\"></span>"; }
-
-                var t = "<tr group=members style=\"background-color:#C0C0C0;\" class=\"small\" row_id=\""+item["id"]+"\" marked=\"no\" bymail=\""+item["bymail"]+"\" >"
-                +"<td style=\"padding:0;\">"+icon+"</td>"
-                +"<td style=\"padding:0;\"><input type=\"checkbox\" class=\"input\"></td>"
-                +"<td style=\"padding:0;\"><a id=\"tooltip\" title='"+item['uuid']+"'>"+escape(item['uuid']).substr(0,4)+"...</a></td>"
-                +"<td style=\"padding:0;\">"+item['first_seen']+"</td>"
-                +"<td style=\"padding:0;\">"+item['last_seen']+"</td>"
-                +"<td style=\"padding:0;\">"+item['status']+"</td>"
-                +"<td style=\"padding:0;\">"+item['severity']+"</td>"
-                +"<td style=\"padding:0;\">"+item['manager']+"</td>"
-                +"<td style=\"padding:0;\">"+item['event_class']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_system']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_group']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_class']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_net_address']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_location']+"</td>"
-                +"<td style=\"padding:0;\">"+item['element_identifier']+"</td>"
-                +"<td style=\"padding:0;\">"+item['element_sub_identifier']+"</td>"
-                +"</tr>";
-
-                $("table[group=group] tbody").append(t);
-
-            });
-
-            $("#showmembers").hide();
-            $("#hidemembers").show();
-            $("#deletemembers").show();
-            $("#addgroup").hide();
-
-        })
-}
-*/
 
 
 
@@ -251,7 +187,7 @@ function AddContainer(e) {
                 $.each( row_list, function( key, value ) {
                     $(value).hide();
                 });
-            ShowContainer();
+            GetMemebersContainer();
             ShowMembersCount();
         })
 
@@ -264,11 +200,9 @@ function AddContainer(e) {
 
 
 
-function ShowContainer(e) {
+function GetMemebersContainer() {
+
     var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
-    //$("table[group=events] tbody tr[marked=yes]").attr("container","yes");
-    $("#containertools").show();
-    $("table[group=events] tbody tr").unbind("click",ClickEventRow);
 
     var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+row_id+"&getmembers=ok",
         function(data) {
@@ -314,17 +248,49 @@ function ShowContainer(e) {
 
 
 
+
+
+
+
+function ShowContainer(e) {
+
+    $("table[group=events] tbody tr").unbind("click",ClickEventRow);
+    // Сброс отметки строки
+    $("table[group=events] tbody tr").css("background-color","");
+    $("table[group=events] tbody tr").attr("marked","no");
+
+    var row_id = $(this).attr("container_show");
+
+    $("table[group=events] tbody tr td a[container_show="+row_id+"]").hide();
+    $("table[group=events] tbody tr td a[container_hide="+row_id+"]").show();
+    $("#containertools").show();
+
+    // Обозначение контейнера
+    $("table[group=events] tbody tr[row_id="+row_id+"]").attr("marked","yes");
+    $("table[group=events] tbody tr[row_id="+row_id+"]").css("background-color","brown").css("color","white");
+
+    $("table[group=events] tbody tr td a").unbind("click",ShowContainer);
+    $("table[group=events] tbody tr td a[container_hide="+row_id+"]").bind("click",HideContainer);
+
+    GetMemebersContainer();
+}
+
+
+
+
 function HideContainer(e) {
 
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
     $("#containertools").hide();
     $("table tr[group=members]").empty();
-/*
-    var jqxhr = $.getJSON("/monitor/events/jsondata?containergroup=_____",
-        function(data) {
-            window.location.reload();
-        })
-*/
+
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    $("table[group=events] tbody tr td a").bind("click",ShowContainer);
+    $("table[group=events] tbody tr td a[container_show="+row_id+"]").show();
+    $("table[group=events] tbody tr td a[container_hide="+row_id+"]").hide();
+
+    $("table[group=events] tbody tr[row_id="+row_id+"]").attr("marked","no");
+    $("table[group=events] tbody tr[row_id="+row_id+"]").css("background-color","").css("color","");
 
 }
 
@@ -378,20 +344,6 @@ function FilterManager() {
 
 
 
-/*
-function RowColor() {
-    $("table[group=events] tbody tr[severity_id=0]").css("color","red");
-    $("table[group=events] tbody tr[severity_id=1]").css("color","brown");
-    $("table[group=events] tbody tr[severity_id=2]").css("color","#B8860B");
-    $("table[group=events] tbody tr[severity_id=3]").css("color","#00008B");
-    $("table[group=events] tbody tr[severity_id=4]").css("color","#006400");
-}
-*/
-
-
-
-
-
 // Выделение строки
 function ClickEventRow(e) {
 
@@ -425,21 +377,6 @@ function LeaveRow(e) {
     }
 }
 
-
-
-// фильтрация по uuid
-function FindUuid(e) {
-
-        if ( ($(this).val().length) != 0 ) {
-
-            $("table[group=events] tbody tr").hide();
-            $("table[group=events] tbody tr[uuid="+($(this).val())+"]").show();
-
-        }
-
-        else { $("table[group=events] tbody tr").show(); }
-
-}
 
 
 
@@ -515,3 +452,15 @@ function CheckBoxRow(e) {
     }
 }
 
+
+
+
+// Фильтр по группировкам
+function FilterGroup(e) {
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?filtergroup=ok",
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+
+}
