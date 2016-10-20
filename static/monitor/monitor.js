@@ -22,7 +22,8 @@ $(document).ready(function() {
     $("#runmanager").bind("click",FilterManager);
     $("#filtergroup").bind("click",FilterGroup);
 
-    $("table[group=events] tbody tr td a").bind("click",ShowContainer);
+    //$("table[group=events] tbody tr td a").bind("click",ChooseActions);
+    $("ul.dropdown-menu li a[action=container]").bind("click",ShowContainer);
     $("#addgroup").bind("click",AddContainer);
     $("#deletemembers").bind("click",DeleteMembers);
     $("#addrow").bind("click",AddRow);
@@ -107,6 +108,8 @@ $(document).ready(function() {
     // Видимость кнопок
     $("#editrow").hide();
     $("#editmail").hide();
+    //$("#sendmess").hide();
+    //$("#working").hide();
 
 /*
     if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#deletemembers").show();}
@@ -120,7 +123,7 @@ $(document).ready(function() {
 
 
     $("#containertools").hide();
-
+    $("table[group=events] tbody tr td input").hide();
 
 });
 
@@ -254,17 +257,21 @@ function GetMemebersContainer() {
 
 function ShowContainer(e) {
 
+
+
     $("table[group=events] tbody tr").unbind("click",ClickEventRow);
     // Сброс отметки строки
     $("table[group=events] tbody tr").css("background-color","");
     $("table[group=events] tbody tr").attr("marked","no");
 
-    var row_id = $(this).attr("container_show");
+    var row_id = $(this).closest("tr").attr("row_id");
 
-    $("table[group=events] tbody tr td a[container_show="+row_id+"]").hide();
+
+
+    $($(this).closest("div.dropdown")).hide();
     $("table[group=events] tbody tr td a[container_hide="+row_id+"]").show();
     $("#containertools").show();
-
+    $("table[group=events] tbody tr td input").show();
     // Обозначение контейнера
     $("table[group=events] tbody tr[row_id="+row_id+"]").attr("marked","yes");
     $("table[group=events] tbody tr[row_id="+row_id+"]").css("background-color","brown").css("color","white");
@@ -273,6 +280,8 @@ function ShowContainer(e) {
     $("table[group=events] tbody tr td a[container_hide="+row_id+"]").bind("click",HideContainer);
 
     GetMemebersContainer();
+
+
 }
 
 
@@ -285,8 +294,10 @@ function HideContainer(e) {
     $("table tr[group=members]").empty();
 
     var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
-    $("table[group=events] tbody tr td a").bind("click",ShowContainer);
-    $("table[group=events] tbody tr td a[container_show="+row_id+"]").show();
+    $(this).prev("div.dropdown").show();
+    $("ul.dropdown-menu li a[action=container]").bind("click",ShowContainer);
+
+    $("table[group=events] tbody tr td input").hide();
     $("table[group=events] tbody tr td a[container_hide="+row_id+"]").hide();
 
     $("table[group=events] tbody tr[row_id="+row_id+"]").attr("marked","no");
@@ -358,6 +369,9 @@ function ClickEventRow(e) {
         else { $("#editrow").hide(); }
         if ($(this).attr("bymail") == "yes") { $("#editmail").show(); }
         else { $("#editmail").hide(); }
+
+        //$("#sendmess").show();
+        //$("#working").show();
 
 }
 

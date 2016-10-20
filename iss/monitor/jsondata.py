@@ -97,49 +97,51 @@ def get_json(request):
             container_row = request.GET["container_row"]
             tz = request.session['tz']
             e = events.objects.get(pk=container_row)
-            l = e.data['containergroup']
             a = []
-            for item in l:
-                i = events.objects.get(pk=item)
-                if i.byhand == True:
-                    byhand = "yes"
-                else:
-                    byhand = "no"
-                if i.agregator == True:
-                    agregator = "yes"
-                else:
-                    agregator = "no"
-                if i.bymail == True:
-                    bymail = "yes"
-                else:
-                    bymail = "no"
+            if e.data.has_key("containergroup"):
+                l = e.data['containergroup']
 
-                a.append(
-                    {
-                        'id':i.id,
-                        'dateorder':time.mktime(i.last_seen.timetuple()),
-                        'uuid':i.uuid,
-                        'first_seen':i.first_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
-                        'last_seen':i.last_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
-                        'status':i.status_id.name,
-                        'severity':i.severity_id.name,
-                        'manager':i.manager,
-                        'event_class':i.event_class,
-                        'device_system':i.device_system,
-                        'device_group':i.device_group,
-                        'device_class':i.device_class,
-                        'device_net_address':i.device_net_address,
-                        'device_location':i.device_location,
-                        'element_identifier':i.element_identifier,
-                        'element_sub_identifier':i.element_sub_identifier,
-                        'byhand':byhand,
-                        'agregator':agregator,
-                        'bymail':bymail,
-                        'summary':i.summary
-                    }
-                )
+                for item in l:
+                    i = events.objects.get(pk=item)
+                    if i.byhand == True:
+                        byhand = "yes"
+                    else:
+                        byhand = "no"
+                    if i.agregator == True:
+                        agregator = "yes"
+                    else:
+                        agregator = "no"
+                    if i.bymail == True:
+                        bymail = "yes"
+                    else:
+                        bymail = "no"
 
-            a = sorted(a, key=operator.itemgetter('dateorder'),reverse=True)
+                    a.append(
+                        {
+                            'id':i.id,
+                            'dateorder':time.mktime(i.last_seen.timetuple()),
+                            'uuid':i.uuid,
+                            'first_seen':i.first_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
+                            'last_seen':i.last_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
+                            'status':i.status_id.name,
+                            'severity':i.severity_id.name,
+                            'manager':i.manager,
+                            'event_class':i.event_class,
+                            'device_system':i.device_system,
+                            'device_group':i.device_group,
+                            'device_class':i.device_class,
+                            'device_net_address':i.device_net_address,
+                            'device_location':i.device_location,
+                            'element_identifier':i.element_identifier,
+                            'element_sub_identifier':i.element_sub_identifier,
+                            'byhand':byhand,
+                            'agregator':agregator,
+                            'bymail':bymail,
+                            'summary':i.summary
+                        }
+                    )
+
+                a = sorted(a, key=operator.itemgetter('dateorder'),reverse=True)
             response_data['members'] = a
 
 
