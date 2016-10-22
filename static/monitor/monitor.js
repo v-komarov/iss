@@ -125,6 +125,11 @@ $(document).ready(function() {
     $("#containertools").hide();
     $("table[group=events] tbody tr td input").hide();
 
+    // Зебра
+    zebra = "#FFF5EE"
+    $("table[group=events] tbody tr:odd").css("background-color",zebra)
+
+
 });
 
 
@@ -281,6 +286,9 @@ function ShowContainer(e) {
 
     GetMemebersContainer();
 
+    $("table[group=events] tbody tr").unbind("mouseenter",EnterRow);
+    $("table[group=events] tbody tr").unbind("mouseleave",LeaveRow);
+
 
 }
 
@@ -302,6 +310,10 @@ function HideContainer(e) {
 
     $("table[group=events] tbody tr[row_id="+row_id+"]").attr("marked","no");
     $("table[group=events] tbody tr[row_id="+row_id+"]").css("background-color","").css("color","");
+
+    $("table[group=events] tbody tr").bind("mouseenter",EnterRow);
+    $("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
+
 
 }
 
@@ -382,6 +394,7 @@ function EnterRow(e) {
     if ($(this).attr("marked") == "no") {
         $(this).css("background-color"," #DCDCDC");
     }
+    //$("table[group=events] tbody tr:odd").css("background-color",window.zebra)
 }
 
 
@@ -389,6 +402,7 @@ function LeaveRow(e) {
     if ($(this).attr("marked") == "no") {
         $(this).css("background-color","");
     }
+    $("table[group=events] tbody tr:odd").css("background-color",window.zebra)
 }
 
 
