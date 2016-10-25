@@ -1,22 +1,14 @@
-.. iss documentation master file, created by
-   sphinx-quickstart on Mon Aug  1 16:00:52 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Проект обновления и модернизации ИСС
+====================================
 
-Welcome to iss's documentation!
-===============================
 
-Contents:
+.. contents:: Оглавление
+    :depth: 2
+
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   example_conf
 
