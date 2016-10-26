@@ -9,6 +9,6 @@
 .. toctree::
    :maxdepth: 3
 
-
+   events
    example_conf
-
+   links

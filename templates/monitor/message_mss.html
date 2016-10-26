@@ -1,0 +1,44 @@
+<div id="message-mss-begin" title="" hidden>
+    <form id="message-mb">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="datetime_begin">Дата времени начала</label></td>
+                    <td><input type="text" class="form-control" id="datetime_begin" name="datetime_begin" placeholder="" /></td>
+                    <td><label for="device_system">Категория и вид аварии</label></td>
+                    <td><input type="text" class="form-control" id="device_system" name="device_system" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label for="service_stoplist">Список услуг недоступных клиентам</label></td>
+                    <td>
+                        <select id="service_stoplist" class="form-control input-sm">
+                            <option value="pppoe">pppoe</option>
+                            <option value="ipoe">ipoe</option>
+                            <option value="iptv">iptv</option>
+                            <option value="adsl">adsl</option>
+                            <option value="phone">phone</option>
+                            <option value="catv">catv</option>
+                        </select>
+                    </td>
+                    <td><label for="clients_info">Причина отсутствия услуги, для информирования клиентов</label></td>
+                    <td><textarea class="form-control" rows="3" id="clients_info" name="clients_info" placeholder=""></textarea></td>
+                </tr>
+                <tr>
+                    <td><label style="margin-right:10px;" for="city">Город</label></td>
+                    <td><input type="text" class="form-control" id="city" name="city" placeholder="" /></td>
+                    <td><label for="address">Адреса (улицы, номера домов)</label></td>
+                    <td><textarea class="form-control" rows="3" id="address" name="address" placeholder=""></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="zkl">Ориентировочное количество ЗКЛ</label></td>
+                    <td><input type="text" class="form-control" id="zkl" name="zkl" placeholder="" /></td>
+                    <td><label style="margin-right:10px;" for="datetime_end">Ориентировочные сроки проведения АВР (если известно)</label></td>
+                    <td><input type="text" class="form-control" id="datetime_end" placeholder="" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+</div>
+
+

@@ -208,6 +208,23 @@ $(document).ready(function() {
 
 
 
+// Список услуг
+    $("#service_stoplist").multiselect({
+        header:true,
+        noneSelectedText:"Выбор услуг",
+        minWidth:150,
+        selectedText: "# из # выбрано",
+        uncheckAllText:"Сбросить все",
+        checkAllText:"Отметить все"
+    });
+    $("#service_stoplist").multiselect("uncheckAll");
+    /*var service = eval($("#service_stoplist").attr("selected_value"));
+    service.forEach(function(item, i, arr) {
+        $("#service_stoplist").multiselect("widget").find(":checkbox[value='"+item+"']").click();
+    });*/
+    // Список услуг конец
+
+
 
 
 });
@@ -619,6 +636,130 @@ function AddRow(e) {
 
 }
 
+
+
+
+
+
+
+
+
+
+
+// Оповещение об аварии на MCC
+function MessageMssBegin(e) {
+
+/*
+    $("#maillist").empty();
+    $("#maillist").append($("<option value=\"\" selected></option>"));
+    $("#mailtext subj").text("");
+    $("#mailtext mailtext").text("");
+    $("#mailtext dl attachement").empty();
+
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+*/
+/*    var jqxhr = $.getJSON("/monitor/events/jsondata?getevent="+row_id,
+        function(data) {
+
+            $("#mail table").attr("event_id",data['id']);
+
+            $("#mail table tbody tr td select#status").val(data['status']);
+            $("#mail table tbody tr td select#severity").val(data['severity']);
+
+            $("#mail table tbody tr td input#event_class").val(data['event_class']);
+            $("#mail table tbody tr td input#device_system").val(data['device_system']);
+            $("#mail table tbody tr td input#device_group").val(data['device_group']);
+            $("#mail table tbody tr td input#device_class").val(data['device_class']);
+            $("#mail table tbody tr td input#device_net_address").val(data['device_net_address']);
+            $("#mail table tbody tr td input#device_location").val(data['device_location']);
+            $("#mail table tbody tr td input#element_identifier").val(data['element_identifier']);
+            $("#mail table tbody tr td input#element_sub_identifier").val(data['element_sub_identifier']);
+
+
+            data['list_mail'].forEach(function(item,i,arr){
+                $("#maillist").append($("<option value="+item['id_mail']+">"+item['label_mail']+"</option>"));
+
+            })
+
+*/
+            $("#message-mss-begin").dialog({
+                title:"Оповещение об аварии на MCC",
+                buttons:[{ text:"Отправить",click: function() {
+                    /*
+                    if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
+
+                        var event_id = $("#mail table").attr("event_id");
+
+                        var status = $("#mail table tbody tr td select#status").val();
+                        var severity = $("#mail table tbody tr td select#severity").val();
+
+                        var event_class = $("#mail table tbody tr td input#event_class").val();
+                        var device_system = $("#mail table tbody tr td input#device_system").val();
+                        var device_group = $("#mail table tbody tr td input#device_group").val();
+                        var device_class = $("#mail table tbody tr td input#device_class").val();
+                        var device_net_address = $("#mail table tbody tr td input#device_net_address").val();
+                        var device_location = $("#mail table tbody tr td input#device_location").val();
+                        var element_identifier = $("#mail table tbody tr td input#element_identifier").val();
+                        var element_sub_identifier = $("#mail table tbody tr td input#element_sub_identifier").val();
+
+                        var csrftoken = getCookie('csrftoken');
+
+                        $.ajaxSetup({
+                            beforeSend: function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
+                            }
+                        });
+
+
+
+                        $.ajax({
+                          url: "/monitor/events/jsondata/",
+                          type: "POST",
+                          dataType: 'text',
+                          data:"{"
+                            +"'event_id':'"+event_id+"',"
+                            +"'action':'edit_event',"
+                            +"'status':"+status+","
+                            +"'severity':"+severity+","
+                            +"'event_class':'"+event_class+"',"
+                            +"'device_system':'"+device_system+"',"
+                            +"'device_group':'"+device_group+"',"
+                            +"'device_class':'"+device_class+"',"
+                            +"'device_net_address':'"+device_net_address+"',"
+                            +"'device_location':'"+device_location+"',"
+                            +"'element_identifier':'"+element_identifier+"',"
+                            +"'element_sub_identifier':'"+element_sub_identifier+"'"
+                            +"}",
+                            success: function(result) {
+                                window.location=$("#menumonitor a").attr("href");
+                            }
+
+                        })
+
+                    } */
+
+                }},
+                    {text:"Закрыть",click: function() {
+                    $(this).dialog("close")}}
+                ],
+                modal:true,
+                minWidth:600,
+                width:900
+
+            });
+
+
+
+
+
+
+
+  //      })
+
+
+}
 
 
 

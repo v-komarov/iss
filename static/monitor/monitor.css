@@ -206,3 +206,21 @@ errorMsg {color: red;}
     padding-right:10px;
 }
 
+
+
+
+
+#message-mb table tbody td input {
+    height: 30px;
+}
+
+#message-mb table tbody td {
+    padding-right:10px;
+    vertical-align:top;
+}
+
+#message-mb > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1),
+#message-mb > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3)
+{
+    width:20%;
+}

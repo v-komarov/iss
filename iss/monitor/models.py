@@ -10,6 +10,8 @@ import datetime
 from iss.localdicts.models import Status,Severity
 
 
+
+### События
 class events(models.Model):
 
     id = models.CharField(max_length=255,primary_key=True, default=uuid.uuid4, editable=False)
@@ -40,4 +42,17 @@ class events(models.Model):
     bymail = models.BooleanField(db_index=True,default=False)
 
     summary = models.CharField(max_length=255,db_index=True,null=True)
+
+
+### Оповещения
+class messages(models.Model):
+    datetime_message = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
+    message_title = models.CharField(max_length=255,default="")
+    accsident_num = models.IntegerField(db_index=True,null=False,unique=True,default=0)
+    email_list = models.CharField(max_length=255,db_index=True,default="")
+    author = models.CharField(max_length=255,db_index=True,default="")
+    data = JSONField(default={})
+    event = models.ForeignKey(events,db_index=True,null=True)
+
+
 
