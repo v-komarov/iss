@@ -18,6 +18,20 @@ class Command(BaseCommand):
     help = 'saving snmp data of devices'
 
 
+    def GetValue(self,ip,oid):
+
+        errorIndication, errorStatus, errorIndex, varBinds = next(
+            getCmd(SnmpEngine(),
+                   CommunityData(community),
+                   UdpTransportTarget((ip, 161)),
+                   ContextData(),
+                   ObjectType(ObjectIdentity(oid)))
+        )
+
+        return varBinds
+
+
+
 
     def handle(self, *args, **options):
 
@@ -25,85 +39,37 @@ class Command(BaseCommand):
 
             devices_lldp.objects.filter(ipaddress=ip).delete()
 
-            errorIndication, errorStatus, errorIndex, varBinds = next(
-                getCmd(SnmpEngine(),
-                       CommunityData(community),
-                       UdpTransportTarget((ip, 161)),
-                       ContextData(),
-                       ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysLocation', 0)),
-                       ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysDescr', 0)))
-            )
+            ### Название локальных портов
+            for i in range(1,100):
+                result = self.GetValue(ip,lldpLocPortTable+".1.4.%s" % i)
+                for name, val in result:
+                    if val.prettyPrint() == "No Such Instance currently exists at this OID":
+                        break
+                    print val.prettyPrint()
 
-            if errorIndication:
-                print(errorIndication)
-            elif errorStatus:
-                print('%s at %s' % (errorStatus.prettyPrint(),
-                                    errorIndex and varBinds[int(errorIndex) - 1][0] or '?'))
-            else:
-                descr = varBinds[0]
-                location = varBinds[1]
+            ### Статус локальных портов
+            for i in range(1,100):
+                result = self.GetValue(ip,lldpLocPortTable+".1.2.%s" % i)
+                for name, val in result:
+                    if val.prettyPrint() == "No Such Instance currently exists at this OID":
+                        break
+                    print val.prettyPrint()
 
-                i = 1
-                over = False
-                while not over:
-                    ### Название портов
-                    errorIndication, errorStatus, errorIndex, varBinds = next(
-                        getCmd(SnmpEngine(),
-                               CommunityData(community),
-                               UdpTransportTarget((ip, 161)),
-                               ContextData(),
-                               ObjectType(ObjectIdentity(lldpLocPortTable+".1.4.%s" % i)),
-                               ObjectType(ObjectIdentity(lldpLocPortTable+".1.3.%s" % i)),
-                               ObjectType(ObjectIdentity("1.3.6.1.2.1.2.2.1.8.%s" % i)))
-                    )
-                    i = i + 1
+            ### MAC локальных портов
+            for i in range(1,100):
+                result = self.GetValue(ip,lldpLocPortTable+".1.3.%s" % i)
+                for name, val in result:
+                    if val.prettyPrint() == "No Such Instance currently exists at this OID":
+                        break
+                    print val.prettyPrint()
 
+            ### Название портов соседей
+            for i in range(1,50):
+                result = self.GetValue(ip,"1.0.8802.1.1.2.1.4.1.1")
+                for name, val in result:
+                    if val.prettyPrint() == "No Such Instance currently exists at this OID":
+                        break
+                    print val.prettyPrint()
 
-
-                    for name,val in varBinds:
-                        if val.prettyPrint() == "No Such Instance currently exists at this OID":
-                            over = True
-                        else:
-                            print val.prettyPrint()
-
-                over = False
-                while not over:
-                    ### Название портов
-                    errorIndication, errorStatus, errorIndex, varBinds = next(
-                        getCmd(SnmpEngine(),
-                               CommunityData(community),
-                               UdpTransportTarget((ip, 161)),
-                               ContextData(),
-                               ObjectType(ObjectIdentity(lldpLocPortTable + ".1.4.%s" % i)),
-                               ObjectType(ObjectIdentity(lldpLocPortTable + ".1.3.%s" % i)),
-                               ObjectType(ObjectIdentity("1.3.6.1.2.1.2.2.1.8.%s" % i)))
-                    )
-                    i = i + 1
-
-                    for name, val in varBinds:
-                        if val.prettyPrint() == "No Such Instance currently exists at this OID":
-                            over = True
-                        else:
-                            print val.prettyPrint()
-
-                over = False
-                while not over:
-                    ### Название портов
-                    errorIndication, errorStatus, errorIndex, varBinds = next(
-                        getCmd(SnmpEngine(),
-                               CommunityData(community),
-                               UdpTransportTarget((ip, 161)),
-                               ContextData(),
-                               ObjectType(ObjectIdentity(lldpLocPortTable + ".1.4.%s" % i)),
-                               ObjectType(ObjectIdentity(lldpLocPortTable + ".1.3.%s" % i)),
-                               ObjectType(ObjectIdentity("1.3.6.1.2.1.2.2.1.8.%s" % i)))
-                    )
-                    i = i + 1
-
-                    for name, val in varBinds:
-                        if val.prettyPrint() == "No Such Instance currently exists at this OID":
-                            over = True
-                        else:
-                            print val.prettyPrint()
 
             print "ok"
