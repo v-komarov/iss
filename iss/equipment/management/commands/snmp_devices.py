@@ -1,14 +1,11 @@
 #coding:utf8
 
 from django.core.management.base import BaseCommand, CommandError
-from pysnmp.hlapi import *
-from pysnmp.entity.rfc3413.oneliner.cmdgen import MibVariable
 from easysnmp import Session
 from iss.equipment.models import devices_lldp,devices_ip
 import binascii
-import pickle
 
-ip_address_list = ['10.5.105.1','10.5.105.2']
+ip_address_list = ['10.5.105.1','10.5.105.2','10.5.105.3']
 community = "sibttklocal"
 lldpLocPortTable = "1.0.8802.1.1.2.1.3.7.1.3"
 lldpRemEntry = "1.0.8802.1.1.2.1.4.1.1.7"
