@@ -3,15 +3,16 @@
 from django.core.management.base import BaseCommand, CommandError
 from pysnmp.hlapi import *
 from pysnmp.entity.rfc3413.oneliner.cmdgen import MibVariable
+from easysnmp import Session
+from iss.equipment.models import devices_lldp,devices_ip
+import binascii
+import pickle
 
-from iss.equipment.models import devices_lldp
-
-
-
-ip_address_list = ['10.5.105.1']
+ip_address_list = ['10.5.105.1','10.5.105.2']
 community = "sibttklocal"
-lldpLocPortTable = "1.0.8802.1.1.2.1.3.7"
-lldpRemEntry = "1.0.8802.1.1.2.1.4.1.1"
+lldpLocPortTable = "1.0.8802.1.1.2.1.3.7.1.3"
+lldpRemEntry = "1.0.8802.1.1.2.1.4.1.1.7"
+portStatus = "1.3.6.1.2.1.2.2.1.8"
 
 
 class Command(BaseCommand):
@@ -19,71 +20,82 @@ class Command(BaseCommand):
     help = 'saving snmp data of devices'
 
 
-    def GetMultyValue(self,ip,oid):
-
-        errorIndication, errorStatus, errorIndex, varBinds = next(
-            getCmd(SnmpEngine(),
-                   CommunityData(community),
-                   UdpTransportTarget((ip, 161)),
-                   ContextData(),
-                   MibVariable(ObjectIdentity(oid)).addMibSource("/path/to/mibs"),
-                   #cmdgen.MibVariable('SNMPv2-MIB', 'sysLocation', 0),
-                   lexicographicMode=True,
-                   maxRows=10000,
-                   ignoreNonIncreasingOid=True
-                   )
-        )
-
-        return varBinds
-
-
-
-    def GetValue(self,ip,oid):
-
-        errorIndication, errorStatus, errorIndex, varBinds = next(
-            getCmd(SnmpEngine(),
-                   CommunityData(community),
-                   UdpTransportTarget((ip, 161)),
-                   ContextData(),
-                   ObjectType(ObjectIdentity(oid)))
-        )
-
-        return varBinds
-
 
 
     def handle(self, *args, **options):
 
+        devices_ip.objects.all().delete()
+        devices_lldp.objects.all().delete()
+
         for ip in ip_address_list:
+            print "begin for %s" % ip
+            session = Session(hostname=ip, community=community, version=2)
 
-            devices_lldp.objects.filter(ipaddress=ip).delete()
-            """
-            ### Название локальных портов
-            for i in range(1,100):
-                result = self.GetValue(ip,lldpLocPortTable+".1.4.%s" % i)
-                for name, val in result:
-                    if val.prettyPrint() == "No Such Instance currently exists at this OID":
-                        break
-                    print val.prettyPrint()
+            name = session.get(('sysName', '0'))
+            descr = session.get(('sysDescr', '0'))
+            location = session.get(('sysLocation', '0'))
 
-            ### MAC локальных портов
-            for i in range(1,100):
-                result = self.GetValue(ip,lldpLocPortTable+".1.3.%s" % i)
-                for name, val in result:
-                    if val.prettyPrint() == "No Such Instance currently exists at this OID":
-                        break
-                    print val.prettyPrint()
-            """
-            import commands
-            data = commands.getoutput('snmpwalk -v2c -c sibttklocal 10.5.105.1 1.0.8802.1.1.2.1.4.1.1.5')
-            x = 0
-            step = data.find(":",x)+20
-            while x <= len(data):
-                a = data[data.find("4.1.1.5",x):data.find(" =",x)].split(".")[-2]
-                #print data[data.find(":",x)+2:data.find(":",x)+19].replace(" ","").lower()
-                x = x + step
+            d = devices_ip.objects.create(
+                ipaddress = ip,
+                device_name = name.value,
+                device_descr = descr.value,
+                device_location = location.value,
+                device_domen = "zenoss_krsk"
+            )
 
 
+            data = session.walk(lldpLocPortTable)
+            for item in data:
+                port = int(item.oid.split(".")[-1],10)
+                mac = binascii.b2a_hex(item.value.encode("utf-8"))
+                devices_lldp.objects.create(
+                    port_local_index = port,
+                    port_local_mac = mac,
+                    device_ip = d
+                )
+                """
+                print '{oid}.{oid_index} {snmp_type} = {value}'.format(
+                    oid=item.oid,
+                    oid_index=item.oid_index,
+                    snmp_type=item.snmp_type,
+                    value=binascii.b2a_hex(item.value.encode("utf-8"))
+                )
+                """
 
-            print "ok"
+
+            data = session.walk(lldpRemEntry)
+            for item in data:
+                port = int(item.oid.split(".")[-2], 10)
+                mac = binascii.b2a_hex(item.value.encode("utf-8"))
+                rec = devices_lldp.objects.get(device_ip=d,port_local_index=port)
+                rec.port_neighbor_mac = mac
+                rec.save()
+                """
+                print '{oid}.{oid_index} {snmp_type} = {value}'.format(
+                    oid=item.oid,
+                    oid_index=item.oid_index,
+                    snmp_type=item.snmp_type,
+                    value=binascii.b2a_hex(item.value.encode("utf-8"))
+                )
+                """
+
+            data = session.walk(portStatus)
+            for item in data:
+
+                port = int(item.oid_index.split(".")[-1], 10)
+                if devices_lldp.objects.filter(device_ip=d,port_local_index=port).count() == 1:
+                    rec = devices_lldp.objects.get(device_ip=d, port_local_index=port)
+                    if item.value == u'1':
+                        rec.port_status = True
+                        rec.save()
+                """
+                print '{oid}.{oid_index} {snmp_type} = {value}'.format(
+                    oid=item.oid,
+                    oid_index=item.oid_index,
+                    snmp_type=item.snmp_type,
+                    value=item.value
+                )
+                """
+
+        print "ok"
 
