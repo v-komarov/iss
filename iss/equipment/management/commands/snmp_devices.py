@@ -5,11 +5,13 @@ from easysnmp import Session
 from iss.equipment.models import devices_lldp,devices_ip
 import binascii
 
-ip_address_list = ['10.5.105.1','10.5.105.2','10.5.105.3']
+ip_address_list = ['10.5.105.1','10.5.105.2','10.5.105.3','10.5.102.2']
+#ip_address_list = ['10.4.119.1','10.4.125.1','10.204.112.41','10.204.112.42','10.204.112.43','10.204.112.44','10.204.112.45','10.204.112.46','10.204.112.47']
 community = "sibttklocal"
 lldpLocPortTable = "1.0.8802.1.1.2.1.3.7.1.3"
 lldpRemEntry = "1.0.8802.1.1.2.1.4.1.1.7"
 portStatus = "1.3.6.1.2.1.2.2.1.8"
+#lldpRemEntry  = "1.0.8802.1.1.2.1.4.1.1.5"
 
 
 class Command(BaseCommand):
@@ -40,11 +42,10 @@ class Command(BaseCommand):
                 device_domen = "zenoss_krsk"
             )
 
-
             data = session.walk(lldpLocPortTable)
             for item in data:
                 port = int(item.oid.split(".")[-1],10)
-                mac = binascii.b2a_hex(item.value.encode("utf-8"))
+                mac = ':'.join(['%0.2x' % ord(_) for _ in item.value])
                 devices_lldp.objects.create(
                     port_local_index = port,
                     port_local_mac = mac,
@@ -55,15 +56,14 @@ class Command(BaseCommand):
                     oid=item.oid,
                     oid_index=item.oid_index,
                     snmp_type=item.snmp_type,
-                    value=binascii.b2a_hex(item.value.encode("utf-8"))
+                    value = ':'.join(['%0.2x' % ord(_) for _ in item.value])
                 )
                 """
-
 
             data = session.walk(lldpRemEntry)
             for item in data:
                 port = int(item.oid.split(".")[-2], 10)
-                mac = binascii.b2a_hex(item.value.encode("utf-8"))
+                mac = ':'.join(['%0.2x' % ord(_) for _ in item.value])
                 rec = devices_lldp.objects.get(device_ip=d,port_local_index=port)
                 rec.port_neighbor_mac = mac
                 rec.save()
@@ -72,7 +72,7 @@ class Command(BaseCommand):
                     oid=item.oid,
                     oid_index=item.oid_index,
                     snmp_type=item.snmp_type,
-                    value=binascii.b2a_hex(item.value.encode("utf-8"))
+                    value = ':'.join(['%0.2x' % ord(_) for _ in item.value])
                 )
                 """
 
