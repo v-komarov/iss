@@ -78,7 +78,9 @@ class EventList(ListView):
 
         if self.session.has_key("search"):
             if len(self.session['search']) >= 3:
-                q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s'))" % (self.session["search"],self.session["search"],self.session["search"],self.session["search"],self.session["search"],self.session["search"]))
+                for search in self.session['search'].split(" "):
+                    if search != " ":
+                        q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s'))" % (search,search,search,search,search,search))
 
         if self.session.has_key("first_seen"):
             if self.session["first_seen"] != "":

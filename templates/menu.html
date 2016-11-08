@@ -5,8 +5,12 @@
 <div class="row" >
 
     <ul class="nav nav-pills">
-      <li id="menumonitor" role="presentation" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
-      <li role="presentation"><a href="/logout">Выход</a></li>
+      <li id="menumonitor" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
+      <li id="menutopology" {% if request.path|slice:'0:20' == "/equipment/topology/" %}class="active"{% endif %}><a href="/equipment/topology/">Топология</a></li>
+      <li id="menuagregators" {% if request.path|slice:'0:22' == "/equipment/agregators/" %}class="active"{% endif %}><a href="/equipment/agregators/">Агрегаторы</a></li>
+      <li id="menufootnodes" {% if request.path|slice:'0:21' == "/equipment/footnodes/" %}class="active"{% endif %}><a href="/equipment/footnodes/">Опорные узлы</a></li>
+      <li id="menudevices" {% if request.path|slice:'0:19' == "/equipment/devices/" %}class="active"{% endif %}><a href="/equipment/devices/page/1/">Устройства</a></li>
+      <li><a href="/logout">Выход</a></li>
     </ul>
 
 

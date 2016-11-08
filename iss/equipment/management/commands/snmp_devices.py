@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        for ip in devices_ip.objects.filter(device_domen="zenoss_krsk"):
+        for ip in devices_ip.objects.filter(device_domen="zenoss_krsk",access=True,no_rewrite=False):
             print "begin for %s" % ip.ipaddress
 
             try:
@@ -30,16 +30,24 @@ class Command(BaseCommand):
 
                 data = session.walk(lldpRemEntry)
                 mac_list = []
+                ports_json = {}
+                ports = []
                 for item in data:
+                    port = int(item.oid.split(".")[-2], 10)
                     if item.snmp_type == "OCTETSTR":
                         mac = ':'.join(['%0.2x' % ord(_) for _ in item.value])
                     else:
                         mac = item.value
-
+                    ports.append({
+                        'port': port,
+                        'mac': mac}
+                    )
                     mac_list.append(mac)
 
+                ports_json["ports"] = ports
                 r = devices_ip.objects.get(ipaddress=ip.ipaddress)
                 r.lldp_neighbor_mac = mac_list
+                r.ports = ports_json
                 r.save()
 
             except:

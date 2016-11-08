@@ -14,7 +14,8 @@ community = "sibttklocal"
 
 lldplocchassisid = "1.0.8802.1.1.2.1.3.2"
 phys = "1.3.6.1.2.1.47.1.1.1.1.11.1"
-
+serial_oid = "1.3.6.1.4.1.171.12.1.1.12"
+#serial_oid = "1.3.6.1.2.1.47.1.1.1.1.11.1"
 
 class Command(BaseCommand):
     args = '<graph ...>'
@@ -47,6 +48,13 @@ class Command(BaseCommand):
 
                 chassisid = ":".join(res)
 
+            serial = session.get((serial_oid, '0'))
+
+            if serial.snmp_type == "OCTETSTR" or serial.snmp_type == "STRING":
+                serial = serial.value
+            else:
+                serial = ""
+
 
             if devices_ip.objects.filter(ipaddress=ip).all().count() == 1:
                 r = devices_ip.objects.get(ipaddress=ip)
@@ -55,6 +63,7 @@ class Command(BaseCommand):
                 r.device_location = location
                 r.device_domen = source
                 r.chassisid = chassisid
+                r.device_serial = serial
                 r.save()
             else:
                 devices_ip.objects.create(
@@ -63,13 +72,14 @@ class Command(BaseCommand):
                     device_name=name,
                     device_location=location,
                     device_domen=source,
-                    chassisid = chassisid
+                    chassisid = chassisid,
+                    device_serial = serial
                 )
 
         except:
             print "error %s" % ip
             device_access_error.objects.create(ipaddress=ip,device_domen=source)
-            devices_ip.objects.filter(ipaddress=ip,device_domen=source).delete()
+            devices_ip.objects.filter(ipaddress=ip, device_domen=source).update(access=False)
 
 
 
@@ -82,11 +92,12 @@ class Command(BaseCommand):
 
         if iplist == "all":
 
-            device_access_error.objects.filter(device_domen=source).delete()
+            #device_access_error.objects.filter(device_domen=source).delete()
 
             for ip in events.objects.filter(source=source).exclude(device_net_address="").distinct("device_net_address"):
-                print ip.device_net_address
-                self.get_data(ip.device_net_address,source)
+                if devices_ip.objects.filter(ipaddress=ip.device_net_address,no_rewrite=True).count() == 0:
+                    print ip.device_net_address
+                    self.get_data(ip.device_net_address,source)
 
         else:
             self.get_data(iplist, source)

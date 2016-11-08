@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$', Begin),
     url(r'^mainmenu/$', MainMenu),
     url(r'^monitor/',include('iss.monitor.urls')),
+    url(r'^equipment/',include('iss.equipment.urls')),
     url(r'^logout/$', LogOut),
     url(r'^admin/', admin.site.urls),
 ]

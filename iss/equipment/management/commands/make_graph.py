@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from iss.equipment.models import devices_ip
 import networkx as nx
 import pickle
-
+import matplotlib.pyplot as plt
 
 
 class Command(BaseCommand):
@@ -31,4 +31,9 @@ class Command(BaseCommand):
         A.write('netmap.dot')
 
 
-        print G.adj
+        #print G.adj
+
+        nx.draw(G)
+        plt.savefig("net.png")
+
+        #print nx.clustering(G)
