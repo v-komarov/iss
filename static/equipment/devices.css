@@ -24,3 +24,14 @@ thead.small > tr:nth-child(1) > th:nth-child(10) {
 }
 
 
+.no-rewrite {
+    background-color: #B0E0E6;
+}
+
+
+.table > tbody > tr > td > input[type=text] {
+    border: 0;
+    margin: 0;
+    background-color: #B0E0E6;
+}
+

@@ -34,3 +34,9 @@ class agregators(models.Model):
     uplink_ports = ArrayField(models.IntegerField(),blank=True,default=[],null=True,db_index=True)
     device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
     footnode = models.GenericIPAddressField(max_length=255, db_index=True, null=True)
+
+
+class scan_iplist(models.Model):
+    ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,unique=True)
+    device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
+

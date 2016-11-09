@@ -16,6 +16,11 @@ lldplocchassisid = "1.0.8802.1.1.2.1.3.2"
 phys = "1.3.6.1.2.1.47.1.1.1.1.11.1"
 serial_oid = "1.3.6.1.4.1.171.12.1.1.12"
 #serial_oid = "1.3.6.1.2.1.47.1.1.1.1.11.1"
+sysName = "1.3.6.1.2.1.1.5"
+sysLocation = "1.3.6.1.2.1.1.6"
+sysDescr = "1.3.6.1.2.1.1.1"
+
+
 
 class Command(BaseCommand):
     args = '<graph ...>'
@@ -30,9 +35,9 @@ class Command(BaseCommand):
 
             session = Session(hostname=ip, community=community, version=2)
 
-            name = session.get(('sysName', '0')).value
-            descr = session.get(('sysDescr', '0')).value
-            location = session.get(('sysLocation', '0')).value
+            name = session.get((sysName, '0')).value
+            descr = session.get((sysDescr, '0')).value
+            location = session.get((sysLocation, '0')).value
             chassisid = session.get((lldplocchassisid, '0'))
             if chassisid.snmp_type == "OCTETSTR":
                 chassisid = ':'.join(['%0.2x' % ord(_) for _ in chassisid.value])
@@ -91,6 +96,7 @@ class Command(BaseCommand):
         iplist = args[1]
 
         if iplist == "all":
+
 
             #device_access_error.objects.filter(device_domen=source).delete()
 
