@@ -7,7 +7,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
 
 
-
+## Устройства
 class devices_ip(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
     device_descr = models.CharField(max_length=255,db_index=True,null=True)
@@ -22,21 +22,44 @@ class devices_ip(models.Model):
     access = models.BooleanField(default=True) # При опросе последний раз
     ports = JSONField(default={})
 
-
+### Лог ошибок доступа
 class device_access_error(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
     device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
     create = models.DateTimeField(auto_now_add=True,null=True)
 
 
+### Опорные узлы
+class footnodes(models.Model):
+    ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
+    device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    descr = models.CharField(max_length=255, db_index=True, null=True)
+    location = models.CharField(max_length=255, db_index=True, null=True)
+    name = models.CharField(max_length=255, db_index=True, null=True)
+    domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    data = JSONField(default={})
+    chassisid = models.CharField(max_length=255, db_index=True, null=True)
+    serial = models.CharField(max_length=100, db_index=True, default="")
+
+
+### Агрегаторы
 class agregators(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
     uplink_ports = ArrayField(models.IntegerField(),blank=True,default=[],null=True,db_index=True)
     device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
-    footnode = models.GenericIPAddressField(max_length=255, db_index=True, null=True)
+    descr = models.CharField(max_length=255, db_index=True, null=True)
+    location = models.CharField(max_length=255, db_index=True, null=True)
+    name = models.CharField(max_length=255, db_index=True, null=True)
+    domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    footnode = models.ForeignKey(footnodes,null=True)
+    data = JSONField(default={})
+    chassisid = models.CharField(max_length=255, db_index=True, null=True)
 
 
+### Список адресов для snmp запросов
 class scan_iplist(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,unique=True)
     device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    community = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    snmp_ver = models.IntegerField(null=True, default=2)
 

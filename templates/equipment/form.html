@@ -1,0 +1,39 @@
+<div id="editfootnode" title="" hidden>
+    <form id="footnodeform">
+        <table>
+            <tbody>
+                <tr class="small">
+                    <td><label for="ipaddress">ip адрес</label></td>
+                    <td><input type="text" class="form-control" id="ipaddress" name="ipaddress" placeholder="" /></td>
+                    <td><label for="domen">domen</label></td>
+                    <td>
+                    <select id="domen" name="domen" class="form-control input-sm">
+                        {% for item in domen %}
+                            <option valie="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="sysname">sysName</label></td>
+                    <td><input type="text" class="form-control" id="sysname" name="sysname" placeholder="" /></td>
+                    <td><label for="sysdescr">sysDescr</label></td>
+                    <td><input type="text" class="form-control" id="sysdescr" name="sysdescr" placeholder="" /></td>
+                </tr>
+                <tr class="small">
+                    <td><label for="syslocation">sysLocation</label></td>
+                    <td><input type="text" class="form-control" id="syslocation" name="syslocation" placeholder="" /></td>
+                    <td><label for="serial">Serial</label></td>
+                    <td><input type="text" class="form-control" id="serial" name="serial" placeholder="" /></td>
+                </tr>
+                <tr class="small">
+                    <td><label for="mac">Mac</label></td>
+                    <td><input type="text" class="form-control" id="mac" name="mac" placeholder="" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+

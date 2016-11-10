@@ -2,10 +2,10 @@
 
 from django.core.management.base import BaseCommand, CommandError
 from easysnmp import Session
-from iss.equipment.models import devices_ip
+from iss.equipment.models import devices_ip,scan_iplist
 import binascii
 
-community = "sibttklocal"
+#community = "sibttklocal"
 lldpLocPortTable = "1.0.8802.1.1.2.1.3.7.1.3"
 #lldpRemEntry = "1.0.8802.1.1.2.1.4.1.1.7"
 portStatus = "1.3.6.1.2.1.2.2.1.8"
@@ -25,8 +25,9 @@ class Command(BaseCommand):
             print "begin for %s" % ip.ipaddress
 
             try:
+                ii = scan_iplist.objects.get(ipaddress=ip.ipaddress)
 
-                session = Session(hostname=ip.ipaddress, community=community, version=2)
+                session = Session(hostname=ip.ipaddress, community=ii.community, version=ii.snmp_ver)
 
                 data = session.walk(lldpRemEntry)
                 mac_list = []

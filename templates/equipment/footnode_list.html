@@ -1,0 +1,105 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}equipment/footnode.js"></script>
+<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
+<link href="{{ MY_STATIC_URL }}equipment/footnode.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container" style="padding:0;">
+
+    {% include "menu.html" %}
+
+</div>
+
+<div class="row">
+
+        <div>
+            <small>
+                <button id="addrow" title="Создать" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </small>
+        </div>
+
+</div>
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/equipment/footnodes/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/equipment/footnodes/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+
+    <table group="footnode" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>ip адрес</th>
+                <th>sysName</th>
+                <th>sysDescr</th>
+                <th>sysLocation</th>
+                <th>serial</th>
+                <th>mac</th>
+                <th>domen</th>
+            </tr>
+
+        </thead>
+
+        {% for row in object_list %}
+            <tbody>
+                <tr class="small">
+                    <td>{{ row.ipaddress }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.descr }}</td>
+                    <td>{{ row.location }}</td>
+                    <td>{{ row.serial }}</td>
+                    <td>{{ row.chassisid }}</td>
+                    <td>{{ row.device_domen }}</td>
+                </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+
+
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/equipment/footnodes/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/equipment/footnodes/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+
+
+
+
+
+</div>
+
+
+
+
+{% include "equipment/form.html" %}
+
+
+
+{% endblock %}

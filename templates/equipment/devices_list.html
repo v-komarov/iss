@@ -105,7 +105,7 @@
                     {% timezone tz %}
                     <td>{{ row.update|date:"d.m.Y H:i e" }}</td>
                     {% endtimezone %}
-                    <td><a href="#" title="Сохранить" row_id={{ row.id }}><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a></td>
+                    <td><a href="#" title="Сохранить" row-id={{ row.id }}><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a></td>
                 </tr>
             </tbody>
         {% endfor %}
@@ -129,7 +129,9 @@
 </div>
 
 
-
+<div id="dialog-row-save" hidden>
+    Данные сохранены
+</div>
 
 
 

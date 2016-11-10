@@ -1,0 +1,53 @@
+.table > thead {
+    background-color: gainsboro;
+}
+
+
+thead.small > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.table > tbody > tr > td {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+
+.row {
+    margin:0;
+    padding-top:2px;
+    padding-bottom:5px;
+    padding-left:5px;
+}
+
+input[type="text"] {
+    height: 30px;
+    aria-hidden: true;
+}
+
+form#footnodeform > table > tbody > tr.small:nth-child(3) > td:nth-child(1) > label:nth-child(1) {
+    margin-right:10px;
+}
+
+form#footnodeform > table > tbody >  tr.small:nth-child(2) > td:nth-child(3) > label:nth-child(1) {
+    margin-right:10px;
+    margin-left:10px;
+
+}
+
+form#footnodeform > table > tbody > tr.small:nth-child(1) > td:nth-child(3) > label:nth-child(1),
+form#footnodeform > table > tbody > tr.small:nth-child(3) > td:nth-child(3) > label:nth-child(1)
+{
+    margin-left:10px;
+}
+
+
+errorMsg {color: red;}
+.invalidElem {border: medium solid red;}
+
+

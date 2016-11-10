@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from iss.mydecorators import group_required,anonymous_required
 
-from iss.equipment.models import devices_ip
+from iss.equipment.models import devices_ip,footnodes
 
 class EquipmentList(ListView):
 
@@ -86,4 +86,57 @@ class EquipmentList(ListView):
 
 
         return context
+
+
+
+
+
+class FootNodeList(ListView):
+
+
+    model = footnodes
+    template_name = "equipment/footnode_list.html"
+    paginate_by = 100
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='footnode',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.session = request.session
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_queryset(self):
+
+
+        return footnodes.objects.all().order_by("ipaddress")
+
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(FootNodeList, self).get_context_data(**kwargs)
+
+        ii = []
+        for i in devices_ip.objects.all().distinct('device_domen'):
+            ii.append(i.device_domen)
+
+
+        context['domen'] = ii
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+        return context
+
+
 

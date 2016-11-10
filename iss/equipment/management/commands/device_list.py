@@ -1,7 +1,7 @@
 #coding:utf8
 
 from django.core.management.base import BaseCommand, CommandError
-from iss.equipment.models import devices_ip,device_access_error
+from iss.equipment.models import devices_ip,device_access_error,scan_iplist
 from django.db import connections
 from easysnmp import Session
 
@@ -10,7 +10,7 @@ from easysnmp import Session
 from iss.monitor.models import events
 
 
-community = "sibttklocal"
+#community = "sibttklocal"
 
 lldplocchassisid = "1.0.8802.1.1.2.1.3.2"
 phys = "1.3.6.1.2.1.47.1.1.1.1.11.1"
@@ -30,10 +30,12 @@ class Command(BaseCommand):
     #@asyncio.coroutine
     def get_data(self,ip,source):
 
+        ii = scan_iplist.objects.get(ipaddress=ip)
+
 
         try:
 
-            session = Session(hostname=ip, community=community, version=2)
+            session = Session(hostname=ip, community=ii.community, version=ii.snmp_ver)
 
             name = session.get((sysName, '0')).value
             descr = session.get((sysDescr, '0')).value
@@ -85,14 +87,15 @@ class Command(BaseCommand):
             print "error %s" % ip
             device_access_error.objects.create(ipaddress=ip,device_domen=source)
             devices_ip.objects.filter(ipaddress=ip, device_domen=source).update(access=False)
-
-
+            #
+            #ii.community = "public"
+            #ii.save()
 
     def handle(self, *args, **options):
 
 
 
-        source = args[0]
+        domen = args[0]
         iplist = args[1]
 
         if iplist == "all":
@@ -100,13 +103,13 @@ class Command(BaseCommand):
 
             #device_access_error.objects.filter(device_domen=source).delete()
 
-            for ip in events.objects.filter(source=source).exclude(device_net_address="").distinct("device_net_address"):
-                if devices_ip.objects.filter(ipaddress=ip.device_net_address,no_rewrite=True).count() == 0:
-                    print ip.device_net_address
-                    self.get_data(ip.device_net_address,source)
+            for ip in scan_iplist.objects.filter(device_domen=domen).distinct("ipaddress"):
+                if devices_ip.objects.filter(ipaddress=ip.ipaddress,no_rewrite=True).count() == 0:
+                    print ip.ipaddress
+                    self.get_data(ip.ipaddress,domen)
 
         else:
-            self.get_data(iplist, source)
+            self.get_data(iplist, domen)
         print "ok"
 
 
