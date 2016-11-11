@@ -19,6 +19,7 @@ serial_oid = "1.3.6.1.4.1.171.12.1.1.12"
 sysName = "1.3.6.1.2.1.1.5"
 sysLocation = "1.3.6.1.2.1.1.6"
 sysDescr = "1.3.6.1.2.1.1.1"
+sysContact = "1.3.6.1.2.1.1.4"
 
 
 
@@ -57,10 +58,13 @@ class Command(BaseCommand):
 
             serial = session.get((serial_oid, '0'))
 
-            if serial.snmp_type == "OCTETSTR" or serial.snmp_type == "STRING":
+            if (serial.snmp_type == "OCTETSTR" or serial.snmp_type == "STRING") and serial.value != "":
                 serial = serial.value
             else:
-                serial = ""
+                try:
+                    serial = session.get((sysContact, '0')).value
+                except:
+                    serial = ""
 
 
             if devices_ip.objects.filter(ipaddress=ip).all().count() == 1:
@@ -71,6 +75,7 @@ class Command(BaseCommand):
                 r.device_domen = source
                 r.chassisid = chassisid
                 r.device_serial = serial
+                r.access = True
                 r.save()
             else:
                 devices_ip.objects.create(
@@ -107,6 +112,7 @@ class Command(BaseCommand):
                 if devices_ip.objects.filter(ipaddress=ip.ipaddress,no_rewrite=True).count() == 0:
                     print ip.ipaddress
                     self.get_data(ip.ipaddress,domen)
+
 
         else:
             self.get_data(iplist, domen)

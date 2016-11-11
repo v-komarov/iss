@@ -17,6 +17,11 @@ from iss.equipment.models import devices_ip,footnodes
 
 
 
+
+
+
+
+
 def get_json(request):
 
     response_data = {}
@@ -72,19 +77,35 @@ def get_json(request):
             domen = request.GET["domen"]
 
             if devices_ip.objects.filter(ipaddress=ipaddress,device_domen=domen).count() == 1:
-                r = devices_ip.objects.get(ipaddress=ipaddress, device_domen=domen)
+                rr = devices_ip.objects.get(ipaddress=ipaddress, device_domen=domen)
                 response_data["result"] = {
-                    "sysname":r.device_name,
-                    "sysdescr":r.device_descr,
-                    "syslocation":r.device_location,
-                    "serial":r.device_serial,
-                    "mac":r.chassisid
+                    "sysname":rr.device_name,
+                    "sysdescr":rr.device_descr,
+                    "syslocation":rr.device_location,
+                    "serial":rr.device_serial,
+                    "mac":rr.chassisid
                 }
 
             else:
                 response_data["result"] = "error"
 
 
+
+        ### Получение данных опорного узла
+        if r.has_key("ftnode") and rg("ftnode") != '':
+            footnode = int(request.GET["ftnode"],10)
+            print footnode
+            f = footnodes.objects.get(pk=footnode)
+            response_data["result"] = {
+                "ipaddress":f.ipaddress,
+                "descr":f.descr,
+                "location":f.location,
+                "serial":f.serial,
+                "name":f.name,
+                "mac":f.chassisid,
+                "domen":f.device_domen
+            }
+            print response_data["result"]
 
 
 
@@ -105,26 +126,18 @@ def get_json(request):
                 chassisid = data["mac"],
                 device_domen = data["domen"]
             )
-        """
-        if data.has_key("action") and data["action"] == 'edit_event':
-            now = datetime.datetime.now(timezone('UTC'))
-            #source = request.user.username
 
-            e = events.objects.get(pk=data['event_id'])
-            e.update_time = now
-            e.last_seen = now
-            e.event_class = data["event_class"]
-            e.severity_id = Severity.objects.get(pk=data["severity"])
-            e.device_system = data["device_system"]
-            e.device_group = data["device_group"]
-            e.device_class = data["device_class"]
-            e.device_net_address = data["device_net_address"]
-            e.device_location = data["device_location"]
-            e.element_identifier = data["element_identifier"]
-            e.element_sub_identifier = data["element_sub_identifier"]
-            e.status_id=Status.objects.get(pk=data["status"])
-            e.save()
-        """
+        if data.has_key("action") and data["action"] == 'edit_footnode':
+
+            n = footnodes.objects.get(pk=int(data["row_id"]))
+            n.ipaddress = data["ipaddress"]
+            n.name = data["name"]
+            n.descr = data["descr"]
+            n.location = data["location"]
+            n.chassisid = data["mac"]
+            n.serial = data["serial"]
+            n.device_domen = data["domen"]
+            n.save()
 
 
 
