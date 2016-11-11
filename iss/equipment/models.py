@@ -22,6 +22,9 @@ class devices_ip(models.Model):
     access = models.BooleanField(default=True) # При опросе последний раз
     ports = JSONField(default={})
 
+    class Meta:
+        unique_together = ('ipaddress', 'device_domen')
+
 ### Лог ошибок доступа
 class device_access_error(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
@@ -55,11 +58,16 @@ class agregators(models.Model):
     data = JSONField(default={})
     chassisid = models.CharField(max_length=255, db_index=True, null=True)
 
+    class Meta:
+        unique_together = ('ipaddress', 'domen')
+
 
 ### Список адресов для snmp запросов
 class scan_iplist(models.Model):
-    ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,unique=True)
+    ipaddress = models.GenericIPAddressField(max_length=255,db_index=True)
     device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
     community = models.CharField(max_length=255, db_index=True, null=True, default=None)
     snmp_ver = models.IntegerField(null=True, default=2)
 
+    class Meta:
+        unique_together = ('ipaddress', 'device_domen')
