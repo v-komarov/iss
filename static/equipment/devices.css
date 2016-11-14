@@ -35,3 +35,8 @@ thead.small > tr:nth-child(1) > th:nth-child(10) {
     background-color: #B0E0E6;
 }
 
+
+
+.row {
+    margin-left:0;
+}

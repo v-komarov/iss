@@ -69,5 +69,10 @@ class scan_iplist(models.Model):
     community = models.CharField(max_length=255, db_index=True, null=True, default=None)
     snmp_ver = models.IntegerField(null=True, default=2)
 
+    def __unicode__(self):
+        return self.ipaddress
+
     class Meta:
         unique_together = ('ipaddress', 'device_domen')
+        verbose_name = 'Адрес'
+        verbose_name_plural = 'Список адресов'

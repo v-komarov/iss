@@ -16,7 +16,7 @@ from django.http import HttpResponse
 from iss.monitor.models import events
 from iss.localdicts.models import Severity,Status
 
-
+from iss.monitor.othersources import get_zkl
 
 
 
@@ -220,6 +220,18 @@ def get_json(request):
                     }
 
             response_data = data
+
+
+        # Запрос расчета ЗКЛ
+        if r.has_key("getzkl") and rg("getzkl") != "":
+            id_event = request.GET["event_id"]
+            event_list = [id_event]
+            a = events.objects.get(pk=id_event)
+            data = a.data
+            if data.has_key("containergroup"):
+                for item in data["containergroup"]:
+                    event_list.append(item)
+            response_data = get_zkl(event_list)
 
 
 

@@ -7,6 +7,9 @@ $(document).ready(function() {
     $("#first_seen").datepicker($.datepicker.regional['ru']);
     $("#last_seen").datepicker($.datepicker.regional['ru']);
 
+
+    $("#mark-all").bind("click",MarkAll);
+
     //setInterval('UpdateData();',5000);
     $("#clearsearch").bind("click",ClearSearch);
     $("#runsearch").bind("click",RunSearch);
@@ -23,6 +26,7 @@ $(document).ready(function() {
     $("#filtergroup").bind("click",FilterGroup);
 
     //$("table[group=events] tbody tr td a").bind("click",ChooseActions);
+    $("ul.dropdown-menu li a[action=zkl]").bind("click",GetZkl);
     $("ul.dropdown-menu li a[action=container]").bind("click",ShowContainer);
     $("ul.dropdown-menu li a[action=message-accidentmmsbegin]").bind("click",MessageMssBegin);
     $("#addgroup").bind("click",AddContainer);
@@ -130,6 +134,9 @@ $(document).ready(function() {
     zebra = "#FFF5EE"
     $("table[group=events] tbody tr:odd").css("background-color",zebra)
 
+    // Видимость checkbox-a "выбрать все"
+    $("#mark-all").hide();
+
 
 });
 
@@ -137,6 +144,33 @@ $(document).ready(function() {
 
 
 
+function MarkAll(e) {
+
+    var status = $("#mark-all").prop("checked");
+    $("table[group=events] tr[group=false] td input:checkbox").prop("checked",status);
+    $("table[group=events] tr[group=false]").attr("group",status);
+}
+
+
+
+
+
+// Запрос ЗКЛ
+function GetZkl(e) {
+
+    var row_id = $(this).closest("tr").attr("row_id");
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?getzkl=ok&event_id="+row_id,
+        function(data) {
+
+            $.each(data, function(key,value) {
+                console.log(key,value);
+
+            });
+
+        })
+
+}
 
 
 
@@ -272,7 +306,7 @@ function ShowContainer(e) {
 
     var row_id = $(this).closest("tr").attr("row_id");
 
-
+    $("#mark-all").show();
 
     $($(this).closest("div.dropdown")).hide();
     $("table[group=events] tbody tr td a[container_hide="+row_id+"]").show();
@@ -315,6 +349,7 @@ function HideContainer(e) {
     $("table[group=events] tbody tr").bind("mouseenter",EnterRow);
     $("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
 
+    $("#mark-all").hide();
 
 }
 

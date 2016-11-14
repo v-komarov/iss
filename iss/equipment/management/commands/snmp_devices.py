@@ -21,11 +21,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        for ip in devices_ip.objects.filter(device_domen="zenoss_krsk",access=True,no_rewrite=False):
+        domen = args[0]
+
+        for ip in devices_ip.objects.filter(device_domen=domen,access=True,no_rewrite=False):
             print "begin for %s" % ip.ipaddress
 
             try:
-                ii = scan_iplist.objects.get(ipaddress=ip.ipaddress)
+                ii = scan_iplist.objects.get(ipaddress=ip.ipaddress,device_domen=domen)
 
                 session = Session(hostname=ip.ipaddress, community=ii.community, version=ii.snmp_ver)
 
