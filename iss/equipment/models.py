@@ -21,6 +21,7 @@ class devices_ip(models.Model):
     no_rewrite = models.BooleanField(default=False)  # Не опрашивать, не переписывать
     access = models.BooleanField(default=True) # При опросе последний раз
     ports = JSONField(default={})
+    data = JSONField(default={})
 
     class Meta:
         unique_together = ('ipaddress', 'device_domen')
