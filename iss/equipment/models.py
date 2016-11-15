@@ -45,6 +45,9 @@ class footnodes(models.Model):
     chassisid = models.CharField(max_length=255, db_index=True, null=True)
     serial = models.CharField(max_length=100, db_index=True, default="")
 
+    class Meta:
+        unique_together = ('ipaddress', 'domen')
+
 
 ### Агрегаторы
 class agregators(models.Model):
