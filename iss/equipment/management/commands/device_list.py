@@ -67,8 +67,8 @@ class Command(BaseCommand):
                     serial = ""
 
 
-            if devices_ip.objects.filter(ipaddress=ip).all().count() == 1:
-                r = devices_ip.objects.get(ipaddress=ip)
+            if devices_ip.objects.filter(ipaddress=ip,device_domen=source).all().count() == 1:
+                r = devices_ip.objects.get(ipaddress=ip,device_domen=source)
                 r.device_descr = descr
                 r.device_name = name
                 r.device_location = location
