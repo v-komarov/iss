@@ -19,6 +19,13 @@ from iss.equipment.models import devices_ip,footnodes
 
 
 
+def outdata(response_data):
+
+    response = HttpResponse(json.dumps(response_data), content_type="application/json")
+    response['Access-Control-Allow-Origin'] = "*"
+    return response
+
+
 
 
 
@@ -62,14 +69,13 @@ def get_json(request):
             else:
                 readonly = False
 
-            r = devices_ip.objects.get(pk=rowid)
-            r.device_serial = serial
-            r.chassisid = mac
-            r.no_rewrite = readonly
-            r.save()
+            ra = devices_ip.objects.get(pk=rowid)
+            ra.device_serial = serial
+            ra.chassisid = mac
+            ra.no_rewrite = readonly
+            ra.save()
 
             response_data["result"] = "ok"
-
 
         ### Получение данных snmp
         if r.has_key("getdevice") and rg("getdevice") != '':
@@ -94,7 +100,7 @@ def get_json(request):
         ### Получение данных опорного узла
         if r.has_key("ftnode") and rg("ftnode") != '':
             footnode = int(request.GET["ftnode"],10)
-            print footnode
+
             f = footnodes.objects.get(pk=footnode)
             response_data["result"] = {
                 "ipaddress":f.ipaddress,
@@ -105,7 +111,8 @@ def get_json(request):
                 "mac":f.chassisid,
                 "domen":f.device_domen
             }
-            print response_data["result"]
+
+            response_data["result"]
 
 
 
