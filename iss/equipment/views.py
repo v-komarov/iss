@@ -9,7 +9,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from iss.mydecorators import group_required,anonymous_required
 
-from iss.equipment.models import devices_ip,footnodes
+from iss.equipment.models import devices_ip,footnodes,agregators
+
+
+
+
+
 
 class EquipmentList(ListView):
 
@@ -129,6 +134,97 @@ class FootNodeList(ListView):
 
 
         context['domen'] = ii
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+        return context
+
+
+
+
+
+class AgregatorsList(ListView):
+
+
+    model = agregators
+    template_name = "equipment/agregators_list.html"
+    paginate_by = 100
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='footnode',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.session = request.session
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_queryset(self):
+
+
+        return []
+
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AgregatorsList, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+        return context
+
+
+
+
+
+
+
+
+class Topology(ListView):
+
+
+    model = agregators
+    template_name = "equipment/topology.html"
+    paginate_by = 100
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='footnode',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.session = request.session
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_queryset(self):
+
+
+        return []
+
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Topology, self).get_context_data(**kwargs)
 
         if self.session.has_key('tz'):
             context['tz']= self.session['tz']
