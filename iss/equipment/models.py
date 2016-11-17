@@ -53,7 +53,6 @@ class footnodes(models.Model):
 class agregators(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
     uplink_ports = ArrayField(models.IntegerField(),blank=True,default=[],null=True,db_index=True)
-    device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
     descr = models.CharField(max_length=255, db_index=True, null=True)
     location = models.CharField(max_length=255, db_index=True, null=True)
     name = models.CharField(max_length=255, db_index=True, null=True)

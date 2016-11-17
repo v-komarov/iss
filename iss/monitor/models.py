@@ -5,9 +5,17 @@ from __future__ import unicode_literals
 import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-
+from django.contrib.auth.models import User
 import datetime
 from iss.localdicts.models import Status,Severity
+
+
+
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User)
+    settings = JSONField(default={})
 
 
 
@@ -16,7 +24,7 @@ class events(models.Model):
 
     id = models.CharField(max_length=255,primary_key=True, default=uuid.uuid4, editable=False)
     source = models.CharField(max_length=255,db_index=True,default="")
-    datetime_evt = models.DateTimeField(db_index=True,null=True)
+    datetime_evt = models.DateTimeField(db_index=True,null=True,auto_now=True)
     uuid = models.CharField(max_length=255,db_index=True,null=True,default=uuid.uuid4,)
     first_seen = models.DateTimeField(db_index=True,null=True)
     update_time = models.DateTimeField(db_index=True,null=True)

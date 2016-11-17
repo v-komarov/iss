@@ -97,10 +97,10 @@ class EventList(ListView):
                     pass
 
         if len(q) == 0:
-            return events.objects.filter(agregation=False).order_by('-update_time')[:1000]
+            return events.objects.filter(agregation=False).order_by('-first_seen')[:1000]
         else:
             str_q = " & ".join(q)
-            str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-update_time')" % str_q
+            str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-first_seen')" % str_q
 
             return (eval(str_sql))[:1000]
 

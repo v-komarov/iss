@@ -11,6 +11,18 @@ import datetime
 import binascii
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
+import json
+import cStringIO
+import commands
+import tempfile
+
+
+"""
+
+pycurl необходим libgnutls-dev
+
+"""
+
 
 
 tz = 'Asia/Krasnoyarsk'
@@ -23,95 +35,108 @@ class Command(BaseCommand):
 
 
 
+    def list0name(self,name):
+        if len(name) > 0:
+            return name[0]["name"]
+        else:
+            return ""
+
 
     def handle(self, *args, **options):
 
-        timedelta = int(time.time()*1000) - 3600
-
-        data = []
-
-        for table in 'event_summary','event_archive':
-
-            cursor = connections["zenoss_krsk"].cursor()
-            q = "SELECT first_seen,update_time,last_seen,summary,message,details_json,event_class.name,severity_id,uuid,element_identifier,element_sub_identifier,status_id,summary FROM %s LEFT JOIN event_class ON %s.event_class_id=event_class.id WHERE update_time > %s ORDER BY first_seen;" % (table,table,timedelta)
-            #q = "SELECT first_seen,update_time,last_seen,summary,message,details_json,event_class.name,severity_id,uuid,element_identifier,element_sub_identifier,status_id,summary FROM %s LEFT JOIN event_class ON %s.event_class_id=event_class.id ORDER BY first_seen;" % (table,table)
-
-            cursor.execute(q)
-
-            d = cursor.fetchall()
-
-            for row in d:
-
-                manager = ""
-                device_class = ""
-                device_group = ""
-                device_net_address = ""
-                device_location = ""
-                device_system = ""
-
-                arrayjson = eval(row[5])
-
-                for item in arrayjson:
-                    if item['name'] == 'manager':
-                        manager = item['value'][0]
-                    elif item['name'] == 'zenoss.device.ip_address':
-                        device_net_address = item['value'][0]
-                    elif item['name'] == 'zenoss.device.location':
-                        device_location = item['value'][0]
-                    elif item['name'] == 'zenoss.device.device_class':
-                        device_class = item['value'][0]
-                    elif item['name'] == 'zenoss.device.groups':
-                        device_group = item['value'][0]
-                    elif item['name'] == 'zenoss.device.systems':
-                        device_system = item['value'][0]
+        tf = tempfile.NamedTemporaryFile(delete=True)
 
 
+        """
 
-                if events.objects.filter(Q(uuid=binascii.b2a_hex(row[8]),source = 'zenoss_krsk')).count() == 0:
-                    events.objects.create(
-                        datetime_evt = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[0]) / 1000)),
-                        source = 'zenoss_krsk',
-                        uuid = binascii.b2a_hex(row[8]),
-                        first_seen = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[0]) / 1000)),
-                        update_time = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[1]) / 1000)),
-                        last_seen = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[2]) / 1000)),
-                        event_class = row[6],
-                        severity_id = Severity.objects.get(pk=row[7]),
-                        manager = manager,
-                        device_net_address = device_net_address,
-                        device_location = device_location,
-                        device_class = device_class,
-                        device_group = device_group,
-                        device_system = device_system,
-                        element_identifier = row[9],
-                        element_sub_identifier = row[10],
-                        status_id = Status.objects.get(pk=row[11]),
-                        summary = row[12]
+        password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+        password_mgr.add_password(None,'http://10.6.0.22:8080/','vak','')
+        handler = urllib2.HTTPBasicAuthHandler(password_mgr)
+        opener = urllib2.build_opener(handler)
+        urllib2.install_opener(opener)
+        headers = {'User-Agent': 'Mozilla 5.10'}
+        request = urllib2.Request('http://10.6.0.22:8080/monitor/events/page/1/', None, headers)
+        f = opener.open(request)
+        data = f.read()
+        print data
+        f.close()
+        """
 
-                    )
+#        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"params\":{\"eventState\":[0,1,3]}}' %s" % (tf.name)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":30000,\"sort\":\"lastTime\"}' %s" % (tf.name)
+
+        print cmd
+        commands.getoutput(cmd)
+
+        data = json.loads(commands.getoutput("cat %s" % tf.name))
+        for r in data["result"]["events"]:
+            event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
+            #print event_str
+            id_row = r["id"] # id
+            ipaddress = ", ".join(r["ipAddress"]) # ip
+            firsttime = krsk_tz.localize(datetime.datetime.strptime(r["firstTime"],"%Y-%m-%d %H:%M:%S"))
+            lasttime = krsk_tz.localize(datetime.datetime.strptime(r["lastTime"],"%Y-%m-%d %H:%M:%S"))
+            summary = r["summary"]
+            severity = Severity.objects.get(pk=r["severity"])
+            update_time = krsk_tz.localize(datetime.datetime.strptime(r["stateChange"],"%Y-%m-%d %H:%M:%S")) # update_time
+            uuid = r["device"]["uuid"] # uuid
+            status = Status.objects.get(name=r["eventState"]) # Статус
+            eventclass = r["eventClass"]["text"]
+
+            device = r["device"]["text"]
+
+            location = self.list0name(r["Location"])
+            devicesystem = self.list0name(r["Systems"])
+            deviceclass = self.list0name(r["DeviceClass"]) # DeviceGroup
+            devicegroup = self.list0name(r["DeviceGroups"]) # DeviceClass
+
+            manager = ""
+            if r["details"].has_key("manager"):
+                manager = ", ".join(r["details"]["manager"])
 
 
-                else:
+            if events.objects.filter(uuid=uuid).count() == 0:
+                events.objects.create(
+                    source='zenoss_krsk',
+                    uuid=uuid,
+                    first_seen=firsttime,
+                    update_time=update_time,
+                    last_seen=lasttime,
+                    event_class=eventclass,
+                    severity_id=severity,
+                    manager=manager,
+                    device_net_address=ipaddress,
+                    device_location=location,
+                    device_class=deviceclass,
+                    device_group=devicegroup,
+                    device_system=devicesystem,
+                    element_identifier=device,
+                    element_sub_identifier="",
+                    status_id=status,
+                    summary=summary
 
-                    evt = events.objects.filter(uuid=binascii.b2a_hex(row[8]),source='zenoss_krsk').get()
+                )
 
-                    evt.datetime_evt = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[0]) / 1000))
-                    evt.first_seen = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[0]) / 1000))
-                    evt.update_time = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[1]) / 1000))
-                    evt.last_seen = krsk_tz.localize(datetime.datetime.fromtimestamp(int(row[2]) / 1000))
-                    evt.event_class = row[6]
-                    evt.severity_id = Severity.objects.get(pk=row[7])
-                    evt.manager = manager
-                    evt.device_net_address = device_net_address
-                    evt.device_location = device_location
-                    evt.device_class = device_class
-                    evt.device_group = device_group
-                    evt.device_system = device_system
-                    evt.element_identifier = row[9]
-                    evt.element_sub_identifier = row[10]
-                    evt.status_id = Status.objects.get(pk=row[11])
-                    evt.summary = row[12]
-                    evt.save()
+            else:
+
+                evt = events.objects.get(uuid=uuid)
+
+                evt.first_seen = firsttime
+                evt.update_time = update_time
+                evt.last_seen = lasttime
+                evt.event_class = eventclass
+                evt.severity_id = severity
+                evt.manager = manager
+                evt.device_net_address = ipaddress
+                evt.device_location = location
+                evt.device_class = deviceclass
+                evt.device_group = devicegroup
+                evt.device_system = devicesystem
+                evt.element_identifier = device
+                evt.element_sub_identifier = ""
+                evt.status_id = status
+                evt.summary = summary
+                evt.save()
 
         print "ok"
 

@@ -7,11 +7,95 @@
 {% load tz %}
 
 
+
+<link href="{{ MY_STATIC_URL }}equipment/agregators.css" type="text/css" rel="stylesheet">
+
+
+
+
+
 <div class="container">
 
     {% include "menu.html" %}
 
 </div>
+
+
+
+
+<div class="row">
+
+            <div class="form-group">
+                <label for="search"><small>Search</small></label>
+                <small>
+                    <input type="text" style="height:28px;padding-left:2px;" id="search" placeholder="{{ search }}">
+                    <button id="runsearch" title="Искать" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    <button id="clearsearch" title="Сброс" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                </small>
+            </div>
+
+</div>
+
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/equipment/agregators/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/equipment/agregators/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+
+    <table group="devices" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>ip адрес</th>
+                <th>sysName</th>
+                <th>sysDescr</th>
+                <th>sysLocation</th>
+                <th>serial</th>
+                <th>mac</th>
+                <th>uplink ports</th>
+                <th>domen</th>
+                <th>Опорный узел</th>
+            </tr>
+
+        </thead>
+
+
+
+    </table>
+
+
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/equipment/agregators/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/equipment/agregators/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+
+
+
+
+
+</div>
+
 
 
 
