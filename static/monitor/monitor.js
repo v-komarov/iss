@@ -3,7 +3,6 @@ $(document).ready(function() {
     $("#floatingCirclesG").attr("hidden","hidden");
     $("table[group=events]").removeAttr("hidden");
 
-
     $("#first_seen").datepicker($.datepicker.regional['ru']);
     $("#last_seen").datepicker($.datepicker.regional['ru']);
 
@@ -138,15 +137,29 @@ $(document).ready(function() {
     $("#mark-all").hide();
 
 
+
+
+    // Освежать экран
+    setInterval('UpdateScreen();',10000);
+
+
+
 });
 
 
 
+function UpdateScreen() {
+    if ($("#menumonitor").is(":hover"))  {
+        window.location=$("#menumonitor a").attr("href");
+    }
+}
 
 
 
-
-
+function FreshScreenOn(e) {
+    $(this).attr("freshscreen","yes");
+    console.log("screen on");
+}
 
 
 
