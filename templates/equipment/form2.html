@@ -9,7 +9,7 @@
                     <td>
                     <select id="domen" name="domen" class="form-control input-sm">
                         {% for item in domen %}
-                            <option valie="{{ item }}">{{ item }}</option>
+                            <option value="{{ item }}">{{ item }}</option>
                         {% endfor %}
                     </select>
                     </td>
@@ -33,14 +33,14 @@
                     <td>
                     <select id="footnode" name="footnode" class="form-control input-sm">
                         {% for item in footnodes %}
-                            <option valie="{{ item.id }}" domen="{{ item.domen }}">{{ item.name }}</option>
+                            <option value="{{ item.id }}" domen="{{ item.domen }}">{{ item.name }}</option>
                         {% endfor %}
                     </select>
                     </td>
                 </tr>
                 <tr>
                     <td><label for="uplink">Uplink</label></td>
-                    <td><input type="text" class="form-control input-sm" id="uplink" name="mac" placeholder="" /></td>
+                    <td><input type="text" class="form-control input-sm" id="uplink" name="uplink" placeholder="" /></td>
                     <td></td>
                     <td></td>
                 </tr>

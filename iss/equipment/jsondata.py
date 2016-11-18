@@ -13,7 +13,7 @@ from pytz import timezone
 
 from django.http import HttpResponse
 
-from iss.equipment.models import devices_ip,footnodes
+from iss.equipment.models import devices_ip,footnodes,agregators
 
 
 
@@ -114,12 +114,33 @@ def get_json(request):
 
             response_data["result"]
 
+        ### Получение данных агрегатора
+        if r.has_key("agregator") and rg("agregator") != '':
+            ag = int(request.GET["agregator"], 10)
+
+            f = agregators.objects.get(pk=ag)
+            response_data["result"] = {
+                "ipaddress": f.ipaddress,
+                "descr": f.descr,
+                "location": f.location,
+                "serial": f.serial,
+                "name": f.name,
+                "mac": f.chassisid,
+                "domen": f.domen,
+                "footnode":f.footnode.id,
+                "uplink":f.uplink_ports
+            }
+
+            response_data["result"]
+
+
 
 
     if request.method == "POST":
+
+
         data = eval(request.body)
 
-        print data
 
         if data.has_key("action") and data["action"] == 'create_footnode':
 
@@ -147,9 +168,33 @@ def get_json(request):
             n.save()
 
 
+        if data.has_key("action") and data["action"] == 'create_agregator':
+            print data
+            agregators.objects.create(
+                ipaddress=data["ipaddress"],
+                name=data["name"],
+                descr=data["descr"],
+                location=data["location"],
+                serial=data["serial"],
+                chassisid=data["mac"],
+                domen=data["domen"],
+                footnode = footnodes.objects.get(pk=data["footnode"]),
+                uplink_ports=data["uplink"].split(",")
+            )
 
 
-
+        if data.has_key("action") and data["action"] == 'edit_agregator':
+            a = agregators.objects.get(pk=int(data["row_id"]))
+            a.ipaddress = data["ipaddress"]
+            a.name = data["name"]
+            a.descr = data["descr"]
+            a.location = data["location"]
+            a.chassisid = data["mac"]
+            a.serial = data["serial"]
+            a.domen = data["domen"]
+            a.footnode = footnodes.objects.get(pk=data["footnode"])
+            a.uplink_ports = data["uplink"].split(",")
+            a.save()
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")
     response['Access-Control-Allow-Origin'] = "*"
