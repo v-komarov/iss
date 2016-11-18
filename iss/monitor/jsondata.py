@@ -12,12 +12,13 @@ from email.utils import parsedate_tz, mktime_tz, formatdate
 from pytz import timezone
 
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
 from iss.monitor.models import events
 from iss.localdicts.models import Severity,Status
 
 from iss.monitor.othersources import get_zkl
-
+from iss.monitor.models import Profile
 
 
 
@@ -232,6 +233,31 @@ def get_json(request):
                 for item in data["containergroup"]:
                     event_list.append(item)
             response_data = get_zkl(event_list)
+
+
+        """
+        # Пользовательские настройки
+        if r.has_key("getsettings") and rg("getsettings") != "":
+            pk_user = request.user.pk
+            u = User.objects.get(pk=pk_user)
+            if Profile.objects.filter(user=u) == 1:
+                p = Profile.objects.get(user=u)
+                data = p.data
+                if data.has_key("monitor-settings"):
+                    response_data = {
+                        'height-table': data["monitor-settings"]["height-table"]
+                    }
+                else:
+                    response_data = {
+                        'height-table': 700
+                    }
+
+            else:
+                response_data = {
+                    'height-table':1700
+                }
+        """
+
 
 
 

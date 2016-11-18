@@ -63,19 +63,23 @@
 
         </thead>
 
-        {% for row in object_list %}
-            <tbody>
-                <tr class="small" marked="no" row_id="{{ row.id }}">
-                    <td>{{ row.ipaddress }}</td>
-                    <td>{{ row.name }}</td>
-                    <td>{{ row.descr }}</td>
-                    <td>{{ row.location }}</td>
-                    <td>{{ row.serial }}</td>
-                    <td>{{ row.chassisid }}</td>
-                    <td>{{ row.device_domen }}</td>
-                </tr>
-            </tbody>
-        {% endfor %}
+        <tbody>
+
+            {% for row in object_list %}
+
+                    <tr class="small" marked="no" row_id="{{ row.id }}">
+                        <td>{{ row.ipaddress }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.descr }}</td>
+                        <td>{{ row.location }}</td>
+                        <td>{{ row.serial }}</td>
+                        <td>{{ row.chassisid }}</td>
+                        <td>{{ row.domen }}</td>
+                    </tr>
+
+            {% endfor %}
+
+        </tbody>
     </table>
 
 

@@ -14,7 +14,7 @@ from iss.localdicts.models import Status,Severity
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
     settings = JSONField(default={})
 
 

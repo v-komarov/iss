@@ -71,7 +71,7 @@ class Command(BaseCommand):
         data = json.loads(commands.getoutput("cat %s" % tf.name))
         for r in data["result"]["events"]:
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
-            #print event_str
+            print event_str
             id_row = r["id"] # id
             ipaddress = ", ".join(r["ipAddress"]) # ip
             firsttime = krsk_tz.localize(datetime.datetime.strptime(r["firstTime"],"%Y-%m-%d %H:%M:%S"))

@@ -166,8 +166,25 @@ class AgregatorsList(ListView):
 
     def get_queryset(self):
 
+        q = []
 
-        return []
+        if self.session.has_key("search"):
+            if len(self.session['search']) >= 3:
+                for search in self.session['search'].split(" "):
+                    print search
+                    if search != " ":
+                        q.append("(Q(ipaddress__icontains='%s') | Q(name__icontains='%s') | Q(location__icontains='%s') | Q(descr__icontains='%s') | Q(chassisid__icontains='%s') | Q(serial__icontains='%s'))" % (search,search,search,search,search,search))
+
+        if len(q) == 0:
+            return agregators.objects.all().order_by('ipaddress')
+        else:
+            str_q = " & ".join(q)
+            str_sql = "agregators.objects.filter(%s).order_by('ipaddress')" % str_q
+
+        return eval(str_sql)
+
+
+
 
 
 
@@ -179,10 +196,35 @@ class AgregatorsList(ListView):
     def get_context_data(self, **kwargs):
         context = super(AgregatorsList, self).get_context_data(**kwargs)
 
+
+        ii = []
+        for i in devices_ip.objects.all().distinct('device_domen'):
+            ii.append(i.device_domen)
+
+        context['domen'] = ii
+
+
+        fn = []
+        for node in footnodes.objects.all():
+            fn.append({
+                'id':node.id,
+                'name':"%s %s" % (node.ipaddress,node.location),
+                'domen':node.domen
+            })
+        context['footnodes'] = fn
+
+
+
         if self.session.has_key('tz'):
             context['tz']= self.session['tz']
         else:
             context['tz']= 'UTC'
+
+        # search
+        if self.session.has_key('search'):
+            context['search'] = self.session['search']
+        else:
+            context['search'] = ""
 
 
         return context

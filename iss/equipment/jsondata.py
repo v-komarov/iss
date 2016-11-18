@@ -109,7 +109,7 @@ def get_json(request):
                 "serial":f.serial,
                 "name":f.name,
                 "mac":f.chassisid,
-                "domen":f.device_domen
+                "domen":f.domen
             }
 
             response_data["result"]
@@ -131,7 +131,7 @@ def get_json(request):
                 location = data["location"],
                 serial = data["serial"],
                 chassisid = data["mac"],
-                device_domen = data["domen"]
+                domen = data["domen"]
             )
 
         if data.has_key("action") and data["action"] == 'edit_footnode':
@@ -143,7 +143,7 @@ def get_json(request):
             n.location = data["location"]
             n.chassisid = data["mac"]
             n.serial = data["serial"]
-            n.device_domen = data["domen"]
+            n.domen = data["domen"]
             n.save()
 
 

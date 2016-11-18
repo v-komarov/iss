@@ -78,37 +78,38 @@
 
         </thead>
 
-        {% for row in object_list %}
-            <tbody>
-                <tr class="small">
-                    <td>{{ row.ipaddress }}</td>
-                    <td>{{ row.device_name }}</td>
-                    <td>{{ row.device_descr }}</td>
-                    <td>{{ row.device_location }}</td>
-                    <td><input type="text" class="input" value="{{ row.device_serial }}" /></td>
-                    <td><input type="text" class="input" value="{{ row.chassisid }}" /></td>
-                    <td>{{ row.device_domen }}</td>
-                    <td>
-                        {% if row.access == False %}
-                            Есть
-                        {% else %}
+        <tbody>
 
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if row.no_rewrite == True %}
-                            <input type="checkbox" class="input no-rewrite" checked />
-                        {% else %}
-                            <input type="checkbox" class="input no-rewrite" />
-                        {% endif %}
-                    </td>
-                    {% timezone tz %}
-                    <td>{{ row.update|date:"d.m.Y H:i e" }}</td>
-                    {% endtimezone %}
-                    <td><a href="#" title="Сохранить" row-id={{ row.id }}><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a></td>
-                </tr>
-            </tbody>
-        {% endfor %}
+            {% for row in object_list %}
+                    <tr class="small">
+                        <td>{{ row.ipaddress }}</td>
+                        <td>{{ row.device_name }}</td>
+                        <td>{{ row.device_descr }}</td>
+                        <td>{{ row.device_location }}</td>
+                        <td><input type="text" class="input" value="{{ row.device_serial }}" /></td>
+                        <td><input type="text" class="input" value="{{ row.chassisid }}" /></td>
+                        <td>{{ row.device_domen }}</td>
+                        <td>
+                            {% if row.access == False %}
+                                Есть
+                            {% else %}
+
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.no_rewrite == True %}
+                                <input type="checkbox" class="input no-rewrite" checked />
+                            {% else %}
+                                <input type="checkbox" class="input no-rewrite" />
+                            {% endif %}
+                        </td>
+                        {% timezone tz %}
+                        <td>{{ row.update|date:"d.m.Y H:i e" }}</td>
+                        {% endtimezone %}
+                        <td><a href="#" title="Сохранить" row-id={{ row.id }}><span class="glyphicon glyphicon-save" aria-hidden="true"></span></a></td>
+                    </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
 

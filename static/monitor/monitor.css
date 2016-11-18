@@ -224,3 +224,14 @@ errorMsg {color: red;}
 {
     width:20%;
 }
+
+
+#usersettings > table > tr > td {
+    padding:0;
+}
+
+
+#height-table {
+    width:100px;
+}
+

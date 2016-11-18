@@ -36,14 +36,14 @@ class device_access_error(models.Model):
 ### Опорные узлы
 class footnodes(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
-    device_domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
     descr = models.CharField(max_length=255, db_index=True, null=True)
     location = models.CharField(max_length=255, db_index=True, null=True)
     name = models.CharField(max_length=255, db_index=True, null=True)
-    domen = models.CharField(max_length=255, db_index=True, null=True, default=None)
     data = JSONField(default={})
     chassisid = models.CharField(max_length=255, db_index=True, null=True)
     serial = models.CharField(max_length=100, db_index=True, default="")
+
 
     class Meta:
         unique_together = ('ipaddress', 'domen')
@@ -60,6 +60,7 @@ class agregators(models.Model):
     footnode = models.ForeignKey(footnodes,null=True)
     data = JSONField(default={})
     chassisid = models.CharField(max_length=255, db_index=True, null=True)
+    serial = models.CharField(max_length=100, db_index=True, default="")
 
     class Meta:
         unique_together = ('ipaddress', 'domen')

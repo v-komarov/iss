@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+
+
     $("#floatingCirclesG").attr("hidden","hidden");
     $("table[group=events]").removeAttr("hidden");
 
@@ -107,18 +109,12 @@ $(document).ready(function() {
 
     $('table[group=events] tbody tr td input[type=checkbox]').on("click",CheckBoxRow);
 
-    $('table[group=events]').tableScroll({height:700});
+    $('table[group=events]').tableScroll({height:800});
 
     // Видимость кнопок
     $("#editrow").hide();
     $("#editmail").hide();
-    //$("#sendmess").hide();
-    //$("#working").hide();
 
-/*
-    if ($("#hidegroup").is(":visible") == true) { $("#addgroup").show(); $("#addrow").hide(); $("#deletemembers").show();}
-    else { $("#addgroup").hide(); $("#addrow").show(); $("#deletemembers").hide();}
-*/
 
     // Сброс строковых checkbox-ов
     $("table[group=events] tbody tr td input:checkbox").each(function(){
