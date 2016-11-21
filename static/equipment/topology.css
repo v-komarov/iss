@@ -1,0 +1,30 @@
+.row {
+    margin:0;
+}
+
+
+.nav {
+    margin-bottom:10px;
+}
+
+
+
+
+.table > thead {
+    background-color: gainsboro;
+}
+
+
+
+div.col-md-4 > table > thead > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+#buttons {
+    padding-left:20px;
+}
+
+

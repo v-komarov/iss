@@ -2,10 +2,6 @@ $(document).ready(function() {
 
 
 
-    $("#user-settings").bind("click",UserSettings);
-
-
-
     //// Валидация
     $("#eventform").validate({
         highlight: function(element, errorClass) {
@@ -770,29 +766,4 @@ function MessageMssBegin(e) {
 
 
 
-
-// Settings
-function UserSettings(e) {
-
-
-    $("#usersettings").dialog({
-          title:"Настройки",
-          show: {
-            effect: "blind",
-            duration: 100
-          },
-          hide: {
-            effect: "blind",
-            duration: 1500
-          },
-          buttons: [{text:"Закрыть", click: function() { $(this).dialog("close")}}],
-          modal:true,
-          minWidth:200,
-          width:400,
-          height:400
-
-    });
-
-
-}
 

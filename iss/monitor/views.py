@@ -26,6 +26,12 @@ from iss.localdicts.models import Status,Severity
 from iss.mydecorators import group_required,anonymous_required
 
 
+from django.contrib.auth.models import User
+from iss.monitor.models import Profile
+from iss.monitor.jsondata import head_order
+
+
+
 cursor = connections["default"].cursor()
 cursor.execute('SELECT DISTINCT manager FROM monitor_events')
 managers = cursor.fetchall()
@@ -45,6 +51,7 @@ class EventList(ListView):
     @method_decorator(group_required(group='monitor',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.session = request.session
+        self.user = request.user
         return super(ListView, self).dispatch(request, *args, **kwargs)
 
 
@@ -206,6 +213,20 @@ class EventList(ListView):
             context["filtergroup"] = True
         else:
             context["filtergroup"] = False
+
+
+        # Чередование полей
+        pk_user = self.user.pk
+        u = User.objects.get(pk=pk_user)
+        if Profile.objects.filter(user=u) == 1:
+            p = Profile.objects.get(user=u)
+            data = p.data
+            if data.has_key("monitor-settings"):
+                context['head_order'] = data["monitor-settings"]["head_order"]
+            else:
+                context['head_order'] = head_order
+        else:
+            context['head_order'] = head_order
 
 
 

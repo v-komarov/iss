@@ -235,3 +235,14 @@ errorMsg {color: red;}
     width:100px;
 }
 
+
+#head-order > tbody > tr > td {
+    padding:0;
+}
+
+
+#head-order {
+    padding-bottom:2px;
+    margin-bottom:0;
+}
+

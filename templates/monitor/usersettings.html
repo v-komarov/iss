@@ -1,12 +1,29 @@
 <div id="usersettings" class="small" hidden>
 
-    <table class="table table-bordered table-striped draggable" width="100%">
-
+    <table id="table-settings" class="table table-bordered table-striped draggable" width="100%">
+        <tbody>
         <tr>
-            <td><label for="height-table">Высота таблицы</label></td>
-            <td><input type="number" class="form-control input-sm" min=10 max=100 step=10 id="height-table" value="{{ heighttable }}" placeholder="" /></td>
-        </tr>
+            <td>Порядок полей</td>
+            <td>
+                <table id="head-order" class="table table-bordered">
+                    <tbody>
+                        {% for a in head_order %}
+                        <tr>
+                            <td name="{{ a.name }}">{{ a.title }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
+                <div class="text-center">
+                    <a id="head-order-up" href="#"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a>
+                    <a id="head-order-down" href="#"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
+                </div>
+
+
+            </td>
+        </tr>
+        </tbody>
     </table>
 
 </div>

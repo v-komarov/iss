@@ -168,8 +168,9 @@ function FreshScreenOn(e) {
 function MarkAll(e) {
 
     var status = $("#mark-all").prop("checked");
-    $("table[group=events] tr[group=false] td input:checkbox").prop("checked",status);
-    $("table[group=events] tr[group=false]").attr("group",status);
+    if (status == true) { $("table[group=events] tr[group=false] td input:checkbox").prop("checked",true); }
+    else { $("table[group=events] tr[group=false] td input").removeAttr("checked"); }
+    //$("table[group=events] tr[group=false]").attr("group",status);
 }
 
 
@@ -221,7 +222,7 @@ function GetZkl(e) {
                 tech = tech + value['ports_info']['tech'];
                 unconnected = unconnected + value['ports_info']['unconnected'];
 
-                console.log(key,value);
+                //console.log(key,value);
 
             });
 

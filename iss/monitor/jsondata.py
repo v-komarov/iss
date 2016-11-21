@@ -22,6 +22,38 @@ from iss.monitor.models import Profile
 
 
 
+
+
+### Чередование полей по умолчанию
+head_order = [
+    {'name':'first_seen', 'title':'first_seen'},
+    {'name': 'last_seen', 'title': 'last_seen'},
+    {'name': 'status_id', 'title': 'Status'},
+    {'name': 'severity_id', 'title': 'Severity'},
+    {'name': 'manager', 'title': 'Manager'},
+    {'name': 'event_class', 'title': 'EventClass'},
+    {'name': 'device_system', 'title': 'DeviceSystem'},
+    {'name': 'device_group', 'title': 'DeviceGroup'},
+    {'name': 'device_class', 'title': 'DeviceClass'},
+    {'name': 'device_net_address', 'title': 'DeviceNetAddress'},
+    {'name': 'device_location', 'title': 'DeviceLocation'},
+    {'name': 'element_identifier', 'title': 'ElementIdentifier'},
+    {'name': 'element_sub_identifier', 'title': 'ElementSubIdentifier'},
+    {'name': 'summary', 'title': 'Summary'},
+
+]
+
+
+
+
+
+
+
+
+
+
+
+
 def get_json(request):
 
     response_data = {}

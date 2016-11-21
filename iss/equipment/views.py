@@ -274,6 +274,27 @@ class Topology(ListView):
             context['tz']= 'UTC'
 
 
+        domen = []
+        for i in devices_ip.objects.all().distinct('device_domen'):
+            domen.append(i.device_domen)
+
+        context['domen'] = domen
+
+
+        footnode = []
+        for i in footnodes.objects.all():
+            footnode.append(i)
+
+        context['footnode'] = footnode
+
+
+        agregator = []
+        for i in agregators.objects.all():
+            agregator.append(i)
+
+        context['agregator'] = agregator
+
+
         return context
 
 

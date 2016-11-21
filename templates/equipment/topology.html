@@ -7,11 +7,97 @@
 {% load tz %}
 
 
+<script type="text/javascript" src="{{ MY_STATIC_URL }}equipment/topology.js"></script>
+<link href="{{ MY_STATIC_URL }}equipment/topology.css" type="text/css" rel="stylesheet">
+
+
 <div class="container">
 
     {% include "menu.html" %}
 
 </div>
+
+
+
+
+<div class="row small">
+    <form class="form-inline col-sm-offset-1">
+        <label for="select-domen">Домен</label>
+        <select id="select-domen" class="form-control input-sm" data-width="auto">
+                <option value=""></option>
+            {% for item in domen %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <label for="select-footnode">Опорный узел</label>
+        <select id="select-footnode" class="form-control input-sm">
+            {% for item in footnode %}
+                <option domen="{{ item.domen }}" value="{{ item.id }}">{{ item.ipaddress }} {{ item.name }} {{ item.location }}</option>
+            {% endfor %}
+        </select>
+        <label for="select-agregator">Агрегатор</label>
+        <select id="select-agregator" class="form-control input-sm">
+            {% for item in agregator %}
+                <option footnode="{{ item.footnode.id }}" value="{{ item.id }}">{{ item.ipaddress }} {{ item.name }} {{ item.location }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+
+
+<div id="buttons" class="row">
+    <button id="addlink" title="Создать" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+</div>
+
+
+
+
+
+<div class="row small">
+    <div class="col-md-4">
+        <table group="user-links" class="table table-bordered table-striped draggable" width="100%">
+
+            <caption>Таблица соединений заданная пользователем</caption>
+
+            <thead>
+                <tr>
+                <th>IP address 1</th>
+                <th>port 1</th>
+                <th>port 2</th>
+                <th>IP address 2</th>
+                <th width="5%">Удалить</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+
+    <div class="col-md-4 col-md-offset-1">
+    <table group="snmp-links" class="table table-bordered table-striped draggable" width="100%">
+
+        <caption>Таблица соединений по данным snmp</caption>
+
+        <thead>
+            <tr>
+            <th>IP address 1</th>
+            <th>Name 1</th>
+            <th>port 1</th>
+            <th>port 2</th>
+            <th>Name 2</th>
+            <th>IP address 2</th>
+            </tr>
+        </thead>
+    </table>
+
+
+
+    </div>
+
+
+</div>
+
+
 
 
 
