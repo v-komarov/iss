@@ -265,29 +265,6 @@ def get_json(request):
             response_data = get_zkl(event_list)
 
 
-        """
-        # Пользовательские настройки
-        if r.has_key("getsettings") and rg("getsettings") != "":
-            pk_user = request.user.pk
-            u = User.objects.get(pk=pk_user)
-            if Profile.objects.filter(user=u) == 1:
-                p = Profile.objects.get(user=u)
-                data = p.data
-                if data.has_key("monitor-settings"):
-                    response_data = {
-                        'height-table': data["monitor-settings"]["height-table"]
-                    }
-                else:
-                    response_data = {
-                        'height-table': 700
-                    }
-
-            else:
-                response_data = {
-                    'height-table':1700
-                }
-        """
-
 
 
 

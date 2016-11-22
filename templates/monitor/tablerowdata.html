@@ -24,19 +24,343 @@
 
                     <td>{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
                     <td>{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
-                    <td>{{ row.field1 }}</td>
-                    <td>{{ row.field2 }}</td>
-                    <td>{{ row.field3 }}</td>
-                    <td>{{ row.field4 }}</td>
-                    <td>{{ row.field5 }}</td>
-                    <td>{{ row.field6 }}</td>
-                    <td>{{ row.field7 }}</td>
-                    <td>{{ row.field8 }}</td>
-                    <td>{{ row.field9 }}</td>
-                    <td>{{ row.field10 }}</td>
-                    <td>{{ row.field11 }}</td>
-                    <td>{{ row.field12 }}</td>
 
+
+                        <td>
+                            {% if head_order.0.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.0.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.0.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.0.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.0.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.0.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.0.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.0.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.0.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.0.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.0.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.0.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.1.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.1.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.1.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.1.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.1.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.1.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.1.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.1.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.1.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.1.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.1.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.1.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.2.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.2.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.2.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.2.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.2.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.2.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.2.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.2.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.2.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.2.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.2.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.2.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.3.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.3.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.3.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.3.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.3.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.3.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.3.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.3.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.3.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.3.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.3.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.3.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.4.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.4.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.4.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.4.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.4.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.4.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.4.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.4.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.4.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.4.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.4.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.4.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.5.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.5.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.5.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.5.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.5.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.5.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.5.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.5.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.5.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.5.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.5.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.5.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.6.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.6.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.6.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.6.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.6.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.6.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.6.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.6.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.6.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.6.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.6.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.6.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.7.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.7.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.7.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.7.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.7.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.7.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.7.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.7.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.7.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.7.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.7.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.7.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.8.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.8.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.8.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.8.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.8.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.8.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.8.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.8.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.8.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.8.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.8.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.8.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.9.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.9.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.9.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.9.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.9.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.9.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.9.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.9.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.9.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.9.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.9.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.9.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.10.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.10.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.10.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.10.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.10.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.10.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.10.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.10.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.10.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.10.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.10.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.10.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if head_order.11.name == "status_id" %}
+                                {{ row.status_id }}
+                            {% elif head_order.11.name == "severity_id" %}
+                                {{ row.severity_id }}
+                            {% elif head_order.11.name == "manager" %}
+                                {{ row.manager }}
+                            {% elif head_order.11.name == "device_system" %}
+                                {{ row.device_system }}
+                            {% elif head_order.11.name == "event_class" %}
+                                {{ row.event_class }}
+                            {% elif head_order.11.name == "device_group" %}
+                                {{ row.device_group }}
+                            {% elif head_order.11.name == "device_class" %}
+                                {{ row.device_class }}
+                            {% elif head_order.11.name == "device_location" %}
+                                {{ row.device_location }}
+                            {% elif head_order.11.name == "device_net_address" %}
+                                {{ row.device_net_address }}
+                            {% elif head_order.11.name == "element_identifier" %}
+                                {{ row.element_identifier }}
+                            {% elif head_order.11.name == "element_sub_identifier" %}
+                                {{ row.element_sub_identifier }}
+                            {% elif head_order.11.name == "summary" %}
+                                {{ row.summary }}
+                            {% endif %}
+                        </td>
 
                 </tr>
         {% endfor %}

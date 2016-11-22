@@ -109,7 +109,7 @@ $(document).ready(function() {
 
     $('table[group=events] tbody tr td input[type=checkbox]').on("click",CheckBoxRow);
 
-    $('table[group=events]').tableScroll({height:800});
+    $('table[group=events]').tableScroll({height:700});
 
     // Видимость кнопок
     $("#editrow").hide();
@@ -353,8 +353,6 @@ function GetMemebersContainer() {
                 if (item["agregator"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-align-justify\" aria-hidden=\"true\"></span>"; }
                 if (item["bymail"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-envelope\" aria-hidden=\"true\"></span>"; }
 
-                var head = $("#head-table-events");
-                console.log(head.children("th"));
 
                 var t = "<tr group=members style=\"background-color:#F5DEB3;\" class=\"small\" row_id=\""+item["id"]+"\" marked=\"no\" bymail=\""+item["bymail"]+"\" >"
                 +"<td>"+icon+"</td>"
