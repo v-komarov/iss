@@ -77,7 +77,63 @@ function UserSettings(e) {
             effect: "blind",
             duration: 1500
           },
-          buttons: [{text:"Закрыть", click: function() { $(this).dialog("close")}}],
+          buttons: [
+            {
+                text:"Сохранить",
+                click: function() {
+
+                    var arr = [];
+
+
+                    $.each($("#head-order tbody tr"), function(index,value) {
+                        var row = {};
+                        row.name = $(value).children("td").attr("name");
+                        row.title = $(value).children("td").text();
+                        arr.push(row);
+                    });
+
+
+                    data = {};
+                    data.action = "save-settings";
+                    data.head_order = arr;
+
+
+
+                    var csrftoken = getCookie('csrftoken');
+
+                    $.ajaxSetup({
+                        beforeSend: function(xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                            }
+                        }
+                    });
+
+
+
+
+                    $.ajax({
+                      url: "/monitor/events/jsondata/",
+                      type: "POST",
+                      dataType: 'json',
+                      data:$.toJSON(data),
+                        success: function(result) {
+                            window.location=$("#menumonitor a").attr("href");
+                        }
+
+                    })
+
+
+
+
+
+
+
+                    $(this).dialog("close");
+
+                }
+            },
+            {text:"Закрыть", click: function() { $(this).dialog("close")}}],
           modal:true,
           minWidth:200,
           width:400,

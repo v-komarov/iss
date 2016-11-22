@@ -1,21 +1,12 @@
-            <thead class="small">
-            <tr style="background-color:gainsboro;">
-                <th style="padding:0;"></th>
-                <th style="padding:0;"><input id="mark-all" type="checkbox" class="input"></th>
-                <th style="padding:0;">first_seen</th>
-                <th style="padding:0;">last_seen</th>
-                <th style="padding:0;">Status</th>
-                <th style="padding:0;">Severity</th>
-                <th style="padding:0;">Manager</th>
-                <th style="padding:0;">EventClass</th>
-                <th style="padding:0;">DeviceSystem</th>
-                <th style="padding:0;">DeviceGroup</th>
-                <th style="padding:0;">DeviceClass</th>
-                <th style="padding:0;">DeviceNetAddress</th>
-                <th style="padding:0;">DeviceLocation</th>
-                <th style="padding:0;">ElementIdentifier</th>
-                <th style="padding:0;">ElementSubIdentifier</th>
-                <th style="padding:0;">Summary</th>
-            </tr>
+            <thead id="head-table-events">
+                <tr class="small" style="background-color:gainsboro;">
+                    <th></th>
+                    <th width="1%"><input id="mark-all" type="checkbox" class="input"></th>
+                    <th>last_seen</th>
+                    <th>first_seen</th>
+                    {% for h in head_order %}
+                        <th name="{{ h.name }}">{{ h.title }}</th>
+                    {% endfor %}
+                </tr>
             </thead>
 

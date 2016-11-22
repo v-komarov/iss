@@ -15,8 +15,8 @@ $(document).ready(function() {
     $("#clearsearch").bind("click",ClearSearch);
     $("#runsearch").bind("click",RunSearch);
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
-    $("table[group=events] tbody tr").bind("mouseenter",EnterRow);
-    $("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
+    //$("table[group=events] tbody tr").bind("mouseenter",EnterRow);
+    //$("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
 
     $("#clearfirstseen").bind("click",ClearFirstSeen);
     $("#clearlastseen").bind("click",ClearLastSeen);
@@ -126,8 +126,8 @@ $(document).ready(function() {
     $("table[group=events] tbody tr td input").hide();
 
     // Зебра
-    zebra = "#FFF5EE"
-    $("table[group=events] tbody tr:odd").css("background-color",zebra)
+    //zebra = "#FFF5EE"
+    //$("table[group=events] tbody tr:odd").css("background-color",zebra)
 
     // Видимость checkbox-a "выбрать все"
     $("#mark-all").hide();
@@ -353,23 +353,26 @@ function GetMemebersContainer() {
                 if (item["agregator"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-align-justify\" aria-hidden=\"true\"></span>"; }
                 if (item["bymail"] == "yes") { icon = icon + "<span class=\"glyphicon glyphicon-envelope\" aria-hidden=\"true\"></span>"; }
 
+                var head = $("#head-table-events");
+                console.log(head.children("th"));
+
                 var t = "<tr group=members style=\"background-color:#F5DEB3;\" class=\"small\" row_id=\""+item["id"]+"\" marked=\"no\" bymail=\""+item["bymail"]+"\" >"
-                +"<td style=\"padding:0;\">"+icon+"</td>"
-                +"<td style=\"padding:0;\"><input type=\"checkbox\" class=\"input\"></td>"
-                +"<td style=\"padding:0;\">"+item['first_seen']+"</td>"
-                +"<td style=\"padding:0;\">"+item['last_seen']+"</td>"
-                +"<td style=\"padding:0;\">"+item['status']+"</td>"
-                +"<td style=\"padding:0;\">"+item['severity']+"</td>"
-                +"<td style=\"padding:0;\">"+item['manager']+"</td>"
-                +"<td style=\"padding:0;\">"+item['event_class']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_system']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_group']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_class']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_net_address']+"</td>"
-                +"<td style=\"padding:0;\">"+item['device_location']+"</td>"
-                +"<td style=\"padding:0;\">"+item['element_identifier']+"</td>"
-                +"<td style=\"padding:0;\">"+item['element_sub_identifier']+"</td>"
-                +"<td style=\"padding:0;\">"+item['summary']+"</td>"
+                +"<td>"+icon+"</td>"
+                +"<td><input type=\"checkbox\" class=\"input\"></td>"
+                +"<td>"+item['first_seen']+"</td>"
+                +"<td>"+item['last_seen']+"</td>"
+                +"<td>"+item['status_id']+"</td>"
+                +"<td>"+item['severity_id']+"</td>"
+                +"<td>"+item['manager']+"</td>"
+                +"<td>"+item['event_class']+"</td>"
+                +"<td>"+item['device_system']+"</td>"
+                +"<td>"+item['device_group']+"</td>"
+                +"<td>"+item['device_class']+"</td>"
+                +"<td>"+item['device_net_address']+"</td>"
+                +"<td>"+item['device_location']+"</td>"
+                +"<td>"+item['element_identifier']+"</td>"
+                +"<td>"+item['element_sub_identifier']+"</td>"
+                +"<td>"+item['summary']+"</td>"
                 +"</tr>";
 
                 $("table[group=events] tbody tr[marked=yes]").after(t);

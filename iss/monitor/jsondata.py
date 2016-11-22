@@ -26,8 +26,6 @@ from iss.monitor.models import Profile
 
 ### Чередование полей по умолчанию
 head_order = [
-    {'name':'first_seen', 'title':'first_seen'},
-    {'name': 'last_seen', 'title': 'last_seen'},
     {'name': 'status_id', 'title': 'Status'},
     {'name': 'severity_id', 'title': 'Severity'},
     {'name': 'manager', 'title': 'Manager'},
@@ -156,8 +154,8 @@ def get_json(request):
                             'uuid':i.uuid,
                             'first_seen':i.first_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
                             'last_seen':i.last_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
-                            'status':i.status_id.name,
-                            'severity':i.severity_id.name,
+                            'status_id':i.status_id.name,
+                            'severity_id':i.severity_id.name,
                             'manager':i.manager,
                             'event_class':i.event_class,
                             'device_system':i.device_system,
@@ -343,6 +341,42 @@ def get_json(request):
             e.element_sub_identifier = data["element_sub_identifier"]
             e.status_id=Status.objects.get(pk=data["status"])
             e.save()
+
+
+
+        if data.has_key("action") and data["action"] == 'save-settings':
+            head_order = eval(str(data["head_order"]))
+            # Чередование полей
+            pk_user = request.user.pk
+
+            u = User.objects.get(pk=pk_user)
+            if Profile.objects.filter(user=u).count() == 1:
+
+                p = Profile.objects.get(user=u)
+                data = p.settings
+                if data.has_key("monitor-settings"):
+                    data['monitor-settings']['head_order'] = head_order
+                    p.settings = data
+                    p.save()
+                else:
+                    data["monitor-settings"] = {
+                        'head_order': head_order,
+                    }
+                    p.settings = data
+                    p.save()
+            else:
+
+                settings = {
+                    'monitor-settings':{
+                        'head_order': head_order,
+                        }
+                    }
+
+                Profile.objects.create(
+                    user = u,
+                    settings = settings
+                )
+
 
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")

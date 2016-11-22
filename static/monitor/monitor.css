@@ -246,3 +246,7 @@ errorMsg {color: red;}
     margin-bottom:0;
 }
 
+
+table[group=events] tbody > tr.small > td {
+    padding:0;
+}

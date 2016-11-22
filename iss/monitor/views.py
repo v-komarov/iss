@@ -55,6 +55,22 @@ class EventList(ListView):
         return super(ListView, self).dispatch(request, *args, **kwargs)
 
 
+    def my_fields_order(self):
+
+        # Чередование полей
+        pk_user = self.user.pk
+        u = User.objects.get(pk=pk_user)
+        if Profile.objects.filter(user=u).count() == 1:
+            p = Profile.objects.get(user=u)
+            data = p.settings
+            if data.has_key("monitor-settings"):
+                return data["monitor-settings"]["head_order"]
+            else:
+                return head_order
+        else:
+            return head_order
+
+
 
     def get_queryset(self):
 
@@ -104,12 +120,32 @@ class EventList(ListView):
                     pass
 
         if len(q) == 0:
-            return events.objects.filter(agregation=False).order_by('-first_seen')[:1000]
+            data = events.objects.filter(agregation=False).order_by('-first_seen')[:1000]
         else:
             str_q = " & ".join(q)
             str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-first_seen')" % str_q
 
-            return (eval(str_sql))[:1000]
+            data = (eval(str_sql))[:200]
+
+
+
+        for i in data:
+            i.field1 = eval(("i.%s") % (self.my_fields_order()[0]["name"]))
+            i.field2 = eval(("i.%s") % (self.my_fields_order()[1]["name"]))
+            i.field3 = eval(("i.%s") % (self.my_fields_order()[2]["name"]))
+            i.field4 = eval(("i.%s") % (self.my_fields_order()[3]["name"]))
+            i.field5 = eval(("i.%s") % (self.my_fields_order()[4]["name"]))
+            i.field6 = eval(("i.%s") % (self.my_fields_order()[5]["name"]))
+            i.field7 = eval(("i.%s") % (self.my_fields_order()[6]["name"]))
+            i.field8 = eval(("i.%s") % (self.my_fields_order()[7]["name"]))
+            i.field9 = eval(("i.%s") % (self.my_fields_order()[8]["name"]))
+            i.field10 = eval(("i.%s") % (self.my_fields_order()[9]["name"]))
+            i.field11 = eval(("i.%s") % (self.my_fields_order()[10]["name"]))
+            i.field12 = eval(("i.%s") % (self.my_fields_order()[11]["name"]))
+
+
+
+        return data
 
 
 
@@ -216,18 +252,7 @@ class EventList(ListView):
 
 
         # Чередование полей
-        pk_user = self.user.pk
-        u = User.objects.get(pk=pk_user)
-        if Profile.objects.filter(user=u) == 1:
-            p = Profile.objects.get(user=u)
-            data = p.data
-            if data.has_key("monitor-settings"):
-                context['head_order'] = data["monitor-settings"]["head_order"]
-            else:
-                context['head_order'] = head_order
-        else:
-            context['head_order'] = head_order
-
+        context['head_order'] = self.my_fields_order()
 
 
         return context

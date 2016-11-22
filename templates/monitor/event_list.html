@@ -4,14 +4,13 @@
 {% block content %}
 
 
-{% load tz %}
 
 
-<link href="{{ MY_STATIC_URL }}monitor/monitor.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/monitor.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/dialogs.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/user-settings.js"></script>
+<link href="{{ MY_STATIC_URL }}monitor/monitor.css" type="text/css" rel="stylesheet">
 {# <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/headfilter.js"></script> #}
 {# <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/dragtable.js"></script> #}
 
@@ -138,44 +137,8 @@
 
         {% include "monitor/tablehead.html" %}
 
-        {% for row in object_list %}
-            <tbody>
-                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false  {% if row.byhand == True %}byhand="yes"{% else %}byhand="no"{% endif%} {% if row.bymail == True %}bymail="yes"{% else %}bymail="no"{% endif%}>
-                    <td style="padding:0;">
-                            {% include "monitor/event_menu.html" %}
-                            <a href="#" container_hide={{ row.id }} hidden="hidden"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></a>
-                        {% if row.agregator == True %}
-                            <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
-                        {% endif %}
-                        {% if row.byhand == True %}
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        {% endif %}
-                        {% if row.bymail == True %}
-                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                        {% endif %}
-                    </td>
-                    <td style="padding:0;"><input type="checkbox" class="input"></td>
-                    {% timezone tz %}
-                    <td style="padding:0;">{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
-                    {# <td style="padding:0;">{{ row.update_time|date:"d.m.Y H:i e" }}</td> #}
-                    <td style="padding:0;">{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
-                    {% endtimezone %}
-                    <td style="padding:0;">{{ row.status_id }}</td>
-                    <td style="padding:0;">{{ row.severity_id }}</td>
-                    <td style="padding:0;">{{ row.manager }}</td>
-                    <td style="padding:0;">{{ row.event_class }}</td>
-                    <td style="padding:0;">{{ row.device_system }}</td>
-                    <td style="padding:0;">{{ row.device_group }}</td>
-                    <td style="padding:0;">{{ row.device_class }}</td>
-                    <td style="padding:0;">{{ row.device_net_address }}</td>
-                    <td style="padding:0;">{{ row.device_location }}</td>
-                    <td style="padding:0;">{{ row.element_identifier }}</td>
-                    <td style="padding:0;">{{ row.element_sub_identifier }}</td>
-                    <td style="padding:0;">{{ row.summary }}</td>
+        {% include "monitor/tablerowdata.html" %}
 
-                </tr>
-            </tbody>
-        {% endfor %}
     </table>
 
 

@@ -63,7 +63,7 @@ class Command(BaseCommand):
         """
 
 #        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"params\":{\"eventState\":[0,1,3]}}' %s" % (tf.name)
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":30000,\"sort\":\"lastTime\"}' %s" % (tf.name)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":3000,\"sort\":\"lastTime\"}' %s" % (tf.name)
 
         print cmd
         commands.getoutput(cmd)

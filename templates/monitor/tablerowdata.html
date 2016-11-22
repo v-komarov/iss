@@ -1,0 +1,45 @@
+{% load tz %}
+{% timezone tz %}
+
+
+        <tbody>
+        {% for row in object_list %}
+                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false  {% if row.byhand == True %}byhand="yes"{% else %}byhand="no"{% endif%} {% if row.bymail == True %}bymail="yes"{% else %}bymail="no"{% endif%}>
+                    <td style="padding:0;">
+                            {% include "monitor/event_menu.html" %}
+                            <a href="#" container_hide={{ row.id }} hidden="hidden"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></a>
+                        {% if row.agregator == True %}
+                            <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
+                        {% endif %}
+                        {% if row.byhand == True %}
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        {% endif %}
+                        {% if row.bymail == True %}
+                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                        {% endif %}
+                    </td>
+
+
+                    <td><input type="checkbox" class="input"></td>
+
+                    <td>{{ row.last_seen|date:"d.m.Y H:i e" }}</td>
+                    <td>{{ row.first_seen|date:"d.m.Y H:i e" }}</td>
+                    <td>{{ row.field1 }}</td>
+                    <td>{{ row.field2 }}</td>
+                    <td>{{ row.field3 }}</td>
+                    <td>{{ row.field4 }}</td>
+                    <td>{{ row.field5 }}</td>
+                    <td>{{ row.field6 }}</td>
+                    <td>{{ row.field7 }}</td>
+                    <td>{{ row.field8 }}</td>
+                    <td>{{ row.field9 }}</td>
+                    <td>{{ row.field10 }}</td>
+                    <td>{{ row.field11 }}</td>
+                    <td>{{ row.field12 }}</td>
+
+
+                </tr>
+        {% endfor %}
+        </tbody>
+
+{% endtimezone %}
