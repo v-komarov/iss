@@ -378,6 +378,9 @@ function GetMemebersContainer() {
             });
 
         ShowMembersCount();
+        // Исправление заголовков таблицы
+        FixTableHead();
+
 
         })
 
@@ -446,6 +449,11 @@ function HideContainer(e) {
     $("table[group=events] tbody tr").bind("mouseleave",LeaveRow);
 
     $("#mark-all").hide();
+
+
+    // Исправление заголовков таблицы
+    FixTableHead();
+
 
 }
 
