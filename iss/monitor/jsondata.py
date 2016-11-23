@@ -47,6 +47,20 @@ head_order = [
 
 
 
+def my_fields_order(request):
+    # Чередование полей
+    pk_user = request.user.pk
+    u = User.objects.get(pk=pk_user)
+    if Profile.objects.filter(user=u).count() == 1:
+        p = Profile.objects.get(user=u)
+        data = p.settings
+        if data.has_key("monitor-settings"):
+            return data["monitor-settings"]["head_order"]
+        else:
+            return head_order
+    else:
+        return head_order
+
 
 
 
@@ -129,6 +143,9 @@ def get_json(request):
             tz = request.session['tz']
             e = events.objects.get(pk=container_row)
             a = []
+
+            h = my_fields_order(request)
+
             if e.data.has_key("containergroup"):
                 l = e.data['containergroup']
 
@@ -147,6 +164,16 @@ def get_json(request):
                     else:
                         bymail = "no"
 
+                    field = []
+
+                    for j in range(0,len(h)):
+                        if h[j]['name'] == "status_id":
+                            field.append(i.status_id.name)
+                        elif h[j]['name'] == "severity_id":
+                            field.append(i.severity_id.name)
+                        else:
+                            field.append(eval("i.%s" % h[j]['name']))
+
                     a.append(
                         {
                             'id':i.id,
@@ -154,21 +181,21 @@ def get_json(request):
                             'uuid':i.uuid,
                             'first_seen':i.first_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
                             'last_seen':i.last_seen.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
-                            'status_id':i.status_id.name,
-                            'severity_id':i.severity_id.name,
-                            'manager':i.manager,
-                            'event_class':i.event_class,
-                            'device_system':i.device_system,
-                            'device_group':i.device_group,
-                            'device_class':i.device_class,
-                            'device_net_address':i.device_net_address,
-                            'device_location':i.device_location,
-                            'element_identifier':i.element_identifier,
-                            'element_sub_identifier':i.element_sub_identifier,
+                            'field0':field[0],
+                            'field1':field[1],
+                            'field2':field[2],
+                            'field3':field[3],
+                            'field4':field[4],
+                            'field5':field[5],
+                            'field6':field[6],
+                            'field7':field[7],
+                            'field8':field[8],
+                            'field9':field[9],
+                            'field10':field[10],
+                            'field11':field[11],
                             'byhand':byhand,
                             'agregator':agregator,
-                            'bymail':bymail,
-                            'summary':i.summary
+                            'bymail':bymail
                         }
                     )
 
