@@ -1,0 +1,15 @@
+.row {
+    margin:0;
+}
+
+
+.nav {
+    margin-bottom:10px;
+}
+
+
+table[group=worklist] > thead > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}

@@ -28,3 +28,30 @@ div.col-md-4 > table > thead > tr > th {
 }
 
 
+
+#ipaddress1,#port1,#ipaddress2,#port2 {
+    margin-left:10px;
+}
+
+
+
+#port1,#port2 {
+    width:70px;
+}
+
+
+#ipaddress1,#ipaddress2 {
+    width:150px;
+    margin-right:10px;
+}
+
+
+errorMsg {color: red;}
+.invalidElem {border: medium solid red;}
+
+
+
+table[group=user-links] > tbody > tr > td {
+    padding:0;
+}
+

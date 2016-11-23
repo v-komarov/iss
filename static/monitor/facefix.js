@@ -41,5 +41,10 @@ function FixTableHead() {
     $("#head-table-events th").eq(14).offset({'left':t14});
     $("#head-table-events th").eq(15).offset({'left':t15});
 
+    $("#head-table-events th").eq(0).css("width","10px");
+    $("#head-table-events th").eq(1).css("width","10px");
+    $("#head-table-events td").eq(0).css("width","10px");
+    $("#head-table-events td").eq(1).css("width","10px");
+
 
 }
