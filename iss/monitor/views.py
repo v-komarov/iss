@@ -29,7 +29,7 @@ from iss.mydecorators import group_required,anonymous_required
 from django.contrib.auth.models import User
 from iss.monitor.models import Profile
 from iss.monitor.jsondata import head_order
-
+from iss.localdicts.models import accident_cats,accident_list
 
 
 cursor = connections["default"].cursor()
@@ -240,6 +240,14 @@ class EventList(ListView):
 
         # Чередование полей
         context['head_order'] = self.my_fields_order()
+
+
+        # Категории аварий
+        context["accident_cats"] = accident_cats.objects.all().distinct('cat')
+
+        # Вид аварии
+        context["accident_list"] = accident_list.objects.all()
+
 
 
         return context

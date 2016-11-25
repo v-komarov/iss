@@ -6,7 +6,7 @@
 
 <div class="row" >
 
-    <ul class="nav nav-pills">
+    <ul class="nav nav-pills small">
       <li id="menumonitor" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
       <li id="menuworking" {% if request.path|slice:'0:18' == "/working/worklist/" %}class="active"{% endif %}><a href="/working/worklist/page/1/">Работы</a></li>
       <li id="menutopology" {% if request.path|slice:'0:20' == "/equipment/topology/" %}class="active"{% endif %}><a href="/equipment/topology/">Топология</a></li>

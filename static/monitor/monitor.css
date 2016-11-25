@@ -264,4 +264,24 @@ table[group=events] tbody > tr.small > td {
 }
 
 
+/* Интерфейс создания аварии */
+#accidentform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1) {
+    vertical-align:top;
+}
 
+#accidentform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1) > label:nth-child(1) {
+    padding-right:5px;
+}
+
+#accidentform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > label:nth-child(1),
+#accidentform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(3) > label:nth-child(1),
+#accidentform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(5) > label:nth-child(1) {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+
+#addaddr {
+    margin-left: 10px;
+}

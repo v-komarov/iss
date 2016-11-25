@@ -46,3 +46,97 @@ class Severity(models.Model):
         verbose_name = 'Важность'
         verbose_name_plural = 'Важность'
 
+
+
+class accident_group(models.Model):
+    name = models.CharField(max_length=100,verbose_name='Название группы')
+    name_short = models.CharField(max_length=10,verbose_name='Краткое название группы')
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Группа аварии'
+        verbose_name_plural = 'Группы аварий'
+
+
+
+
+
+class accident_list(models.Model):
+    name = models.CharField(max_length=100,verbose_name='Название аварии')
+    name_short = models.CharField(max_length=10,verbose_name='Краткое название аварии')
+    accident_group = models.ForeignKey(accident_group, verbose_name='Группа аварии')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Авария'
+        verbose_name_plural = 'Аварии'
+
+
+
+
+class accident_cats(models.Model):
+    name = models.CharField(max_length=100,verbose_name='Название категории')
+    cat = models.CharField(max_length=10,verbose_name='Номер категории')
+    accident = models.ForeignKey(accident_list, verbose_name='Аварии')
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Категория аварии'
+        verbose_name_plural = 'Категории аварий'
+
+
+
+
+
+class address_city(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Город',unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Город'
+        verbose_name_plural = 'Города'
+
+
+
+class address_street(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Улица',unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Улица'
+        verbose_name_plural = 'Улицы'
+
+
+
+class address_house(models.Model):
+    iss_address_id = models.IntegerField(null=True,verbose_name='ИСС код')
+    city = models.ForeignKey(address_city, verbose_name='Город', on_delete=models.PROTECT)
+    street = models.ForeignKey(address_street, verbose_name='Улица', null=True, on_delete=models.PROTECT)
+    house = models.CharField(max_length=100, verbose_name='Дом', null=True)
+
+
+    def __unicode__(self):
+        return self.house
+
+
+    class Meta:
+        verbose_name = 'Дом'
+        verbose_name_plural = 'Дома'
+
+        unique_together = ('iss_address_id', 'city','street','house')

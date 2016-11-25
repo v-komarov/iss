@@ -13,9 +13,11 @@ from pytz import timezone
 
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.db.models import Q
 
-from iss.monitor.models import events
-from iss.localdicts.models import Severity,Status
+
+from iss.monitor.models import events,accidents
+from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list
 
 from iss.monitor.othersources import get_zkl
 from iss.monitor.models import Profile
@@ -294,6 +296,58 @@ def get_json(request):
 
 
 
+        #### Поиск по адресу
+        if r.has_key("term") and rg("term") != "":
+            term = request.GET["term"]
+            obj = []
+
+            t = term.split(" ")
+            if len(t) == 1:
+                t1 = t[0]
+                data = address_house.objects.filter(Q(house=None) & Q(city__name__icontains=t1) & Q(street=None))
+
+
+            elif len(t) == 2:
+                t1 = t[0]
+                t2 = t[1]
+                t3 = None
+                data = address_house.objects.filter(Q(house=None) & Q(city__name__icontains=t1) & Q(street__name__icontains=t2))
+
+            elif len(t) == 3:
+                t1 = t[0]
+                t2 = t[1]
+                t3 = t[2]
+                data = address_house.objects.filter(Q(house__icontains=t3) & Q(city__name__icontains=t1) & Q(street__name__icontains=t2))
+
+            else:
+                data = address_house.objects.filter(Q(house__icontains=term) | Q(city__name__icontains=term) | Q(street__name__icontains=term))
+
+
+
+            for item in data:
+
+                if item.city != None and item.street != None and item.house != None:
+                    label = item.city.name+" "+item.street.name+" "+item.house
+                elif item.city != None and item.street != None:
+                    label = item.city.name+" "+item.street.name
+                elif item.city != None:
+                    label = item.city.name
+                else:
+                    label = ""
+
+                obj.append(
+                    {
+                        "label": label,
+                        "value": item.id
+                    }
+                )
+
+
+            response_data = obj
+
+
+
+
 
 
     if request.method == "POST":
@@ -380,6 +434,40 @@ def get_json(request):
                     user = u,
                     settings = settings
                 )
+
+
+
+
+        if data.has_key("action") and data["action"] == 'create_accident':
+
+            accident_data = eval(str(data))
+            data = {}
+            data["address_list"] = accident_data["address_list"]
+            event_id = accident_data["event_id"]
+            acctype = int(accident_data["acctype"],10)
+            acccat = int(accident_data["acccat"],10)
+            accname = accident_data["accountname"]
+            acccomment = accident_data["acccomment"]
+
+
+            e = events.objects.get(pk=event_id)
+            t = accident_list.objects.get(pk=acctype)
+            c = accident_cats.objects.get(pk=acccat)
+
+            accidents.objects.create(
+                acc_name = accname,
+                acc_comment = acccomment,
+                acc_cat = c,
+                acc_type = t,
+                acc_event = e,
+                acc_address = json.dumps(data)
+            )
+
+            e.accident = True
+            e.save()
+
+
+
 
 
 

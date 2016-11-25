@@ -2,6 +2,7 @@ $(document).ready(function() {
 
 
 
+
     $("#floatingCirclesG").attr("hidden","hidden");
     $("table[group=events]").removeAttr("hidden");
 

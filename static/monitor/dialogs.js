@@ -1,6 +1,9 @@
 $(document).ready(function() {
 
 
+    $("ul.dropdown-menu li a[action=create-accident]").bind("click",Accident);
+    $("button#addaddr").bind("click",AddAccidentAddressList);
+
 
     //// Валидация
     $("#eventform").validate({
@@ -125,6 +128,42 @@ $(document).ready(function() {
 
 
 
+    //// Валидация
+    $("#accidentform").validate({
+        highlight: function(element, errorClass) {
+            $(element).add($(element).parent()).addClass("invalidElem");
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).add($(element).parent()).removeClass("invalidElem");
+        },
+
+        errorElement: "div",
+        errorClass: "errorMsg",
+
+          rules: {
+            accidentcat: {
+                required: true
+            },
+            accidenttype: {
+                required: true
+            },
+            accidentname: {
+                required: true,
+                minlength: 5,
+                maxlength: 100
+            },
+          },
+
+    });// Валидация
+
+
+
+    $("#accidentform table tbody tr td input").change(function(e) {
+        $("#accidentform").validate().element($(e.target));
+    })
+
+
+
 
     // Выбор почтового сообщения для отображения
     $("#maillist").change(function(e) {
@@ -227,7 +266,64 @@ $(document).ready(function() {
 
 
 
+
+
+
+    // Поиск адреса
+    $("#accidentaddress").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#accidentdata',
+        position: 'top',
+        select: function (event,ui) {
+            $("#accidentaddress").val(ui.item.label);
+            window.address_id = ui.item.value;
+            window.address_label = ui.item.label;
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("#accidentaddress").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    })
+
+
+
+
+
 });
+
+
+
+function DeleteAccidentAddressList(e) {
+
+    var address_id = $(this).closest("dt").attr("addressid");
+    console.log(address_id);
+    $("#address-accident-list dt[addressid="+address_id+"]").remove();
+    $("#address-accident-list dd[addressid="+address_id+"]").remove();
+
+}
+
+
+function AddAccidentAddressList(e) {
+
+    t = "<dt addressid=\'"+address_id+"\'><a href=\"#\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></dt>"
+    +"<dd addressid=\'"+address_id+"\' addresslabel=\'"+address_label+"\'>"
+    + address_label
+    + "</dd>"
+
+    $("#address-accident-list").prepend(t);
+
+    $("#address-accident-list dt a").bind("click",DeleteAccidentAddressList);
+
+}
 
 
 
@@ -258,6 +354,158 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
+// Выбор аварии - новая или редактирование уже созданной
+function Accident() {
+
+    var accident = $("table[group=events] tbody tr").attr("accident");
+    // Взависимости от атрибута accident=yes или accident=no
+    if (accident == "yes") {
+        EditAccident();
+    }
+    else {
+        CreateAccident();
+    }
+
+}
+
+
+
+
+
+
+
+
+function CreateAccident() {
+
+
+    // Очистка
+    $("#accidentcat").val("");
+    $("#accidenttype").val("");
+    $("#accidentname").val("");
+    $("#accidentcomment").val("");
+    $("#accidentaddress").val("");
+    $("#address-accident-list").empty();
+
+    $("#accidentdata").attr("action","create-accident");
+
+
+    AccidentData();
+
+}
+
+
+
+
+
+
+function EditAccident() {
+
+    $("#accidentdata").attr("action","edit-accident");
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+
+    $("#accidentdata").attr("action","edit-accident");
+
+    AccidentData();
+
+}
+
+
+
+
+
+
+
+
+function AccidentData() {
+
+
+
+            $("#accidentdata").dialog({
+                title:"Авария",
+                buttons:[{ text:"Сохранить",click: function() {
+                    if ($('#accidenttype').valid() && $('#accidentcat').valid() && $('#accidentname').valid()) {
+
+                        // Данные
+                        var acccat = $("#accidentcat").val();
+                        var acctype = $("#accidenttype").val();
+                        var accname = $("#accidentname").val();
+                        var acccomment = $("#accidentcomment").val();
+                        var acc_addr = $("#address-accident-list dd");
+
+                        address_arr = [];
+
+                        $.each($("#address-accident-list dd"), function( index, value ) {
+                            var row = {};
+                            row.addressid = $(value).attr("addressid");
+                            row.addresslabel = $(value).attr("addresslabel");
+                            address_arr.push(row);
+                        });
+
+                        var data = {};
+                        data.address_list = address_arr;
+                        data.acccat = acccat;
+                        data.acctype = acctype;
+                        data.accname = accname;
+                        data.acccomment = acccomment;
+                        data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+                        data.action = $("#accidentdata").attr("action");
+
+
+                        var csrftoken = getCookie('csrftoken');
+
+                        $.ajaxSetup({
+                            beforeSend: function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
+                            }
+                        });
+
+
+
+
+
+                        $.ajax({
+                          url: "/monitor/events/jsondata/",
+                          type: "POST",
+                          dataType: 'json',
+                          data:$.toJSON(data),
+                            success: function(result) {
+                                location.reload();
+                            }
+
+                        });
+
+
+                        $(this).dialog("close");
+
+
+
+                    }
+
+                }},
+                    {text:"Закрыть",click: function() {
+                    $(this).dialog("close")}}
+                ],
+                modal:true,
+                minWidth:400,
+                width:500,
+                height:350
+
+            });
+
+
+
+}
+
+
+
 
 
 
@@ -310,6 +558,7 @@ function ShowMail() {
                 modal:true,
                 minWidth:400,
                 width:700
+
 
             });
 

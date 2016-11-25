@@ -4,7 +4,7 @@
 
         <tbody id="body-table-events">
         {% for row in object_list %}
-                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false  {% if row.byhand == True %}byhand="yes"{% else %}byhand="no"{% endif%} {% if row.bymail == True %}bymail="yes"{% else %}bymail="no"{% endif%}>
+                <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false  {% if row.byhand == True %}byhand="yes"{% else %}byhand="no"{% endif%} {% if row.bymail == True %}bymail="yes"{% else %}bymail="no"{% endif%} {% if row.accident == True %} accident="yes" {% else %} acciden="no" {% endif %}>
                     <td style="padding:0;">
                             {% include "monitor/event_menu.html" %}
                             <a href="#" container_hide={{ row.id }} hidden="hidden"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span></a>
@@ -16,6 +16,9 @@
                         {% endif %}
                         {% if row.bymail == True %}
                             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                        {% endif %}
+                        {% if row.accident == True %}
+                            <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
                         {% endif %}
                     </td>
 

@@ -1,0 +1,59 @@
+<div id="accidentdata" title="" hidden>
+    <form id="accidentform" class="small form-horizontal">
+
+        <table width="100%">
+            <tr>
+                <td>
+                    <label for="accidentcat">Категория</label>
+                </td>
+                <td>
+                    <select id="accidentcat" name="accidentcat" class="form-control input-sm">
+                    {% for item in accident_cats %}
+                        <option value="{{ item.id }}">{{ item.cat }}</option>
+                    {% endfor %}
+                    </select>
+                </td>
+                <td>
+                    <label for="accidenttype">Вид</label>
+                </td>
+                <td>
+                    <select id="accidenttype" name="accidenttype" class="form-control input-sm">
+                    {% for item in accident_list %}
+                        <option value="{{ item.id }}">{{ item.name_short }}</option>
+                    {% endfor %}
+                    </select>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top;"><label for="accidentname">Название</label></td>
+                <td colspan="6"><input type="text" class="form-control input-sm" id="accidentname" name="accidentname" placeholder="" /></td>
+            </tr>
+            <tr>
+                <td><label for="accidentcomment">Примечание</label></td>
+                <td colspan="6"><textarea class="form-control input-sm" rows="3" id="accidentcomment" name="accidentcomment"></textarea></td>
+            </tr>
+            <tr>
+                <td><label>Адрес</label></td>
+                <td colspan="4"><input type="text" class="form-control input-sm" id="accidentaddress" name="accidentaddress" placeholder="" /></td>
+                <td>
+                    <button id="addaddr" title="Добавить адрес" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                </td>
+            </tr>
+        </table>
+
+        <table>
+
+        </table>
+
+    </form>
+    Список адресов:
+    <dl class="dl-horizontal" id="address-accident-list"></dl>
+
+
+</div>

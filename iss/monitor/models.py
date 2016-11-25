@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
 import datetime
-from iss.localdicts.models import Status,Severity
+from iss.localdicts.models import Status,Severity,accident_cats,accident_list
 
 
 
@@ -51,6 +51,10 @@ class events(models.Model):
 
     summary = models.CharField(max_length=255,db_index=True,null=True)
 
+    accident = models.BooleanField(db_index=True,default=False)
+
+
+
 
 ### Оповещения
 class messages(models.Model):
@@ -64,3 +68,12 @@ class messages(models.Model):
 
 
 
+
+class accidents(models.Model):
+    create_datetime = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
+    acc_name = models.CharField(max_length=100,default="")
+    acc_comment = models.CharField(max_length=250,default="")
+    acc_cat = models.ForeignKey(accident_cats)
+    acc_type = models.ForeignKey(accident_list)
+    acc_event = models.ForeignKey(events)
+    acc_address = JSONField(default={})

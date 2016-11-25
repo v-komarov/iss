@@ -169,7 +169,7 @@ def get_json(request):
 
 
         if data.has_key("action") and data["action"] == 'create_agregator':
-            print data
+
             agregators.objects.create(
                 ipaddress=data["ipaddress"],
                 name=data["name"],
