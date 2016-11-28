@@ -247,7 +247,7 @@ $(document).ready(function() {
 
 
 
-// Список услуг
+    // Список услуг
     $("#service_stoplist").multiselect({
         header:true,
         noneSelectedText:"Выбор услуг",
@@ -305,7 +305,6 @@ $(document).ready(function() {
 function DeleteAccidentAddressList(e) {
 
     var address_id = $(this).closest("dt").attr("addressid");
-    console.log(address_id);
     $("#address-accident-list dt[addressid="+address_id+"]").remove();
     $("#address-accident-list dd[addressid="+address_id+"]").remove();
 
@@ -363,10 +362,12 @@ function getCookie(name) {
 // Выбор аварии - новая или редактирование уже созданной
 function Accident() {
 
-    var accident = $("table[group=events] tbody tr").attr("accident");
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    var accident = $("table[group=events] tbody tr[row_id="+row_id+"]").attr("accident");
+
     // Взависимости от атрибута accident=yes или accident=no
     if (accident == "yes") {
-        EditAccident();
+        EditAccident(row_id);
     }
     else {
         CreateAccident();
@@ -391,25 +392,10 @@ function CreateAccident() {
     $("#accidentcomment").val("");
     $("#accidentaddress").val("");
     $("#address-accident-list").empty();
-
+    $("#accidentend").prop("checked",false);
     $("#accidentdata").attr("action","create-accident");
 
 
-    AccidentData();
-
-}
-
-
-
-
-
-
-function EditAccident() {
-
-    $("#accidentdata").attr("action","edit-accident");
-    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
-
-    $("#accidentdata").attr("action","edit-accident");
 
     AccidentData();
 
@@ -417,6 +403,46 @@ function EditAccident() {
 
 
 
+
+
+
+function EditAccident(row_id) {
+
+    $("#accidentdata").attr("action","edit-accident");
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?getaccidentdata="+row_id,
+        function(data) {
+
+            $("#accidentcat").val(data['acccat']);
+            $("#accidenttype").val(data['acctype']);
+            $("#accidentname").val(data['accname']);
+            $("#accidentcomment").val(data['acccomment']);
+            $("#accidentaddress").val("");
+            $("#address-accident-list").empty();
+
+            if (data["accend"] == "yes") { $("#accidentend").prop("checked",true); }
+            else { $("#accidentend").prop("checked",false); }
+
+
+            $.each(data['address']['address_list'], function(index,value){
+
+                var v = value;
+
+                t = "<dt addressid=\'"+v['addressid']+"\'><a href=\"#\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></dt>"
+                +"<dd addressid=\'"+v['addressid']+"\' addresslabel=\'"+v['addresslabel']+"\'>"
+                + v['addresslabel']
+                + "</dd>"
+
+                $("#address-accident-list").prepend(t);
+                $("#address-accident-list dt a").bind("click",DeleteAccidentAddressList);
+
+            });
+
+        })
+
+    AccidentData();
+
+}
 
 
 
@@ -437,6 +463,8 @@ function AccidentData() {
                         var accname = $("#accidentname").val();
                         var acccomment = $("#accidentcomment").val();
                         var acc_addr = $("#address-accident-list dd");
+                        if ($("#accidentend").prop("checked") == true) { var accend = "yes"; }
+                        else { var accend = "no"; }
 
                         address_arr = [];
 
@@ -453,6 +481,7 @@ function AccidentData() {
                         data.acctype = acctype;
                         data.accname = accname;
                         data.acccomment = acccomment;
+                        data.accend = accend;
                         data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
                         data.action = $("#accidentdata").attr("action");
 

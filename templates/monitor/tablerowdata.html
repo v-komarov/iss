@@ -18,7 +18,7 @@
                             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                         {% endif %}
                         {% if row.accident == True %}
-                            <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-flag" aria-hidden="true" {% if row.accident_end == False %} style="color:red;" {% endif %}></span>
                         {% endif %}
                     </td>
 

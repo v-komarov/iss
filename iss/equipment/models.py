@@ -23,6 +23,7 @@ class devices_ip(models.Model):
     ports = JSONField(default={})
     data = JSONField(default={})
 
+
     class Meta:
         unique_together = ('ipaddress', 'device_domen')
 

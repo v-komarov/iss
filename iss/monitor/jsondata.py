@@ -23,6 +23,9 @@ from iss.monitor.othersources import get_zkl
 from iss.monitor.models import Profile
 
 
+tz = 'Asia/Krasnoyarsk'
+krsk_tz = timezone(tz)
+
 
 
 
@@ -350,10 +353,35 @@ def get_json(request):
 
 
 
+        ### Данные по аварии
+        if r.has_key("getaccidentdata") and rg("getaccidentdata") != "":
+            ### id строки события (контейнера)
+            row_id = request.GET["getaccidentdata"]
+            acc = accidents.objects.get(acc_event=row_id)
+            if acc.acc_end != None:
+                accend = "yes"
+            else:
+                accend = "no"
+            acc = {
+                'address' : acc.acc_address,
+                'acctype' : acc.acc_type.id,
+                'acccat' : acc.acc_cat.id,
+                'accname' : acc.acc_name,
+                'acccomment' : acc.acc_comment,
+                'accend' : accend
+            }
+
+            response_data = acc
+
+
+
+
+
+
     if request.method == "POST":
         data = eval(request.body)
 
-        print data
+
 
         if data.has_key("action") and data["action"] == 'create_event':
 
@@ -438,7 +466,7 @@ def get_json(request):
 
 
 
-        if data.has_key("action") and data["action"] == 'create_accident':
+        if data.has_key("action") and data["action"] == 'create-accident':
 
             accident_data = eval(str(data))
             data = {}
@@ -446,13 +474,35 @@ def get_json(request):
             event_id = accident_data["event_id"]
             acctype = int(accident_data["acctype"],10)
             acccat = int(accident_data["acccat"],10)
-            accname = accident_data["accountname"]
+            accname = accident_data["accname"]
             acccomment = accident_data["acccomment"]
+            accend = accident_data["accend"]
 
 
             e = events.objects.get(pk=event_id)
             t = accident_list.objects.get(pk=acctype)
             c = accident_cats.objects.get(pk=acccat)
+
+
+            ### Поиск даты начала аварии - самое ранее событие
+            datetime_start = e.first_seen
+            if e.data.has_key("containergroup"):
+                for item in e.data["containergroup"]:
+                    a = events.objects.get(pk=item)
+                    if datetime_start > a.first_seen:
+                        datetime_start = a.first_seen
+
+
+            if accend == "yes":
+                acc_end = krsk_tz.localize(datetime.datetime.now())
+                e.accident_end = True
+                e.save()
+            else:
+                acc_end = None
+                e.accident_end = False
+                e.save()
+
+
 
             accidents.objects.create(
                 acc_name = accname,
@@ -460,11 +510,56 @@ def get_json(request):
                 acc_cat = c,
                 acc_type = t,
                 acc_event = e,
-                acc_address = json.dumps(data)
+                acc_address = data,
+                acc_start = datetime_start,
+                acc_end = acc_end
             )
+
+
 
             e.accident = True
             e.save()
+
+
+
+
+
+
+        if data.has_key("action") and data["action"] == 'edit-accident':
+            accident_data = eval(str(data))
+            data = {}
+            data["address_list"] = accident_data["address_list"]
+            event_id = accident_data["event_id"]
+            acctype = int(accident_data["acctype"], 10)
+            acccat = int(accident_data["acccat"], 10)
+            accname = accident_data["accname"]
+            acccomment = accident_data["acccomment"]
+            accend = accident_data["accend"]
+
+            e = events.objects.get(pk=event_id)
+            t = accident_list.objects.get(pk=acctype)
+            c = accident_cats.objects.get(pk=acccat)
+
+            acc = accidents.objects.get(acc_event=e)
+
+            ### Текущее состояние - завершена или нет
+            if acc.acc_end == None and accend == "yes":
+                acc.acc_end = krsk_tz.localize(datetime.datetime.now())
+                e.accident_end = True
+                e.save()
+
+            elif acc.acc_end != None and accend == "no":
+                acc.acc_end = None
+                e.accident_end = False
+                e.save()
+
+            acc.acc_name = accname
+            acc.acc_comment = acccomment
+            acc.acc_type = t
+            acc.acc_cat = c
+            acc.acc_address = data
+
+            acc.save()
 
 
 

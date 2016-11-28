@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
             q = """
                 SELECT ports_description.port_status_id, address_table.city_address, address_table.street_address, address_table.dom_address,
-                ports_description.port_number, equipment_info.equipment_ne_name, equipment_info.equipment_ip, mac_sn.mac_address, mac_mac.mac_address
+                ports_description.port_number, equipment_info.equipment_ne_name, equipment_info.equipment_ip, mac_sn.mac_address, mac_mac.mac_address, equipment_info.equipment_id
                 FROM
               ports_description INNER JOIN equipment_info on equipment_info.equipment_mac_id=ports_description.port_equipment_mac_id
               INNER JOIN address_table on address_table.address_id=equipment_info.equipment_address_id
@@ -59,6 +59,10 @@ class Command(BaseCommand):
                 'unconnected': 0
             }
 
+
+            iss_device_id = 0
+
+
             for row in rows:
                 #print row
                 # except:
@@ -78,8 +82,13 @@ class Command(BaseCommand):
                     ports_info["unconnected"] = ports_info["unconnected"] + 1
 
 
+                iss_device_id = row[9]
+
+
+
             data = a.data
             data["ports_info"] = ports_info
+            data["iss_id_device"] = iss_device_id
             a.data = data
             a.save()
 

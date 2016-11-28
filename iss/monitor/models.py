@@ -52,6 +52,8 @@ class events(models.Model):
     summary = models.CharField(max_length=255,db_index=True,null=True)
 
     accident = models.BooleanField(db_index=True,default=False)
+    accident_end = models.BooleanField(db_index=True,default=False)
+
 
 
 
@@ -75,5 +77,10 @@ class accidents(models.Model):
     acc_comment = models.CharField(max_length=250,default="")
     acc_cat = models.ForeignKey(accident_cats)
     acc_type = models.ForeignKey(accident_list)
-    acc_event = models.ForeignKey(events)
+    acc_event = models.OneToOneField(events,on_delete=models.SET_NULL,null=True)
     acc_address = JSONField(default={})
+    acc_iss_id = models.IntegerField(default=None,null=True)
+    acc_start = models.DateTimeField(db_index=True,null=True)
+    acc_end = models.DateTimeField(db_index=True,null=True)
+
+
