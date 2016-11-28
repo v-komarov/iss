@@ -70,11 +70,11 @@ class messages(models.Model):
 
 
 
-
+### Аварии
 class accidents(models.Model):
     create_datetime = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
     acc_name = models.CharField(max_length=100,default="")
-    acc_comment = models.CharField(max_length=250,default="")
+    acc_comment = models.TextField(default="")
     acc_cat = models.ForeignKey(accident_cats)
     acc_type = models.ForeignKey(accident_list)
     acc_event = models.OneToOneField(events,on_delete=models.SET_NULL,null=True)
@@ -82,5 +82,7 @@ class accidents(models.Model):
     acc_iss_id = models.IntegerField(default=None,null=True)
     acc_start = models.DateTimeField(db_index=True,null=True)
     acc_end = models.DateTimeField(db_index=True,null=True)
+    acc_reason = models.TextField(default="")
+    acc_repair = models.TextField(default="")
 
 

@@ -394,7 +394,8 @@ function CreateAccident() {
     $("#address-accident-list").empty();
     $("#accidentend").prop("checked",false);
     $("#accidentdata").attr("action","create-accident");
-
+    $("#accidentreason").val("");
+    $("#accidentrepair").val("");
 
 
     AccidentData();
@@ -417,6 +418,8 @@ function EditAccident(row_id) {
             $("#accidenttype").val(data['acctype']);
             $("#accidentname").val(data['accname']);
             $("#accidentcomment").val(data['acccomment']);
+            $("#accidentreason").val(data['accreason']);
+            $("#accidentrepair").val(data['accrepair']);
             $("#accidentaddress").val("");
             $("#address-accident-list").empty();
 
@@ -462,6 +465,8 @@ function AccidentData() {
                         var acctype = $("#accidenttype").val();
                         var accname = $("#accidentname").val();
                         var acccomment = $("#accidentcomment").val();
+                        var accreason = $("#accidentreason").val();
+                        var accrepair = $("#accidentrepair").val();
                         var acc_addr = $("#address-accident-list dd");
                         if ($("#accidentend").prop("checked") == true) { var accend = "yes"; }
                         else { var accend = "no"; }
@@ -482,6 +487,8 @@ function AccidentData() {
                         data.accname = accname;
                         data.acccomment = acccomment;
                         data.accend = accend;
+                        data.accreason = accreason;
+                        data.accrepair = accrepair;
                         data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
                         data.action = $("#accidentdata").attr("action");
 
@@ -525,7 +532,7 @@ function AccidentData() {
                 modal:true,
                 minWidth:400,
                 width:500,
-                height:350
+                height:450
 
             });
 

@@ -368,7 +368,9 @@ def get_json(request):
                 'acccat' : acc.acc_cat.id,
                 'accname' : acc.acc_name,
                 'acccomment' : acc.acc_comment,
-                'accend' : accend
+                'accend' : accend,
+                'accreason' : acc.acc_reason,
+                'accrepair' : acc.acc_repair
             }
 
             response_data = acc
@@ -477,6 +479,8 @@ def get_json(request):
             accname = accident_data["accname"]
             acccomment = accident_data["acccomment"]
             accend = accident_data["accend"]
+            accreason = accident_data["accreason"]
+            accrepair = accident_data["accrepair"]
 
 
             e = events.objects.get(pk=event_id)
@@ -512,7 +516,9 @@ def get_json(request):
                 acc_event = e,
                 acc_address = data,
                 acc_start = datetime_start,
-                acc_end = acc_end
+                acc_end = acc_end,
+                acc_reason = accreason,
+                acc_repair = accrepair
             )
 
 
@@ -535,6 +541,8 @@ def get_json(request):
             accname = accident_data["accname"]
             acccomment = accident_data["acccomment"]
             accend = accident_data["accend"]
+            accreason = accident_data["accreason"]
+            accrepair = accident_data["accrepair"]
 
             e = events.objects.get(pk=event_id)
             t = accident_list.objects.get(pk=acctype)
@@ -557,6 +565,8 @@ def get_json(request):
             acc.acc_comment = acccomment
             acc.acc_type = t
             acc.acc_cat = c
+            acc.acc_reason = accreason
+            acc.acc_repair = accrepair
             acc.acc_address = data
 
             acc.save()
