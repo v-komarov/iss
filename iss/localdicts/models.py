@@ -124,6 +124,10 @@ class address_street(models.Model):
 
 
 
+
+
+
+
 class address_house(models.Model):
     iss_address_id = models.IntegerField(null=True,verbose_name='ИСС код')
     city = models.ForeignKey(address_city, verbose_name='Город', on_delete=models.PROTECT)
@@ -140,3 +144,38 @@ class address_house(models.Model):
         verbose_name_plural = 'Дома'
 
         unique_together = ('iss_address_id', 'city','street','house')
+
+
+
+
+
+
+class address_companies(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Компания', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Компании'
+
+
+
+
+
+class devices_type(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Вид устройства', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Вид устройства'
+        verbose_name_plural = 'Виды устройств'
+
+
+
+
+
+

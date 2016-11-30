@@ -70,9 +70,12 @@ class messages(models.Model):
 
 
 
+
+
 ### Аварии
 class accidents(models.Model):
     create_datetime = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
+    update_datetime = models.DateTimeField(db_index=True,null=True,auto_now=True)
     acc_name = models.CharField(max_length=100,default="")
     acc_comment = models.TextField(default="")
     acc_cat = models.ForeignKey(accident_cats)
@@ -84,5 +87,6 @@ class accidents(models.Model):
     acc_end = models.DateTimeField(db_index=True,null=True)
     acc_reason = models.TextField(default="")
     acc_repair = models.TextField(default="")
+    acc_reports_id = models.IntegerField(default=None,null=True)
 
 

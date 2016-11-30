@@ -1,7 +1,7 @@
 #!coding:utf-8
 
 from django.contrib import admin
-from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house
+from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,devices_type
 
 class StatusAdmin(admin.ModelAdmin):
     pass
@@ -54,6 +54,23 @@ class AddressHouseAdmin(admin.ModelAdmin):
     list_filter = ('city','street')
 
 
+
+
+class AddressCompaniesAdmin(admin.ModelAdmin):
+
+    fields = ('name',)
+    list_display = ('name',)
+
+
+
+class DevicesTypeAdmin(admin.ModelAdmin):
+
+    fields = ('name',)
+    list_display = ('name',)
+
+
+
+
 admin.site.register(TzList)
 admin.site.register(Status,StatusAdmin)
 admin.site.register(Severity,SeverityAdmin)
@@ -63,4 +80,6 @@ admin.site.register(accident_cats,AccidentCatsAdmin)
 admin.site.register(address_city,AddressCityAdmin)
 admin.site.register(address_street,AddressStreetAdmin)
 admin.site.register(address_house,AddressHouseAdmin)
+admin.site.register(address_companies,AddressCompaniesAdmin)
+admin.site.register(devices_type,DevicesTypeAdmin)
 

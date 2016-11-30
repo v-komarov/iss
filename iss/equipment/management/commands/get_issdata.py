@@ -27,14 +27,14 @@ class Command(BaseCommand):
             ip = a.ipaddress
             serial = a.device_serial
 
-            mac = "%s-%s-%s" % (mac[0:4],mac[4:9],mac[8:13])
+            mac = "%s-%s-%s" % (mac[0:4],mac[4:8],mac[8:13])
 
             # try:
             ### Запрос из ИСС
 
             q = """
                 SELECT ports_description.port_status_id, address_table.city_address, address_table.street_address, address_table.dom_address,
-                ports_description.port_number, equipment_info.equipment_ne_name, equipment_info.equipment_ip, mac_sn.mac_address, mac_mac.mac_address, equipment_info.equipment_id
+                ports_description.port_number, equipment_info.equipment_ne_name, equipment_info.equipment_ip, mac_sn.mac_address, mac_mac.mac_address, equipment_info.equipment_id, equipment_info.equipment_address_id
                 FROM
               ports_description INNER JOIN equipment_info on equipment_info.equipment_mac_id=ports_description.port_equipment_mac_id
               INNER JOIN address_table on address_table.address_id=equipment_info.equipment_address_id
@@ -61,7 +61,7 @@ class Command(BaseCommand):
 
 
             iss_device_id = 0
-
+            iss_address_id = 0
 
             for row in rows:
                 #print row
@@ -83,12 +83,13 @@ class Command(BaseCommand):
 
 
                 iss_device_id = row[9]
-
+                iss_address_id = row[10]
 
 
             data = a.data
             data["ports_info"] = ports_info
             data["iss_id_device"] = iss_device_id
+            data["iss_address_id"] = iss_address_id
             a.data = data
             a.save()
 

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'iss.monitor',
     'iss.equipment',
     'iss.working',
+    'iss.inventory',
 ]
 
 MIDDLEWARE_CLASSES = [
