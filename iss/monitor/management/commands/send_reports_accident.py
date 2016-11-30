@@ -109,6 +109,8 @@ devicetype = devices_type.objects.get(pk=1)
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
+utc = timezone("UTC")
+
 
 class Command(BaseCommand):
     args = '<zenoss message ...>'
@@ -196,30 +198,40 @@ class Command(BaseCommand):
 
 
             values = {
-                'id':ac.acc_reports_id,
                 'companies':companies,
                 'cities':ci,
-                'start_datetime':str(ac.acc_start),
-                'finish_datetime':str(ac.acc_end),
+                'start_datetime':time.mktime(ac.acc_start.replace(tzinfo=timezone('UTC')).timetuple()),
                 'category':int(ac.acc_cat.cat,10),
                 'kind':ac.acc_type.id,
                 'locations':address_str,
                 'affected_customers':zkl,
                 'reason':ac.acc_reason,
-                'actions':ac.acc_repair,
-                'iss_id':ac.acc_iss_id
+                'actions':ac.acc_repair
             }
+
+            if ac.acc_end != None:
+                values['finish_datetime'] = time.mktime(ac.acc_end.replace(tzinfo=timezone('UTC')).timetuple())
+            if ac.acc_iss_id != None:
+                values['iss_id'] = ac.acc_iss_id
+            if ac.acc_reports_id != None:
+                values['id'] = ac.acc_reports_id
+
+
 
             data = json.dumps(values)
 
-            print data
+            #print data
 
             req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
             #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
 
             f = urllib2.urlopen(req)
             result = f.read()
-            print result
+            r = json.loads(result)
+            if ac.acc_reports_id == None and r.has_key("api_status"):
+                if r["api_status"] == "OK":
+                    ac.acc_reports_id = r["api_response"]["id"]
+                    ac.save()
 
         """
         data = json.loads(result)
