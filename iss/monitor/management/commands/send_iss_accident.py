@@ -144,15 +144,30 @@ class Command(BaseCommand):
                 'addresslist' : address_list.decode("utf-8")
             }
 
+            value = ""
+            value = value + "date:%s[%s]" % (ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),day)
+            value = value + "iss2_id:%s[%s]" % (ac.id,day)
+            value = value + "accname:%s[%s]" % (ac.acc_name.encode("cp1251"),day)
+            value = value + "acctypecat:%s,%s[%s]" % (ac.acc_type.name.encode("cp1251"),ac.acc_cat.name.encode("cp1251"),day)
+            value = value + "acccomment:%s[%s]" % (ac.acc_comment.encode("cp1251"),day)
+            value = value + "deviceidlist:%s[%s]" % (",".join(iddevices),day)
+            value = value + "citynamelist:%s[%s]" % (",".join(cityname).encode("cp1251"),day)
+            value = value + "addresslist:%s[%s]" % (address_list.decode("utf-8").encode("cp1251"),day)
+
+
 
 
 
             data = json.dumps(values)
 
-            req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.php',data=data.encode("cp1251"),headers={'Content-Type': 'application/json; charset=cp1251'})
+            req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.php',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
             f = urllib2.urlopen(req)
             result = f.read()
-            print result
+            start = result.find("[")
+            end = result.find("]")
+
+            id_iss = result[start + 1:end]
+
 
 
         print "ok"
