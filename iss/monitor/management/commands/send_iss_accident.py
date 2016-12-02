@@ -127,7 +127,7 @@ class Command(BaseCommand):
                     address_list = address_list + str(city) +","+ str(street) + ",%s" % hl.encode("utf-8") + ";"
 
 
-            address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")
+            address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")[:-1]
             # accname, acctype, acccat, acccomment, deviceidlist, addresslist, citynamelist
             #
             #
@@ -137,7 +137,7 @@ class Command(BaseCommand):
                 'iss2_id':ac.id,
                 'day':day,
                 'accname':ac.acc_name,
-                'acctypecat' : "%s,%s" % (ac.acc_type.name,ac.acc_cat.name),
+                'acctypecat' : "%s,%s" % (ac.acc_type.name_short,ac.acc_cat.cat),
                 'acccomment' : ac.acc_comment,
                 'deviceidlist' : ",".join(iddevices),
                 'citynamelist' : ",".join(cityname),
@@ -148,11 +148,11 @@ class Command(BaseCommand):
             value = value + "date:%s[%s]" % (ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),day)
             value = value + "iss2_id:%s[%s]" % (ac.id,day)
             value = value + "accname:%s[%s]" % (ac.acc_name.encode("cp1251"),day)
-            value = value + "acctypecat:%s,%s[%s]" % (ac.acc_type.name.encode("cp1251"),ac.acc_cat.name.encode("cp1251"),day)
+            value = value + "acctypecat:%s,%s[%s]" % (ac.acc_type.name_short.encode("cp1251"),ac.acc_cat.cat.encode("cp1251"),day)
             value = value + "acccomment:%s[%s]" % (ac.acc_comment.encode("cp1251"),day)
             value = value + "deviceidlist:%s[%s]" % (",".join(iddevices),day)
             value = value + "citynamelist:%s[%s]" % (",".join(cityname).encode("cp1251"),day)
-            value = value + "addresslist:%s[%s]" % (address_list.decode("utf-8").encode("cp1251"),day)
+            value = value + "addresslist:%s" % (address_list.decode("utf-8").encode("cp1251"))
 
 
 
@@ -167,6 +167,8 @@ class Command(BaseCommand):
             end = result.find("]")
 
             id_iss = result[start + 1:end]
+            ac.acc_iss_id = int(id_iss,10)
+            ac.save()
 
 
 
