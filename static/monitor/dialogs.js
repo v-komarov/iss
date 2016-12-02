@@ -393,6 +393,7 @@ function CreateAccident() {
     $("#accidentaddress").val("");
     $("#address-accident-list").empty();
     $("#accidentend").prop("checked",false);
+    $("#accidentstat").prop("checked",false);
     $("#accidentdata").attr("action","create-accident");
     $("#accidentreason").val("");
     $("#accidentrepair").val("");
@@ -402,6 +403,8 @@ function CreateAccident() {
     AccidentData();
 
 }
+
+
 
 
 
@@ -432,6 +435,10 @@ function EditAccident(row_id) {
             if (data["accend"] == "yes") { $("#accidentend").prop("checked",true); }
             else { $("#accidentend").prop("checked",false); }
 
+            // Включение в статистику
+            if (data["accstat"] == "yes") { $("#accidentstat").prop("checked",true); }
+            else { $("#accidentstat").prop("checked",false); }
+
 
             $.each(data['address']['address_list'], function(index,value){
 
@@ -457,6 +464,8 @@ function EditAccident(row_id) {
 
 
 
+
+
 function AccidentData() {
 
 
@@ -476,6 +485,8 @@ function AccidentData() {
                         var acc_addr = $("#address-accident-list dd");
                         if ($("#accidentend").prop("checked") == true) { var accend = "yes"; }
                         else { var accend = "no"; }
+                        if ($("#accidentstat").prop("checked") == true) { var accstat = "yes"; }
+                        else { var accstat = "no"; }
 
                         address_arr = [];
 
@@ -493,6 +504,7 @@ function AccidentData() {
                         data.accname = accname;
                         data.acccomment = acccomment;
                         data.accend = accend;
+                        data.accstat = accstat;
                         data.accreason = accreason;
                         data.accrepair = accrepair;
                         data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
@@ -538,7 +550,7 @@ function AccidentData() {
                 modal:true,
                 minWidth:400,
                 width:500,
-                height:450
+                height:550
 
             });
 

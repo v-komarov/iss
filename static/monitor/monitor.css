@@ -290,7 +290,7 @@ table[group=events] tbody > tr.small > td {
 
 
 
-#accidentend {
+#accidentend, #accidentstat {
     width: 10px;
 }
 

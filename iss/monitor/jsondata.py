@@ -362,6 +362,13 @@ def get_json(request):
                 accend = "yes"
             else:
                 accend = "no"
+
+            if acc.acc_stat == True:
+                accstat = "yes"
+            else:
+                accstat = "no"
+
+
             accjson = {
                 'accid' : acc.id,
                 'address' : acc.acc_address,
@@ -370,6 +377,7 @@ def get_json(request):
                 'accname' : acc.acc_name,
                 'acccomment' : acc.acc_comment,
                 'accend' : accend,
+                'accstat' : accstat,
                 'accreason' : acc.acc_reason,
                 'accrepair' : acc.acc_repair
             }
@@ -487,6 +495,7 @@ def get_json(request):
             accname = accident_data["accname"]
             acccomment = accident_data["acccomment"]
             accend = accident_data["accend"]
+            accstat = accident_data["accstat"]
             accreason = accident_data["accreason"]
             accrepair = accident_data["accrepair"]
 
@@ -514,6 +523,11 @@ def get_json(request):
                 e.accident_end = False
                 e.save()
 
+            if accstat == "yes":
+                acc_stat = True
+            else:
+                acc_stat = False
+
 
 
             accidents.objects.create(
@@ -525,6 +539,7 @@ def get_json(request):
                 acc_address = data,
                 acc_start = datetime_start,
                 acc_end = acc_end,
+                acc_stat = acc_stat,
                 acc_reason = accreason,
                 acc_repair = accrepair
             )
@@ -549,6 +564,7 @@ def get_json(request):
             accname = accident_data["accname"]
             acccomment = accident_data["acccomment"]
             accend = accident_data["accend"]
+            accstat = accident_data["accstat"]
             accreason = accident_data["accreason"]
             accrepair = accident_data["accrepair"]
 
@@ -569,6 +585,12 @@ def get_json(request):
                 e.accident_end = False
                 e.save()
 
+            if accstat == "yes":
+                acc_stat = True
+            else:
+                acc_stat = False
+
+
             acc.acc_name = accname
             acc.acc_comment = acccomment
             acc.acc_type = t
@@ -576,6 +598,7 @@ def get_json(request):
             acc.acc_reason = accreason
             acc.acc_repair = accrepair
             acc.acc_address = data
+            acc.acc_stat = acc_stat
 
             acc.save()
 
