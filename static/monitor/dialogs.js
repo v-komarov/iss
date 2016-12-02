@@ -246,7 +246,7 @@ $(document).ready(function() {
 
 
 
-
+    /*
     // Список услуг
     $("#service_stoplist").multiselect({
         header:true,
@@ -257,12 +257,7 @@ $(document).ready(function() {
         checkAllText:"Отметить все"
     });
     $("#service_stoplist").multiselect("uncheckAll");
-    /*var service = eval($("#service_stoplist").attr("selected_value"));
-    service.forEach(function(item, i, arr) {
-        $("#service_stoplist").multiselect("widget").find(":checkbox[value='"+item+"']").click();
-    });*/
-    // Список услуг конец
-
+    */
 
 
 
