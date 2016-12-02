@@ -397,6 +397,7 @@ function CreateAccident() {
     $("#accidentreason").val("");
     $("#accidentrepair").val("");
 
+    $("accident-link").text("");
 
     AccidentData();
 
@@ -422,6 +423,11 @@ function EditAccident(row_id) {
             $("#accidentrepair").val(data['accrepair']);
             $("#accidentaddress").val("");
             $("#address-accident-list").empty();
+
+            // Номер аварии и ссылка на url ИСС
+            $("accident-link").text("Авария № "+data['accid']+" ");
+            if (data["accissid"] != 0) { $("accident-link").append("<a href=\"http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]+"\">Работа (в ИСС) № "+data["accissid"]+"</a>"); }
+
 
             if (data["accend"] == "yes") { $("#accidentend").prop("checked",true); }
             else { $("#accidentend").prop("checked",false); }

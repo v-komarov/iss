@@ -145,14 +145,14 @@ class Command(BaseCommand):
             }
 
             value = ""
-            value = value + "date:%s[%s]" % (ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),day)
-            value = value + "iss2_id:%s[%s]" % (ac.id,day)
-            value = value + "accname:%s[%s]" % (ac.acc_name.encode("cp1251"),day)
-            value = value + "acctypecat:%s,%s[%s]" % (ac.acc_type.name_short.encode("cp1251"),ac.acc_cat.cat.encode("cp1251"),day)
-            value = value + "acccomment:%s[%s]" % (ac.acc_comment.encode("cp1251"),day)
-            value = value + "deviceidlist:%s[%s]" % (",".join(iddevices),day)
-            value = value + "citynamelist:%s[%s]" % (",".join(cityname).encode("cp1251"),day)
-            value = value + "addresslist:%s" % (address_list.decode("utf-8").encode("cp1251"))
+            value = value + "date(%s)%s[%s]" % (day,ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),day)
+            value = value + "iss2_id(%s)%s[%s]" % (day,ac.id,day)
+            value = value + "accname(%s)%s[%s]" % (day,ac.acc_name.encode("cp1251"),day)
+            value = value + "acctypecat(%s)%s,%s[%s]" % (day,ac.acc_type.name_short.encode("cp1251"),ac.acc_cat.cat.encode("cp1251"),day)
+            value = value + "acccomment(%s)%s[%s]" % (day,ac.acc_comment.encode("cp1251"),day)
+            value = value + "deviceidlist(%s)%s[%s]" % (day,",".join(iddevices),day)
+            value = value + "citynamelist(%s)%s[%s]" % (day,",".join(cityname).encode("cp1251"),day)
+            value = value + "addresslist(%s)%s" % (day,address_list.decode("utf-8").encode("cp1251"))
 
 
 
@@ -171,6 +171,7 @@ class Command(BaseCommand):
             ac.save()
 
 
+            #print result
 
         print "ok"
 

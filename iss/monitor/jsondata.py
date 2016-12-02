@@ -362,7 +362,8 @@ def get_json(request):
                 accend = "yes"
             else:
                 accend = "no"
-            acc = {
+            accjson = {
+                'accid' : acc.id,
                 'address' : acc.acc_address,
                 'acctype' : acc.acc_type.id,
                 'acccat' : acc.acc_cat.id,
@@ -373,7 +374,14 @@ def get_json(request):
                 'accrepair' : acc.acc_repair
             }
 
-            response_data = acc
+            ### Номер в ИСС
+            if acc.acc_iss_id != None:
+                accjson['accissid'] = acc.acc_iss_id
+            else:
+                accjson['accissid'] = 0
+
+
+            response_data = accjson
 
 
 
