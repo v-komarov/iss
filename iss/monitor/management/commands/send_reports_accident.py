@@ -203,7 +203,7 @@ class Command(BaseCommand):
                 'start_datetime':time.mktime(ac.acc_start.replace(tzinfo=timezone('UTC')).timetuple()),
                 'category':int(ac.acc_cat.cat,10),
                 'kind':ac.acc_type.id,
-                'locations':address_str,
+                'locations':"auto "+address_str,
                 'affected_customers':zkl,
                 'reason':ac.acc_reason,
                 'actions':ac.acc_repair
@@ -222,7 +222,7 @@ class Command(BaseCommand):
 
             #print data
 
-            req = urllib2.Request(url='http://zenoss.sib.transtk.ru:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+            req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
             #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
 
             f = urllib2.urlopen(req)
