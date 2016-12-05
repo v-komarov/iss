@@ -123,115 +123,143 @@ class Command(BaseCommand):
 
         ### Выбор аварий без acc_reports_id
         for ac in accidents.objects.order_by("-update_datetime")[:3]:
-            ev = ac.acc_event
 
-            domen = ev.source
+            ### Учитываем или нет в статистике
+            if ac.acc_stat == True:
 
+                ev = ac.acc_event
 
-            ####
-            companies = []
-            cities = []
-            houses = []
-            address_str = ""
-            zkl = 0
+                domen = ev.source
 
 
-            #### Выбор ip адресов
-            ipaddress = [ev.device_net_address]
-            if ev.data.has_key("containergroup"):
-                for item in ev.data["containergroup"]:
-                    a = events.objects.get(pk=item)
-                    ipaddress.append(a.device_net_address)
-            #### Поиск устройств по ip адресам
-            for ip in ipaddress:
-                if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
-                    ### Найден коммутатор в базе инвентори
-                    dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
-                    if dev.company.id not in companies:
-                        companies.append(dev.company.id)
-                    if dev.address.city.id not in cities:
-                        cities.append(dev.address.city.id)
-                    if dev.address.house not in houses:
-                        houses.append(dev.address.id)
+                ####
+                companies = []
+                cities = []
+                houses = []
+                address_str = ""
+                zkl = 0
 
 
-
-
-
-            ### Дополнение из адресов , введеннх операторов
-            for addrid in ac.acc_address["address_list"]:
-                if int(addrid["addressid"],10) not in houses:
-                    houses.append(int(addrid["addressid"],10))
+                #### Выбор ip адресов
+                ipaddress = [ev.device_net_address]
+                if ev.data.has_key("containergroup"):
+                    for item in ev.data["containergroup"]:
+                        a = events.objects.get(pk=item)
+                        ipaddress.append(a.device_net_address)
+                #### Поиск устройств по ip адресам
+                for ip in ipaddress:
+                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
+                        ### Найден коммутатор в базе инвентори
+                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
+                        if dev.company.id not in companies:
+                            companies.append(dev.company.id)
+                        if dev.address.city.id not in cities:
+                            cities.append(dev.address.city.id)
+                        if dev.address.house not in houses:
+                            houses.append(dev.address.id)
 
 
 
-            ### Формирование адресной строки
-            for addrid in houses:
-                a = address_house.objects.get(pk=addrid)
-                if a.street == None and a.house == None:
-                    address_str = address_str + "%s," % (a.city.name)
-                elif a.house == None:
-                    address_str = address_str + "%s: %s," % (a.city.name,a.street.name)
-                else:
-                    address_str = address_str + "%s: %s: %s," % (a.city.name,a.street.name,a.house)
+
+
+                ### Дополнение из адресов , введеннх операторов
+                for addrid in ac.acc_address["address_list"]:
+                    if int(addrid["addressid"],10) not in houses:
+                        houses.append(int(addrid["addressid"],10))
 
 
 
-            ### Расчет ЗКЛ на основе списка ip
-            for addrid in houses:
-                a = address_house.objects.get(pk=addrid)
-                d = devices.objects.filter(address=a)
-                for i in d:
-                    if i.data["ipaddress"] not in ipaddress:
-                        ipaddress.append(i.data["ipaddress"])
-
-            for ip in ipaddress:
-                for d in devices_ip.objects.filter(device_domen=domen,ipaddress=ip):
-                    if d.data.has_key("ports_info"):
-                        zkl = zkl + d.data["ports_info"]["used"]
-
-
-            ### Преобразование id в reports для городов
-            ci = []
-            for c in cities:
-                ci.append(id_city_2_reports["%s" % c]["idreports"])
-
-
-            values = {
-                'companies':companies,
-                'cities':ci,
-                'start_datetime':time.mktime(ac.acc_start.replace(tzinfo=timezone('UTC')).timetuple()),
-                'category':int(ac.acc_cat.cat,10),
-                'kind':ac.acc_type.id,
-                'locations':"auto "+address_str,
-                'affected_customers':zkl,
-                'reason':ac.acc_reason,
-                'actions':ac.acc_repair
-            }
-
-            if ac.acc_end != None:
-                values['finish_datetime'] = time.mktime(ac.acc_end.replace(tzinfo=timezone('UTC')).timetuple())
-            if ac.acc_iss_id != None:
-                values['iss_id'] = ac.acc_iss_id
-            if ac.acc_reports_id != None:
-                values['id'] = ac.acc_reports_id
+                ### Формирование адресной строки
+                for addrid in houses:
+                    a = address_house.objects.get(pk=addrid)
+                    if a.street == None and a.house == None:
+                        address_str = address_str + "%s," % (a.city.name)
+                    elif a.house == None:
+                        address_str = address_str + "%s: %s," % (a.city.name,a.street.name)
+                    else:
+                        address_str = address_str + "%s: %s: %s," % (a.city.name,a.street.name,a.house)
 
 
 
-            data = json.dumps(values)
+                ### Расчет ЗКЛ на основе списка ip
+                for addrid in houses:
+                    a = address_house.objects.get(pk=addrid)
+                    d = devices.objects.filter(address=a)
+                    for i in d:
+                        if i.data["ipaddress"] not in ipaddress:
+                            ipaddress.append(i.data["ipaddress"])
 
-            #print data
+                for ip in ipaddress:
+                    for d in devices_ip.objects.filter(device_domen=domen,ipaddress=ip):
+                        if d.data.has_key("ports_info"):
+                            zkl = zkl + d.data["ports_info"]["used"]
 
-            req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-            #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
 
-            f = urllib2.urlopen(req)
-            result = f.read()
-            r = json.loads(result)
-            if ac.acc_reports_id == None and r.has_key("api_status"):
-                if r["api_status"] == "OK":
-                    ac.acc_reports_id = r["api_response"]["id"]
-                    ac.save()
+                ### Преобразование id в reports для городов
+                ci = []
+                for c in cities:
+                    ci.append(id_city_2_reports["%s" % c]["idreports"])
+
+
+                values = {
+                    'companies':companies,
+                    'cities':ci,
+                    'start_datetime':time.mktime(ac.acc_start.replace(tzinfo=timezone('UTC')).timetuple()),
+                    'category':int(ac.acc_cat.cat,10),
+                    'kind':ac.acc_type.id,
+                    'locations':"auto "+address_str,
+                    'affected_customers':zkl,
+                    'reason':ac.acc_reason,
+                    'actions':ac.acc_repair
+                }
+
+                if ac.acc_end != None:
+                    values['finish_datetime'] = time.mktime(ac.acc_end.replace(tzinfo=timezone('UTC')).timetuple())
+                if ac.acc_iss_id != None:
+                    values['iss_id'] = ac.acc_iss_id
+                if ac.acc_reports_id != None:
+                    values['id'] = ac.acc_reports_id
+
+
+
+                data = json.dumps(values)
+
+                #print data
+
+                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+                #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
+
+                f = urllib2.urlopen(req)
+                result = f.read()
+                r = json.loads(result)
+                if ac.acc_reports_id == None and r.has_key("api_status"):
+                    if r["api_status"] == "OK":
+                        ac.acc_reports_id = r["api_response"]["id"]
+                        ac.save()
+
+                #print result
+
+
+            ### отмечено, что не нужно учитывать в статистике
+            elif ac.acc_stat == False and ac.acc_reports_id != None:
+
+                values = {'id': ac.acc_reports_id}
+
+                data = json.dumps(values)
+
+                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+
+                f = urllib2.urlopen(req)
+                result = f.read()
+                r = json.loads(result)
+                if ac.acc_reports_id != None and r.has_key("api_status"):
+                    if r["api_status"] == "OK":
+                        ac.acc_reports_id = None
+                        ac.save()
+
+                #print result
 
         """
         data = json.loads(result)
