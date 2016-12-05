@@ -54,19 +54,9 @@ class events(models.Model):
     accident = models.BooleanField(db_index=True,default=False)
     accident_end = models.BooleanField(db_index=True,default=False)
 
+    mcc_mail_begin = models.BooleanField(db_index=True,default=False) ### Было создано или нет сообщение в МСС
 
 
-
-
-### Оповещения
-class messages(models.Model):
-    datetime_message = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
-    message_title = models.CharField(max_length=255,default="")
-    accsident_num = models.IntegerField(db_index=True,null=False,unique=True,default=0)
-    email_list = models.CharField(max_length=255,db_index=True,default="")
-    author = models.CharField(max_length=255,db_index=True,default="")
-    data = JSONField(default={})
-    event = models.ForeignKey(events,db_index=True,null=True)
 
 
 
@@ -91,3 +81,12 @@ class accidents(models.Model):
     acc_stat = models.BooleanField(db_index=True, default=False) ### Включать в статистику
 
 
+
+
+
+### Оповещения
+class messages(models.Model):
+    datetime_message = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
+    accident = models.ForeignKey(accidents,db_index=True,null=True)
+    data = JSONField(default={})
+    send_done = models.BooleanField(db_index=True, default=False)

@@ -30,7 +30,6 @@ $(document).ready(function() {
     //$("table[group=events] tbody tr td a").bind("click",ChooseActions);
     $("ul.dropdown-menu li a[action=zkl]").bind("click",GetZkl);
     $("ul.dropdown-menu li a[action=container]").bind("click",ShowContainer);
-    $("ul.dropdown-menu li a[action=message-accidentmmsbegin]").bind("click",MessageMssBegin);
     $("#addgroup").bind("click",AddContainer);
     $("#deletemembers").bind("click",DeleteMembers);
     $("#addrow").bind("click",AddRow);

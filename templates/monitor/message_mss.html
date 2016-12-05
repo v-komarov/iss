@@ -3,28 +3,40 @@
         <table>
             <tbody>
                 <tr>
-                    <td><label for="datetime_begin">Дата времени начала</label></td>
-                    <td><input type="text" class="form-control" id="datetime_begin" name="datetime_begin" placeholder="" /></td>
-                    <td><label for="device_system">Категория и вид аварии</label></td>
-                    <td><input type="text" class="form-control" id="device_system" name="device_system" placeholder="" /></td>
+                    <td><label for="acc-datetime-begin">Дата времени начала</label></td>
+                    <td><input type="text" class="form-control" id="acc-datetime-begin" name="acc-datetime-begin" placeholder="" /></td>
+                    <td><label for="acc-cat-type">Категория и вид аварии</label></td>
+                    <td><input type="text" class="form-control" id="acc-cat-type" name="acc-cat-type" placeholder="" /></td>
                 </tr>
                 <tr>
-                    <td><label for="service_stoplist">Список услуг недоступных клиентам</label></td>
-                    <td><textarea class="form-control" rows="3" id="service_stoplist" name="clients_info" placeholder=""></textarea></td>
-                    <td><label for="clients_info">Причина отсутствия услуги, для информирования клиентов</label></td>
-                    <td><textarea class="form-control" rows="3" id="clients_info" name="clients_info" placeholder=""></textarea></td>
+                    <td><label for="acc-service-stoplist">Список услуг недоступных клиентам</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-service-stoplist" name="acc-service-stoplist" placeholder=""></textarea></td>
+                    <td><label for="acc-reason">Причина отсутствия услуги, для информирования клиентов</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-reason" name="acc-reason" placeholder=""></textarea></td>
                 </tr>
                 <tr>
-                    <td><label style="margin-right:10px;" for="city">Город</label></td>
-                    <td><input type="text" class="form-control" id="city" name="city" placeholder="" /></td>
-                    <td><label for="address">Адреса (улицы, номера домов)</label></td>
-                    <td><textarea class="form-control" rows="3" id="address" name="address" placeholder=""></textarea></td>
+                    <td><label style="margin-right:10px;" for="acc-cities">Город</label></td>
+                    <td><input type="text" class="form-control" id="acc-cities" name="acc-cities" placeholder="" /></td>
+                    <td><label for="acc-address-list">Адреса (улицы, номера домов)</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-address-list" name="acc-address-list" placeholder=""></textarea></td>
                 </tr>
                 <tr>
-                    <td><label for="zkl">Ориентировочное количество ЗКЛ</label></td>
-                    <td><input type="text" class="form-control" id="zkl" name="zkl" placeholder="" /></td>
-                    <td><label style="margin-right:10px;" for="datetime_end">Ориентировочные сроки проведения АВР (если известно)</label></td>
-                    <td><input type="text" class="form-control" id="datetime_end" placeholder="" /></td>
+                    <td><label for="acc-zkl">Ориентировочное количество ЗКЛ</label></td>
+                    <td><input type="text" class="form-control" id="acc-zkl" name="acc-zkl" placeholder="" /></td>
+                    <td><label style="margin-right:10px;" for="acc-repair-end">Ориентировочные сроки проведения АВР (если известно)</label></td>
+                    <td><input type="text" class="form-control" id="acc-repair-end" name="acc-repair-end" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label for="acc-email-templates">Шаблон</label></td>
+                    <td>
+                        <select class="form-control" id="acc-email-templates" name="acc-email-templates" placeholder="">
+                            {% for e in email_templates %}
+                                <option value="{{ e.id }}" address_list="{{ e.address_list }}">{{ e.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><label style="margin-right:10px;" for="acc-email-list">Список email</label></td>
+                    <td><input type="text" class="form-control" id="acc-email-list" placeholder="" /></td>
                 </tr>
             </tbody>
         </table>

@@ -3,6 +3,7 @@ $(document).ready(function() {
 
     $("ul.dropdown-menu li a[action=create-accident]").bind("click",Accident);
     $("button#addaddr").bind("click",AddAccidentAddressList);
+    $("ul.dropdown-menu li a[action=message-accidentmmsbegin]").bind("click",MessageMssBegin);
 
 
     //// Валидация
@@ -127,9 +128,63 @@ $(document).ready(function() {
 
 
 
-
+/*
     //// Валидация
     $("#accidentform").validate({
+        highlight: function(element, errorClass) {
+            $(element).add($(element).parent()).addClass("invalidElem");
+        },
+        unhighlight: function(element, errorClass) {
+            $(element).add($(element).parent()).removeClass("invalidElem");
+        },
+
+        errorElement: "div",
+        errorClass: "errorMsg",
+
+          rules: {
+            acc-datetime-begin: {
+                required: true
+            },
+            acc-cat-type: {
+                required: true
+            },
+            acc-reason: {
+                required: true
+            },
+            acc-cities: {
+                required: true
+            },
+            acc-address-list: {
+                required: true
+            },
+            acc-zkl: {
+                required: true
+            },
+            acc-email-list: {
+                required: true
+            },
+            acc-service-stoplist: {
+                required: true
+            },
+          },
+
+    });// Валидация
+
+
+
+    $("#accidentform table tbody tr td input").change(function(e) {
+        $("#accidentform").validate().element($(e.target));
+    })
+
+*/
+
+
+
+
+
+
+    //// Валидация
+    $("#message-mb").validate({
         highlight: function(element, errorClass) {
             $(element).add($(element).parent()).addClass("invalidElem");
         },
@@ -158,9 +213,16 @@ $(document).ready(function() {
 
 
 
-    $("#accidentform table tbody tr td input").change(function(e) {
-        $("#accidentform").validate().element($(e.target));
+    $("#message-mb table tbody tr td input").change(function(e) {
+        $("#message-mb").validate().element($(e.target));
     })
+
+
+
+
+
+
+
 
 
 
@@ -294,6 +356,11 @@ $(document).ready(function() {
 
 
 });
+
+
+
+
+
 
 
 
@@ -792,6 +859,8 @@ function EditRow(e) {
                         var element_identifier = $("#event table tbody tr td input#element_identifier").val();
                         var element_sub_identifier = $("#event table tbody tr td input#element_sub_identifier").val();
 
+
+
                         var csrftoken = getCookie('csrftoken');
 
                         $.ajaxSetup({
@@ -847,6 +916,7 @@ function EditRow(e) {
 
 
         })
+
 
 
 
@@ -944,61 +1014,118 @@ function AddRow(e) {
 
 
 
+
+
+
 // Оповещение об аварии на MCC
 function MessageMssBegin(e) {
 
-/*
-    $("#maillist").empty();
-    $("#maillist").append($("<option value=\"\" selected></option>"));
-    $("#mailtext subj").text("");
-    $("#mailtext mailtext").text("");
-    $("#mailtext dl attachement").empty();
 
+
+    // Для формы отправки оповещения - отображение списка адресов
+    $( "#acc-email-templates" ).change(function() {
+        var address_list = $("#acc-email-templates option:selected").attr("address_list");
+        $("#acc-email-list").val(address_list);
+    });
+
+
+
+
+
+
+    // Сообщение еще не создавалось
     var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
-*/
-/*    var jqxhr = $.getJSON("/monitor/events/jsondata?getevent="+row_id,
-        function(data) {
+    var accident = $("table[group=events] tbody tr[row_id="+row_id+"]").attr("accident");
+    var mcc_mail_begin = $("table[group=events] tbody tr[row_id="+row_id+"]").attr("mcc-mail-begin");
+    // Авария не создавалась - ничего не делать
+    if (accident != "yes") { return;}
 
-            $("#mail table").attr("event_id",data['id']);
-
-            $("#mail table tbody tr td select#status").val(data['status']);
-            $("#mail table tbody tr td select#severity").val(data['severity']);
-
-            $("#mail table tbody tr td input#event_class").val(data['event_class']);
-            $("#mail table tbody tr td input#device_system").val(data['device_system']);
-            $("#mail table tbody tr td input#device_group").val(data['device_group']);
-            $("#mail table tbody tr td input#device_class").val(data['device_class']);
-            $("#mail table tbody tr td input#device_net_address").val(data['device_net_address']);
-            $("#mail table tbody tr td input#device_location").val(data['device_location']);
-            $("#mail table tbody tr td input#element_identifier").val(data['element_identifier']);
-            $("#mail table tbody tr td input#element_sub_identifier").val(data['element_sub_identifier']);
+    // Почтовое сообщение не создавалось
+    if (mcc_mail_begin == "no") {
 
 
-            data['list_mail'].forEach(function(item,i,arr){
-                $("#maillist").append($("<option value="+item['id_mail']+">"+item['label_mail']+"</option>"));
+        var jqxhr = $.getJSON("/monitor/events/jsondata?mailaccidentdata="+row_id+"&mcc_mail_begin=no",
+
+            function(data) {
+
+                $("#acc-datetime-begin").val(data['acc_start']);
+                $("#acc-cat-type").val(data['acccat']+","+data['acctype']);
+                $("#acc-reason").val(data['accreason']);
+                $("#acc-cities").val(data['acccities']);
+                $("#acc-address-list").val(data['accaddresslist']);
+                $("#acc-zkl").val(data['acczkl']);
+                $("#acc-email-templates").val("");
+                $("#acc-email-list").val("");
+                $("#acc-repair-end").val("");
+                $("#acc-service-stoplist").val("");
+
 
             })
 
-*/
+
+
+    }
+    // Почтовое сообщение уже было создано
+    else {
+
+        var jqxhr = $.getJSON("/monitor/events/jsondata?mailaccidentdata="+row_id+"&mcc_mail_begin=yes",
+
+            function(data) {
+
+
+                $("#acc-datetime-begin").val(data['acc_start']);
+                $("#acc-cat-type").val(data['acccattype']);
+                $("#acc-reason").val(data['accreason']);
+                $("#acc-cities").val(data['acccities']);
+                $("#acc-address-list").val(data['accaddresslist']);
+                $("#acc-zkl").val(data['acczkl']);
+                $("#acc-email-templates").val(data['acc_email_templates']);
+                $("#acc-email-list").val(data['acc_email_list']);
+                $("#acc-repair-end").val(data['acc_repair_end']);
+                $("#acc-service-stoplist").val(data['acc_service_stoplist']);
+
+            })
+
+    }
+
+
+
+
             $("#message-mss-begin").dialog({
                 title:"Оповещение об аварии на MCC",
                 buttons:[{ text:"Отправить",click: function() {
-                    /*
-                    if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
 
-                        var event_id = $("#mail table").attr("event_id");
+                    if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
 
-                        var status = $("#mail table tbody tr td select#status").val();
-                        var severity = $("#mail table tbody tr td select#severity").val();
 
-                        var event_class = $("#mail table tbody tr td input#event_class").val();
-                        var device_system = $("#mail table tbody tr td input#device_system").val();
-                        var device_group = $("#mail table tbody tr td input#device_group").val();
-                        var device_class = $("#mail table tbody tr td input#device_class").val();
-                        var device_net_address = $("#mail table tbody tr td input#device_net_address").val();
-                        var device_location = $("#mail table tbody tr td input#device_location").val();
-                        var element_identifier = $("#mail table tbody tr td input#element_identifier").val();
-                        var element_sub_identifier = $("#mail table tbody tr td input#element_sub_identifier").val();
+                        var acc_datetime_begin = $("#acc-datetime-begin").val();
+                        var acc_cat_type = $("#acc-cat-type").val();
+                        var acc_reason = $("#acc-reason").val();
+                        var acc_cities = $("#acc-cities").val();
+                        var acc_address_list = $("#acc-address-list").val();
+                        var acc_zkl = $("#acc-zkl").val();
+                        var acc_email_templates = $("#acc-email-templates").val();
+                        var acc_email_list = $("#acc-email-list").val();
+                        var acc_service_stoplist = $("#acc-service-stoplist").val();
+                        var acc_repair_end = $("#acc-repair-end").val();
+
+
+                        var data = {};
+                        data.acc_datetime_begin = acc_datetime_begin;
+                        data.acc_cat_type = acc_cat_type;
+                        data.acc_reason = acc_reason;
+                        data.acc_cities = acc_cities;
+                        data.acc_address_list = acc_address_list;
+                        data.acc_zkl = acc_zkl;
+                        data.acc_email_templates = acc_email_templates;
+                        data.acc_email_list = acc_email_list;
+                        data.acc_service_stoplist = acc_service_stoplist;
+                        data.acc_repair_end = acc_repair_end;
+                        data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+                        data.action = "create-mcc-message-email";
+
+
+
 
                         var csrftoken = getCookie('csrftoken');
 
@@ -1015,28 +1142,21 @@ function MessageMssBegin(e) {
                         $.ajax({
                           url: "/monitor/events/jsondata/",
                           type: "POST",
-                          dataType: 'text',
-                          data:"{"
-                            +"'event_id':'"+event_id+"',"
-                            +"'action':'edit_event',"
-                            +"'status':"+status+","
-                            +"'severity':"+severity+","
-                            +"'event_class':'"+event_class+"',"
-                            +"'device_system':'"+device_system+"',"
-                            +"'device_group':'"+device_group+"',"
-                            +"'device_class':'"+device_class+"',"
-                            +"'device_net_address':'"+device_net_address+"',"
-                            +"'device_location':'"+device_location+"',"
-                            +"'element_identifier':'"+element_identifier+"',"
-                            +"'element_sub_identifier':'"+element_sub_identifier+"'"
-                            +"}",
+                          dataType: 'json',
+                          data:$.toJSON(data),
                             success: function(result) {
-                                window.location=$("#menumonitor a").attr("href");
+                                location.reload();
                             }
 
-                        })
+                        });
 
-                    } */
+
+                        $(this).dialog("close");
+
+
+
+
+                    }
 
                 }},
                     {text:"Закрыть",click: function() {
@@ -1047,14 +1167,6 @@ function MessageMssBegin(e) {
                 width:900
 
             });
-
-
-
-
-
-
-
-  //      })
 
 
 }

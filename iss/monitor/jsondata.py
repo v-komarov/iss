@@ -7,6 +7,9 @@ import pickle
 import operator
 import uuid
 import email
+import itertools
+
+
 
 from email.utils import parsedate_tz, mktime_tz, formatdate
 from pytz import timezone
@@ -17,10 +20,18 @@ from django.db.models import Q
 
 
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list
+from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,devices_type
 
 from iss.monitor.othersources import get_zkl
-from iss.monitor.models import Profile
+from iss.monitor.models import Profile,messages
+from iss.equipment.models import devices_ip
+from iss.inventory.models import devices
+
+
+
+## Для коммутаторов
+devicetype = devices_type.objects.get(pk=1)
+
 
 
 tz = 'Asia/Krasnoyarsk'
@@ -396,6 +407,148 @@ def get_json(request):
 
 
 
+
+        #### Данные по аварии для отправки email сообщения МСС
+        if r.has_key("mailaccidentdata") and rg("mailaccidentdata") != "":
+            ### id строки события (контейнера)
+            row_id = request.GET["mailaccidentdata"]
+            ev = events.objects.get(pk=row_id)
+            acc = accidents.objects.get(acc_event=row_id)
+            if request.GET["mcc_mail_begin"] == "no":
+            # Почтовое сообщение еще не создавалось
+
+                ##### Определение списка адресов ####
+                #####################################
+                domen = ev.source
+
+
+                ipaddress = [ev.device_net_address]
+                if ev.data.has_key("containergroup"):
+                    for item in ev.data["containergroup"]:
+                        a = events.objects.get(pk=item)
+                        ipaddress.append(a.device_net_address)
+
+                iddevices = []
+                ### Поиск соответствия ip адресу id для iss
+                for ip in ipaddress:
+                    if devices_ip.objects.filter(ipaddress=ip,device_domen="zenoss_krsk").count() == 1:
+                        d = devices_ip.objects.get(ipaddress=ip,device_domen="zenoss_krsk")
+                        if d.data.has_key("iss_id_device"):
+                            iddevices.append("%s" % d.data["iss_id_device"])
+
+
+                houses = []
+                #### Сбор id адресов
+                #### Поиск устройств по ip адресам
+                for ip in ipaddress:
+                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
+                        ### Найден коммутатор в базе инвентори
+                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
+                        if dev.address.house not in houses:
+                            houses.append(dev.address.id)
+
+
+
+
+
+                ### Дополнение из адресов , введеннх операторов
+                for addrid in acc.acc_address["address_list"]:
+                    if int(addrid["addressid"],10) not in houses:
+                        houses.append(int(addrid["addressid"],10))
+
+
+
+                address_list = ""
+                ### Формирование адресной строки
+                q = []
+                for addr in houses:
+                    q.append("Q(id=%s)" % addr)
+
+                strsql = "address_house.objects.filter(%s)" % (" | ".join(q))
+                data = eval(strsql)
+
+                cities = []
+                cityname = []
+                for i in data:
+                    if i.city.id not in cities:
+                        cities.append(i.city.id)
+                        cityname.append(i.city.name)
+
+                addr = []
+                for i in data:
+                    addr.append(
+                        {
+                            'city':i.city,
+                            'street':i.street,
+                            'house':i.house
+                        }
+
+                    )
+
+
+
+                for city,street_house in itertools.groupby(addr,key=lambda x:x['city']):
+                    #address_list = address_list + "," + str(city) + ","
+                    for street,houses in itertools.groupby(list(street_house),key=lambda y:y['street']):
+                        hl = ""
+                        for h in list(houses):
+                            a = "%s" % h["house"]
+                            hl = hl + a + ","
+                        address_list = address_list + str(city) +","+ str(street) + ",%s" % hl.encode("utf-8") + ";"
+
+
+                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")[:-1]
+
+
+                ### Рсчет ЗКЛ
+                zkl = 0
+                for ip in ipaddress:
+                    for d in devices_ip.objects.filter(device_domen=domen, ipaddress=ip):
+                        if d.data.has_key("ports_info"):
+                            zkl = zkl + d.data["ports_info"]["used"]
+
+                tzm = 'Europe/Moscow'
+
+                accjson = {
+                        'accid': acc.id,
+                        'acc_start': acc.acc_start.astimezone(timezone(tzm)).strftime('%d.%m.%Y %H:%M'),
+                        'acctype': acc.acc_type.name_short,
+                        'acccat': acc.acc_cat.cat,
+                        'accreason': acc.acc_reason,
+                        'acccities':",".join(cityname),
+                        'accaddresslist':address_list,
+                        'acczkl':zkl
+                    }
+
+
+            else:
+            # Почтовое сообщение уже было создано
+                m = messages.objects.filter(accident=acc).order_by('-datetime_message').first()
+
+
+                accjson = {
+                    'acc_start': m.data['acc_datetime_begin'],
+                    'acccattype': m.data['acc_cat_type'],
+                    'accreason': m.data['acc_reason'],
+                    'acccities': m.data['acc_cities'],
+                    'accaddresslist': m.data['acc_address_list'],
+                    'acczkl': m.data['acc_zkl'],
+                    'acc_email_templates': m.data['acc_email_templates'],
+                    'acc_email_list': m.data['acc_email_list'],
+                    'acc_service_stoplist': m.data['acc_service_stoplist'],
+                    'acc_repair_end':m.data['acc_repair_end']
+                }
+
+
+            response_data = accjson
+
+
+
+
+
+
+
+
     if request.method == "POST":
         data = eval(request.body)
 
@@ -604,6 +757,19 @@ def get_json(request):
 
 
 
+
+
+        ## создание оповещения email сообщения
+        if data.has_key("action") and data["action"] == 'create-mcc-message-email':
+            values = eval(str(data))
+            event_id = values["event_id"]
+            ev = events.objects.get(pk=event_id)
+            ac = accidents.objects.get(acc_event=ev)
+            messages.objects.create(accident=ac,data=values)
+            ev.mcc_mail_begin = True
+            ev.save()
+
+            print values
 
 
 
