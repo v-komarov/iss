@@ -9,6 +9,9 @@
 .. toctree::
    :maxdepth: 3
 
+   models
    events
+   zkl
+   other_systems
    example_conf
    links
