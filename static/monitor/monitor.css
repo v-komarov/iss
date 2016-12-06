@@ -251,17 +251,10 @@ table[group=events] tbody > tr.small > td {
     padding:0;
 }
 
-#head-table-events > tr:nth-child(1) > th:nth-child(2),
-#head-table-events > tr:nth-child(1) > th:nth-child(3),
-#head-table-events > tr:nth-child(1) > th:nth-child(4) {
-    padding-left:10px;
+#head-table-events > tr > th {
+    padding:0px;
 }
 
-#head-table-events > tr:nth-child(1) > th:nth-child(5),
-#head-table-events > tr:nth-child(1) > th:nth-child(6),
-#head-table-events > tr:nth-child(1) > th:nth-child(7) {
-    padding-left:5px;
-}
 
 
 /* Интерфейс создания аварии */

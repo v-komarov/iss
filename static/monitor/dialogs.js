@@ -450,7 +450,7 @@ function CreateAccident() {
     // Очистка
     $("#accidentcat").val("");
     $("#accidenttype").val("");
-    $("#accidentname").val("");
+    $("#accidentname").val("Недоступно оборудование г. ");
     $("#accidentcomment").val("");
     $("#accidentaddress").val("");
     $("#address-accident-list").empty();
@@ -475,6 +475,7 @@ function CreateAccident() {
 
 function EditAccident(row_id) {
 
+
     $("#accidentdata").attr("action","edit-accident");
 
     var jqxhr = $.getJSON("/monitor/events/jsondata?getaccidentdata="+row_id,
@@ -492,6 +493,10 @@ function EditAccident(row_id) {
             // Номер аварии и ссылка на url ИСС
             $("accident-link").text("Авария № "+data['accid']+" ");
             if (data["accissid"] != 0) { $("accident-link").append("<a href=\"http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]+"\">Работа (в ИСС) № "+data["accissid"]+"</a>"); }
+
+
+            // Открытие окна в ИСС
+            window.open("http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]);
 
 
             if (data["accend"] == "yes") { $("#accidentend").prop("checked",true); }
@@ -518,7 +523,7 @@ function EditAccident(row_id) {
 
         })
 
-    AccidentData();
+    //AccidentData();
 
 }
 

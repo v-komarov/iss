@@ -488,13 +488,13 @@ def get_json(request):
 
 
                 for city,street_house in itertools.groupby(addr,key=lambda x:x['city']):
-                    #address_list = address_list + "," + str(city) + ","
+                    address_list = address_list + "," + str(city) + ","
                     for street,houses in itertools.groupby(list(street_house),key=lambda y:y['street']):
                         hl = ""
                         for h in list(houses):
                             a = "%s" % h["house"]
                             hl = hl + a + ","
-                        address_list = address_list + str(city) +","+ str(street) + ",%s" % hl.encode("utf-8") + ";"
+                        address_list = address_list + str(street) + ",%s" % hl.encode("utf-8") + ";"
 
 
                 address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")[:-1]
@@ -516,7 +516,7 @@ def get_json(request):
                         'acccat': acc.acc_cat.cat,
                         'accreason': acc.acc_reason,
                         'acccities':",".join(cityname),
-                        'accaddresslist':address_list,
+                        'accaddresslist':address_list[1:-1],
                         'acczkl':zkl
                     }
 
