@@ -15,7 +15,7 @@ nginx
 .. code-block:: sh
 
  upstream iss {
-     server 127.0.0.1:8000;
+     server unix:/run/uwsgi/app/iss.socket;
  }
 
 
@@ -96,8 +96,7 @@ uwsgi
  daemonize=/var/log/uwsgi/app/iss.log
  uid=www-data
  gid=www-data
- socket=127.0.0.1:8000
- vacuum = true
+ socket=/run/uwsgi/app/iss.socket
 
 
 

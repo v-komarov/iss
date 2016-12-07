@@ -36,12 +36,12 @@ class Command(BaseCommand):
         now = datetime.datetime.now(timezone('UTC'))
 
         """
-            issmail@sibttk.ru
+            gamma@sibttk.ru
 
         """
 
         M = poplib.POP3('10.6.0.115')
-        M.user("issmail@sibttk.ru")
+        M.user("gamma@sibttk.ru")
         M.pass_("Qwerty123")
         M.set_debuglevel(1)
         numMessages = len(M.list()[1])
@@ -54,7 +54,7 @@ class Command(BaseCommand):
             subject = mail.get('Subject')
             h = email.Header.decode_header(subject)
             sub = h[0][0].decode(h[0][1]) if h[0][1] else h[0][0]
-            message_id = mail.get('Message-ID')
+            message_id = mail.get('Message-ID').replace("<","").replace(">","")
             message_from = mail.get('From')
             message_from = message_from[message_from.find("<"):message_from.find(">")+1]
 
@@ -104,7 +104,7 @@ class Command(BaseCommand):
                         })
 
             # Поиск в теле письма ISS-ID:
-            start = body.find("ISS-ID:<")
+            start = body.find("ISS-ID:")
             if start > 0:
                 end = body.find(">",start)
                 mail_iss_id = body[start+7:end+1]

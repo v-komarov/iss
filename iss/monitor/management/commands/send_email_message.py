@@ -44,7 +44,11 @@ class Command(BaseCommand):
                 temp_id = int(m.data["acc_email_templates"],10)
                 temp = email_templates.objects.get(pk=temp_id)
 
-                acc_number = m.accident.id
+                if m.accident.acc_iss_id:
+                    acc_number = m.accident.acc_iss_id
+                else:
+                    acc_number = ""
+
                 body = temp.template % (acc_number,m.data["acc_datetime_begin"],m.data["acc_cat_type"],m.data["acc_service_stoplist"],m.data["acc_reason"],m.data["acc_cities"],m.data["acc_address_list"],m.data["acc_zkl"],m.data["acc_repair_end"])
                 sbj = "Оповещение об аварии МР-Сибирь № %s" % acc_number
                 mto = m.data["acc_email_list"].split(";")
@@ -52,8 +56,9 @@ class Command(BaseCommand):
                 email = EmailMessage(
                     subject=sbj,
                     body=body,
-                    from_email='issmail@sibttk.ru',
-                    to=mto
+                    from_email='gamma@sibttk.ru',
+                    to=mto,
+                    reply_to=['ds@sibir.ttk.ru',]
                 )
 
                 email.content_subtype = "html"
