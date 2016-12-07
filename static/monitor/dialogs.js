@@ -1055,7 +1055,7 @@ function MessageMssBegin(e) {
             function(data) {
 
                 $("#acc-datetime-begin").val(data['acc_start']);
-                $("#acc-cat-type").val(data['acctype']+","+data['acccat']);
+                $("#acc-cat-type").val(data['acccat']+","+data['acctype']);
                 $("#acc-reason").val(data['accreason']);
                 $("#acc-cities").val(data['acccities']);
                 $("#acc-address-list").val(data['accaddresslist']);
