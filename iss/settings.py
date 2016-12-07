@@ -29,6 +29,22 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = '10.6.0.115'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'issmail@sibttk.ru'
+EMAIL_HOST_PASSWORD = 'Qwerty123'
+EMAIL_USE_TLS = False
+
+
+
+
+
+
+
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -90,3 +90,4 @@ class messages(models.Model):
     accident = models.ForeignKey(accidents,db_index=True,null=True)
     data = JSONField(default={})
     send_done = models.BooleanField(db_index=True, default=False)
+    mail_body = models.TextField(default=None,null=True)
