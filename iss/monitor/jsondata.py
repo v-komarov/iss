@@ -495,7 +495,7 @@ def get_json(request):
                             hl = hl + a + ","
                         address_list = address_list + str(street) + ",%s" % hl.encode("utf-8") + ";"
 
-                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";").replace(",;",";")
+                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";").replace(",;",";").replace(";,",";")
 
                 ### Рсчет ЗКЛ
                 zkl = 0
