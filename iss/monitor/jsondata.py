@@ -436,7 +436,6 @@ def get_json(request):
                         if d.data.has_key("iss_id_device"):
                             iddevices.append("%s" % d.data["iss_id_device"])
 
-
                 houses = []
                 #### Сбор id адресов
                 #### Поиск устройств по ip адресам
@@ -446,7 +445,6 @@ def get_json(request):
                         dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
                         if dev.address.house not in houses:
                             houses.append(dev.address.id)
-
 
 
 
@@ -491,14 +489,13 @@ def get_json(request):
                     address_list = address_list + "," + str(city) + ","
                     for street,houses in itertools.groupby(list(street_house),key=lambda y:y['street']):
                         hl = ""
+
                         for h in list(houses):
                             a = "%s" % h["house"]
                             hl = hl + a + ","
                         address_list = address_list + str(street) + ",%s" % hl.encode("utf-8") + ";"
 
-
-                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")[:-1]
-
+                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";").replace(",;",";")
 
                 ### Рсчет ЗКЛ
                 zkl = 0
@@ -516,7 +513,7 @@ def get_json(request):
                         'acccat': acc.acc_cat.cat,
                         'accreason': acc.acc_reason,
                         'acccities':",".join(cityname),
-                        'accaddresslist':address_list[1:-1],
+                        'accaddresslist':address_list[1:],
                         'acczkl':zkl
                     }
 
