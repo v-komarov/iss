@@ -55,9 +55,11 @@ class Command(BaseCommand):
                 sbj = "Оповещение об аварии МР-Сибирь № %s" % acc_number
                 mto = m.data["acc_email_list"].split(";")
 
+                issid = "<p>ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
+
                 email = EmailMessage(
                     subject=sbj,
-                    body=body,
+                    body=body+issid,
                     from_email='gamma@sibttk.ru',
                     to=mto,
                     reply_to=['ds@sibir.ttk.ru',]

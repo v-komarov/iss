@@ -262,10 +262,11 @@ def get_json(request):
 
             # Если событие на основе почтового сообщения, то отправляем список почтовых сообщений
             if e.bymail == True:
-                for m in e.data["mails"]:
+
+                for m in eval(str(e.data))['mails']:
                     d = datetime.datetime.fromtimestamp(email.utils.mktime_tz(parsedate_tz(m["mail_date"])))
                     list_mail.append({
-                        'id_mail':m["mail_id"].replace(">","").replace("<",""),
+                        'id_mail':m["mail_id"],
                         'label_mail':m["mail_from"].replace(">","").replace("<","")+" ("+d.replace(tzinfo=timezone("UTC")).astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M:%S")+")"
                     })
 
@@ -282,8 +283,9 @@ def get_json(request):
             id_event = request.GET["event_id"]
             id_mail = request.GET["mail_id"]
             e = events.objects.get(pk=id_event)
-            for m in e.data["mails"]:
-                if m["mail_id"] == u"<%s>" % id_mail:
+            for m in eval(str(e.data))['mails']:
+
+                if m["mail_id"] == id_mail:
                     files = []
                     for a in m["attachment"]:
                         files.append(a["file_name"])

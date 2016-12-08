@@ -58,7 +58,6 @@ class Command(BaseCommand):
             message_from = mail.get('From')
             message_from = message_from[message_from.find("<"):message_from.find(">")+1]
 
-
             ### Тело письма
             body = ""
             if mail.is_multipart():
@@ -74,6 +73,7 @@ class Command(BaseCommand):
             else:
                 body = mail.get_payload(decode=True)
 
+
             # Почтовое сообщение для хранения
             m = {
                 'mail_id':message_id,
@@ -84,6 +84,8 @@ class Command(BaseCommand):
                 'attachment':[]
 
             }
+
+
 
             ## Вложение файлов
             if mail.is_multipart():
@@ -103,19 +105,26 @@ class Command(BaseCommand):
                             'file_data':pickle.dumps(file_data)
                         })
 
+
             # Поиск в теле письма ISS-ID:
             start = body.find("ISS-ID:")
+
             if start > 0:
-                end = body.find(">",start)
+                end = body.find(":ISS-ID",start)
                 mail_iss_id = body[start+7:end+1]
 
                 ### Поиск сообщения
-                if events.objects.filter(uuid=mail_iss_id).count() == 1:
-                    e = events.objects.get(uuid=mail_iss_id)
+                if events.objects.filter(uuid=mail_iss_id[:-1]).count() == 1:
+                    e = events.objects.get(uuid=mail_iss_id[:-1])
                     d = e.data
-                    d["mails"].append(m)
+                    if d.has_key("mails"):
+                        d["mails"].append(m)
+                    else:
+                        d["mails"] = [m,]
                     e.data = d
+                    e.bymail = True
                     e.save()
+
 
 
             else:
@@ -131,12 +140,11 @@ class Command(BaseCommand):
                     update_time=now,
                     last_seen=now,
                     severity_id=Severity.objects.get(pk=3),
-                    manager="issmail@sibttk.ru",
+                    manager="gamma@sibttk.ru",
                     status_id=Status.objects.get(pk=0),
                     bymail = True,
-                    data = d
+                    data = unicode(d)
                 )
-
 
 
             M.dele(i + 1)
