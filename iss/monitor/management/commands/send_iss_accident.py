@@ -131,8 +131,9 @@ class Command(BaseCommand):
             # accname, acctype, acccat, acccomment, deviceidlist, addresslist, citynamelist
             #
             #
-
+            """
             values = {
+                'type_query':'create_work',
                 'date':ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),
                 'iss2_id':ac.id,
                 'day':day,
@@ -143,8 +144,10 @@ class Command(BaseCommand):
                 'citynamelist' : ",".join(cityname),
                 'addresslist' : address_list.decode("utf-8")
             }
+            """
 
             value = ""
+            value = value + "type_query(%s)create_work[%s]" % (day,day)
             value = value + "date(%s)%s[%s]" % (day,ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),day)
             value = value + "iss2_id(%s)%s[%s]" % (day,ac.id,day)
             value = value + "accname(%s)%s[%s]" % (day,ac.acc_name.encode("cp1251"),day)
@@ -158,7 +161,9 @@ class Command(BaseCommand):
 
 
 
-            data = json.dumps(values)
+
+
+            #data = json.dumps(values)
 
             req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.php',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
             f = urllib2.urlopen(req)

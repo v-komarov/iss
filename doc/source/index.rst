@@ -13,5 +13,6 @@
    events
    zkl
    other_systems
+   tools
    example_conf
    links

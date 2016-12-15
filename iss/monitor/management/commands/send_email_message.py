@@ -8,6 +8,7 @@ from iss.monitor.models import events
 
 import pickle
 import datetime
+import urllib2
 from StringIO import StringIO
 import poplib,getpass,email
 from email.header import decode_header
@@ -27,18 +28,55 @@ krsk_tz = timezone(tz)
 
 
 
+
+### Ключ для iss
+day = "eed3eis9quei7ga9avievaegaaNieHui"
+
+
+
+### Отправка ДРП в ИСС
+def send_iss_drp(iss_work_id,action_text):
+
+    """
+
+    iss_work_id - идентификатор работ
+    action_text - суть ДРП
+
+    """
+
+    value = ""
+    value = value + "type_query(%s)create_drp[%s]" % (day, day)
+    value = value + "iss_work_id(%s)%s[%s]" % (day, iss_work_id ,day)
+    value = value + "action_text(%s)%s[%s]" % (day, action_text ,day)
+
+    req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.php', data=value, headers={'Content-Type': 'text/plain; charset=cp1251'})
+    f = urllib2.urlopen(req)
+
+
+
+
+
+
+
+
 class Command(BaseCommand):
     args = '<mail message ...>'
     help = 'sand mail message'
 
+    """
+    Отправка email сообщений согласно шаблона
 
+    """
 
 
     def handle(self, *args, **options):
 
         now = datetime.datetime.now(timezone('UTC'))
 
+        ### Поиск неотправленных сообщений в очереди (в таблице)
         for m in messages.objects.filter(send_done=False):
+
+            ### Выбор сообщений с оповещение об аварии на МСС
             if m.data["acc_email_templates"] == "1":
 
                 temp_id = int(m.data["acc_email_templates"],10)
@@ -72,6 +110,8 @@ class Command(BaseCommand):
                 m.send_done = True
                 m.save()
 
+                ### Отправка сообщения в ИСС для создания ДРП
+                send_iss_drp(acc_number,sbj)
 
         print "ok"
 
