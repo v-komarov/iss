@@ -44,7 +44,8 @@ class EventList(ListView):
 
     model = events
     template_name = "monitor/event_list.html"
-    paginate_by = 100
+
+    paginate_by = 50
 
 
     @method_decorator(login_required(login_url='/'))
@@ -69,6 +70,9 @@ class EventList(ListView):
                 return head_order
         else:
             return head_order
+
+
+
 
 
 
@@ -150,7 +154,9 @@ class EventList(ListView):
         if self.session.has_key('status_id'):
             status = pickle.loads(self.session['status_id'])
         else:
-            status = []
+            status = [1,2,3]
+            self.session['status_id'] = pickle.dumps(status)
+
 
         # Список статусов
         status_list = []
@@ -166,7 +172,8 @@ class EventList(ListView):
         if self.session.has_key('severity_id'):
             severity = pickle.loads(self.session['severity_id'])
         else:
-            severity = []
+            severity = [5,]
+            self.session['severity_id'] = pickle.dumps(severity)
 
         # Список важности
         severity_list = []
@@ -251,8 +258,6 @@ class EventList(ListView):
 
         ## Шаблоны сообщений
         context["email_templates"] = email_templates.objects.all()
-
-
 
 
 

@@ -109,7 +109,7 @@ $(document).ready(function() {
 
     $('table[group=events] tbody tr td input[type=checkbox]').on("click",CheckBoxRow);
 
-    $('table[group=events]').tableScroll({height:700});
+    //$('table[group=events]').tableScroll({height:700});
 
     // Видимость кнопок
     $("#editrow").hide();

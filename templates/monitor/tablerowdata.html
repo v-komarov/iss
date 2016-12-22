@@ -2,7 +2,7 @@
 {% timezone tz %}
 
 
-        <tbody id="body-table-events">
+        <tbody id="body-table-events" style="display:block;height: 600px;overflow-y: auto;overflow-x: hidden;">
         {% for row in object_list %}
                 <tr class="small" row_id={{ row.id }} status_id={{ row.status_id.id }} manager={{ row.manager }} marked="no" uuid={{ row.uuid }} severity_id={{ row.severity_id.id }} group=false  {% if row.byhand == True %}byhand="yes"{% else %}byhand="no"{% endif%} {% if row.bymail == True %}bymail="yes"{% else %}bymail="no"{% endif%} {% if row.accident == True %} accident="yes" {% else %} acciden="no" {% endif %} {% if row.mcc_mail_begin == True %} mcc-mail-begin="yes" {% else %} mcc-mail-begin="no" {% endif %}>
                     <td style="padding:0;width:6px;">

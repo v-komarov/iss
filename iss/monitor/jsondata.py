@@ -601,7 +601,11 @@ def get_json(request):
 
 
         if data.has_key("action") and data["action"] == 'save-settings':
+
             head_order = eval(str(data["head_order"]))
+            row_page_data = eval(str(data["row_page_data"]))
+            refresh_data = eval(str(data["refresh_data"]))
+
             # Чередование полей
             pk_user = request.user.pk
 
@@ -612,11 +616,15 @@ def get_json(request):
                 data = p.settings
                 if data.has_key("monitor-settings"):
                     data['monitor-settings']['head_order'] = head_order
+                    data['monitor-settings']['row_page_data'] = row_page_data
+                    data['monitor-settings']['refresh_data'] = refresh_data
                     p.settings = data
                     p.save()
                 else:
                     data["monitor-settings"] = {
                         'head_order': head_order,
+                        'row_page_data': int(row_page_data,10),
+                        'refresh_data': refresh_data
                     }
                     p.settings = data
                     p.save()
@@ -625,6 +633,8 @@ def get_json(request):
                 settings = {
                     'monitor-settings':{
                         'head_order': head_order,
+                        'row_page_data': int(row_page_data,10),
+                        'refresh_data': refresh_data
                         }
                     }
 
@@ -768,7 +778,7 @@ def get_json(request):
             ev.mcc_mail_begin = True
             ev.save()
 
-            print values
+            #print values
 
 
 

@@ -96,7 +96,8 @@ function UserSettings(e) {
                     data = {};
                     data.action = "save-settings";
                     data.head_order = arr;
-
+                    data.row_page_data = $("#row-page-data").val();
+                    data.refresh_data = $("#refresh-data").val();
 
 
                     var csrftoken = getCookie('csrftoken');
