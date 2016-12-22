@@ -6,7 +6,38 @@ $(document).ready(function() {
     $("#head-order-down").bind("click",HeadOrderDown);
 
 
+    /// Отображение настроек период обновления таблицы и количество событий на странице
+    var refresh_table = $("#refresh-data").attr("refresh_table");
+    var row_page_table = $("#row-page-data").attr("row_page_table");
+    $("#refresh-data").val(refresh_table);
+    $("#row-page-data").val(row_page_table);
+
+
+    // Освежать данные согласно настроек пользователя
+    if (refresh_table != 0) {
+        // Освежать экран
+        setInterval('UpdateScreen();',1000*refresh_table);
+
+    }
+
+
+
+
+
 });
+
+
+
+
+
+// Обновление данных
+function UpdateScreen() {
+    window.location=$("#menumonitor a").attr("href");
+    console.log("has refreshed");
+}
+
+
+
 
 
 

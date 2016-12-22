@@ -135,20 +135,11 @@ $(document).ready(function() {
 
 
 
-    // Освежать экран
-    setInterval('UpdateScreen();',10000);
-
 
 
 });
 
 
-
-function UpdateScreen() {
-    if ($("#menumonitor").is(":hover"))  {
-        window.location=$("#menumonitor a").attr("href");
-    }
-}
 
 
 
@@ -379,7 +370,7 @@ function GetMemebersContainer() {
 
         ShowMembersCount();
         // Исправление заголовков таблицы
-        FixTableHead();
+        //FixTableHead();
 
 
         })
@@ -452,7 +443,7 @@ function HideContainer(e) {
 
 
     // Исправление заголовков таблицы
-    FixTableHead();
+    //FixTableHead();
 
 
 }

@@ -73,7 +73,41 @@ class EventList(ListView):
 
 
 
+    ### Через сколько обновлять таблицу
+    def my_refresh_table(self):
 
+        pk_user = self.user.pk
+        u = User.objects.get(pk=pk_user)
+        if Profile.objects.filter(user=u).count() == 1:
+            p = Profile.objects.get(user=u)
+            data = p.settings
+            if data.has_key("monitor-settings"):
+                if data["monitor-settings"].has_key("refresh_data"):
+                    return data["monitor-settings"]["refresh_data"]
+                else:
+                    return 0
+            else:
+                return 0
+        else:
+            return 0
+
+    #### Сколько событий на странице
+    def my_row_page_table(self):
+
+        pk_user = self.user.pk
+        u = User.objects.get(pk=pk_user)
+        if Profile.objects.filter(user=u).count() == 1:
+            p = Profile.objects.get(user=u)
+            data = p.settings
+            if data.has_key("monitor-settings"):
+                if data["monitor-settings"].has_key("row_page_data"):
+                    return data["monitor-settings"]["row_page_data"]
+                else:
+                    return 50
+            else:
+                return 50
+        else:
+            return 50
 
 
     def get_queryset(self):
@@ -258,6 +292,14 @@ class EventList(ListView):
 
         ## Шаблоны сообщений
         context["email_templates"] = email_templates.objects.all()
+
+
+        # Значение через сколько обновлять таблицу
+        context["refresh_table"] = "%s" % self.my_refresh_table()
+
+
+        # Сколько событий на странице
+        context["row_page_table"] = "%s" % self.my_row_page_table()
 
 
 

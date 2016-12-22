@@ -624,7 +624,7 @@ def get_json(request):
                     data["monitor-settings"] = {
                         'head_order': head_order,
                         'row_page_data': int(row_page_data,10),
-                        'refresh_data': refresh_data
+                        'refresh_data': int(refresh_data,10)
                     }
                     p.settings = data
                     p.save()
@@ -634,7 +634,7 @@ def get_json(request):
                     'monitor-settings':{
                         'head_order': head_order,
                         'row_page_data': int(row_page_data,10),
-                        'refresh_data': refresh_data
+                        'refresh_data': int(refresh_data,10)
                         }
                     }
 
