@@ -45,12 +45,14 @@ class EventList(ListView):
     model = events
     template_name = "monitor/event_list.html"
 
-    paginate_by = 50
+    paginate_by = 0
+
 
 
     @method_decorator(login_required(login_url='/'))
     @method_decorator(group_required(group='monitor',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
+        self.request = request
         self.session = request.session
         self.user = request.user
         return super(ListView, self).dispatch(request, *args, **kwargs)
@@ -174,6 +176,15 @@ class EventList(ListView):
 
 
 
+
+
+
+    ### Строк на странице - переопределение
+    def get_paginate_by(self, queryset):
+
+        p = self.my_row_page_table()
+
+        return self.request.GET.get('paginate_by', p)
 
 
 

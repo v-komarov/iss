@@ -32,8 +32,11 @@ $(document).ready(function() {
 
 // Обновление данных
 function UpdateScreen() {
-    window.location=$("#menumonitor a").attr("href");
-    console.log("has refreshed");
+
+    if ( $("table[group]=events").attr("refresh") == "yes" ) {
+        window.location=$("#menumonitor a").attr("href");
+        console.log("has refreshed");
+    }
 }
 
 

@@ -9,6 +9,7 @@
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/dialogs.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/user-settings.js"></script>
 <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/facefix.js"></script>
+<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/columns_filter.js"></script>
 {# <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/headfilter.js"></script> #}
 {# <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/dragtable.js"></script> #}
 {# <script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/datatables.min.js"></script> #}
@@ -136,7 +137,7 @@
 
 
 
-    <table group="events" class="table table-bordered table-striped draggable" width="100%" hidden>
+    <table group="events" class="table table-bordered table-striped draggable" width="100%" hidden refresh="yes">
 
 
         {% include "monitor/tablehead.html" %}

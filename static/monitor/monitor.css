@@ -248,7 +248,8 @@ errorMsg {color: red;}
 
 
 table[group=events] tbody > tr.small > td {
-    padding:0;
+    padding-top:0;
+    padding-left:0;
 }
 
 #head-table-events > tr > th {

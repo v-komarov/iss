@@ -18,7 +18,6 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
 
-
 from iss.monitor.models import events,accidents
 from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,devices_type
 
@@ -642,6 +641,7 @@ def get_json(request):
                     user = u,
                     settings = settings
                 )
+
 
 
 
