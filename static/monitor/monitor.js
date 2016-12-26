@@ -235,7 +235,12 @@ function GetZkl(e) {
 
 
             $("#zkllist").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
                   title:"ЗКЛ",
+                closeOnEscape: false,
                   show: {
                     effect: "blind",
                     duration: 100
@@ -244,7 +249,7 @@ function GetZkl(e) {
                     effect: "blind",
                     duration: 1500
                   },
-                  buttons: [{text:"Закрыть", click: function() { $(this).dialog("close")}}],
+                  buttons: [{text:"Закрыть", click: function() { $(this).dialog("close"); $("table[group=events]").attr("refresh","yes"); }}],
                   modal:true,
                   minWidth:400,
                   width:900,
@@ -369,6 +374,7 @@ function GetMemebersContainer() {
             });
 
         ShowMembersCount();
+        $("table[group=events]").attr("refresh","no");
         // Исправление заголовков таблицы
         //FixTableHead();
 
@@ -444,7 +450,7 @@ function HideContainer(e) {
 
     // Исправление заголовков таблицы
     //FixTableHead();
-
+    $("table[group=events]").attr("refresh","yes");
 
 }
 

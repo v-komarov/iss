@@ -543,6 +543,72 @@ def get_json(request):
 
 
 
+        ### Данные по колоночным фильтрам
+        if r.has_key("getfiltercolumns") and rg("getfiltercolumns") != "":
+            pk_user = request.user.pk
+
+            u = User.objects.get(pk=pk_user)
+            if Profile.objects.filter(user=u).count() == 1:
+
+                p = Profile.objects.get(user=u)
+                data = p.settings
+                if data.has_key("monitor-settings"):
+                    if data["monitor-settings"].has_key("columns-filter"):
+                        response_data = data["monitor-settings"]["columns-filter"]
+                    else:
+                        response_data = {
+                            'f1': '',
+                            'f2': '',
+                            'f3': '',
+                            'f4': '',
+                            'f5': '',
+                            'f6': '',
+                            'f7': '',
+                            'f8': '',
+                            'f9': '',
+                            'f10': '',
+                            'f11': '',
+                            'f12': '',
+                            'f13': '',
+                            'f14': ''
+                        }
+
+                else:
+                    response_data = {
+                        'f1': '',
+                        'f2': '',
+                        'f3': '',
+                        'f4': '',
+                        'f5': '',
+                        'f6': '',
+                        'f7': '',
+                        'f8': '',
+                        'f9': '',
+                        'f10': '',
+                        'f11': '',
+                        'f12': '',
+                        'f13': '',
+                        'f14': ''
+                    }
+            else:
+
+                response_data = {
+                    'f1':'',
+                    'f2': '',
+                    'f3': '',
+                    'f4': '',
+                    'f5': '',
+                    'f6': '',
+                    'f7': '',
+                    'f8': '',
+                    'f9': '',
+                    'f10': '',
+                    'f11': '',
+                    'f12': '',
+                    'f13': '',
+                    'f14': ''
+                }
+
 
 
 
@@ -779,6 +845,44 @@ def get_json(request):
             ev.save()
 
             #print values
+
+
+
+
+        ## сохранение значений колоночных фильтров
+        if data.has_key("action") and data["action"] == 'save-filter-columns':
+            values = eval(str(data))
+
+            pk_user = request.user.pk
+
+            u = User.objects.get(pk=pk_user)
+            if Profile.objects.filter(user=u).count() == 1:
+
+                p = Profile.objects.get(user=u)
+                data = p.settings
+                if data.has_key("monitor-settings"):
+                    data['monitor-settings']['columns-filter'] = values
+                    p.settings = data
+                    p.save()
+                else:
+                    data["monitor-settings"] = {
+                        'columns-filter': values
+                    }
+                    p.settings = data
+                    p.save()
+            else:
+
+                settings = {
+                    'monitor-settings':{
+                        'columns-filter': values
+                        }
+                    }
+
+                Profile.objects.create(
+                    user = u,
+                    settings = settings
+                )
+
 
 
 

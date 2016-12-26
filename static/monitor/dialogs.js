@@ -539,7 +539,12 @@ function AccidentData() {
 
 
             $("#accidentdata").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
                 title:"Авария",
+                closeOnEscape: false,
                 buttons:[{ text:"Сохранить",click: function() {
                     if ($('#accidenttype').valid() && $('#accidentcat').valid() && $('#accidentname').valid()) {
 
@@ -606,6 +611,7 @@ function AccidentData() {
 
 
                         $(this).dialog("close");
+                        $("table[group=events]").attr("refresh","yes");
 
 
 
@@ -613,7 +619,7 @@ function AccidentData() {
 
                 }},
                     {text:"Закрыть",click: function() {
-                    $(this).dialog("close")}}
+                    $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
                 ],
                 modal:true,
                 minWidth:400,
@@ -675,7 +681,7 @@ function ShowMail() {
                 title:"Почтовое сообщение",
                 buttons:[
                     {text:"Закрыть",click: function() {
-                    $(this).dialog("close")}}
+                    $(this).dialog("close"); $("table[group=events]").attr("refresh","yes"); }}
                 ],
                 modal:true,
                 minWidth:400,
@@ -736,7 +742,12 @@ function EditMail(e) {
 
 
             $("#mail").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
                 title:"Почтовое сообщение",
+                closeOnEscape: false,
                 buttons:[{ text:"Сохранить",click: function() {
                     if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
 
@@ -794,7 +805,7 @@ function EditMail(e) {
 
                 }},
                     {text:"Закрыть",click: function() {
-                    $(this).dialog("close")}}
+                    $(this).dialog("close"); $("table[group=events]").attr("refresh","yes");}}
                 ],
                 modal:true,
                 minWidth:400,
@@ -847,7 +858,12 @@ function EditRow(e) {
 
 
             $("#event").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
                 title:"Изменение события",
+                closeOnEscape: false,
                 buttons:[{ text:"Сохранить",click: function() {
                     if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
 
@@ -907,7 +923,7 @@ function EditRow(e) {
 
                 }},
                     {text:"Закрыть",click: function() {
-                    $(this).dialog("close")}}
+                    $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
                 ],
                 modal:true,
                 minWidth:400,
@@ -946,7 +962,12 @@ function AddRow(e) {
     $("#event table tbody tr td input#element_sub_identifier").val("");
 
     $("#event").dialog({
+        open:function() {
+        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+        $("table[group=events]").attr("refresh","no");
+        },
         title:"Создание события",
+        closeOnEscape: false,
         buttons:[{ text:"Сохранить",click: function() {
             if ($('#event_class').valid() && $('#device_system').valid() && $('#device_group').valid() && $('#device_class').valid() && $('#device_net_address').valid() && $('#device_location').valid() && $('#element_identifier').valid()) {
                 var status = $("#event table tbody tr td select#status").val();
@@ -1000,7 +1021,7 @@ function AddRow(e) {
 
         }},
             {text:"Закрыть",click: function() {
-            $(this).dialog("close")}}
+            $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
         ],
         modal:true,
         minWidth:400,
@@ -1098,7 +1119,12 @@ function MessageMssBegin(e) {
 
 
             $("#message-mss-begin").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
                 title:"Оповещение об аварии на MCC",
+                closeOnEscape: false,
                 buttons:[{ text:"Отправить",click: function() {
 
                     if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
@@ -1158,6 +1184,7 @@ function MessageMssBegin(e) {
 
 
                         $(this).dialog("close");
+                        $("table[group=events]").attr("refresh","yes");
 
 
 
@@ -1166,7 +1193,7 @@ function MessageMssBegin(e) {
 
                 }},
                     {text:"Закрыть",click: function() {
-                    $(this).dialog("close")}}
+                    $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
                 ],
                 modal:true,
                 minWidth:600,
