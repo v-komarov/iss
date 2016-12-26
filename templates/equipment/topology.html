@@ -38,9 +38,10 @@
         <label for="select-agregator">Агрегатор</label>
         <select id="select-agregator" class="form-control input-sm">
             {% for item in agregator %}
-                <option footnode="{{ item.footnode.id }}" value="{{ item.id }}">{{ item.ipaddress }} {{ item.name }} {{ item.location }}</option>
+                <option footnode="{{ item.footnode.id }}" value="{{ item.id }}" ipaddress="{{ item.ipaddress }}">{{ item.ipaddress }} {{ item.name }} {{ item.location }}</option>
             {% endfor %}
         </select>
+        <a id="koksharov" href="#">Схема</a>
     </form>
 </div>
 

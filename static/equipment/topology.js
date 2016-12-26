@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     ClearSelects();
 
-    // Выбр домена
+    // Выбор домена
     $( "#select-domen" ).change(function() {
         var domen = $(this).val();
         ClearSelects();
@@ -36,6 +36,8 @@ $(document).ready(function() {
     $( "#select-agregator" ).change(function() {
 
         $("#addlink").show();
+
+        $("#koksharov").attr("href","http://10.6.15.90/cgi-bin/zsheme/zsheme.cgi?ip="+$("#select-agregator option:selected").attr("ipaddress"));
 
     });
 
@@ -149,6 +151,8 @@ function ClearSelects() {
     $("#select-footnode option").each(function(){ $(this).hide(); });
     $("#select-agregator").val("");
     $("#select-agregator option").each(function(){ $(this).hide(); });
+
+    $("#koksharov").attr("href","#");
 
 
 }
