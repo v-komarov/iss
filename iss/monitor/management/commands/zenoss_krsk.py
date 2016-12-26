@@ -63,10 +63,13 @@ class Command(BaseCommand):
         """
 
 #        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"params\":{\"eventState\":[0,1,3]}}' %s" % (tf.name)
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":3000,\"sort\":\"lastTime\"}' %s" % (tf.name)
+        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":3000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s" % (tf.name)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":3000,\"sort\":\"stateChange\",\"dir\":\"desc\"}' %s" % (tf.name)
 
         print cmd
         commands.getoutput(cmd)
+
+        uuid_list = []
 
         data = json.loads(commands.getoutput("cat %s" % tf.name))
         for r in data["result"]["events"]:
@@ -94,49 +97,51 @@ class Command(BaseCommand):
             if r["details"].has_key("manager"):
                 manager = ", ".join(r["details"]["manager"])
 
+            if uuid not in uuid_list:
+                uuid_list.append(uuid)
 
-            if events.objects.filter(uuid=uuid).count() == 0:
-                events.objects.create(
-                    source='zenoss_krsk',
-                    uuid=uuid,
-                    first_seen=firsttime,
-                    update_time=update_time,
-                    last_seen=lasttime,
-                    event_class=eventclass,
-                    severity_id=severity,
-                    manager=manager,
-                    device_net_address=ipaddress,
-                    device_location=location,
-                    device_class=deviceclass,
-                    device_group=devicegroup,
-                    device_system=devicesystem,
-                    element_identifier=device,
-                    element_sub_identifier="",
-                    status_id=status,
-                    summary=summary
+                if events.objects.filter(uuid=uuid).count() == 0:
+                    events.objects.create(
+                        source='zenoss_krsk',
+                        uuid=uuid,
+                        first_seen=firsttime,
+                        update_time=update_time,
+                        last_seen=lasttime,
+                        event_class=eventclass,
+                        severity_id=severity,
+                        manager=manager,
+                        device_net_address=ipaddress,
+                        device_location=location,
+                        device_class=deviceclass,
+                        device_group=devicegroup,
+                        device_system=devicesystem,
+                        element_identifier=device,
+                        element_sub_identifier="",
+                        status_id=status,
+                        summary=summary
 
-                )
+                    )
 
-            else:
+                else:
 
-                evt = events.objects.get(uuid=uuid)
+                    evt = events.objects.get(uuid=uuid)
 
-                evt.first_seen = firsttime
-                evt.update_time = update_time
-                evt.last_seen = lasttime
-                evt.event_class = eventclass
-                evt.severity_id = severity
-                evt.manager = manager
-                evt.device_net_address = ipaddress
-                evt.device_location = location
-                evt.device_class = deviceclass
-                evt.device_group = devicegroup
-                evt.device_system = devicesystem
-                evt.element_identifier = device
-                evt.element_sub_identifier = ""
-                evt.status_id = status
-                evt.summary = summary
-                evt.save()
+                    evt.first_seen = firsttime
+                    evt.update_time = update_time
+                    evt.last_seen = lasttime
+                    evt.event_class = eventclass
+                    evt.severity_id = severity
+                    evt.manager = manager
+                    evt.device_net_address = ipaddress
+                    evt.device_location = location
+                    evt.device_class = deviceclass
+                    evt.device_group = devicegroup
+                    evt.device_system = devicesystem
+                    evt.element_identifier = device
+                    evt.element_sub_identifier = ""
+                    evt.status_id = status
+                    evt.summary = summary
+                    evt.save()
 
         print "ok"
 

@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     */
 
-    $("#columns-filter-on").bind("click",FilterColumns);
+    $("#columns-filter-on").bind("click",FilterColumnsSave);
 
     //$("#head-table-events th input[type=text]").keyup(function() {
 
@@ -15,7 +15,6 @@ $(document).ready(function() {
     //});
     ColorSeverity();
     FilterColumnsShow();
-    FilterColumns();
 
 });
 
@@ -50,6 +49,30 @@ function FilterColumnsShow() {
             $("#head-table-events th input[type=text]").eq(13).val(data["f14"]);
 
 
+
+            $.each($("#body-table-events tr"), function( indexrow, valuerow ) {
+
+
+                if ($(valuerow).children("td").eq(2).text().toUpperCase().indexOf(data["f1"].toUpperCase()) <= 0  && data["f1"] != "") { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(3).text().toUpperCase().indexOf(data["f2"].toUpperCase()) <= 0  && data["f2"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(4).text().toUpperCase().indexOf(data["f3"].toUpperCase()) <= 0  && data["f3"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(5).text().toUpperCase().indexOf(data["f4"].toUpperCase()) <= 0  && data["f4"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(6).text().toUpperCase().indexOf(data["f5"].toUpperCase()) <= 0  && data["f5"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(7).text().toUpperCase().indexOf(data["f6"].toUpperCase()) <= 0  && data["f6"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(8).text().toUpperCase().indexOf(data["f7"].toUpperCase()) <= 0  && data["f7"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(9).text().toUpperCase().indexOf(data["f8"].toUpperCase()) <= 0  && data["f8"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(10).text().toUpperCase().indexOf(data["f9"].toUpperCase()) <= 0  && data["f9"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(11).text().toUpperCase().indexOf(data["f10"].toUpperCase()) <= 0  && data["f10"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(12).text().toUpperCase().indexOf(data["f11"].toUpperCase()) <= 0  && data["f11"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(13).text().toUpperCase().indexOf(data["f12"].toUpperCase()) <= 0  && data["f12"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(14).text().toUpperCase().indexOf(data["f13"].toUpperCase()) <= 0  && data["f13"] != "" ) { $(valuerow).hide(); }
+                if ($(valuerow).children("td").eq(15).text().toUpperCase().indexOf(data["f14"].toUpperCase()) <= 0  && data["f14"] != "" ) { $(valuerow).hide(); }
+
+            });
+
+            // Показывать все
+            if (data["f1"] == "" && data["f2"] == "" && data["f3"] == "" && data["f4"] == "" && data["f5"] == "" && data["f6"] == "" && data["f7"] == "" && data["f8"] == "" && data["f9"] == "" && data["f10"] == "" && data["f11"] == "" && data["f12"] == "" && data["f13"] == "" && data["f14"] == "") {$("#body-table-events tr").show();}
+
         })
 
 
@@ -61,7 +84,14 @@ function FilterColumnsShow() {
 
 
 
-function FilterColumns(e) {
+
+
+
+
+
+
+
+function FilterColumns() {
 
     // Показывать все
     var show_all = true;
@@ -85,7 +115,6 @@ function FilterColumns(e) {
     if (show_all == true) { $("#body-table-events tr").show(); }
 
 
-    FilterColumnsSave();
 
 
 }
@@ -111,7 +140,7 @@ function ColorSeverity() {
 
 
 // Сохранение значений фильтров
-function FilterColumnsSave() {
+function FilterColumnsSave(e) {
 
 
         data = {};
@@ -152,7 +181,7 @@ function FilterColumnsSave() {
           dataType: 'json',
           data:$.toJSON(data),
             success: function(result) {
-                //window.location=$("#menumonitor a").attr("href");
+                FilterColumns();
             }
 
         })
