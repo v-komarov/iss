@@ -11,6 +11,7 @@
 
    models
    events
+   api
    zkl
    other_systems
    tools
