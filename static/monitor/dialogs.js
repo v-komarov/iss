@@ -2,8 +2,10 @@ $(document).ready(function() {
 
 
     $("ul.dropdown-menu li a[action=create-accident]").bind("click",Accident);
+    $("ul.dropdown-menu li a[action=accident-iss]").bind("click",AccidentISS);
     $("button#addaddr").bind("click",AddAccidentAddressList);
     $("ul.dropdown-menu li a[action=message-accidentmmsbegin]").bind("click",MessageMssBegin);
+
 
 
     //// Валидация
@@ -492,12 +494,12 @@ function EditAccident(row_id) {
             $("#address-accident-list").empty();
 
             // Номер аварии и ссылка на url ИСС
-            $("accident-link").text("Авария № "+data['accid']+" ");
-            if (data["accissid"] != 0) { $("accident-link").append("<a href=\"http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]+"\">Работа (в ИСС) № "+data["accissid"]+"</a>"); }
+            //$("accident-link").text("Авария № "+data['accid']+" ");
+            //if (data["accissid"] != 0) { $("accident-link").append("<a href=\"http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]+"\">Работа (в ИСС) № "+data["accissid"]+"</a>"); }
 
 
             // Открытие окна в ИСС
-            window.open("http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]);
+            //window.open("http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]);
 
 
             if (data["accend"] == "yes") { $("#accidentend").prop("checked",true); }
@@ -524,7 +526,7 @@ function EditAccident(row_id) {
 
         })
 
-    //AccidentData();
+    AccidentData();
 
 }
 
@@ -637,6 +639,28 @@ function AccidentData() {
 
 
 
+// Ссылка на аварию в ИСС
+function AccidentISS(e) {
+
+    // Проверка есть ли авария в данной строке таблицы
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    var accident = $("table[group=events] tbody tr[row_id="+row_id+"]").attr("accident");
+
+    if (accident == "yes") {
+    // Если авария уже создана (и в ИСС тоже)
+        var jqxhr = $.getJSON("/monitor/events/jsondata?getaccidentdata="+row_id,
+            function(data) {
+
+                // Открытие окна в ИСС
+                window.open("http://10.6.3.7/departs/rcu/works/edit_work_mss.php?id="+data["accissid"]);
+
+            })
+
+        }
+
+}
+
+
 
 
 
@@ -678,6 +702,10 @@ function ShowMail() {
 
 
             $("#mail2").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
                 title:"Почтовое сообщение",
                 buttons:[
                     {text:"Закрыть",click: function() {
@@ -1083,7 +1111,7 @@ function MessageMssBegin(e) {
                 $("#acc-zkl").val(data['acczkl']);
                 $("#acc-email-templates").val("");
                 $("#acc-email-list").val("");
-                $("#acc-repair-end").val("");
+                $("#acc-repair-end").val("Уточняется");
                 $("#acc-service-stoplist").val("");
 
 
