@@ -250,6 +250,8 @@ errorMsg {color: red;}
 table[group=events] tbody > tr.small > td {
     padding-top:0;
     padding-left:0;
+    overflow:hidden;
+    white-space:nowrap;
 }
 
 #head-table-events > tr > th {
