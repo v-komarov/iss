@@ -204,7 +204,7 @@ class Command(BaseCommand):
                 values = {
                     'companies':companies,
                     'cities':ci,
-                    'start_datetime':time.mktime(ac.acc_start.replace(tzinfo=timezone('UTC')).timetuple()),
+                    'start_datetime':time.mktime(ac.acc_start.astimezone(tzinfo=timezone('UTC')).timetuple()),
                     'category':int(ac.acc_cat.cat,10),
                     'kind':ac.acc_type.id,
                     'locations':"auto "+address_str,
@@ -214,7 +214,7 @@ class Command(BaseCommand):
                 }
 
                 if ac.acc_end != None:
-                    values['finish_datetime'] = time.mktime(ac.acc_end.replace(tzinfo=timezone('UTC')).timetuple())
+                    values['finish_datetime'] = time.mktime(ac.acc_end.astimezone(tzinfo=timezone('UTC')).timetuple())
                 if ac.acc_iss_id != None:
                     values['iss_id'] = ac.acc_iss_id
                 if ac.acc_reports_id != None:
