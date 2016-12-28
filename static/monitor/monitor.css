@@ -250,9 +250,29 @@ errorMsg {color: red;}
 table[group=events] tbody > tr.small > td {
     padding-top:0;
     padding-left:0;
+}
+
+
+
+#body-table-events > tr > td:nth-child(3),
+#body-table-events > tr > td:nth-child(4),
+#body-table-events > tr > td:nth-child(5),
+#body-table-events > tr > td:nth-child(6),
+#body-table-events > tr > td:nth-child(7),
+#body-table-events > tr > td:nth-child(8),
+#body-table-events > tr > td:nth-child(9),
+#body-table-events > tr > td:nth-child(10),
+#body-table-events > tr > td:nth-child(11),
+#body-table-events > tr > td:nth-child(12),
+#body-table-events > tr > td:nth-child(13),
+#body-table-events > tr > td:nth-child(14),
+#body-table-events > tr > td:nth-child(15),
+#body-table-events > tr > td:nth-child(16) {
     overflow:hidden;
     white-space:nowrap;
 }
+
+
 
 #head-table-events > tr > th {
     padding:0px;
