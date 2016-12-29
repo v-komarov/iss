@@ -781,7 +781,7 @@ def get_json(request):
 
 
 
-
+        ### Редактирование аварии
         if data.has_key("action") and data["action"] == 'edit-accident':
             accident_data = eval(str(data))
             data = {}
