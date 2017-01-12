@@ -67,7 +67,10 @@ class EventList(ListView):
             p = Profile.objects.get(user=u)
             data = p.settings
             if data.has_key("monitor-settings"):
-                return data["monitor-settings"]["head_order"]
+                if data["monitor-settings"].has_key("head_order"):
+                    return data["monitor-settings"]["head_order"]
+                else:
+                    return head_order
             else:
                 return head_order
         else:
@@ -160,12 +163,12 @@ class EventList(ListView):
                     pass
 
         if len(q) == 0:
-            data = events.objects.filter(agregation=False).order_by('-first_seen').select_related()[:1000]
+            data = events.objects.filter(agregation=False).order_by('-first_seen').select_related()[:5000]
         else:
             str_q = " & ".join(q)
             str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-first_seen').select_related()" % str_q
 
-            data = (eval(str_sql))[:1000]
+            data = (eval(str_sql))[:5000]
 
 
         #for i in data:
