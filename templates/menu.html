@@ -6,15 +6,87 @@
 
 <div class="row" >
 
+
     <ul class="nav nav-pills small">
-      <li id="menumonitor" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
-      <li id="menuworking" {% if request.path|slice:'0:18' == "/working/worklist/" %}class="active"{% endif %}><a href="/working/worklist/page/1/">Работы</a></li>
-      <li id="menutopology" {% if request.path|slice:'0:20' == "/equipment/topology/" %}class="active"{% endif %}><a href="/equipment/topology/">Топология</a></li>
-      <li id="menuagregators" {% if request.path|slice:'0:22' == "/equipment/agregators/" %}class="active"{% endif %}><a href="/equipment/agregators/page/1/">Агрегаторы</a></li>
-      <li id="menufootnodes" {% if request.path|slice:'0:21' == "/equipment/footnodes/" %}class="active"{% endif %}><a href="/equipment/footnodes/page/1/">Опорные узлы</a></li>
-      <li id="menudevices" {% if request.path|slice:'0:19' == "/equipment/devices/" %}class="active"{% endif %}><a href="/equipment/devices/page/1/">Устройства</a></li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          События
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="menumonitor" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Аварии</a></li>
+          <li><a href="#">Оповещения</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Работы
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="menuworking" {% if request.path|slice:'0:18' == "/working/worklist/" %}class="active"{% endif %}><a href="/working/worklist/page/1/">Плановые работы</a></li>
+          <li><a href="#">Аварийные работы</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Отчет</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Топология сети
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="menufootnodes" {% if request.path|slice:'0:21' == "/equipment/footnodes/" %}class="active"{% endif %}><a href="/equipment/footnodes/page/1/">Опорные узлы</a></li>
+          <li id="menuagregators" {% if request.path|slice:'0:22' == "/equipment/agregators/" %}class="active"{% endif %}><a href="/equipment/agregators/page/1/">Агрегаторы</a></li>
+          <li id="menudevices" {% if request.path|slice:'0:19' == "/equipment/devices/" %}class="active"{% endif %}><a href="/equipment/devices/page/1/">Устройства</a></li>
+          <li class="divider"></li>
+          <li id="menutopology" {% if request.path|slice:'0:20' == "/equipment/topology/" %}class="active"{% endif %}><a href="/equipment/topology/">Топология</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Контрольные сроки
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Текст подпункта</a></li>
+          <li><a href="#">Текст подпункта</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Текст подпункта</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Дома
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">УК ТСЖ ТСН</a></li>
+          <li><a href="#">Текст подпункта</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Текст подпункта</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Отчеты
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Текст подпункта</a></li>
+          <li><a href="#">Текст подпункта</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Текст подпункта</a></li>
+        </ul>
+      </li>
+
       <li><a href="/logout">Выход</a></li>
+
+
     </ul>
+
 
 
 </div>
