@@ -20,7 +20,7 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 
-from iss.monitor.models import events
+from iss.monitor.models import events,accidents
 from iss.localdicts.models import Status,Severity
 
 from iss.mydecorators import group_required,anonymous_required
@@ -316,6 +316,52 @@ class EventList(ListView):
         context["row_page_table"] = "%s" % self.my_row_page_table()
 
 
+
+        return context
+
+
+
+
+
+
+
+
+### Аварии
+class AccidentList(ListView):
+
+    model = events
+    template_name = "monitor/accident_list.html"
+
+    paginate_by = 50
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='monitor',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+    def get_queryset(self):
+
+        data = accidents.objects.all().order_by("-acc_start")
+
+        return data
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AccidentList, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
 
         return context
 
