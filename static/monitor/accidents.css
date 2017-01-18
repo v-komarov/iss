@@ -12,3 +12,13 @@ thead.small > tr > th {
 table[group=accidents] > tbody > tr > td {
     padding:0;
 }
+
+
+#accidentstarttime, #accidentendtime {
+    width:70px;
+}
+
+
+#accidentstartdate, #accidentenddate, #accidentcat, #accidenttype {
+    width:100px;
+}

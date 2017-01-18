@@ -365,7 +365,7 @@ def get_json(request):
 
 
 
-        ### Данные по аварии
+        ### Данные по аварии для формы аварии интерфейса оперативный журнал
         if r.has_key("getaccidentdata") and rg("getaccidentdata") != "":
             ### id строки события (контейнера)
             row_id = request.GET["getaccidentdata"]
@@ -403,6 +403,47 @@ def get_json(request):
 
             response_data = accjson
 
+
+
+
+
+        ### Данные по аварии для формы аварии интерфейса аварий
+        if r.has_key("getaccidentdata2") and rg("getaccidentdata2") != "":
+            ### id строки события (контейнера)
+            row_id = request.GET["getaccidentdata2"]
+            acc = accidents.objects.get(pk=row_id)
+            if acc.acc_end != None:
+                accend = "yes"
+            else:
+                accend = "no"
+
+            if acc.acc_stat == True:
+                accstat = "yes"
+            else:
+                accstat = "no"
+
+
+            accjson = {
+                'accid' : acc.id,
+                'address' : acc.acc_address,
+                'acctype' : acc.acc_type.id,
+                'acccat' : acc.acc_cat.id,
+                'accname' : acc.acc_name,
+                'acccomment' : acc.acc_comment,
+                'accend' : accend,
+                'accstat' : accstat,
+                'accreason' : acc.acc_reason,
+                'accrepair' : acc.acc_repair
+            }
+
+            ### Номер в ИСС
+            if acc.acc_iss_id != None:
+                accjson['accissid'] = acc.acc_iss_id
+            else:
+                accjson['accissid'] = 0
+
+
+            response_data = accjson
 
 
 

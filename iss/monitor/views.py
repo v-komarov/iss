@@ -363,5 +363,12 @@ class AccidentList(ListView):
         else:
             context['tz']= 'UTC'
 
+        # Категории аварий
+        context["accident_cats"] = accident_cats.objects.all().distinct('cat')
+
+        # Вид аварии
+        context["accident_list"] = accident_list.objects.all()
+
+
         return context
 
