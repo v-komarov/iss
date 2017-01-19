@@ -8,6 +8,8 @@ $(document).ready(function() {
     $("#accidentstartdate").datepicker($.datepicker.regional['ru']);
     $("#accidentenddate").datepicker($.datepicker.regional['ru']);
 
+    $("#runsearch").bind("click",RunSearch);
+    $("#clearsearch").bind("click",ClearSearch);
 
     //$('table[group=accidents]').tableScroll({height:800});
 
@@ -45,6 +47,7 @@ $(document).ready(function() {
 
 
 
+
 // Выделение строки
 function ClickEventRow(e) {
 
@@ -56,6 +59,36 @@ function ClickEventRow(e) {
         $("#editrow").show();
 
 }
+
+
+
+
+
+// Поиск
+function RunSearch(e) {
+
+    var search = $("#search").val();
+    var jqxhr = $.getJSON("/monitor/events/jsondata?searchaccident="+search,
+        function(data) {
+            window.location=$("#menuaccidents a").attr("href");
+        })
+}
+
+
+
+// Отмена Search
+function ClearSearch(e) {
+    $("#search").val("");
+    $("#search").attr("placeholder","");
+
+    var search = "xxxxx";
+    var jqxhr = $.getJSON("/monitor/events/jsondata?searchaccident="+search,
+        function(data) {
+            window.location=$("#menuaccidents a").attr("href");
+        })
+}
+
+
 
 
 
@@ -129,7 +162,10 @@ function EditAccident(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?getaccidentdata2="+row_id,
         function(data) {
 
-
+            $("#accidentstartdate").val(data['accstartdate']);
+            $("#accidentstarttime").val(data['accstarttime']);
+            $("#accidentenddate").val(data['accenddate']);
+            $("#accidentendtime").val(data['accendtime']);
             $("#accidentcat").val(data['acccat']);
             $("#accidenttype").val(data['acctype']);
             $("#accidentname").val(data['accname']);
@@ -164,7 +200,7 @@ function EditAccident(e) {
 
         })
 
-    AccidentData();
+    AccidentData(row_id);
 
 }
 
@@ -174,7 +210,7 @@ function EditAccident(e) {
 
 
 
-function AccidentData() {
+function AccidentData(row_id) {
 
 
 
@@ -182,6 +218,8 @@ function AccidentData() {
                 open:function() {
                 $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
                 $("table[group=events]").attr("refresh","no");
+                // Убираем календарь (не знаю как предотвратить открытие)
+                $("#accidentstartdate").datepicker("hide");
                 },
                 title:"Авария",
                 closeOnEscape: false,
@@ -189,6 +227,10 @@ function AccidentData() {
                     if ($('#accidenttype').valid() && $('#accidentcat').valid() && $('#accidentname').valid()) {
 
                         // Данные
+                        var accstartdate = $("#accidentstartdate").val();
+                        var accstarttime = $("#accidentstarttime").val();
+                        var accenddate = $("#accidentenddate").val();
+                        var accendtime = $("#accidentendtime").val();
                         var acccat = $("#accidentcat").val();
                         var acctype = $("#accidenttype").val();
                         var accname = $("#accidentname").val();
@@ -211,6 +253,10 @@ function AccidentData() {
                         });
 
                         var data = {};
+                        data.accstartdate = accstartdate;
+                        data.accstarttime = accstarttime;
+                        data.accenddate = accenddate;
+                        data.accendtime = accendtime;
                         data.address_list = address_arr;
                         data.acccat = acccat;
                         data.acctype = acctype;
@@ -220,8 +266,8 @@ function AccidentData() {
                         data.accstat = accstat;
                         data.accreason = accreason;
                         data.accrepair = accrepair;
-                        data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
-                        data.action = $("#accidentdata").attr("action");
+                        data.acc_id = $("table[group=accidents] tbody tr[marked=yes]").attr("row_id");
+                        data.action = "edit-accident2";
 
 
                         var csrftoken = getCookie('csrftoken');
@@ -251,7 +297,7 @@ function AccidentData() {
 
 
                         $(this).dialog("close");
-                        $("table[group=events]").attr("refresh","yes");
+                        //$("table[group=events]").attr("refresh","yes");
 
 
 

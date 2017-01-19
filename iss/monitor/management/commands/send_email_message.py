@@ -93,7 +93,7 @@ class Command(BaseCommand):
                 sbj = "Оповещение об аварии МР-Сибирь № %s" % acc_number
                 mto = m.data["acc_email_list"].split(";")
 
-                issid = "<p>ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
+                issid = "<p style=\"color:white;\">ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
 
                 email = EmailMessage(
                     subject=sbj,

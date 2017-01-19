@@ -347,9 +347,24 @@ class AccidentList(ListView):
 
     def get_queryset(self):
 
-        data = accidents.objects.all().order_by("-acc_start")
 
-        return data
+        q = []
+
+        if self.session.has_key("searchaccident"):
+            if len(self.session['searchaccident']) >= 3:
+                for search in self.session['searchaccident'].split(" "):
+                    if search != " ":
+                        q.append("(Q(acc_name__icontains='%s') | Q(acc_comment__icontains='%s') | Q(acc_address__icontains='%s') | Q(acc_start__icontains='%s') | Q(acc_end__icontains='%s') | Q(acc_reason__icontains='%s') | Q(acc_repair__icontains='%s'))" % (search,search,search,search,search,search,search))
+
+        if len(q) == 0:
+            return accidents.objects.all().order_by("-acc_start")
+        else:
+            str_q = " & ".join(q)
+            str_sql = "accidents.objects.filter(%s).order_by('-acc_start')" % str_q
+
+        return eval(str_sql)
+
+
 
 
 
@@ -368,6 +383,11 @@ class AccidentList(ListView):
 
         # Вид аварии
         context["accident_list"] = accident_list.objects.all()
+
+        if self.session.has_key("searchaccident"):
+            context["searchaccident"] = self.session["searchaccident"]
+        else:
+            context["searchaccident"] = ""
 
 
         return context

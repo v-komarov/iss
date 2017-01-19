@@ -113,6 +113,14 @@ def get_json(request):
             else:
                 request.session['search'] = request.GET["search"]
 
+        ### Строка поиска в интерфейсе аварий
+        if r.has_key("searchaccident") and rg("searchaccident") != '':
+            if request.GET["searchaccident"] == "xxxxx":
+                request.session['searchaccident'] = ""
+            else:
+                request.session['searchaccident'] = request.GET["searchaccident"]
+
+
         ### Показывать только группировки
         if r.has_key("filtergroup") and rg("filtergroup") != '':
             if request.session.has_key("filtergroup"):
@@ -409,7 +417,8 @@ def get_json(request):
 
         ### Данные по аварии для формы аварии интерфейса аварий
         if r.has_key("getaccidentdata2") and rg("getaccidentdata2") != "":
-            ### id строки события (контейнера)
+            tz = request.session['tz']
+            ### id строки аварии
             row_id = request.GET["getaccidentdata2"]
             acc = accidents.objects.get(pk=row_id)
             if acc.acc_end != None:
@@ -422,6 +431,13 @@ def get_json(request):
             else:
                 accstat = "no"
 
+            if acc.acc_end != None:
+                accenddate = acc.acc_end.astimezone(timezone(tz)).strftime("%d.%m.%Y")
+                accendtime = acc.acc_end.astimezone(timezone(tz)).strftime("%H:%M")
+            else:
+                accenddate = ''
+                accendtime = ''
+
 
             accjson = {
                 'accid' : acc.id,
@@ -433,7 +449,11 @@ def get_json(request):
                 'accend' : accend,
                 'accstat' : accstat,
                 'accreason' : acc.acc_reason,
-                'accrepair' : acc.acc_repair
+                'accrepair' : acc.acc_repair,
+                'accstartdate' : acc.acc_start.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
+                'accstarttime' : acc.acc_start.astimezone(timezone(tz)).strftime("%H:%M"),
+                'accenddate': accenddate,
+                'accendtime': accendtime
             }
 
             ### Номер в ИСС
@@ -822,7 +842,7 @@ def get_json(request):
 
 
 
-        ### Редактирование аварии
+        ### Редактирование аварии интерфейс оперативного журнала
         if data.has_key("action") and data["action"] == 'edit-accident':
             accident_data = eval(str(data))
             data = {}
@@ -923,6 +943,69 @@ def get_json(request):
                     user = u,
                     settings = settings
                 )
+
+
+
+        ### Редактирование аварии интерфейс журнала аварий
+        if data.has_key("action") and data["action"] == 'edit-accident2':
+            tzuser = request.session['tz']
+            accident_data = eval(str(data))
+            data = {}
+            data["address_list"] = accident_data["address_list"]
+            acc_id = accident_data["acc_id"]
+            acctype = int(accident_data["acctype"], 10)
+            acccat = int(accident_data["acccat"], 10)
+            accname = accident_data["accname"]
+            acccomment = accident_data["acccomment"]
+            accend = accident_data["accend"]
+            accstat = accident_data["accstat"]
+            accreason = accident_data["accreason"]
+            accrepair = accident_data["accrepair"]
+            accstartdate = accident_data["accstartdate"]
+            accstarttime = accident_data["accstarttime"]
+            accenddate = accident_data["accenddate"]
+            accendtime = accident_data["accendtime"]
+
+            t = accident_list.objects.get(pk=acctype)
+            c = accident_cats.objects.get(pk=acccat)
+
+            acc = accidents.objects.get(pk=acc_id)
+
+            e = events.objects.get(pk=acc.acc_event.id)
+
+            ### Текущее состояние - завершена или нет
+            if acc.acc_end == None and accend == "yes":
+                acc.acc_end = timezone(tzuser).localize(datetime.datetime.strptime(accenddate+" "+accendtime, "%d.%m.%Y %H:%M"))
+                e.accident_end = True
+                e.save()
+
+            elif acc.acc_end != None and accend == "no":
+                acc.acc_end = None
+                e.accident_end = False
+                e.save()
+
+            if accstat == "yes":
+                acc_stat = True
+            else:
+                acc_stat = False
+
+            #print accstartdate+" "+accstarttime
+            #print datetime.datetime.strptime(accstartdate+" "+accstarttime, "%d.%m.%Y %H:%M")
+            #print timezone(tzuser).localize(datetime.datetime.strptime(accstartdate+" "+accstarttime, "%d.%m.%Y %H:%M"))
+            #print timezone(tzuser)
+
+            acc.acc_start = timezone(tzuser).localize(datetime.datetime.strptime(accstartdate+" "+accstarttime, "%d.%m.%Y %H:%M"))
+            acc.acc_name = accname
+            acc.acc_comment = acccomment
+            acc.acc_type = t
+            acc.acc_cat = c
+            acc.acc_reason = accreason
+            acc.acc_repair = accrepair
+            acc.acc_address = data
+            acc.acc_stat = acc_stat
+
+            acc.save()
+
 
 
 

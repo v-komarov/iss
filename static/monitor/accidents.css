@@ -22,3 +22,8 @@ table[group=accidents] > tbody > tr > td {
 #accidentstartdate, #accidentenddate, #accidentcat, #accidenttype {
     width:100px;
 }
+
+#addaddr {
+    margin-left:10px;
+}
+
