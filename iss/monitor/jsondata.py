@@ -901,7 +901,7 @@ def get_json(request):
             event_id = values["event_id"]
             ev = events.objects.get(pk=event_id)
             ac = accidents.objects.get(acc_event=ev)
-            messages.objects.create(accident=ac,data=values)
+            messages.objects.create(accident=ac,data=values,author=request.user.first_name+" "+request.user.last_name)
             ev.mcc_mail_begin = True
             ev.save()
 

@@ -72,6 +72,8 @@ class accidents(models.Model):
     acc_type = models.ForeignKey(accident_list)
     acc_event = models.OneToOneField(events,on_delete=models.SET_NULL,null=True)
     acc_address = JSONField(default={})
+    acc_address_devices = JSONField(default={})
+    acc_address_comment = models.CharField(max_length=100,default="")
     acc_iss_id = models.IntegerField(default=None,null=True)
     acc_start = models.DateTimeField(db_index=True,null=True)
     acc_end = models.DateTimeField(db_index=True,null=True)
@@ -91,3 +93,4 @@ class messages(models.Model):
     data = JSONField(default={})
     send_done = models.BooleanField(db_index=True, default=False)
     mail_body = models.TextField(default=None,null=True)
+    author = models.CharField(max_length=100,default="")

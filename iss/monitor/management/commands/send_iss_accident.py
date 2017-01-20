@@ -155,11 +155,8 @@ class Command(BaseCommand):
             value = value + "acccomment(%s)%s[%s]" % (day,ac.acc_comment.encode("cp1251"),day)
             value = value + "deviceidlist(%s)%s[%s]" % (day,",".join(iddevices),day)
             value = value + "citynamelist(%s)%s[%s]" % (day,",".join(cityname).encode("cp1251"),day)
-            value = value + "addresslist(%s)%s" % (day,address_list.decode("utf-8").encode("cp1251"))
-
-
-
-
+            value = value + "addresslist(%s)%s[%s]" % (day,address_list.decode("utf-8").encode("cp1251"),day)
+            value = value + "reason(%s)%s" % (day,ac.acc_reason.encode("cp1251"))
 
 
 

@@ -25,7 +25,7 @@ from transliterate import detect_language
 
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
-
+msk_tz = timezone('Europe/Moscow')
 
 
 
@@ -93,12 +93,26 @@ class Command(BaseCommand):
                 sbj = "Оповещение об аварии МР-Сибирь № %s" % acc_number
                 mto = m.data["acc_email_list"].split(";")
 
-                issid = "<p style=\"color:white;\">ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
+
+                ### Подпись
+                signature = u"""
+                <p>
+                Исп: %s<br>
+                Диспетчер отдела мониторинга и управления<br>
+                сетями доступа Макрорегион Сибирь<br>
+                Тел. (806) 3721. E-Mail: DS@sibir.ttk.ru<br>
+                --------------------------------------------------<br>
+                Данное сообщение сформировано автоматически<br>
+                ISS2 %s.
+                </p>
+                """ % (m.author,msk_tz.localize(datetime.datetime.now()).strftime("%d.%m.%Y %H:%M %Z"))
+
+                issid = u"<p style=\"color:white;\">ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
 
                 email = EmailMessage(
                     subject=sbj,
-                    body=body+issid,
-                    from_email='gamma@sibttk.ru',
+                    body=body+signature+issid,
+                    from_email='GAMMA <gamma@sibttk.ru>',
                     to=mto,
                     reply_to=['ds@sibir.ttk.ru',]
                 )
@@ -112,6 +126,7 @@ class Command(BaseCommand):
 
                 ### Отправка сообщения в ИСС для создания ДРП
                 send_iss_drp(acc_number,sbj)
+
 
         print "ok"
 
