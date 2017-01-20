@@ -373,6 +373,55 @@ def get_json(request):
 
 
 
+        #### Получение адресов на основании группировки события ip адресов для первоначального отображения в интерфейсе создания аварии
+        if r.has_key("getaccidentipaddress") and rg("getaccidentipaddress") != "":
+            ### id строки события (контейнера)
+            row_id = request.GET["getaccidentipaddress"]
+            list_evt = [row_id]
+            evt = events.objects.get(pk=row_id)
+            ### Поиск вложенных событий в контейнер
+            if evt.agregator == True:
+                if evt.data.has_key("containergroup"):
+                    for item in evt.data["containergroup"]:
+                        list_evt.append(item)
+
+            #### Список ip адресов
+            list_ip = []
+            for evt_id in list_evt:
+                list_ip.append(events.objects.get(pk=evt_id).device_net_address)
+
+            #### Поиск адресов на основании ip адресов
+            addressjson = []
+            for ip in list_ip:
+                if devices.objects.filter(data__domen="zenoss_krsk",data__ipaddress=ip).count() == 1:
+                    d = devices.objects.get(data__domen="zenoss_krsk",data__ipaddress=ip)
+                    ### Первоначально id адреса в списке нет
+                    address_exists = False
+                    for i in addressjson:
+                        if i["addressid"] == d.address.id:
+                            #### Адрес уже существует
+                            address_exists = True
+
+                    if address_exists == False:
+                    ### Если такого адреса нет - то добавляем
+                        addressjson.append(
+                            {
+                                'addressid':d.address.id,
+                                'addresslabel':d.address.city.name+" "+d.address.street.name+" "+d.address.house,
+                                'show':True
+                            }
+                        )
+
+            response_data = {
+                'address_list':addressjson
+            }
+
+
+
+
+
+
+
         ### Данные по аварии для формы аварии интерфейса оперативный журнал
         if r.has_key("getaccidentdata") and rg("getaccidentdata") != "":
             ### id строки события (контейнера)
@@ -401,6 +450,7 @@ def get_json(request):
                 'accreason' : acc.acc_reason,
                 'accrepair' : acc.acc_repair
             }
+
 
             ### Номер в ИСС
             if acc.acc_iss_id != None:

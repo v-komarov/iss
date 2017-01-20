@@ -390,6 +390,32 @@ function AddAccidentAddressList(e) {
 
 
 
+// Изменение видимости строки адреса оборудования
+function ChangeAccidentAddressList(e) {
+
+    $("#address-accident-devices-list dt a").unbind("click");
+
+    var showitem = $(this).closest("dt").attr("showitem");
+
+    if ( showitem == "yes" ) {
+        $(this).closest("dt").attr("showitem","no");
+        $(this).closest("dt").next("dd").attr("showitem","no");
+        $(this).children("span").toggleClass("glyphicon-eye-open",false);
+        $(this).children("span").toggleClass("glyphicon-eye-close",true);
+    }
+
+    else {
+        $(this).closest("dt").attr("showitem","yes");
+        $(this).closest("dt").next("dd").attr("showitem","yes");
+        $(this).children("span").toggleClass("glyphicon-eye-open",true);
+        $(this).children("span").toggleClass("glyphicon-eye-close",false);
+    }
+
+    $("#address-accident-devices-list dt a").bind("click",ChangeAccidentAddressList);
+
+}
+
+
 
 
 
@@ -449,23 +475,48 @@ function Accident() {
 
 function CreateAccident() {
 
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
 
-    // Очистка
-    $("#accidentcat").val("");
-    $("#accidenttype").val("");
-    $("#accidentname").val("Недоступно оборудование г. ");
-    $("#accidentcomment").val("");
-    $("#accidentaddress").val("");
-    $("#address-accident-list").empty();
-    $("#accidentend").prop("checked",false);
-    $("#accidentstat").prop("checked",false);
-    $("#accidentdata").attr("action","create-accident");
-    $("#accidentreason").val("");
-    $("#accidentrepair").val("");
+    var jqxhr = $.getJSON("/monitor/events/jsondata?getaccidentipaddress="+row_id,
+        function(data) {
 
-    $("accident-link").text("");
 
-    AccidentData();
+        // Очистка
+        $("#accidentcat").val("");
+        $("#accidenttype").val("");
+        $("#accidentname").val("Недоступно оборудование г. ");
+        $("#accidentcomment").val("");
+        $("#accidentaddress").val("");
+        $("#address-accident-list").empty();
+        $("#accidentend").prop("checked",false);
+        $("#accidentstat").prop("checked",false);
+        $("#accidentdata").attr("action","create-accident");
+        $("#accidentreason").val("");
+        $("#accidentrepair").val("");
+
+        $("accident-link").text("");
+
+        // Предварительная очистка списка
+        $("#address-accident-devices-list").empty();
+
+        $.each(data['address_list'], function(index,value){
+
+            var v = value;
+
+            t = "<dt addressid=\'"+v['addressid']+"\' showitem=\"yes\"><a href=\"#\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a></dt>"
+            +"<dd addressid=\'"+v['addressid']+"\' addresslabel=\'"+v['addresslabel']+"\' showitem=\'yes\'>"
+            + v['addresslabel']
+            + "</dd>"
+
+            $("#address-accident-devices-list").prepend(t);
+            $("#address-accident-devices-list dt a").bind("click",ChangeAccidentAddressList);
+
+        });
+
+
+        AccidentData();
+
+    })
 
 }
 
@@ -572,7 +623,20 @@ function AccidentData() {
                             address_arr.push(row);
                         });
 
+
+                        device_address_arr = [];
+
+                        $.each($("#address-accident-devices-list dd"), function( index, value ) {
+                            var row = {};
+                            row.addressid = $(value).attr("addressid");
+                            row.addresslabel = $(value).attr("addresslabel");
+                            row.showitem = $(value).attr("showitem");
+                            device_address_arr.push(row);
+                        });
+
+
                         var data = {};
+                        data.device_address = device_address_arr;
                         data.address_list = address_arr;
                         data.acccat = acccat;
                         data.acctype = acctype;
