@@ -74,6 +74,8 @@
                 <th>Тип</th>
                 <th>Название</th>
                 <th>Адрес</th>
+                <th>Адрес оборудования</th>
+                <th>Адрес коммент.</th>
                 <th>Причина</th>
                 <th>Прин.меры</th>
                 <th>Коментарий</th>
@@ -91,8 +93,8 @@
                         <td>{{ row.acc_start|date:"d.m.Y H:i e" }}</td>
                         <td>{{ row.acc_end|date:"d.m.Y H:i e" }}</td>
                         {% endtimezone %}
-                        <td>{{ row.acc_cat.cat }} ({{ row.acc_cat }})</td>
-                        <td>{{ row.acc_type.name_short }} ({{ row.acc_type }})</td>
+                        <td><a id="tooltip" title="{{ row.acc_cat.cat }} ({{ row.acc_cat }})">{{ row.acc_cat.cat }}</a></td>
+                        <td><a id="tooltip" title="{{ row.acc_type.name_short }} ({{ row.acc_type }})">{{ row.acc_type.name_short }}</a></td>
                         <td>{{ row.acc_name }}</td>
                         <td>
                             <ul>
@@ -101,9 +103,21 @@
                             {% endfor %}
                             </ul>
                         </td>
-                        <td>{{ row.acc_reason }}</td>
+                        <td>
+                            <ul>
+                            {% for item in row.acc_address_devices.address_list %}
+                                {% if item.showitem == "yes" %}
+                                    <li>{{ item.addresslabel }}</li>
+                                {% else %}
+                                    <li style="text-decoration:line-through;">{{ item.addresslabel }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{{ row.acc_address_comment }}</td>
+                        <td><a id="tooltip" title="{{ row.acc_reason }}">{{ row.acc_reason|truncatechars:15 }}</a></td>
                         <td>{{ row.acc_repair }}</td>
-                        <td>{{ row.acc_comment }}</td>
+                        <td><a id="tooltip" title="{{ row.acc_comment }}">{{ row.acc_comment|truncatechars:15 }}</a></td>
                         <td align="center">
                             {% if row.acc_stat %}
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>

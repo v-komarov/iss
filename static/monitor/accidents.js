@@ -121,6 +121,36 @@ function AddAccidentAddressList(e) {
 
 
 
+// Изменение видимости строки адреса оборудования
+function ChangeAccidentAddressList(e) {
+
+    $("#address-accident-devices-list dt a").unbind("click");
+
+    var showitem = $(this).closest("dt").attr("showitem");
+
+    if ( showitem == "yes" ) {
+        $(this).closest("dt").attr("showitem","no");
+        $(this).closest("dt").next("dd").attr("showitem","no");
+        $(this).children("span").toggleClass("glyphicon-eye-open",false);
+        $(this).children("span").toggleClass("glyphicon-eye-close",true);
+        $(this).closest("dt").next("dd").css("text-decoration","line-through");
+    }
+
+    else {
+        $(this).closest("dt").attr("showitem","yes");
+        $(this).closest("dt").next("dd").attr("showitem","yes");
+        $(this).children("span").toggleClass("glyphicon-eye-open",true);
+        $(this).children("span").toggleClass("glyphicon-eye-close",false);
+        $(this).closest("dt").next("dd").css("text-decoration","none");
+    }
+
+    $("#address-accident-devices-list dt a").bind("click",ChangeAccidentAddressList);
+
+}
+
+
+
+
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -174,6 +204,8 @@ function EditAccident(e) {
             $("#accidentrepair").val(data['accrepair']);
             $("#accidentaddress").val("");
             $("#address-accident-list").empty();
+            $("#accidentaddresscomment").val(data['accaddrcomment']);
+
 
             // Авария завершена
             if (data["accend"] == "yes") { $("#accidentend").prop("checked",true); }
@@ -197,6 +229,42 @@ function EditAccident(e) {
                 $("#address-accident-list dt a").bind("click",DeleteAccidentAddressList);
 
             });
+
+
+
+            // Список адресов оборудования
+            // Предварительная очистка списка
+            $("#address-accident-devices-list").empty();
+            $.each(data['accdevaddress']['address_list'], function(index,value){
+
+                var v = value;
+
+                if ( v["showitem"] == "yes" ) {
+
+                    t = "<dt addressid=\'"+v['addressid']+"\' showitem=\"yes\"><a href=\"#\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a></dt>"
+                    +"<dd addressid=\'"+v['addressid']+"\' addresslabel=\'"+v['addresslabel']+"\' showitem=\'yes\'>"
+                    + v['addresslabel']
+                    + "</dd>"
+
+                }
+
+                else (
+
+                    t = "<dt addressid=\'"+v['addressid']+"\' showitem=\"no\"><a href=\"#\"><span class=\"glyphicon glyphicon-eye-close\" aria-hidden=\"true\"></span></a></dt>"
+                    +"<dd style=\"text-decoration:line-through;\" addressid=\'"+v['addressid']+"\' addresslabel=\'"+v['addresslabel']+"\' showitem=\'no\'>"
+                    + v['addresslabel']
+                    + "</dd>"
+
+                )
+
+
+                $("#address-accident-devices-list").prepend(t);
+                $("#address-accident-devices-list dt a").bind("click",ChangeAccidentAddressList);
+
+            });
+
+
+
 
         })
 
@@ -242,6 +310,8 @@ function AccidentData(row_id) {
                         else { var accend = "no"; }
                         if ($("#accidentstat").prop("checked") == true) { var accstat = "yes"; }
                         else { var accstat = "no"; }
+                        var accaddrcomment = $("#accidentaddresscomment").val();
+
 
                         address_arr = [];
 
@@ -252,7 +322,18 @@ function AccidentData(row_id) {
                             address_arr.push(row);
                         });
 
+                        device_address_arr = [];
+
+                        $.each($("#address-accident-devices-list dd"), function( index, value ) {
+                            var row = {};
+                            row.addressid = $(value).attr("addressid");
+                            row.addresslabel = $(value).attr("addresslabel");
+                            row.showitem = $(value).attr("showitem");
+                            device_address_arr.push(row);
+                        });
+
                         var data = {};
+                        data.device_address = device_address_arr;
                         data.accstartdate = accstartdate;
                         data.accstarttime = accstarttime;
                         data.accenddate = accenddate;
@@ -266,6 +347,7 @@ function AccidentData(row_id) {
                         data.accstat = accstat;
                         data.accreason = accreason;
                         data.accrepair = accrepair;
+                        data.addrcomment = accaddrcomment;
                         data.acc_id = $("table[group=accidents] tbody tr[marked=yes]").attr("row_id");
                         data.action = "edit-accident2";
 

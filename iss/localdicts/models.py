@@ -192,3 +192,18 @@ class email_templates(models.Model):
         verbose_name_plural = 'Шаблоны оповещений'
 
 
+
+
+
+class address_templates(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название шаблона', unique=True)
+    template = models.TextField(default="", verbose_name='Шаблон')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Шаблон адреса'
+        verbose_name_plural = 'Шаблоны адресов'
+
+

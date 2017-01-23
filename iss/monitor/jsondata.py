@@ -61,6 +61,103 @@ head_order = [
 
 
 
+### Формирование словаря адресов аварии
+def accident_dict(acc_id):
+    acc = accidents.objects.get(pk=acc_id)
+    data = {}
+    data["comment"] = acc.acc_address_comment
+
+    address_list = []
+    ### Для адресов, сформированных на основе устройств
+    for item in acc.acc_address["address_list"]:
+        addr = address_house.objects.get(pk=item["addressid"])
+        ### Может город и улица в адресе отсутствовать . Про город - маловероятно
+        if addr.city:
+            city = addr.city.name
+        else:
+            city = ''
+        if addr.street:
+            street = addr.street.name
+        else:
+            street = ''
+        if addr.house:
+            house = addr.house
+        else:
+            house = ""
+        address_list.append(
+            {
+                'city' : city,
+                'street' : street,
+                'house' : house
+            }
+        )
+
+    ip = acc.acc_event.device_net_address
+    if devices.objects.filter(data__domen="zenoss_krsk",data__ipaddress=ip).count() == 1:
+        d = devices.objects.get(data__domen="zenoss_krsk", data__ipaddress=ip)
+        ### Может город и улица в адресе отсутствовать . Про город - маловероятно
+        if d.address.city:
+            city = d.address.city.name
+        else:
+            city = ''
+        if d.address.street:
+            street = d.address.street.name
+        else:
+            street = ''
+        if d.address.house:
+            house = d.address.house
+        else:
+            house = ""
+        address_list.append(
+            {
+                'city' : city,
+                'street' : street,
+                'house' : d.address.house,
+                'system' : acc.acc_event.device_system
+            }
+        )
+
+
+    ### Для адресов, вычисляемых на основе событий
+    if acc.acc_event.data.has_key("containergroup") and acc.acc_event.agregator == True:
+        for item in acc.acc_event.data["containergroup"]:
+            e = events.objects.get(pk=item)
+            ip = e.device_net_address
+            if devices.objects.filter(data__domen="zenoss_krsk", data__ipaddress=ip).count() == 1:
+                d = devices.objects.get(data__domen="zenoss_krsk", data__ipaddress=ip)
+                ### Может город и улица в адресе отсутствовать . Про город - маловероятно
+                if d.address.city:
+                    city = d.address.city.name
+                else:
+                    city = ''
+                if d.address.street:
+                    street = d.address.street.name
+                else:
+                    street = ''
+                if d.address.house:
+                    house = d.address.house
+                else:
+                    house = ""
+                address_list.append(
+                    {
+                        'city': city,
+                        'street': street,
+                        'house': house,
+                        'system': e.device_system
+                    }
+                )
+
+    data["address_list"] = address_list
+
+    return data
+
+
+
+
+
+
+
+
 
 def my_fields_order(request):
     # Чередование полей
@@ -448,7 +545,9 @@ def get_json(request):
                 'accend' : accend,
                 'accstat' : accstat,
                 'accreason' : acc.acc_reason,
-                'accrepair' : acc.acc_repair
+                'accrepair' : acc.acc_repair,
+                'accdevaddress' : acc.acc_address_devices,
+                'accaddrcomment' : acc.acc_address_comment
             }
 
 
@@ -503,7 +602,9 @@ def get_json(request):
                 'accstartdate' : acc.acc_start.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
                 'accstarttime' : acc.acc_start.astimezone(timezone(tz)).strftime("%H:%M"),
                 'accenddate': accenddate,
-                'accendtime': accendtime
+                'accendtime': accendtime,
+                'accdevaddress': acc.acc_address_devices,
+                'accaddrcomment': acc.acc_address_comment
             }
 
             ### Номер в ИСС
@@ -822,7 +923,7 @@ def get_json(request):
 
 
 
-
+        ### Создание аварии - интерфейс оперативного журнала
         if data.has_key("action") and data["action"] == 'create-accident':
 
             accident_data = eval(str(data))
@@ -837,7 +938,9 @@ def get_json(request):
             accstat = accident_data["accstat"]
             accreason = accident_data["accreason"]
             accrepair = accident_data["accrepair"]
-
+            data2 = {}
+            data2["address_list"] = accident_data["device_address"]
+            accaddrcomment = accident_data["addrcomment"]
 
             e = events.objects.get(pk=event_id)
             t = accident_list.objects.get(pk=acctype)
@@ -869,7 +972,7 @@ def get_json(request):
 
 
 
-            accidents.objects.create(
+            a = accidents.objects.create(
                 acc_name = accname,
                 acc_comment = acccomment,
                 acc_cat = c,
@@ -880,13 +983,24 @@ def get_json(request):
                 acc_end = acc_end,
                 acc_stat = acc_stat,
                 acc_reason = accreason,
-                acc_repair = accrepair
+                acc_repair = accrepair,
+                acc_address_devices = data2,
+                acc_address_comment = accaddrcomment
+
             )
 
 
 
             e.accident = True
             e.save()
+
+            ### Формирование словаря адресов
+            a.acc_addr_dict = {'address_list' : accident_dict(a.id)}
+            a.save()
+
+
+
+
 
 
 
@@ -906,6 +1020,10 @@ def get_json(request):
             accstat = accident_data["accstat"]
             accreason = accident_data["accreason"]
             accrepair = accident_data["accrepair"]
+            data2 = {}
+            data2["address_list"] = accident_data["device_address"]
+            accaddrcomment = accident_data["addrcomment"]
+
 
             e = events.objects.get(pk=event_id)
             t = accident_list.objects.get(pk=acctype)
@@ -938,6 +1056,10 @@ def get_json(request):
             acc.acc_repair = accrepair
             acc.acc_address = data
             acc.acc_stat = acc_stat
+            acc.acc_address_devices = data2
+            acc.acc_address_comment = accaddrcomment
+
+            acc.acc_addr_dict = {'address_list' : accident_dict(acc.id)}
 
             acc.save()
 
@@ -1015,6 +1137,9 @@ def get_json(request):
             accstarttime = accident_data["accstarttime"]
             accenddate = accident_data["accenddate"]
             accendtime = accident_data["accendtime"]
+            data2 = {}
+            data2["address_list"] = accident_data["device_address"]
+            accaddrcomment = accident_data["addrcomment"]
 
             t = accident_list.objects.get(pk=acctype)
             c = accident_cats.objects.get(pk=acccat)
@@ -1053,6 +1178,10 @@ def get_json(request):
             acc.acc_repair = accrepair
             acc.acc_address = data
             acc.acc_stat = acc_stat
+            acc.acc_address_devices = data2
+            acc.acc_address_comment = accaddrcomment
+
+            acc.acc_addr_dict = {'address_list' : accident_dict(acc_id)}
 
             acc.save()
 

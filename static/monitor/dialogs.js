@@ -402,6 +402,7 @@ function ChangeAccidentAddressList(e) {
         $(this).closest("dt").next("dd").attr("showitem","no");
         $(this).children("span").toggleClass("glyphicon-eye-open",false);
         $(this).children("span").toggleClass("glyphicon-eye-close",true);
+        $(this).closest("dt").next("dd").css("text-decoration","line-through");
     }
 
     else {
@@ -409,6 +410,7 @@ function ChangeAccidentAddressList(e) {
         $(this).closest("dt").next("dd").attr("showitem","yes");
         $(this).children("span").toggleClass("glyphicon-eye-open",true);
         $(this).children("span").toggleClass("glyphicon-eye-close",false);
+        $(this).closest("dt").next("dd").css("text-decoration","none");
     }
 
     $("#address-accident-devices-list dt a").bind("click",ChangeAccidentAddressList);
@@ -493,6 +495,7 @@ function CreateAccident() {
         $("#accidentdata").attr("action","create-accident");
         $("#accidentreason").val("");
         $("#accidentrepair").val("");
+        $("#accidentaddresscomment").val("");
 
         $("accident-link").text("");
 
@@ -543,6 +546,7 @@ function EditAccident(row_id) {
             $("#accidentrepair").val(data['accrepair']);
             $("#accidentaddress").val("");
             $("#address-accident-list").empty();
+            $("#accidentaddresscomment").val(data['accaddrcomment']);
 
             // Номер аварии и ссылка на url ИСС
             //$("accident-link").text("Авария № "+data['accid']+" ");
@@ -560,7 +564,39 @@ function EditAccident(row_id) {
             if (data["accstat"] == "yes") { $("#accidentstat").prop("checked",true); }
             else { $("#accidentstat").prop("checked",false); }
 
+            // Список адресов оборудования
+            // Предварительная очистка списка
+            $("#address-accident-devices-list").empty();
+            $.each(data['accdevaddress']['address_list'], function(index,value){
 
+                var v = value;
+
+                if ( v["showitem"] == "yes" ) {
+
+                    t = "<dt addressid=\'"+v['addressid']+"\' showitem=\"yes\"><a href=\"#\"><span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span></a></dt>"
+                    +"<dd addressid=\'"+v['addressid']+"\' addresslabel=\'"+v['addresslabel']+"\' showitem=\'yes\'>"
+                    + v['addresslabel']
+                    + "</dd>"
+
+                }
+
+                else (
+
+                    t = "<dt addressid=\'"+v['addressid']+"\' showitem=\"no\"><a href=\"#\"><span class=\"glyphicon glyphicon-eye-close\" aria-hidden=\"true\"></span></a></dt>"
+                    +"<dd style=\"text-decoration:line-through;\" addressid=\'"+v['addressid']+"\' addresslabel=\'"+v['addresslabel']+"\' showitem=\'no\'>"
+                    + v['addresslabel']
+                    + "</dd>"
+
+                )
+
+
+                $("#address-accident-devices-list").prepend(t);
+                $("#address-accident-devices-list dt a").bind("click",ChangeAccidentAddressList);
+
+            });
+
+
+            // Список адресов введенных вручную
             $.each(data['address']['address_list'], function(index,value){
 
                 var v = value;
@@ -613,6 +649,8 @@ function AccidentData() {
                         else { var accend = "no"; }
                         if ($("#accidentstat").prop("checked") == true) { var accstat = "yes"; }
                         else { var accstat = "no"; }
+                        var accaddrcomment = $("#accidentaddresscomment").val();
+
 
                         address_arr = [];
 
@@ -646,6 +684,7 @@ function AccidentData() {
                         data.accstat = accstat;
                         data.accreason = accreason;
                         data.accrepair = accrepair;
+                        data.addrcomment = accaddrcomment;
                         data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
                         data.action = $("#accidentdata").attr("action");
 

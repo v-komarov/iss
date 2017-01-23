@@ -81,7 +81,7 @@ class accidents(models.Model):
     acc_repair = models.TextField(default="")
     acc_reports_id = models.IntegerField(default=None,null=True)
     acc_stat = models.BooleanField(db_index=True, default=False) ### Включать в статистику
-
+    acc_addr_dict = JSONField(default={}) ### Словарь данных адресов
 
 
 

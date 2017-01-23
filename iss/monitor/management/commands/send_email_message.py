@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
                 acc_type_cat = "%s,%s" % (m.data["acc_cat_type"].split(",")[1],m.data["acc_cat_type"].split(",")[0])
 
-                body = temp.template % (acc_number,m.data["acc_datetime_begin"],acc_type_cat,m.data["acc_service_stoplist"],m.data["acc_reason"],m.data["acc_cities"],m.data["acc_address_list"],m.data["acc_zkl"],m.data["acc_repair_end"])
+                body = temp.template.format(accnum=acc_number,begin=m.data["acc_datetime_begin"],acctype=acc_type_cat,stoplist=m.data["acc_service_stoplist"],reason=m.data["acc_reason"],cities=m.data["acc_cities"],addresslist=m.data["acc_address_list"],acczkl=m.data["acc_zkl"],repairend=m.data["acc_repair_end"])
                 sbj = "Оповещение об аварии МР-Сибирь № %s" % acc_number
                 mto = m.data["acc_email_list"].split(";")
 
