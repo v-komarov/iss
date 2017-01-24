@@ -102,7 +102,11 @@
 {% for item in address %}
 {{ item.addresslabel }}
 {% endfor %}">
-{{ address.0.addresslabel }} ({{ address|length }})
+    {% if address|length == 1 %}
+        {{ address.0.addresslabel }}
+    {% elif address|length > 1 %}
+        Список адресов ({{ address|length }})
+    {% endif %}
 </a>
 {% endwith %}
                         </td>
@@ -112,7 +116,11 @@
 {% for item in address_device %}
 {{ item.addresslabel }}
 {% endfor %}">
-{{ address_device.0.addresslabel }} ({{ address_device|length }})
+    {% if address_device|length == 1 %}
+        {{ address_device.0.addresslabel }}
+    {% elif address_device|length > 1 %}
+        Список адресов ({{ address_device|length }})
+    {% endif %}
 </a>
 {% endwith %}
                             {% comment %}
