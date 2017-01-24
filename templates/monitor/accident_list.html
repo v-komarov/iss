@@ -97,13 +97,25 @@
                         <td><a id="tooltip" title="{{ row.acc_type.name_short }} ({{ row.acc_type }})">{{ row.acc_type.name_short }}</a></td>
                         <td>{{ row.acc_name }}</td>
                         <td>
-                            <ul>
-                            {% for item in row.acc_address.address_list %}
-                                <li>{{ item.addresslabel }}</li>
-                            {% endfor %}
-                            </ul>
+{% with address=row.acc_address.address_list %}
+<a id="tooltip" title="
+{% for item in address %}
+{{ item.addresslabel }}
+{% endfor %}">
+{{ address.0.addresslabel }} ({{ address|length }})
+</a>
+{% endwith %}
                         </td>
                         <td>
+{% with address_device=row.acc_address_devices.address_list %}
+<a id="tooltip" title="
+{% for item in address_device %}
+{{ item.addresslabel }}
+{% endfor %}">
+{{ address_device.0.addresslabel }} ({{ address_device|length }})
+</a>
+{% endwith %}
+                            {% comment %}
                             <ul>
                             {% for item in row.acc_address_devices.address_list %}
                                 {% if item.showitem == "yes" %}
@@ -113,6 +125,7 @@
                                 {% endif %}
                             {% endfor %}
                             </ul>
+                            {% endcomment %}
                         </td>
                         <td>{{ row.acc_address_comment }}</td>
                         <td><a id="tooltip" title="{{ row.acc_reason }}">{{ row.acc_reason|truncatechars:15 }}</a></td>

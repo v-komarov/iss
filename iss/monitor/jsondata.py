@@ -67,8 +67,16 @@ def accident_dict(acc_id):
     data = {}
     data["comment"] = acc.acc_address_comment
 
+    #### Список id адресов с showitem="no"
+    showitemno = []
+    if acc.acc_address_devices.has_key("address_list"):
+        for row in acc.acc_address_devices["address_list"]:
+            if row["showitem"] == "no":
+                showitemno.append(int(row["addressid"],10))
+
+
     address_list = []
-    ### Для адресов, сформированных на основе устройств
+    ### Для адресов, сформированных на основе ручного ввода адресов
     for item in acc.acc_address["address_list"]:
         addr = address_house.objects.get(pk=item["addressid"])
         ### Может город и улица в адресе отсутствовать . Про город - маловероятно
@@ -92,6 +100,7 @@ def accident_dict(acc_id):
             }
         )
 
+
     ip = acc.acc_event.device_net_address
     if devices.objects.filter(data__domen="zenoss_krsk",data__ipaddress=ip).count() == 1:
         d = devices.objects.get(data__domen="zenoss_krsk", data__ipaddress=ip)
@@ -108,17 +117,25 @@ def accident_dict(acc_id):
             house = d.address.house
         else:
             house = ""
+
+        ## Флаг showitem
+        if d.address.id in showitemno:
+            showitem = "no"
+        else:
+            showitem = "yes"
+
         address_list.append(
             {
                 'city' : city,
                 'street' : street,
                 'house' : d.address.house,
-                'system' : acc.acc_event.device_system
+                'system' : acc.acc_event.device_system,
+                'showitem' : showitem
             }
         )
 
 
-    ### Для адресов, вычисляемых на основе событий
+    ### Для адресов, вычисляемых на основе событий - ip адресов
     if acc.acc_event.data.has_key("containergroup") and acc.acc_event.agregator == True:
         for item in acc.acc_event.data["containergroup"]:
             e = events.objects.get(pk=item)
@@ -138,12 +155,20 @@ def accident_dict(acc_id):
                     house = d.address.house
                 else:
                     house = ""
+
+                ## Флаг showitem
+                if d.address.id in showitemno:
+                    showitem = "no"
+                else:
+                    showitem = "yes"
+
                 address_list.append(
                     {
                         'city': city,
                         'street': street,
                         'house': house,
-                        'system': e.device_system
+                        'system': e.device_system,
+                        'showitem': showitem
                     }
                 )
 
