@@ -16,6 +16,7 @@ import json
 import time
 import datetime
 import binascii
+import pprint
 from pytz import timezone
 
 
@@ -118,7 +119,13 @@ class Command(BaseCommand):
     help = 'saving zenoss message'
 
 
-
+    def add_arguments(self, parser):
+	parser.add_argument(
+		'--avoid-api-call',
+		action='store_true',
+		dest='avoid_api_call',
+		default=False,
+		help='Avoid NOCLite API call for debugging purpose')
 
     def handle(self, *args, **options):
 
@@ -236,19 +243,28 @@ class Command(BaseCommand):
 
                 #print data
 
-                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-                #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
+                print options
 
-                f = urllib2.urlopen(req)
-                result = f.read()
-                r = json.loads(result)
-                if ac.acc_reports_id == None and r.has_key("api_status"):
-                    if r["api_status"] == "OK":
-                        ac.acc_reports_id = r["api_response"]["id"]
-                        ac.save()
+		if options['avoid_api_call']:
+                    print 'Data debug output:'
+		    pp = pprint.PrettyPrinter(indent=4)
+		    pp.pprint(eval(data.replace('\\\\', '\\')))
+		    print
+		    pp.pprint(eval(data)['locations'])
+		else:
+        	    req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+                    #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+    	            #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
 
-                #print result
+        	    f = urllib2.urlopen(req)
+                    result = f.read()
+	            r = json.loads(result)
+    	            if ac.acc_reports_id == None and r.has_key("api_status"):
+        	        if r["api_status"] == "OK":
+            	            ac.acc_reports_id = r["api_response"]["id"]
+                	    ac.save()
+
+                    print result
 
 
             ### отмечено, что не нужно учитывать в статистике
@@ -258,18 +274,24 @@ class Command(BaseCommand):
 
                 data = json.dumps(values)
 
-                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
-                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+		if options['avoid_api_call']:
+		    print 'Data debug output'
+		    pp = pprint.PrettyPrinter(indent=4)
+		    pp.pprint(eval(data))
+		else:
 
-                f = urllib2.urlopen(req)
-                result = f.read()
-                r = json.loads(result)
-                if ac.acc_reports_id != None and r.has_key("api_status"):
-                    if r["api_status"] == "OK":
-                        ac.acc_reports_id = None
-                        ac.save()
+                    req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+	            #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
 
-                #print result
+    	            f = urllib2.urlopen(req)
+        	    result = f.read()
+            	    r = json.loads(result)
+                    if ac.acc_reports_id != None and r.has_key("api_status"):
+	                if r["api_status"] == "OK":
+    	                    ac.acc_reports_id = None
+        	            ac.save()
+
+            	    #print result
 
         """
         data = json.loads(result)

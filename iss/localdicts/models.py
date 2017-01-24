@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django import template
+
 
 
 
@@ -201,6 +203,13 @@ class address_templates(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    ### Вызов шаблонизатора
+    def gettempl(self,data):
+        t = template.Template(self.template)
+        c = template.Context({'data': data})
+        return t.render(c)
+
 
     class Meta:
         verbose_name = 'Шаблон адреса'
