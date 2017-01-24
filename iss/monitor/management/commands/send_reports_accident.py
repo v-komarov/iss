@@ -5,9 +5,10 @@ import urllib,urllib2
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 from django.db.models import Q
+from django import template
 
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import address_house
+from iss.localdicts.models import address_house,address_templates
 from iss.equipment.models import devices_ip
 from iss.inventory.models import devices,devices_type
 
@@ -170,6 +171,8 @@ class Command(BaseCommand):
 
 
                 ### Формирование адресной строки
+                address_str = ""
+                """
                 for addrid in houses:
                     a = address_house.objects.get(pk=addrid)
                     if a.street == None and a.house == None:
@@ -178,7 +181,14 @@ class Command(BaseCommand):
                         address_str = address_str + "%s: %s," % (a.city.name,a.street.name)
                     else:
                         address_str = address_str + "%s: %s: %s," % (a.city.name,a.street.name,a.house)
+                """
 
+                ### Формирование через шаблонизатор
+                if address_templates.objects.filter(name="reports").count() == 1:
+                    templ = address_templates.objects.get(name="reports").template
+                    t = template.Template(templ)
+                    c = template.Context({'data': ac.acc_addr_dict})
+                    address_str = t.render(c)
 
 
                 ### Расчет ЗКЛ на основе списка ip
