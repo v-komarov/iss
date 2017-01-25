@@ -654,13 +654,6 @@ def get_json(request):
             acc = accidents.objects.get(acc_event=row_id)
 
 
-            ### Создано в ИСС или нет
-            if acc.acc_iss_id != None:
-                iss = "yes"
-            else:
-                iss = "no"
-
-
             if request.GET["mcc_mail_begin"] == "no":
             # Почтовое сообщение еще не создавалось
 
@@ -761,8 +754,7 @@ def get_json(request):
                         'accreason': acc.acc_reason,
                         'acccities':",".join(cityname),
                         'accaddresslist':address_list[1:],
-                        'acczkl':zkl,
-                        'iss' : iss
+                        'acczkl':zkl
                     }
 
 
@@ -781,8 +773,7 @@ def get_json(request):
                     'acc_email_templates': m.data['acc_email_templates'],
                     'acc_email_list': m.data['acc_email_list'],
                     'acc_service_stoplist': m.data['acc_service_stoplist'],
-                    'acc_repair_end':m.data['acc_repair_end'],
-                    'iss' : iss
+                    'acc_repair_end':m.data['acc_repair_end']
                 }
 
 
@@ -791,6 +782,16 @@ def get_json(request):
 
 
 
+        ### Определение зарегистрирована авария в ИСС или нет
+        if r.has_key("issaccidentok") and rg("issaccidentok") != "":
+            ### id строки события (контейнера)
+            row_id = request.GET["issaccidentok"]
+            ev = events.objects.get(pk=row_id)
+            acc = accidents.objects.get(acc_event=row_id)
+            if acc.acc_iss_id:
+                response_data = {'iss':'yes'}
+            else:
+                response_data = {'iss':'no'}
 
 
 
