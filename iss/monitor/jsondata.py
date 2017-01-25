@@ -652,6 +652,15 @@ def get_json(request):
             row_id = request.GET["mailaccidentdata"]
             ev = events.objects.get(pk=row_id)
             acc = accidents.objects.get(acc_event=row_id)
+
+
+            ### Создано в ИСС или нет
+            if acc.acc_iss_id != None:
+                iss = "yes"
+            else:
+                iss = "no"
+
+
             if request.GET["mcc_mail_begin"] == "no":
             # Почтовое сообщение еще не создавалось
 
@@ -752,7 +761,8 @@ def get_json(request):
                         'accreason': acc.acc_reason,
                         'acccities':",".join(cityname),
                         'accaddresslist':address_list[1:],
-                        'acczkl':zkl
+                        'acczkl':zkl,
+                        'iss' : iss
                     }
 
 
@@ -771,11 +781,16 @@ def get_json(request):
                     'acc_email_templates': m.data['acc_email_templates'],
                     'acc_email_list': m.data['acc_email_list'],
                     'acc_service_stoplist': m.data['acc_service_stoplist'],
-                    'acc_repair_end':m.data['acc_repair_end']
+                    'acc_repair_end':m.data['acc_repair_end'],
+                    'iss' : iss
                 }
 
 
             response_data = accjson
+
+
+
+
 
 
 

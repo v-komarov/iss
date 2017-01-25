@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+    window.iss;
 
     $("ul.dropdown-menu li a[action=create-accident]").bind("click",Accident);
     $("ul.dropdown-menu li a[action=accident-iss]").bind("click",AccidentISS);
@@ -1179,16 +1180,11 @@ function AddRow(e) {
 function MessageMssBegin(e) {
 
 
-
     // Для формы отправки оповещения - отображение списка адресов
     $( "#acc-email-templates" ).change(function() {
         var address_list = $("#acc-email-templates option:selected").attr("address_list");
         $("#acc-email-list").val(address_list);
     });
-
-
-
-
 
 
     // Сообщение еще не создавалось
@@ -1201,9 +1197,7 @@ function MessageMssBegin(e) {
     // Почтовое сообщение не создавалось
     if (mcc_mail_begin == "no") {
 
-
         var jqxhr = $.getJSON("/monitor/events/jsondata?mailaccidentdata="+row_id+"&mcc_mail_begin=no",
-
             function(data) {
 
                 $("#acc-datetime-begin").val(data['acc_start']);
@@ -1217,6 +1211,7 @@ function MessageMssBegin(e) {
                 $("#acc-repair-end").val("Уточняется");
                 $("#acc-service-stoplist").val("");
 
+                $("#message-mss-begin").attr("iss",data["iss"]);
 
             })
 
@@ -1242,96 +1237,102 @@ function MessageMssBegin(e) {
                 $("#acc-repair-end").val(data['acc_repair_end']);
                 $("#acc-service-stoplist").val(data['acc_service_stoplist']);
 
+                $("#message-mss-begin").attr("iss",data["iss"]);
+
+
             })
 
     }
 
+    console.log($("#message-mss-begin").attr("iss"));
+    if ($("#message-mss-begin").attr("iss") == "yes") {
+
+        $("#message-mss-begin").dialog({
+            open:function() {
+            $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+            $("table[group=events]").attr("refresh","no");
+            },
+            title:"Оповещение об аварии на MCC",
+            closeOnEscape: false,
+            buttons:[{ text:"Отправить",click: function() {
+
+                if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
+
+
+                    var acc_datetime_begin = $("#acc-datetime-begin").val();
+                    var acc_cat_type = $("#acc-cat-type").val();
+                    var acc_reason = $("#acc-reason").val();
+                    var acc_cities = $("#acc-cities").val();
+                    var acc_address_list = $("#acc-address-list").val();
+                    var acc_zkl = $("#acc-zkl").val();
+                    var acc_email_templates = $("#acc-email-templates").val();
+                    var acc_email_list = $("#acc-email-list").val();
+                    var acc_service_stoplist = $("#acc-service-stoplist").val();
+                    var acc_repair_end = $("#acc-repair-end").val();
+
+
+                    var data = {};
+                    data.acc_datetime_begin = acc_datetime_begin;
+                    data.acc_cat_type = acc_cat_type;
+                    data.acc_reason = acc_reason;
+                    data.acc_cities = acc_cities;
+                    data.acc_address_list = acc_address_list;
+                    data.acc_zkl = acc_zkl;
+                    data.acc_email_templates = acc_email_templates;
+                    data.acc_email_list = acc_email_list;
+                    data.acc_service_stoplist = acc_service_stoplist;
+                    data.acc_repair_end = acc_repair_end;
+                    data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+                    data.action = "create-mcc-message-email";
 
 
 
-            $("#message-mss-begin").dialog({
-                open:function() {
-                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
-                $("table[group=events]").attr("refresh","no");
-                },
-                title:"Оповещение об аварии на MCC",
-                closeOnEscape: false,
-                buttons:[{ text:"Отправить",click: function() {
 
-                    if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
+                    var csrftoken = getCookie('csrftoken');
 
-
-                        var acc_datetime_begin = $("#acc-datetime-begin").val();
-                        var acc_cat_type = $("#acc-cat-type").val();
-                        var acc_reason = $("#acc-reason").val();
-                        var acc_cities = $("#acc-cities").val();
-                        var acc_address_list = $("#acc-address-list").val();
-                        var acc_zkl = $("#acc-zkl").val();
-                        var acc_email_templates = $("#acc-email-templates").val();
-                        var acc_email_list = $("#acc-email-list").val();
-                        var acc_service_stoplist = $("#acc-service-stoplist").val();
-                        var acc_repair_end = $("#acc-repair-end").val();
-
-
-                        var data = {};
-                        data.acc_datetime_begin = acc_datetime_begin;
-                        data.acc_cat_type = acc_cat_type;
-                        data.acc_reason = acc_reason;
-                        data.acc_cities = acc_cities;
-                        data.acc_address_list = acc_address_list;
-                        data.acc_zkl = acc_zkl;
-                        data.acc_email_templates = acc_email_templates;
-                        data.acc_email_list = acc_email_list;
-                        data.acc_service_stoplist = acc_service_stoplist;
-                        data.acc_repair_end = acc_repair_end;
-                        data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
-                        data.action = "create-mcc-message-email";
-
-
-
-
-                        var csrftoken = getCookie('csrftoken');
-
-                        $.ajaxSetup({
-                            beforeSend: function(xhr, settings) {
-                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                                }
+                    $.ajaxSetup({
+                        beforeSend: function(xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader("X-CSRFToken", csrftoken);
                             }
-                        });
+                        }
+                    });
 
 
 
-                        $.ajax({
-                          url: "/monitor/events/jsondata/",
-                          type: "POST",
-                          dataType: 'json',
-                          data:$.toJSON(data),
-                            success: function(result) {
-                                location.reload();
-                            }
+                    $.ajax({
+                      url: "/monitor/events/jsondata/",
+                      type: "POST",
+                      dataType: 'json',
+                      data:$.toJSON(data),
+                        success: function(result) {
+                            location.reload();
+                        }
 
-                        });
-
-
-                        $(this).dialog("close");
-                        $("table[group=events]").attr("refresh","yes");
+                    });
 
 
+                    $(this).dialog("close");
+                    $("table[group=events]").attr("refresh","yes");
 
 
-                    }
 
-                }},
-                    {text:"Закрыть",click: function() {
-                    $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
-                ],
-                modal:true,
-                minWidth:600,
-                width:900
 
-            });
+                }
 
+            }},
+                {text:"Закрыть",click: function() {
+                $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
+            ],
+            modal:true,
+            minWidth:600,
+            width:900
+
+        });
+
+    }
+
+    else { alert("Авария не зарегистрирована в ИСС!"); }
 
 }
 
