@@ -2,7 +2,7 @@
 
 import pickle
 
-from iss.monitor.models import events
+from iss.monitor.models import events,drp_list
 from	django.http	import	HttpResponse
 from	django.http import	HttpResponseRedirect
 from StringIO import StringIO
@@ -32,3 +32,24 @@ def get_filedata(request):
 
 
         return HttpResponse("None")
+
+
+
+
+### Вывод файлов ДПР
+def get_drpfile(request):
+
+    if request.method == "GET":
+        ### id строки таблицы ДРП
+        id = request.GET["id"]
+        drp = drp_list.objects.get(pk=id)
+        filename = drp.data_files["filename"]
+        filedata = drp.data_files["filedata"]
+
+        response = HttpResponse(content_type="application/%s" % filename.split(".")[-1])
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        result = pickle.loads(filedata)
+        response.write(result.getvalue())
+        return response
+
+

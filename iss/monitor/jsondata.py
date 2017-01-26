@@ -865,6 +865,45 @@ def get_json(request):
 
 
 
+        ### Данные для интерфеса списка ДРП интерфейса списка аварий
+        if r.has_key("getdrplist") and rg("getdrplist") != "":
+            tz = request.session['tz']
+            accident_id = int(request.GET["getdrplist"],10)
+            mess_list = []
+            file_list = []
+            acc = accidents.objects.get(pk=accident_id)
+            for drp in acc.drp_list_set.all():
+                if drp.num_drp == 0:
+                    file_list.append({
+                        'datetime_order':int((time.mktime(drp.datetime_drp.astimezone(timezone('UTC')).timetuple()))*10000),
+                        'id':drp.id,
+                        'datetime': drp.datetime_drp.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M"),
+                        'filename':drp.data_files["filename"],
+                        'author':drp.author
+                    })
+                else:
+                    mess_list.append({
+                        'num_drp': drp.num_drp,
+                        'id':drp.id,
+                        'message':drp.message_drp,
+                        'datetime': drp.datetime_drp.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M"),
+                        'author': drp.author
+                    })
+
+            if len(mess_list) != 0:
+                mess_list = sorted(mess_list, key=operator.itemgetter('num_drp'),reverse=True)
+            if len(file_list) != 0:
+                file_list = sorted(file_list, key=operator.itemgetter('datetime_order'),reverse=True)
+
+            response_data["accident_name"] = acc.acc_name
+            response_data["file_list"] = file_list
+            response_data["mess_list"] = mess_list
+
+
+
+
+
+
 
     if request.method == "POST":
         data = eval(request.body)
@@ -941,18 +980,21 @@ def get_json(request):
                 else:
                     data["monitor-settings"] = {
                         'head_order': head_order,
-                        'row_page_data': int(row_page_data,10),
-                        'refresh_data': int(refresh_data,10)
+                        'row_page_data': row_page_data,
+                        'refresh_data': refresh_data
                     }
                     p.settings = data
                     p.save()
             else:
 
+                #print row_page_data,type(row_page_data)
+                #print refresh_data,type(refresh_data)
+
                 settings = {
                     'monitor-settings':{
                         'head_order': head_order,
-                        'row_page_data': int(row_page_data,10),
-                        'refresh_data': int(refresh_data,10)
+                        'row_page_data': row_page_data,
+                        'refresh_data': refresh_data
                         }
                     }
 

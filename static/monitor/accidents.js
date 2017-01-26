@@ -11,8 +11,11 @@ $(document).ready(function() {
     $("#runsearch").bind("click",RunSearch);
     $("#clearsearch").bind("click",ClearSearch);
 
-    //$('table[group=accidents]').tableScroll({height:800});
+    // Вызов формы списка ДРП
+    $("tr td a[drp=yes]").bind("click",ListDRP);
 
+
+    //$('table[group=accidents]').tableScroll({height:800});
 
 
     // Поиск адреса
@@ -400,4 +403,73 @@ function AccidentData(row_id) {
 
 }
 
+
+
+
+// Вывод ДРП по аварии
+function ListDRP(e) {
+
+    var row_id = $("tr[marked=yes]").attr("row_id");
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?getdrplist="+row_id,
+        function(data) {
+
+            // Предварительная очистка списка
+            $("#accident-drp-list").empty();
+
+            $.each(data['mess_list'], function(index,value){
+
+                var v = value;
+
+                t = "<dt>"+v["author"]+"<br># "+v["num_drp"]+" ("+v["datetime"]+")<br></dt>"
+                +"<dd>"
+                + v["message"] +"<br>"
+                + "</dd>"
+
+                $("#accident-drp-list").prepend(t);
+
+            });
+
+            // Предварительная очистка списка
+            $("#accident-drp-files").empty();
+
+            $.each(data['file_list'], function(index,value){
+
+                var v = value;
+
+                t = "<dt>"+v["author"]+"<br>"+v["datetime"]+"<br></dt>"
+                +"<dd>"
+                + "<a target='_blank' href='monitor/accident/filedata?id="+v["id"]+"'>"+v["filename"] + "</a><br>"
+                + "</dd>"
+
+                $("#accident-drp-files").prepend(t);
+
+            });
+
+
+
+            $("#drplist").dialog({
+                open:function() {
+                },
+                  title:"ДРП " + data["accident_name"],
+                closeOnEscape: false,
+                  show: {
+                    effect: "blind",
+                    duration: 100
+                  },
+                  hide: {
+                    effect: "blind",
+                    duration: 100
+                  },
+                  buttons: [{text:"Закрыть", click: function() { $(this).dialog("close");  }}],
+                  modal:true,
+                  minWidth:400,
+                  width:600,
+                  height:400
+
+            });
+    })
+
+
+}
 

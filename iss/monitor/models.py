@@ -86,6 +86,7 @@ class accidents(models.Model):
 
 
 
+
 ### Оповещения
 class messages(models.Model):
     datetime_message = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
@@ -94,3 +95,16 @@ class messages(models.Model):
     send_done = models.BooleanField(db_index=True, default=False)
     mail_body = models.TextField(default=None,null=True)
     author = models.CharField(max_length=100,default="")
+
+
+
+
+### Список ДРП
+class drp_list(models.Model):
+    datetime_drp = models.DateTimeField(db_index=True,null=True)
+    data_files = JSONField(default={}) ### Хранение файлов
+    message_drp = models.TextField(default="")
+    accident = models.ForeignKey(accidents)
+    num_drp = models.IntegerField(default=1)
+    author = models.CharField(max_length=100, default="")
+

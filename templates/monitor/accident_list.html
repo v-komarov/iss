@@ -68,6 +68,7 @@
         <thead class="small">
 
             <tr style="background-color:gainsboro;">
+                <th>ДРП</th>
                 <th>Начало аварии</th>
                 <th>Завершение аварии</th>
                 <th>Категория</th>
@@ -88,7 +89,11 @@
 
             {% for row in object_list %}
 
+
                     <tr class="small" marked="no" row_id="{{ row.id }}">
+
+                        <td><a href="#" drp="yes" title="Показать список ДПР"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> &nbsp; {{ row.drp_list_set|length }}</a></td>
+
                         {% timezone tz %}
                         <td>{{ row.acc_start|date:"d.m.Y H:i e" }}</td>
                         <td>{{ row.acc_end|date:"d.m.Y H:i e" }}</td>
@@ -175,7 +180,9 @@
 </div>
 
 
+
 {% include "monitor/accidentform2.html" %}
+{% include "monitor/drplist.html" %}
 
 
 {% endblock %}
