@@ -92,7 +92,7 @@
 
                     <tr class="small" marked="no" row_id="{{ row.id }}">
 
-                        <td><a href="#" drp="yes" title="Показать список ДПР"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> &nbsp; {{ row.drp_list_set|length }}</a></td>
+                        <td><a href="#" drp="yes" title="Показать список ДПР"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> &nbsp; {{ row.drp_list_set.count }}</a></td>
 
                         {% timezone tz %}
                         <td>{{ row.acc_start|date:"d.m.Y H:i e" }}</td>
