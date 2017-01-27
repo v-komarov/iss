@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import pickle
+import mimetypes
 
 from iss.monitor.models import events,drp_list
 from	django.http	import	HttpResponse
@@ -46,10 +47,10 @@ def get_drpfile(request):
         filename = drp.data_files["filename"]
         filedata = drp.data_files["filedata"]
 
-        response = HttpResponse(content_type="application/%s" % filename.split(".")[-1])
-        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        response = HttpResponse(content_type="application/octet-stream")
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename.encode("utf-8")
         result = pickle.loads(filedata)
-        response.write(result.getvalue())
+        response.write(result)
         return response
 
 

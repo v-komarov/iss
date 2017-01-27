@@ -105,3 +105,6 @@ class Command(BaseCommand):
                         accident=ac,
                         author=author_file
                     )
+
+
+

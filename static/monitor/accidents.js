@@ -439,7 +439,8 @@ function ListDRP(e) {
 
                 t = "<dt>"+v["author"]+"<br>"+v["datetime"]+"<br></dt>"
                 +"<dd>"
-                + "<a target='_blank' href='monitor/accident/filedata?id="+v["id"]+"'>"+v["filename"] + "</a><br>"
+//                + "<a target='_blank' href='monitor/accident/filedata?id="+v["id"]+"'>"+v["filename"] + "</a><br>"
+                + "<a href='monitor/accident/filedata?id="+v["id"]+"'>"+v["filename"] + "</a><br>"
                 + "</dd>"
 
                 $("#accident-drp-files").prepend(t);
