@@ -50,11 +50,11 @@
 
     {% if paginator.num_pages > 1 %}
         {% if page_obj.has_previous %}
-            <a href="/equipment/agregators/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            <a href="/monitor/accidents/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
         {% endif %}
         <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
         {% if page_obj.has_next %}
-            <a href="/equipment/agregators/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            <a href="/monitor/accidents/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
         {% endif %}
     {% endif %}
 
@@ -165,11 +165,11 @@
 
         {% if paginator.num_pages > 1 %}
             {% if page_obj.has_previous %}
-                <a href="/equipment/agregators/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+                <a href="/monitor/accidents/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
             {% endif %}
             <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a href="/equipment/agregators/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+                <a href="/monitor/accidents/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
             {% endif %}
         {% endif %}
 
