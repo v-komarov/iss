@@ -1030,10 +1030,18 @@ def get_json(request):
             c = accident_cats.objects.get(pk=acccat)
 
 
+            ### Формирование списка id событий
+            events_list = [e.id]
+
+
             ### Поиск даты начала аварии - самое ранее событие
             datetime_start = e.first_seen
             if e.data.has_key("containergroup"):
                 for item in e.data["containergroup"]:
+
+                    #### Добавление id события в список
+                    events_list.append(item)
+
                     a = events.objects.get(pk=item)
                     if datetime_start > a.first_seen:
                         datetime_start = a.first_seen
@@ -1068,7 +1076,8 @@ def get_json(request):
                 acc_reason = accreason,
                 acc_repair = accrepair,
                 acc_address_devices = data2,
-                acc_address_comment = accaddrcomment
+                acc_address_comment = accaddrcomment,
+                acc_events_list = {'events_list':events_list}
 
             )
 
@@ -1130,6 +1139,13 @@ def get_json(request):
             else:
                 acc_stat = False
 
+            ### Формирование списка id событий
+            events_list = [e.id]
+            if e.data.has_key("containergroup"):
+                for item in e.data["containergroup"]:
+                    #### Добавление id события в список
+                    events_list.append(item)
+
 
             acc.acc_name = accname
             acc.acc_comment = acccomment
@@ -1143,6 +1159,8 @@ def get_json(request):
             acc.acc_address_comment = accaddrcomment
 
             acc.acc_addr_dict = {'address_list' : accident_dict(acc.id)}
+
+            acc.acc_events_list = {'events_list':events_list}
 
             acc.save()
 
@@ -1231,6 +1249,14 @@ def get_json(request):
 
             e = events.objects.get(pk=acc.acc_event.id)
 
+            ### Формирование списка id событий
+            events_list = [e.id]
+            if e.data.has_key("containergroup"):
+                for item in e.data["containergroup"]:
+                    #### Добавление id события в список
+                    events_list.append(item)
+
+
             ### Текущее состояние - завершена или нет
             if acc.acc_end == None and accend == "yes":
                 acc.acc_end = timezone(tzuser).localize(datetime.datetime.strptime(accenddate+" "+accendtime, "%d.%m.%Y %H:%M"))
@@ -1265,6 +1291,8 @@ def get_json(request):
             acc.acc_address_comment = accaddrcomment
 
             acc.acc_addr_dict = {'address_list' : accident_dict(acc_id)}
+
+            acc.acc_events_list = {'events_list':events_list}
 
             acc.save()
 

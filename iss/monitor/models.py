@@ -64,6 +64,9 @@ class events(models.Model):
 
 
 
+
+
+
 ### Аварии
 class accidents(models.Model):
     create_datetime = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
@@ -84,6 +87,8 @@ class accidents(models.Model):
     acc_reports_id = models.IntegerField(default=None,null=True)
     acc_stat = models.BooleanField(db_index=True, default=False) ### Включать в статистику
     acc_addr_dict = JSONField(default={}) ### Словарь данных адресов
+    acc_events_list = JSONField(default={}) ### Список событий, на основании которых сформирована авария
+
 
 
 
