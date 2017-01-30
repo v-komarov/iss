@@ -115,22 +115,15 @@ utc = timezone("UTC")
 
 
 class Command(BaseCommand):
-    args = '<zenoss message ...>'
-    help = 'saving zenoss message'
+    args = '<sending data ...>'
+    help = 'send data to reports'
 
 
-    def add_arguments(self, parser):
-        parser.add_argument(
-		'--avoid-api-call',
-        action='store_true',
-		dest='avoid_api_call',
-		default=False,
-		help='Avoid NOCLite API call for debugging purpose')
 
     def handle(self, *args, **options):
 
         ### Выбор аварий без acc_reports_id
-        for ac in accidents.objects.order_by("-update_datetime")[:3]:
+        for ac in accidents.objects.order_by("-update_datetime")[:5]:
 
             ### Учитываем или нет в статистике
             if ac.acc_stat == True:
@@ -165,8 +158,6 @@ class Command(BaseCommand):
                             cities.append(dev.address.city.id)
                         if dev.address.house not in houses:
                             houses.append(dev.address.id)
-
-
 
 
 
@@ -243,28 +234,19 @@ class Command(BaseCommand):
 
                 #print data
 
-                print options
 
-        if options['avoid_api_call']:
-            print 'Data debug output:'
-            pp = pprint.PrettyPrinter(indent=4)
-            pp.pprint(eval(data.replace('\\\\', '\\')))
-            print
-            pp.pprint(eval(data)['locations'])
-        else:
-            req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-                    #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-    	            #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
+                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+                #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
 
-            f = urllib2.urlopen(req)
-            result = f.read()
-            r = json.loads(result)
-            if ac.acc_reports_id == None and r.has_key("api_status"):
-                if r["api_status"] == "OK":
-                    ac.acc_reports_id = r["api_response"]["id"]
-                    ac.save()
+                f = urllib2.urlopen(req)
+                result = f.read()
+                r = json.loads(result)
+                if ac.acc_reports_id == None and r.has_key("api_status"):
+                    if r["api_status"] == "OK":
+                        ac.acc_reports_id = r["api_response"]["id"]
+                        ac.save()
 
-                    print result
 
 
             ### отмечено, что не нужно учитывать в статистике
@@ -274,24 +256,17 @@ class Command(BaseCommand):
 
                 data = json.dumps(values)
 
-        if options['avoid_api_call']:
-            print 'Data debug output'
-            pp = pprint.PrettyPrinter(indent=4)
-            pp.pprint(eval(data))
-        else:
+                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
 
-            req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
-            #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+                f = urllib2.urlopen(req)
+                result = f.read()
+                r = json.loads(result)
+                if ac.acc_reports_id != None and r.has_key("api_status"):
+                    if r["api_status"] == "OK":
+                        ac.acc_reports_id = None
+                        ac.save()
 
-    	    f = urllib2.urlopen(req)
-            result = f.read()
-            r = json.loads(result)
-            if ac.acc_reports_id != None and r.has_key("api_status"):
-                if r["api_status"] == "OK":
-                    ac.acc_reports_id = None
-                    ac.save()
-
-            #print result
 
         """
         data = json.loads(result)

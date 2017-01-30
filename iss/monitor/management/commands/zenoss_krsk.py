@@ -99,8 +99,8 @@ class Command(BaseCommand):
 
             if uuid not in uuid_list:
                 uuid_list.append(uuid)
-
-                if events.objects.filter(uuid=uuid).count() == 0:
+                ### Формирование нового события или запись в существующие
+                if events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count() == 0:
                     events.objects.create(
                         source='zenoss_krsk',
                         uuid=uuid,
@@ -118,30 +118,53 @@ class Command(BaseCommand):
                         element_identifier=device,
                         element_sub_identifier="",
                         status_id=status,
-                        summary=summary
+                        summary=summary,
+                        started_date = firsttime
 
                     )
 
                 else:
 
-                    evt = events.objects.get(uuid=uuid)
+                    #### Завершение события (очистка) или нет - определение в зависимости от статуса
+                    if status.id == 4 or status.id == 5:
+                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
+                            first_seen=firsttime,
+                            update_time=update_time,
+                            last_seen=lasttime,
+                            event_class=eventclass,
+                            severity_id=severity,
+                            manager=manager,
+                            device_net_address=ipaddress,
+                            device_location=location,
+                            device_class=deviceclass,
+                            device_group=devicegroup,
+                            device_system=devicesystem,
+                            element_identifier=device,
+                            element_sub_identifier="",
+                            status_id=status,
+                            summary=summary,
+                            finished_date = lasttime
+                        )
 
-                    evt.first_seen = firsttime
-                    evt.update_time = update_time
-                    evt.last_seen = lasttime
-                    evt.event_class = eventclass
-                    evt.severity_id = severity
-                    evt.manager = manager
-                    evt.device_net_address = ipaddress
-                    evt.device_location = location
-                    evt.device_class = deviceclass
-                    evt.device_group = devicegroup
-                    evt.device_system = devicesystem
-                    evt.element_identifier = device
-                    evt.element_sub_identifier = ""
-                    evt.status_id = status
-                    evt.summary = summary
-                    evt.save()
+                    #### Если событие не завершено
+                    else:
+                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
+                            first_seen=firsttime,
+                            update_time=update_time,
+                            last_seen=lasttime,
+                            event_class=eventclass,
+                            severity_id=severity,
+                            manager=manager,
+                            device_net_address=ipaddress,
+                            device_location=location,
+                            device_class=deviceclass,
+                            device_group=devicegroup,
+                            device_system=devicesystem,
+                            element_identifier=device,
+                            element_sub_identifier="",
+                            status_id=status,
+                            summary=summary
+                        )
 
         print "ok"
 

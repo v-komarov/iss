@@ -56,7 +56,9 @@ class events(models.Model):
 
     mcc_mail_begin = models.BooleanField(db_index=True,default=False) ### Было создано или нет сообщение в МСС
 
-
+    ### дата и время начала и завершения события
+    started_date = models.DateTimeField(db_index=True,null=True)
+    finished_date = models.DateTimeField(db_index=True,null=True)
 
 
 

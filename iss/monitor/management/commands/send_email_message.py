@@ -71,7 +71,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        now = datetime.datetime.now(timezone('UTC'))
+        now = datetime.datetime.now(timezone('Asia/Krasnoyarsk'))
 
         ### Поиск неотправленных сообщений в очереди (в таблице)
         for m in messages.objects.filter(send_done=False):
@@ -105,7 +105,7 @@ class Command(BaseCommand):
                 Данное сообщение сформировано автоматически<br>
                 ISS2 %s.
                 </p>
-                """ % (m.author,msk_tz.localize(datetime.datetime.now()).strftime("%d.%m.%Y %H:%M %Z"))
+                """ % (m.author,now.astimezone(msk_tz).strftime("%d.%m.%Y %H:%M %Z"))
 
                 issid = u"<p style=\"color:white;\">ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
 
