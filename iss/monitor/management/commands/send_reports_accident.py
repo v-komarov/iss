@@ -123,7 +123,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         ### Выбор аварий без acc_reports_id
-        for ac in accidents.objects.order_by("-update_datetime")[:5]:
+        for ac in accidents.objects.order_by("-update_datetime")[:50]:
 
             ### Учитываем или нет в статистике
             if ac.acc_stat == True:
@@ -132,12 +132,10 @@ class Command(BaseCommand):
 
                 domen = ev.source
 
-
                 ####
                 companies = []
                 cities = []
                 houses = []
-                address_str = ""
                 zkl = 0
 
 
@@ -147,6 +145,18 @@ class Command(BaseCommand):
                     for item in ev.data["containergroup"]:
                         a = events.objects.get(pk=item)
                         ipaddress.append(a.device_net_address)
+
+                """
+                address_id = []
+                ### Формирование списков адресов, введенных вручную и на основе ip адесов
+                if ac.acc_address.has_key("address_list"):
+                    for i in ac.acc_address["address_list"]:
+                        address_id.append(int(i["addressid"],10))
+                if ac.acc_address_devices.has_key("address_list"):
+                    for i in ac.acc_address_devices["address_list"]:
+                        address_id.append(int(i["addressid"], 10))
+                """
+
                 #### Поиск устройств по ip адресам
                 for ip in ipaddress:
                     if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
@@ -160,7 +170,6 @@ class Command(BaseCommand):
                             houses.append(dev.address.id)
 
 
-
                 ### Дополнение из адресов , введеннх операторов
                 for addrid in ac.acc_address["address_list"]:
                     if int(addrid["addressid"],10) not in houses:
@@ -170,16 +179,6 @@ class Command(BaseCommand):
 
                 ### Формирование адресной строки
                 address_str = ""
-                """
-                for addrid in houses:
-                    a = address_house.objects.get(pk=addrid)
-                    if a.street == None and a.house == None:
-                        address_str = address_str + "%s," % (a.city.name)
-                    elif a.house == None:
-                        address_str = address_str + "%s: %s," % (a.city.name,a.street.name)
-                    else:
-                        address_str = address_str + "%s: %s: %s," % (a.city.name,a.street.name,a.house)
-                """
 
                 ### Формирование через шаблонизатор
                 if address_templates.objects.filter(name="reports").count() == 1:
@@ -235,9 +234,8 @@ class Command(BaseCommand):
                 #print data
 
 
+
                 req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-                #req = urllib2.Request(url='http://127.0.0.1:5000/api/reports/accidents/references/',data=json.dumps({}),headers={'Content-Type': 'application/json'})
 
                 f = urllib2.urlopen(req)
                 result = f.read()
@@ -256,6 +254,7 @@ class Command(BaseCommand):
 
                 data = json.dumps(values)
 
+
                 req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
                 #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
 
@@ -268,12 +267,6 @@ class Command(BaseCommand):
                         ac.save()
 
 
-        """
-        data = json.loads(result)
-        for key in data["api_response"]["categories"].keys():
-            print key,data["api_response"]["categories"][key]
-
-        """
 
         print "ok"
 
