@@ -134,21 +134,10 @@
     {% endif %}
 </a>
 {% endwith %}
-                            {% comment %}
-                            <ul>
-                            {% for item in row.acc_address_devices.address_list %}
-                                {% if item.showitem == "yes" %}
-                                    <li>{{ item.addresslabel }}</li>
-                                {% else %}
-                                    <li style="text-decoration:line-through;">{{ item.addresslabel }}</li>
-                                {% endif %}
-                            {% endfor %}
-                            </ul>
-                            {% endcomment %}
                         </td>
                         <td>{{ row.acc_address_comment }}</td>
                         <td><a id="tooltip" title="{{ row.acc_reason }}">{{ row.acc_reason|truncatechars:15 }}</a></td>
-                        <td>{{ row.acc_repair }}</td>
+                        <td><a id="tooltip" title="{{ row.acc_repair }}">{{ row.acc_repair|truncatechars:15 }}</a></td>
                         <td><a id="tooltip" title="{{ row.acc_comment }}">{{ row.acc_comment|truncatechars:15 }}</a></td>
                         <td align="center">
                             {% if row.acc_stat %}

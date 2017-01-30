@@ -17,9 +17,10 @@ from pytz import timezone
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django import template
 
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,devices_type
+from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,devices_type,address_templates
 
 from iss.monitor.othersources import get_zkl
 from iss.monitor.models import Profile,messages
@@ -177,6 +178,47 @@ def accident_dict(acc_id):
     return data
 
 
+
+
+
+
+
+
+### Формирование словаря адресов аварии (по списку id адресов)
+def accident_dict2(addressid_list):
+
+    data = {}
+
+    address_list = []
+    ### Для адресов, сформированных на основе ручного ввода адресов
+    for item in addressid_list:
+        address_id = int(item['addressid'],10)
+        addr = address_house.objects.get(pk=address_id)
+
+        ### Может город и улица в адресе отсутствовать . Про город - маловероятно
+        if addr.city:
+            city = addr.city.name
+        else:
+            city = ''
+        if addr.street:
+            street = addr.street.name
+        else:
+            street = ''
+        if addr.house:
+            house = addr.house
+        else:
+            house = ""
+        address_list.append(
+            {
+                'city' : city,
+                'street' : street,
+                'house' : house
+            }
+        )
+
+    data["address_list"] = address_list
+
+    return data
 
 
 
@@ -1296,6 +1338,24 @@ def get_json(request):
 
             acc.save()
 
+
+
+
+        ### Формирование адресной строки для загрузки в наименование
+        if data.has_key("action") and data["action"] == 'writeaddressdata':
+            accident_data = eval(str(data))
+            data = {}
+            data["address_list"] = accident_data["address_list"]
+
+            ### Формирование через шаблонизатор
+            address_str = ""
+            if address_templates.objects.filter(name="accidentname").count() == 1:
+                templ = address_templates.objects.get(name="accidentname").template
+                t = template.Template(templ)
+                c = template.Context({'data': accident_dict2(data["address_list"])})
+                address_str = t.render(c)
+
+            response_data = {'address':address_str}
 
 
 
