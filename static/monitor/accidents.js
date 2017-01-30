@@ -14,6 +14,10 @@ $(document).ready(function() {
     // Вызов формы списка ДРП
     $("tr td a[drp=yes]").bind("click",ListDRP);
 
+    // Заполнение названия аварии адресной строкой
+    $("#write-address-data").bind("click",WriteAddressData);
+
+
 
     //$('table[group=accidents]').tableScroll({height:800});
 
@@ -473,4 +477,60 @@ function ListDRP(e) {
 
 
 }
+
+
+
+
+
+// Заполнение поля формы  аварии "Название" по клику "заполнить"
+function WriteAddressData(e) {
+
+        address_arr = [];
+
+        $.each($("#address-accident-list dd"), function( index, value ) {
+            var row = {};
+            row.addressid = $(value).attr("addressid");
+            address_arr.push(row);
+        });
+
+        $.each($("#address-accident-devices-list dd"), function( index, value ) {
+            var row = {};
+            row.addressid = $(value).attr("addressid");
+            address_arr.push(row);
+        });
+
+
+        var data = {};
+        data.address_list = address_arr;
+        data.action = "writeaddressdata";
+
+
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+        $.ajax({
+          url: "/monitor/events/jsondata/",
+          type: "POST",
+          dataType: 'json',
+          data:$.toJSON(data),
+            success: function(result) {
+
+                $("#accidentname").val("Недоступно оборудование г. "+result['address']);
+
+            }
+
+        });
+
+
+
+}
+
 
