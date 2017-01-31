@@ -785,7 +785,7 @@ function WriteAddressData(e) {
           data:$.toJSON(data),
             success: function(result) {
 
-                $("#accidentname").val("Недоступно оборудование г. "+result['address']);
+                $("#accidentname").val("Недоступно оборудование "+result['address']);
 
             }
 
