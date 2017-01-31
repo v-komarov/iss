@@ -125,7 +125,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         ### Выбор аварий без acc_reports_id
-        for ac in accidents.objects.order_by("-update_datetime")[:50]:
+        for ac in accidents.objects.order_by("-update_datetime")[:100]:
 
             ### Учитываем или нет в статистике
             if ac.acc_stat == True:
@@ -172,6 +172,8 @@ class Command(BaseCommand):
                     t = template.Template(templ)
                     c = template.Context({'data': ac.acc_addr_dict})
                     address_str = t.render(c)
+
+                #print ac.id
 
 
                 ### Расчет ЗКЛ на основе списка ip
@@ -220,7 +222,6 @@ class Command(BaseCommand):
                 #print data
 
 
-
                 req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
 
                 f = urllib2.urlopen(req)
@@ -232,7 +233,6 @@ class Command(BaseCommand):
                         ac.save()
 
 
-
             ### отмечено, что не нужно учитывать в статистике
             elif ac.acc_stat == False and ac.acc_reports_id != None:
 
@@ -240,9 +240,9 @@ class Command(BaseCommand):
 
                 data = json.dumps(values)
 
+                #print ac.id
 
                 req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
-                #req = urllib2.Request(url='http://127.0.0.1:4000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
 
                 f = urllib2.urlopen(req)
                 result = f.read()
@@ -251,7 +251,6 @@ class Command(BaseCommand):
                     if r["api_status"] == "OK":
                         ac.acc_reports_id = None
                         ac.save()
-
 
 
         print "ok"

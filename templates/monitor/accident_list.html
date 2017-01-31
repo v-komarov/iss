@@ -106,7 +106,7 @@
                         {% endtimezone %}
                         <td><a id="tooltip" title="{{ row.acc_cat.cat }} ({{ row.acc_cat }})">{{ row.acc_cat.cat }}</a></td>
                         <td><a id="tooltip" title="{{ row.acc_type.name_short }} ({{ row.acc_type }})">{{ row.acc_type.name_short }}</a></td>
-                        <td>{{ row.acc_name }}</td>
+                        <td><a id="tooltip" title="{{ row.acc_name }}">{{ row.acc_name|truncatechars:60 }}</a></td>
                         <td>
 {% with address=row.acc_address.address_list %}
 <a id="tooltip" title="

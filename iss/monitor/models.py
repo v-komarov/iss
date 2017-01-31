@@ -71,7 +71,7 @@ class events(models.Model):
 class accidents(models.Model):
     create_datetime = models.DateTimeField(db_index=True,null=True,auto_now_add=True)
     update_datetime = models.DateTimeField(db_index=True,null=True,auto_now=True)
-    acc_name = models.CharField(max_length=100,default="")
+    acc_name = models.CharField(max_length=250,default="")
     acc_comment = models.TextField(default="")
     acc_cat = models.ForeignKey(accident_cats)
     acc_type = models.ForeignKey(accident_list)
