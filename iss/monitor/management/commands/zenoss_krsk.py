@@ -42,6 +42,15 @@ class Command(BaseCommand):
             return ""
 
 
+    def list2name(self,namelist):
+        names = []
+        for item in namelist:
+            names.append(item['name'])
+        return ", ".join(names)
+
+
+
+
     def handle(self, *args, **options):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
@@ -88,10 +97,10 @@ class Command(BaseCommand):
 
             device = r["device"]["text"]
 
-            location = self.list0name(r["Location"])
-            devicesystem = self.list0name(r["Systems"])
-            deviceclass = self.list0name(r["DeviceClass"]) # DeviceGroup
-            devicegroup = self.list0name(r["DeviceGroups"]) # DeviceClass
+            location = self.list2name(r["Location"])
+            devicesystem = self.list2name(r["Systems"])
+            deviceclass = self.list2name(r["DeviceClass"]) # DeviceGroup
+            devicegroup = self.list2name(r["DeviceGroups"]) # DeviceClass
 
             manager = ""
             if r["details"].has_key("manager"):

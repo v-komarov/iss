@@ -12,6 +12,8 @@ from iss.localdicts.models import address_house,address_templates
 from iss.equipment.models import devices_ip
 from iss.inventory.models import devices,devices_type
 
+from iss.monitor.tools import groupevents_ip
+
 import json
 import time
 import datetime
@@ -140,22 +142,7 @@ class Command(BaseCommand):
 
 
                 #### Выбор ip адресов
-                ipaddress = [ev.device_net_address]
-                if ev.data.has_key("containergroup"):
-                    for item in ev.data["containergroup"]:
-                        a = events.objects.get(pk=item)
-                        ipaddress.append(a.device_net_address)
-
-                """
-                address_id = []
-                ### Формирование списков адресов, введенных вручную и на основе ip адесов
-                if ac.acc_address.has_key("address_list"):
-                    for i in ac.acc_address["address_list"]:
-                        address_id.append(int(i["addressid"],10))
-                if ac.acc_address_devices.has_key("address_list"):
-                    for i in ac.acc_address_devices["address_list"]:
-                        address_id.append(int(i["addressid"], 10))
-                """
+                ipaddress = groupevents_ip(ev.id)
 
                 #### Поиск устройств по ip адресам
                 for ip in ipaddress:
@@ -174,7 +161,6 @@ class Command(BaseCommand):
                 for addrid in ac.acc_address["address_list"]:
                     if int(addrid["addressid"],10) not in houses:
                         houses.append(int(addrid["addressid"],10))
-
 
 
                 ### Формирование адресной строки

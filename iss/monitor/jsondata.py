@@ -28,6 +28,11 @@ from iss.equipment.models import devices_ip
 from iss.inventory.models import devices
 
 
+from iss.monitor.tools import groupevents_ip
+
+
+
+
 
 ## Для коммутаторов
 devicetype = devices_type.objects.get(pk=1)
@@ -543,16 +548,9 @@ def get_json(request):
             row_id = request.GET["getaccidentipaddress"]
             list_evt = [row_id]
             evt = events.objects.get(pk=row_id)
-            ### Поиск вложенных событий в контейнер
-            if evt.agregator == True:
-                if evt.data.has_key("containergroup"):
-                    for item in evt.data["containergroup"]:
-                        list_evt.append(item)
 
             #### Список ip адресов
-            list_ip = []
-            for evt_id in list_evt:
-                list_ip.append(events.objects.get(pk=evt_id).device_net_address)
+            list_ip = groupevents_ip(evt.id)
 
             #### Поиск адресов на основании ip адресов
             addressjson = []
@@ -703,12 +701,8 @@ def get_json(request):
                 #####################################
                 domen = ev.source
 
-
-                ipaddress = [ev.device_net_address]
-                if ev.data.has_key("containergroup"):
-                    for item in ev.data["containergroup"]:
-                        a = events.objects.get(pk=item)
-                        ipaddress.append(a.device_net_address)
+                ### IP Адреса устройств
+                ipaddress = groupevents_ip(ev.id)
 
                 iddevices = []
                 ### Поиск соответствия ip адресу id для iss
