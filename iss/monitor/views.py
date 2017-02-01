@@ -21,7 +21,8 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 
-from iss.monitor.models import events,accidents
+
+from iss.monitor.models import events,accidents,messages
 from iss.localdicts.models import Status,Severity
 
 from iss.mydecorators import group_required,anonymous_required
@@ -389,6 +390,59 @@ class AccidentList(ListView):
             context["searchaccident"] = self.session["searchaccident"]
         else:
             context["searchaccident"] = ""
+
+
+        return context
+
+
+
+
+
+
+
+### Оповещения
+class MessageList(ListView):
+
+    model = events
+    template_name = "monitor/message_list.html"
+
+    paginate_by = 50
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='monitor',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+    def get_queryset(self):
+
+        data = messages.objects.order_by('-datetime_message')
+
+        for row in data:
+            m = pickle.loads(row.mail_body)
+            row.subject = m.subject
+            row.body = m.body
+
+        return data
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(MessageList, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
 
 
         return context

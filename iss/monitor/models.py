@@ -88,7 +88,7 @@ class accidents(models.Model):
     acc_stat = models.BooleanField(db_index=True, default=False) ### Включать в статистику
     acc_addr_dict = JSONField(default={}) ### Словарь данных адресов
     acc_events_list = JSONField(default={}) ### Список событий, на основании которых сформирована авария
-
+    author = models.CharField(max_length=100,default="")
 
 
 

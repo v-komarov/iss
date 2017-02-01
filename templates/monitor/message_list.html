@@ -1,0 +1,137 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}monitor/messages.css" type="text/css" rel="stylesheet">
+
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/monitor/messages/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/monitor/messages/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+
+    <table group="messages" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Начало аварии</th>
+                <th>Завершение аварии</th>
+                <th>Создание оповещения</th>
+                <th>Название</th>
+                <th>Email адрес</th>
+                <th>Тема</th>
+                <th><span class="glyphicon glyphicon-envelope" aria-hidden="true"></th>
+                <th>Отправлено</th>
+                <th>Создал</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for row in object_list %}
+
+
+                    <tr class="small" marked="no" row_id="{{ row.id }}">
+
+
+                        {% timezone tz %}
+                        <td>{{ row.accident.acc_start|date:"d.m.Y H:i e" }}</td>
+                        <td>{{ row.accident.acc_end|date:"d.m.Y H:i e" }}</td>
+                        <td>{{ row.datetime_message|date:"d.m.Y H:i e" }}</td>
+                        {% endtimezone %}
+                        <td><a id="tooltip" title="{{ row.accident.acc_name }}">{{ row.accident.acc_name|truncatechars:50 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.data.acc_email_list }}">{{ row.data.acc_email_list|truncatechars:25 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.subject }}">{{ row.subject|truncatechars:25 }}</a></td>
+                        <td><a data-toggle="modal" data-target="#{{ row.id }}"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></a>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                              <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">{{ row.subject }}</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    {{ row.body|safe }}
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                        </td>
+                        <td align="center">
+                            {% if row.send_done %}
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            {% endif %}
+                        </td>
+                        <td>{{ row.author }}</td>
+
+                    </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+
+
+
+
+    </table>
+
+
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/monitor/messages/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/monitor/messages/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+
+
+
+
+
+</div>
+
+
+
+{% endblock %}
+

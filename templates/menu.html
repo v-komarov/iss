@@ -17,7 +17,7 @@
           <li id="menumonitor" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
           <li class="divider"></li>
           <li id="menuaccidents" {% if request.path|slice:'0:19' == "/monitor/accidents/" %}class="active"{% endif %}><a href="/monitor/accidents/page/1/">Аварии</a></li>
-          <li><a href="#">Оповещения</a></li>
+          <li id="menuemailaccidents" {% if request.path|slice:'0:18' == "/monitor/messages/" %}class="active"{% endif %}><a href="/monitor/messages/page/1/">Оповещения</a></li>
         </ul>
       </li>
       <li class="dropdown">

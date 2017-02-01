@@ -1113,7 +1113,8 @@ def get_json(request):
                 acc_repair = accrepair,
                 acc_address_devices = data2,
                 acc_address_comment = accaddrcomment,
-                acc_events_list = {'events_list':events_list}
+                acc_events_list = {'events_list':events_list},
+                author = request.user.get_username()+ " ("+request.user.get_full_name()+")"
 
             )
 
@@ -1210,7 +1211,7 @@ def get_json(request):
             event_id = values["event_id"]
             ev = events.objects.get(pk=event_id)
             ac = accidents.objects.get(acc_event=ev)
-            messages.objects.create(accident=ac,data=values,author=request.user.first_name+" "+request.user.last_name)
+            messages.objects.create(accident=ac,data=values,author=request.user.get_username()+ " ("+request.user.get_full_name()+")")
             ev.mcc_mail_begin = True
             ev.save()
 
