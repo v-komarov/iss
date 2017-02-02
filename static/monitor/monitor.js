@@ -155,13 +155,18 @@ function FreshScreenOn(e) {
 
 
 
-
+// Отметка всех строк-событий для включения в группировку
 function MarkAll(e) {
 
     var status = $("#mark-all").prop("checked");
-    if (status == true) { $("table[group=events] tr[group=false] td input:checkbox").prop("checked",true); }
-    else { $("table[group=events] tr[group=false] td input").removeAttr("checked"); }
-    //$("table[group=events] tr[group=false]").attr("group",status);
+    if (status == true) {
+        $("table[group=events] tr[group=false] td input:checkbox").prop("checked",true);
+        $("table[group=events] tr[group=false]").attr("group",true);
+    }
+    else {
+        $("table[group=events] tr[group=true] td input").removeAttr("checked");
+        $("table[group=events] tr[group=true]").attr("group",false);
+    }
 }
 
 

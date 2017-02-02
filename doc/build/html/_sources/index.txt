@@ -10,6 +10,7 @@
    :maxdepth: 4
 
    models
+   inventory
    events
    api
    zkl
