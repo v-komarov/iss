@@ -29,11 +29,6 @@ krsk_tz = timezone(tz)
 
 
 
-## Для коммутаторов
-devicetype = devices_type.objects.get(pk=1)
-
-
-
 
 class Command(BaseCommand):
     args = '<zenoss message ...>'
@@ -70,9 +65,9 @@ class Command(BaseCommand):
             #### Сбор id адресов
             #### Поиск устройств по ip адресам
             for ip in ipaddress:
-                if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
+                if devices.objects.filter(data__ipaddress=ip,data__domen=domen).count() == 1:
                     ### Найден коммутатор в базе инвентори
-                    dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
+                    dev = devices.objects.get(data__ipaddress=ip,data__domen=domen)
                     if dev.address.house not in houses:
                         houses.append(dev.address.id)
 

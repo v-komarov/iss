@@ -14,13 +14,16 @@ import itertools
 from email.utils import parsedate_tz, mktime_tz, formatdate
 from pytz import timezone
 
+import logging
+
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django import template
 
+
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,devices_type,address_templates
+from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,address_templates
 
 from iss.monitor.othersources import get_zkl
 from iss.monitor.models import Profile,messages
@@ -32,10 +35,8 @@ from iss.monitor.tools import groupevents_ip
 
 
 
+logger = logging.getLogger('monitor')
 
-
-## Для коммутаторов
-devicetype = devices_type.objects.get(pk=1)
 
 
 
@@ -716,9 +717,9 @@ def get_json(request):
                 #### Сбор id адресов
                 #### Поиск устройств по ip адресам
                 for ip in ipaddress:
-                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
+                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen).count() == 1:
                         ### Найден коммутатор в базе инвентори
-                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
+                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen)
                         if dev.address.house not in houses:
                             houses.append(dev.address.id)
 
@@ -930,6 +931,8 @@ def get_json(request):
                 mess_list = sorted(mess_list, key=operator.itemgetter('num_drp'),reverse=True)
             if len(file_list) != 0:
                 file_list = sorted(file_list, key=operator.itemgetter('datetime_order'),reverse=True)
+
+            logger.info(datetime.datetime.now().replace(tzinfo=krsk_tz).strftime("%d.%m.%Y %H:%M:%S %Z%z")+"\t"+request.user.get_username()+"\t")
 
             response_data["accident_name"] = acc.acc_name
             response_data["file_list"] = file_list

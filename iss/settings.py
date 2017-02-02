@@ -150,3 +150,24 @@ ROOT_URL = 'http://127.0.0.1:10000/'
 MY_STATIC_URL = 'http://127.0.0.1:10000/'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR+'/log/monitor.log',
+        },
+    },
+    'loggers': {
+        'monitor': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+            'format':'[%(asctime)s] %(levelname)s %(module)s %(message)s %(user)s',
+        },
+    },
+}

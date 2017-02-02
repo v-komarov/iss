@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django import template
-
+from django.contrib.postgres.fields import JSONField
 
 
 
@@ -166,20 +166,6 @@ class address_companies(models.Model):
 
 
 
-class devices_type(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Вид устройства', unique=True)
-
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Вид устройства'
-        verbose_name_plural = 'Виды устройств'
-
-
-
-
-
 
 class email_templates(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название шаблона', unique=True)
@@ -215,4 +201,29 @@ class address_templates(models.Model):
         verbose_name = 'Шаблон адреса'
         verbose_name_plural = 'Шаблоны адресов'
 
+
+
+
+class ports(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Вид порта', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Вид порта'
+        verbose_name_plural = 'Виды портов'
+
+
+
+
+class slots(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Вид слота', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Вид слота'
+        verbose_name_plural = 'Виды слотов'
 

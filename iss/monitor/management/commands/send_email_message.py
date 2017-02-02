@@ -105,7 +105,7 @@ class Command(BaseCommand):
                 Данное сообщение сформировано автоматически<br>
                 ISS2 %s.
                 </p>
-                """ % (m.author,now.astimezone(msk_tz).strftime("%d.%m.%Y %H:%M %Z"))
+                """ % (m.author[m.author.find("(")+1:m.author.find(")")],now.astimezone(msk_tz).strftime("%d.%m.%Y %H:%M %Z"))
 
                 issid = u"<p style=\"color:white;\">ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
 

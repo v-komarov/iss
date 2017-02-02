@@ -104,11 +104,6 @@ id_kinds_2_reports = {
 
 
 
-## Для коммутаторов
-devicetype = devices_type.objects.get(pk=1)
-
-
-
 
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
@@ -146,9 +141,9 @@ class Command(BaseCommand):
 
                 #### Поиск устройств по ip адресам
                 for ip in ipaddress:
-                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
+                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen).count() == 1:
                         ### Найден коммутатор в базе инвентори
-                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
+                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen)
                         if dev.company.id not in companies:
                             companies.append(dev.company.id)
                         if dev.address.city.id not in cities:

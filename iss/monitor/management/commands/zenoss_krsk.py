@@ -71,17 +71,14 @@ class Command(BaseCommand):
         f.close()
         """
 
-#        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"params\":{\"eventState\":[0,1,3]}}' %s" % (tf.name)
         cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s" % (tf.name)
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":3000,\"sort\":\"stateChange\",\"dir\":\"desc\"}' %s" % (tf.name)
 
         print cmd
         commands.getoutput(cmd)
 
-        uuid_list = []
-
         data = json.loads(commands.getoutput("cat %s" % tf.name))
-        for r in data["result"]["events"]:
+
+        for r in (data["result"]["events"])[::-1]:
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
             print event_str
             id_row = r["id"] # id
@@ -106,13 +103,35 @@ class Command(BaseCommand):
             if r["details"].has_key("manager"):
                 manager = ", ".join(r["details"]["manager"])
 
-            if uuid not in uuid_list:
-                uuid_list.append(uuid)
-                ### Формирование нового события или запись в существующие
-                if events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count() == 0:
-                    events.objects.create(
-                        source='zenoss_krsk',
-                        uuid=uuid,
+            ### Формирование нового события или запись в существующие
+            if events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count() == 0:
+                events.objects.create(
+                    source='zenoss_krsk',
+                    uuid=uuid,
+                    first_seen=firsttime,
+                    update_time=update_time,
+                    last_seen=lasttime,
+                    event_class=eventclass,
+                    severity_id=severity,
+                    manager=manager,
+                    device_net_address=ipaddress,
+                    device_location=location,
+                    device_class=deviceclass,
+                    device_group=devicegroup,
+                    device_system=devicesystem,
+                    element_identifier=device,
+                    element_sub_identifier="",
+                    status_id=status,
+                    summary=summary,
+                    started_date = firsttime
+
+                )
+
+            else:
+
+                #### Завершение события (очистка) или нет - определение в зависимости от статуса
+                if status.id == 4 or status.id == 5:
+                    events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
                         first_seen=firsttime,
                         update_time=update_time,
                         last_seen=lasttime,
@@ -128,52 +147,28 @@ class Command(BaseCommand):
                         element_sub_identifier="",
                         status_id=status,
                         summary=summary,
-                        started_date = firsttime
-
+                        finished_date = lasttime
                     )
 
+                #### Если событие не завершено
                 else:
-
-                    #### Завершение события (очистка) или нет - определение в зависимости от статуса
-                    if status.id == 4 or status.id == 5:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
-                            first_seen=firsttime,
-                            update_time=update_time,
-                            last_seen=lasttime,
-                            event_class=eventclass,
-                            severity_id=severity,
-                            manager=manager,
-                            device_net_address=ipaddress,
-                            device_location=location,
-                            device_class=deviceclass,
-                            device_group=devicegroup,
-                            device_system=devicesystem,
-                            element_identifier=device,
-                            element_sub_identifier="",
-                            status_id=status,
-                            summary=summary,
-                            finished_date = lasttime
-                        )
-
-                    #### Если событие не завершено
-                    else:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
-                            first_seen=firsttime,
-                            update_time=update_time,
-                            last_seen=lasttime,
-                            event_class=eventclass,
-                            severity_id=severity,
-                            manager=manager,
-                            device_net_address=ipaddress,
-                            device_location=location,
-                            device_class=deviceclass,
-                            device_group=devicegroup,
-                            device_system=devicesystem,
-                            element_identifier=device,
-                            element_sub_identifier="",
-                            status_id=status,
-                            summary=summary
-                        )
+                    events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
+                        first_seen=firsttime,
+                        update_time=update_time,
+                        last_seen=lasttime,
+                        event_class=eventclass,
+                        severity_id=severity,
+                        manager=manager,
+                        device_net_address=ipaddress,
+                        device_location=location,
+                        device_class=deviceclass,
+                        device_group=devicegroup,
+                        device_system=devicesystem,
+                        element_identifier=device,
+                        element_sub_identifier="",
+                        status_id=status,
+                        summary=summary
+                    )
 
         print "ok"
 
