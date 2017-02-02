@@ -71,6 +71,15 @@
       </li>
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Инвентори
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="menudevicesschemes" {% if request.path|slice:'0:24' == "/inventory/devicescheme/" %}class="active"{% endif %}><a href="/inventory/devicescheme/page/1/">Модели устройств</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Отчеты
           <b class="caret"></b>
         </a>

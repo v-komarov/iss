@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import datetime
+
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from iss.localdicts.models import address_companies,address_house
@@ -12,6 +14,8 @@ from iss.localdicts.models import address_companies,address_house
 class devices_scheme(models.Model):
     name = models.CharField(max_length=100, verbose_name='Вид устройства', unique=True)
     scheme_device = JSONField(default={})
+    author = models.CharField(max_length=100,default="")
+    datetime_create = models.DateTimeField(auto_now_add=True,null=True)
 
     def __unicode__(self):
         return self.name
@@ -26,7 +30,7 @@ class devices(models.Model):
     address = models.ForeignKey(address_house)
     serial = models.CharField(max_length=100, db_index=True, default="")
     data = JSONField(default={})
-    device_type = models.ForeignKey(devices_scheme,null=True)
+    device_scheme = models.ForeignKey(devices_scheme,null=True)
 
 
 
