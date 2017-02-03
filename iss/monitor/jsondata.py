@@ -305,6 +305,7 @@ def get_json(request):
                 request.session['containergroup'] = request.GET["containergroup"]
 
 
+        """
         # Добавление в группировку (контейнер)
         if r.has_key("addgroup") and rg("addgroup") != '[]':
             container_row = request.GET["container_row"]
@@ -328,9 +329,9 @@ def get_json(request):
             e.agregation = False
             e.agregator = True
             e.save()
+        """
 
-
-
+        ### данные по списку событий в контейнере
         if r.has_key("getmembers") and rg("getmembers") != '':
             container_row = request.GET["container_row"]
             tz = request.session['tz']
@@ -397,6 +398,7 @@ def get_json(request):
 
 
 
+        """
         # Удаление из группировки
         if r.has_key("delgroup") and rg("delgroup") != '[]':
             container_row = request.GET["container_row"]
@@ -414,6 +416,8 @@ def get_json(request):
 
             e.data['containergroup'] = l
             e.save()
+        """
+
 
 
         # Данные по событию для отображения в форме
@@ -1355,6 +1359,62 @@ def get_json(request):
 
             response_data = {'address':address_str}
 
+
+
+
+        ### Добавление отмеченных событий (строк) в группировку (контейнер)
+        if data.has_key("action") and data["action"] == 'addgroup':
+            group_data = eval(str(data))
+            container = group_data["container_row"]
+            group_row = group_data["addgroup"]
+
+            g = []
+            for item in group_row:
+                if container != item:
+                    g.append(item)
+                    i = events.objects.get(pk=item)
+                    i.agregation = True
+                    i.agregator = False
+                    i.data['containergroup'] = []
+                    i.save()
+
+            e = events.objects.get(pk=container)
+            data = e.data
+            if data.has_key('containergroup'):
+                for a in g:
+                    data['containergroup'].append(a)
+            else:
+                data['containergroup'] = g
+            e.agregation = False
+            e.agregator = True
+            e.save()
+
+
+            response_data = {'result': "ok"}
+
+
+
+        # Удаление из группировки
+        if data.has_key("action") and data["action"] == 'delgroup':
+            group_data = eval(str(data))
+            container = group_data["container_row"]
+            group_row = group_data["delgroup"]
+
+            e = events.objects.get(pk=container)
+            l = e.data['containergroup']
+            for item in group_row:
+                if item != container:
+                    i=l.index(item)
+                    del l[i]
+                    a = events.objects.get(pk=item)
+                    a.agregation = False
+                    a.save()
+                    del item
+
+            e.data['containergroup'] = l
+            e.save()
+
+            response_data = {'result': "ok"}
 
 
 

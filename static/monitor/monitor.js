@@ -143,6 +143,43 @@ $(document).ready(function() {
 
 
 
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+
+
+
+
+function getCookie(name) {
+
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+
+
+
+
+
+
+
+
 function FreshScreenOn(e) {
     $(this).attr("freshscreen","yes");
     console.log("screen on");
@@ -275,21 +312,52 @@ function GetZkl(e) {
 // Удаление выбранных элементов из контейнера
 function DeleteMembers(e) {
 
-    var container_row = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    var container_row = $("table[group=events] tbody tr[container=yes]").attr("row_id");
     var id = [];
-    var i = $("table[group=events] tbody tr[group=members] td input:checked");
+    var i = $("table[group=events] tbody tr[group=members] td input:checked").not("[container=yes]");
     $.each( i, function( key, value ) {
-        id.push("'"+$(value).closest("tr").attr("row_id")+"'");
+        id.push($(value).closest("tr").attr("row_id"));
     });
 
-    var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+container_row+"&delgroup=["+id+"]",
-        function(data) {
+
+    var data = {};
+    data.delgroup = id;
+    data.container_row = container_row;
+    data.action = "delgroup";
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+    $.ajax({
+      url: "/monitor/events/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
 
             GetMemebersContainer();
             ShowMembersCount();
-        })
+
+        }
+
+    });
+
+
 
 }
+
+
+
 
 
 
@@ -312,23 +380,50 @@ function ShowMembersCount() {
 // Добавление в группировку
 function AddContainer(e) {
 
-    var container_row = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    var container_row = $("table[group=events] tbody tr[container=yes]").attr("row_id");
     var id = []
-    var row_list = $("table[group=events] tbody tr[group=true]");
+    var row_list = $("table[group=events] tbody tr[group=true]").not("[container=yes]");
     $.each( row_list, function( key, value ) {
-        id.push("'"+$(value).attr("row_id")+"'");
+        id.push($(value).attr("row_id"));
     });
 
-    var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+container_row+"&addgroup=["+id+"]",
-        function(data) {
-            //window.location.reload();
-                // Скрываем добавленные события из общего списка
-                $.each( row_list, function( key, value ) {
-                    $(value).hide();
-                });
+
+    var data = {};
+    data.addgroup = id;
+    data.container_row = container_row;
+    data.action = "addgroup";
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+    $.ajax({
+      url: "/monitor/events/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
+
+            // Скрываем добавленные события из общего списка
+            $.each( row_list, function( key, value ) {
+                $(value).hide();
+            });
             GetMemebersContainer();
             ShowMembersCount();
-        })
+
+        }
+
+    });
+
 
 }
 
@@ -341,7 +436,7 @@ function AddContainer(e) {
 
 function GetMemebersContainer() {
 
-    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    var row_id = $("table[group=events] tbody tr[container=yes]").attr("row_id");
 
     var jqxhr = $.getJSON("/monitor/events/jsondata?container_row="+row_id+"&getmembers=ok",
         function(data) {
@@ -401,6 +496,9 @@ function ShowContainer(e) {
 
 
     $("table[group=events] tbody tr").unbind("click",ClickEventRow);
+    // Отметка контейнера
+    $("table[group=events] tbody tr[marked=yes]").attr("container","yes");
+
     // Сброс отметки строки
     $("table[group=events] tbody tr").css("background-color","");
     $("table[group=events] tbody tr").attr("marked","no");
@@ -436,6 +534,9 @@ function HideContainer(e) {
     $("table[group=events] tbody tr").bind("click",ClickEventRow);
     $("#containertools").hide();
     $("table tr[group=members]").empty();
+
+    // Снятие отметки контейнера
+    $("table[group=events] tbody tr[container=yes]").attr("container","no");
 
     var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
     $(this).prev("div.dropdown").show();

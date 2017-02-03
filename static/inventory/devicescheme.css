@@ -12,3 +12,9 @@ thead.small > tr > th {
 table[group=devicescheme] > tbody > tr > td {
     padding:0;
 }
+
+
+#namescheme, #jsonscheme {
+    margin-left: 10px;
+    width: 500px;
+}
