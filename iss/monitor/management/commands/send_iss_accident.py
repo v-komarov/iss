@@ -9,7 +9,7 @@ from django.db.models import Q
 from iss.monitor.models import events,accidents
 from iss.localdicts.models import address_house
 from iss.equipment.models import devices_ip
-from iss.inventory.models import devices,devices_type
+from iss.inventory.models import devices
 
 import itertools
 import json
@@ -157,7 +157,7 @@ class Command(BaseCommand):
 
             #data = json.dumps(values)
 
-            req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.php',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
+            req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.soap',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
             f = urllib2.urlopen(req)
             result = f.read()
             start = result.find("[")

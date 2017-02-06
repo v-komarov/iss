@@ -1,7 +1,7 @@
 import re
 import requests
 
-ISS_GET_URL = 'http://10.6.3.7/address_text.php?ip={ip}'
+ISS_GET_URL = 'http://10.6.3.7/address_text.soap?ip={ip}'
 ISS_ATTEMPTS = 10
 
 

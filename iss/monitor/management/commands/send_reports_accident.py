@@ -10,7 +10,7 @@ from django import template
 from iss.monitor.models import events,accidents
 from iss.localdicts.models import address_house,address_templates
 from iss.equipment.models import devices_ip
-from iss.inventory.models import devices,devices_type
+from iss.inventory.models import devices
 
 from iss.monitor.tools import groupevents_ip
 

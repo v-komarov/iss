@@ -49,7 +49,7 @@ def send_iss_drp(iss_work_id,action_text):
     value = value + "iss_work_id(%s)%s[%s]" % (day, iss_work_id ,day)
     value = value + "action_text(%s)%s[%s]" % (day, action_text ,day)
 
-    req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.php', data=value, headers={'Content-Type': 'text/plain; charset=cp1251'})
+    req = urllib2.Request(url='http://10.6.3.7/departs/rcu/works/create_work_mss_post.soap', data=value, headers={'Content-Type': 'text/plain; charset=cp1251'})
     f = urllib2.urlopen(req)
 
 

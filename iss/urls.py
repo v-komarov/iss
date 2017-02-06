@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^equipment/',include('iss.equipment.urls')),
     url(r'^inventory/',include('iss.inventory.urls')),
     url(r'^logout/$', LogOut),
+    url(r'^onyma/', include('iss.onyma.urls')),
     url(r'^admin/', admin.site.urls),
 ]
