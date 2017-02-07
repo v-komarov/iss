@@ -18,3 +18,9 @@ table[group=devicescheme] > tbody > tr > td {
     margin-left: 10px;
     width: 500px;
 }
+
+
+#editschemeform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1),
+#editschemeform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) {
+    vertical-align: top;
+}

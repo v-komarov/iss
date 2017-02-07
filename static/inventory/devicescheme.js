@@ -3,8 +3,9 @@ $(document).ready(function() {
 
     $("#additem").bind("click",AddScheme);
     $("#edititem").bind("click",EditScheme);
+    $("table[group=devicescheme] tbody tr").bind("click",ClickEventRow);
 
-
+    $("#edititem").hide();
 
 });
 
@@ -42,27 +43,32 @@ function getCookie(name) {
 
 
 
+// Выделение строки
+function ClickEventRow(e) {
+
+        $("table[group=devicescheme] tbody tr").css("background-color","");
+        $(this).css("background-color","#F0E68C");
+        $("table[group=devicescheme] tbody tr").attr("marked","no");
+        $(this).attr("marked","yes");
+
+        $("#edititem").show();
+
+}
+
+
+
+
+
 
 
 // Добавить схему
 function AddScheme(e) {
 
-    $("#editagregator").attr("action","create_agregator");
-    $("#editagregator").attr("agregator-id","");
+    $("#editschemeform").attr("action","create_scheme");
+    $("#editschemeform").attr("scheme-id","");
 
-    $("#agregatorform table tbody tr td input#ipaddress").val("");
-    $("#agregatorform table tbody tr td input#sysname").val("");
-    $("#agregatorform table tbody tr td input#sysdescr").val("");
-    $("#agregatorform table tbody tr td input#syslocation").val("");
-    $("#agregatorform table tbody tr td input#serial").val("");
-    $("#agregatorform table tbody tr td input#mac").val("");
-    $("#agregatorform table tbody tr td select#domen").val("");
-    $("#agregatorform table tbody tr td select#footnode").val("");
-    $("#agregatorform table tbody tr td input#uplink").val("");
-
-    $('#footnode option').each(function(){
-        $(this).hide();
-    });
+    $("#editschemeform table tbody tr td input#namescheme").val("");
+    $("#editschemeform table tbody tr td textarea#jsonscheme").val("");
 
     RowData();
 
@@ -75,22 +81,15 @@ function AddScheme(e) {
 // Редактировать схему
 function EditScheme(e) {
 
-    var row_id = $("table[group=agregators] tbody tr[marked=yes]").attr("row_id");
-    $("#editagregator").attr("action","edit_agregator");
-    $("#editagregator").attr("agregator-id",row_id);
+    var row_id = $("table[group=devicescheme] tbody tr[marked=yes]").attr("row_id");
+    $("#editschemeform").attr("action","edit_scheme");
+    $("#editschemeform").attr("scheme-id",row_id);
 
-    var jqxhr = $.getJSON("/equipment/devices/jsondata?agregator="+row_id,
+    var jqxhr = $.getJSON("/inventory/jsondata?scheme="+row_id,
         function(data) {
 
-            $("#agregatorform table tbody tr td input#ipaddress").val(data["result"]["ipaddress"]);
-            $("#agregatorform table tbody tr td input#sysname").val(data["result"]["name"]);
-            $("#agregatorform table tbody tr td input#sysdescr").val(data["result"]["descr"]);
-            $("#agregatorform table tbody tr td input#syslocation").val(data["result"]["location"]);
-            $("#agregatorform table tbody tr td input#serial").val(data["result"]["serial"]);
-            $("#agregatorform table tbody tr td input#mac").val(data["result"]["mac"]);
-            $("#agregatorform table tbody tr td select#domen").val(data["result"]["domen"]);
-            $("#agregatorform table tbody tr td select#footnode").val(data["result"]["footnode"]);
-            $("#agregatorform table tbody tr td input#uplink").val(data["result"]["uplink"]);
+            $("#editschemeform table tbody tr td input#namescheme").val(data["name"]);
+            $("#editschemeform table tbody tr td textarea#jsonscheme").val(data["scheme_device"]);
 
             RowData();
 
@@ -110,16 +109,9 @@ function RowData() {
     $("#editscheme").dialog({
         title:"Схема",
         buttons:[{ text:"Сохранить",click: function() {
-            if ($('#ipaddress').valid() && $('#sysname').valid() && $('#sysdescr').valid() && $('#syslocation').valid() && $('#serial').valid() && $('#mac').valid() && $('#uplink').valid() && $("#domen").valid() && $("#footnode").valid()) {
-                var ipaddress = $("#agregatorform table tbody tr td input#ipaddress").val();
-                var name = $("#agregatorform table tbody tr td input#sysname").val();
-                var descr = $("#agregatorform table tbody tr td input#sysdescr").val();
-                var location = $("#agregatorform table tbody tr td input#syslocation").val();
-                var serial = $("#agregatorform table tbody tr td input#serial").val();
-                var mac = $("#agregatorform table tbody tr td input#mac").val();
-                var domen = $("#agregatorform table tbody tr td select#domen").val();
-                var footnode = $("#agregatorform table tbody tr td select#footnode").val();
-                var uplink = $("#agregatorform table tbody tr td input#uplink").val();
+            if ($('input#namescheme').val().length != 0 && $('textarea#jsonscheme').val().length != 0) {
+                var name = $("#editschemeform table tbody tr td input#namescheme").val();
+                var scheme_device = $("#editschemeform table tbody tr td textarea#jsonscheme").val();
 
 
                 var csrftoken = getCookie('csrftoken');
@@ -132,37 +124,29 @@ function RowData() {
                     }
                 });
 
-                // Определение создание или редактирование
-                var row_id = ""
-                var action = $("#editagregator").attr("action");
-                if ($("#editagregator").attr("action") == "edit_agregator") {
-                    var row_id = $("#editagregator").attr("agregator-id");
-                }
+
+                var data = {};
+                data.scheme_device = scheme_device;
+                data.name = name;
+                data.scheme_id = $("#editschemeform").attr("scheme-id");
+                data.action = $("#editschemeform").attr("action");
+
 
                 $.ajax({
-                  url: "/equipment/devices/jsondata/",
+                  url: "/inventory/jsondata/",
                   type: "POST",
-                  dataType: 'text',
-                  data:"{"
-                    +"'row_id':'"+row_id+"',"
-                    +"'action':'"+action+"',"
-                    +"'ipaddress':'"+ipaddress+"',"
-                    +"'name':'"+name+"',"
-                    +"'descr':'"+descr+"',"
-                    +"'location':'"+location+"',"
-                    +"'serial':'"+serial+"',"
-                    +"'mac':'"+mac+"',"
-                    +"'domen':'"+domen+"',"
-                    +"'footnode':"+footnode+","
-                    +"'uplink':'"+uplink+"'"
-                    +"}",
+                  dataType: 'json',
+                  data:$.toJSON(data),
                     success: function(result) {
-                        window.location=$("#menuagregators a").attr("href");
+                        if (result["result"] == "ok") { location.reload(); }
+                        else { alert(result["result"]); }
                     }
 
-                })
+                });
+
 
             }
+            else { alert("Необходимо заполнить поля");}
 
         }},
 
