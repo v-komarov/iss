@@ -16,12 +16,13 @@ import cStringIO
 import commands
 import tempfile
 
+import iss.dbconn
 
-"""
 
-pycurl необходим libgnutls-dev
 
-"""
+username = iss.dbconn.ZENOSS_API_USERNAME
+password = iss.dbconn.ZENOSS_API_PASSWORD
+
 
 
 
@@ -56,22 +57,8 @@ class Command(BaseCommand):
         tf = tempfile.NamedTemporaryFile(delete=True)
 
 
-        """
 
-        password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-        password_mgr.add_password(None,'http://10.6.0.22:8080/','vak','')
-        handler = urllib2.HTTPBasicAuthHandler(password_mgr)
-        opener = urllib2.build_opener(handler)
-        urllib2.install_opener(opener)
-        headers = {'User-Agent': 'Mozilla 5.10'}
-        request = urllib2.Request('http://10.6.0.22:8080/monitor/events/page/1/', None, headers)
-        f = opener.open(request)
-        data = f.read()
-        print data
-        f.close()
-        """
-
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s" % (tf.name)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
 
         print cmd
         commands.getoutput(cmd)
