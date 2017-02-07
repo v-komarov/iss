@@ -4,6 +4,13 @@ from django.core.management.base import BaseCommand, CommandError
 from iss.equipment.models import devices_ip
 import pymssql
 
+import iss.dbconn
+
+
+username = iss.dbconn.ISS_MSSQL_USERNAME
+password = iss.dbconn.ISS_MSSQL_PASSWORD
+
+
 
 class Command(BaseCommand):
     args = '<get iss data ...>'
@@ -15,7 +22,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
 
-        conn = pymssql.connect(server='10.6.3.7', user='django', password='django2016', database='sibttkdb')
+        conn = pymssql.connect(server='10.6.3.7', user=username, password=password, database='sibttkdb')
         cursor = conn.cursor()
 
 

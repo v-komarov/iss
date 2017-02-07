@@ -3,8 +3,8 @@
 error_reporting(1);
 
 
-$username='iss2';
-$password='MU4K8C6A';
+$username=$argv[1];
+$password=$argv[2];
 
 
 $date = date("Y-m-d\T00:00:00.000\Z", time());
@@ -55,7 +55,7 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         $header =  new SoapHeader($ns, "credentials", $AuthHeader, false);
         $client->__setSoapHeaders(array($header));
 
-        $ls = 1*$argv[1];
+        $ls = 1*$argv[3];
         $dogid=$client->o_mdb_api_func_get_dogid_for_dognum(array(pdognum=>$ls))->return;
         $balans=$client->o_mdb_api_func_get_remainder_dog(array(pdogid=>$dogid,pdate=>$date))->return;
 

@@ -1,6 +1,6 @@
 #coding:utf-8
 
-#coding:utf-8
+
 
 import json
 import commands
@@ -8,8 +8,11 @@ import commands
 
 from django.http import HttpResponse
 
-from iss.equipment.models import devices_ip,footnodes,agregators
+import iss.dbconn
 
+
+username = iss.dbconn.ONYMA_USERNAME
+password = iss.dbconn.ONYMA_PASSWORD
 
 
 
@@ -28,7 +31,7 @@ def get_apidata(request):
         if r.has_key("action") and rg("action") == 'get_balans_ls':
 
             ls = int(request.GET["ls"],10)
-            balans = commands.getoutput("/usr/bin/php iss/onyma/soap/ls_get_balans.php %s" % ls)
+            balans = commands.getoutput("/usr/bin/php iss/onyma/soap/ls_get_balans.php %s %s %s" % (username,password,ls))
 
             result = {'result': balans}
 
