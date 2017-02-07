@@ -38,3 +38,39 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata
     {"domen": "zenoss_krsk", "lldp": {"ports": [{"mac": "34:08:04:47:fa:00", "port": 26}, {"mac": "ec:22:80:2d:8b:20", "port": 25}]}, "mac": "ec:22:80:2d:84:00", "location": "g.Achinsk, Druzhbyi Narodov, 6, gate 2 (---2)", "descr": "DES-3200-28/C1 Fast Ethernet Switch", "serial": "R3DZ1E6003594", "ipaddress": "10.246.172.81", "name": "46-72.8.2gt2#81"}
 
 ports - список портов , mac адресов "соседей".
+
+
+
+
+Запросы к Onyma
+---------------
+
+url http://10.6.0.22:8000/onyma/apidata
+
+
+Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Запрос **GET**
+
+Параметры:
+
+#. action=get_balans_ls
+#. ls=<лицевой счет>
+
+Вывод : json формат
+
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata/?action=get_balans_ls&ls=2178523
+
+
+Пример ответ:
+
+ ::
+
+    {"result": "-69.001151"}
+
