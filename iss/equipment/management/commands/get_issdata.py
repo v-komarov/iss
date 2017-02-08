@@ -6,6 +6,11 @@ import pymssql
 
 import iss.dbconn
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+
 
 username = iss.dbconn.ISS_MSSQL_USERNAME
 password = iss.dbconn.ISS_MSSQL_PASSWORD

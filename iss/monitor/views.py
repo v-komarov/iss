@@ -34,9 +34,13 @@ from iss.monitor.jsondata import head_order
 from iss.localdicts.models import accident_cats,accident_list,email_templates
 
 
-cursor = connections["default"].cursor()
-cursor.execute('SELECT DISTINCT manager FROM monitor_events')
-managers = cursor.fetchall()
+#cursor = connections["default"].cursor()
+#cursor.execute('SELECT DISTINCT manager FROM monitor_events')
+#managers = cursor.fetchall()
+
+managers = []
+for m in events.objects.distinct('manager'):
+    managers.append(m.manager)
 
 
 
@@ -264,7 +268,7 @@ class EventList(ListView):
         # Список manager
         manager_list = []
         for row in managers:
-            manager_list.append("<option value='%s'>%s</option>" % (row[0],row[0]))
+            manager_list.append("<option value='%s'>%s</option>" % (row,row))
 
         context['manager'] = manager_list
         context['selected_manager'] = manager
