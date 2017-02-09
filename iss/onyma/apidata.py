@@ -4,6 +4,12 @@
 
 import json
 import commands
+import os
+import datetime
+import ssl
+import SOAPpy
+from SOAPpy import WSDL, structType, headerType, arrayType
+
 
 
 from django.http import HttpResponse
@@ -17,7 +23,7 @@ password = iss.dbconn.ONYMA_PASSWORD
 
 
 
-
+### Вывод в формате json
 def get_apidata(request):
 
     response_data = {}
@@ -47,6 +53,8 @@ def get_apidata(request):
 
 
 
+
+### Вывод в текстовом формате
 def get_apidata2(request):
 
     response_data = {}
@@ -56,7 +64,7 @@ def get_apidata2(request):
         r = request.GET
         rg = request.GET.get
 
-
+        ## Запрос остатка на лицевом счете по номеру договора
         if r.has_key("action") and rg("action") == 'get_balans_dognum':
 
             dognum = int(request.GET["dognum"],10)
@@ -65,7 +73,25 @@ def get_apidata2(request):
             response_data = "balans:%s;" % balans
 
 
+        ### Запрос списка групп (городов)
+        if r.has_key("action") and rg("action") == 'get_groups':
+            groups = commands.getoutput(
+                "/usr/bin/php iss/onyma/soap/get_groups.php %s %s" % (username,password))
+
+            result = ""
+            for item in json.loads(groups)["row"]:
+                result = result + "name:{name},id:{id};".format(name=item["g_name"].encode("utf-8"),id=item["gid"])
+            response_data = result
+
+
 
     response = HttpResponse(response_data, content_type="text/plain")
     response['Access-Control-Allow-Origin'] = "*"
     return response
+
+
+
+
+
+
+
