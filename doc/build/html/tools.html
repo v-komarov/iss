@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Вспомогательные утилиты &#8212; Документация iss 1.0</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Документация iss 1.0" href="index.html" />
+    <link rel="next" title="Примеры конфигов" href="example_conf.html" />
+    <link rel="prev" title="Взаимодействие с другими системами" href="other_systems.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             accesskey="I">указатель</a></li>
+        <li class="right" >
+          <a href="example_conf.html" title="Примеры конфигов"
+             accesskey="N">вперёд</a> |</li>
+        <li class="right" >
+          <a href="other_systems.html" title="Взаимодействие с другими системами"
+             accesskey="P">назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="contents topic" id="id1">
+<p class="topic-title first">Оглавление</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id2" id="id4">Вспомогательные утилиты</a><ul>
+<li><a class="reference internal" href="#zenapitool" id="id5">zenapitool</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h1><a class="toc-backref" href="#id4">Вспомогательные утилиты</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="zenapitool">
+<h2><a class="toc-backref" href="#id5">zenapitool</a><a class="headerlink" href="#zenapitool" title="Ссылка на этот заголовок">¶</a></h2>
+<p id="index-0">Утилита формирования запросов командной строки к базе zenoss</p>
+<p><a class="reference external" href="https://github.com/k-vinogradov/zenapitool/">github : zenapitool</a></p>
+<div class="section" id="id3">
+<h3>Пример: выборка всех сетевых устройств<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">zenapitool</span><span class="o">.</span><span class="n">py</span> <span class="n">device</span><span class="o">-</span><span class="nb">list</span> <span class="o">-</span><span class="n">p</span> <span class="s2">&quot;/Devices/Network&quot;</span> <span class="o">-</span><span class="n">c</span> <span class="n">icCV</span> <span class="o">-</span><span class="n">f</span> <span class="n">table</span>  <span class="o">-</span><span class="n">w</span> <span class="n">device_list</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">IP</span> <span class="n">Address</span>       <span class="n">Device</span> <span class="n">Class</span>                                        <span class="n">SNMP</span> <span class="n">Community</span>         <span class="n">SNMP</span> <span class="n">Version</span>
+<span class="o">---------------</span>  <span class="o">--------------------------------------------------</span>  <span class="o">---------------------</span>  <span class="o">--------------</span>
+<span class="mf">10.207</span><span class="o">.</span><span class="mf">2.28</span>      <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.207</span><span class="o">.</span><span class="mf">5.84</span>      <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.207</span><span class="o">.</span><span class="mf">5.91</span>      <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.1</span>         <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.3</span>         <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.4</span>         <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.9</span>         <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.16</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.34</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.41</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.45</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.47</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.48</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.50</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.51</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.52</span>        <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.8</span><span class="o">.</span><span class="mf">1.114</span>       <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">8.35</span>      <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">9.11</span>      <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">9.84</span>      <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">private</span>                <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">10.202</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">28.23</span>     <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">VoIP</span>                                       <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.15</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.16</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.17</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.11</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.12</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.13</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.18</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.14</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.22</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.21</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+<span class="mf">10.208</span><span class="o">.</span><span class="mf">130.23</span>    <span class="o">/</span><span class="n">Network</span><span class="o">/</span><span class="n">Switch</span><span class="o">/</span><span class="n">D</span><span class="o">-</span><span class="n">Link</span><span class="o">/</span><span class="n">DES</span> <span class="mi">3028</span> <span class="n">Series</span><span class="o">/</span><span class="n">FTTB</span> <span class="n">Access</span>  <span class="n">sibttklocal</span>            <span class="n">v2c</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="tv">
+<h3>Пример: выборка всех TV устройств<a class="headerlink" href="#tv" title="Ссылка на этот заголовок">¶</a></h3>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">zenapitool</span><span class="o">.</span><span class="n">py</span> <span class="n">device</span><span class="o">-</span><span class="nb">list</span> <span class="o">-</span><span class="n">p</span> <span class="s2">&quot;/Devices/TV&quot;</span> <span class="o">-</span><span class="n">c</span> <span class="n">icCV</span> <span class="o">-</span><span class="n">f</span> <span class="n">table</span>  <span class="o">-</span><span class="n">w</span> <span class="n">device_list</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">IP</span> <span class="n">Address</span>       <span class="n">Device</span> <span class="n">Class</span>                <span class="n">SNMP</span> <span class="n">Community</span>    <span class="n">SNMP</span> <span class="n">Version</span>
+<span class="o">---------------</span>  <span class="o">--------------------------</span>  <span class="o">----------------</span>  <span class="o">--------------</span>
+<span class="mf">10.247</span><span class="o">.</span><span class="mf">0.146</span>     <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">TrCATV</span><span class="o">/</span><span class="mi">220</span><span class="o">-</span><span class="mi">60</span><span class="o">-</span><span class="n">C</span>         <span class="n">sibttk</span>            <span class="n">v2c</span>
+<span class="mf">10.247</span><span class="o">.</span><span class="mf">0.147</span>     <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">TrCATV</span><span class="o">/</span><span class="mi">220</span><span class="o">-</span><span class="mi">60</span><span class="o">-</span><span class="n">C</span>         <span class="n">sibttk</span>            <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">18.91</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">18.92</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">17.91</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">17.92</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">17.93</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">16.91</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">16.92</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">16.93</span>    <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">117.91</span>   <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">117.92</span>   <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">Anevia</span> <span class="n">Flamingo</span> <span class="mi">660</span>     <span class="n">sibttklocal</span>       <span class="n">v2c</span>
+<span class="mf">9.208</span><span class="o">.</span><span class="mf">131.45</span>     <span class="o">/</span><span class="n">TV</span><span class="o">/</span><span class="n">ONTF20</span><span class="o">-</span><span class="n">A10</span><span class="o">/</span><span class="n">Pin</span> <span class="mi">1</span>        <span class="n">sibttk</span>            <span class="n">v2c</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Оглавление</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Вспомогательные утилиты</a><ul>
+<li><a class="reference internal" href="#zenapitool">zenapitool</a><ul>
+<li><a class="reference internal" href="#id3">Пример: выборка всех сетевых устройств</a></li>
+<li><a class="reference internal" href="#tv">Пример: выборка всех TV устройств</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Предыдущий раздел</h4>
+  <p class="topless"><a href="other_systems.html"
+                        title="предыдущая глава">Взаимодействие с другими системами</a></p>
+  <h4>Следующий раздел</h4>
+  <p class="topless"><a href="example_conf.html"
+                        title="следующая глава">Примеры конфигов</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Эта страница</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tools.txt"
+            rel="nofollow">Исходный текст</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Быстрый поиск</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Искать" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             >указатель</a></li>
+        <li class="right" >
+          <a href="example_conf.html" title="Примеры конфигов"
+             >вперёд</a> |</li>
+        <li class="right" >
+          <a href="other_systems.html" title="Взаимодействие с другими системами"
+             >назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Vladimir Komarov.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Расположение и краткое описание моделей &#8212; Документация iss 1.0</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Документация iss 1.0" href="index.html" />
+    <link rel="next" title="Инвентори" href="inventory.html" />
+    <link rel="prev" title="Проект обновления и модернизации ИСС" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             accesskey="I">указатель</a></li>
+        <li class="right" >
+          <a href="inventory.html" title="Инвентори"
+             accesskey="N">вперёд</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Проект обновления и модернизации ИСС"
+             accesskey="P">назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="contents topic" id="id1">
+<p class="topic-title first">Оглавление</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id2" id="id3">Расположение и краткое описание моделей</a><ul>
+<li><a class="reference internal" href="#monitor" id="id4">Приложение monitor</a></li>
+<li><a class="reference internal" href="#localdicts" id="id5">Приложение localdicts (большенство справочников отображены в стандартном административном интерфейсе)</a></li>
+<li><a class="reference internal" href="#equipment" id="id6">Приложение equipment</a></li>
+<li><a class="reference internal" href="#inventory" id="id7">Приложение inventory</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h1><a class="toc-backref" href="#id3">Расположение и краткое описание моделей</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="monitor">
+<h2><a class="toc-backref" href="#id4">Приложение monitor</a><a class="headerlink" href="#monitor" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li>Profile - для хранения интерфейсных настроек пользователей Оперативного журнала</li>
+<li>events - для хранения событий (загружается из zenoss Красноярска, можно добавлять вручную оператором или формировать на основе почтовых сообщений)</li>
+<li>accidents - для хранения созданных оператором аварий на основе одиночного события или группы событий.</li>
+<li>messages - для хранения подготовленных для рассылки оповещений.</li>
+</ol>
+</div>
+<div class="section" id="localdicts">
+<h2><a class="toc-backref" href="#id5">Приложение localdicts (большенство справочников отображены в стандартном административном интерфейсе)</a><a class="headerlink" href="#localdicts" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li>TzList - Список часовых поясов для выбора отображения даты и времени пользователем.</li>
+<li>Status - для &#8220;расшифровки&#8221; статусов событий events</li>
+<li>Severity - для &#8220;расшифровки&#8221; важности событий events</li>
+<li>accident_group - Название группы аварий (унаследован от iss)</li>
+<li>accident_list  - Название аварии (унаследован от iss)</li>
+<li>accident_cats - Категории аварий (унаследован от iss)</li>
+<li>address_city - Справочник городов (унаследован от iss)</li>
+<li>address_street - Справочник улиц (унаследован от iss)</li>
+<li>address_house - Хранимые адреса (номера домов , коды городов, коды улиц) (унаследован от iss)</li>
+<li>address_companies - Справочник компаний (пока две ТТК-Сибирь и РК-Сибирь)</li>
+<li>email_templates - Справочник шаблонов оповещений по email.</li>
+</ol>
+</div>
+<div class="section" id="equipment">
+<h2><a class="toc-backref" href="#id6">Приложение equipment</a><a class="headerlink" href="#equipment" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li>devices_ip - Сведения по ip устройствам, полученные динамически (snmp,lldp)</li>
+<li>device_access_error - (Лог) Список ip устройств , доступ к которым при опросе не был получен.</li>
+<li>footnodes - Справочник опорных узлов.</li>
+<li>agregators - Спраовчник агрегаторов.</li>
+<li>scan_iplist - Справочник ip адресов , по которым происходит опрос устройств по snmp,lldp</li>
+</ol>
+<div class="section" id="agregators">
+<h3>agregators<a class="headerlink" href="#agregators" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="uplink">
+<h4>Формат хранения uplink-ов<a class="headerlink" href="#uplink" title="Ссылка на этот заголовок">¶</a></h4>
+<p>Данные uplink-ов хранятся в поле <strong>uplink_ports</strong> (формат поля array)</p>
+<div class="admonition important">
+<p class="first admonition-title">Важно</p>
+<p class="last">При создании структуры графа от агрегатора и ниже необходимо исключать порты uplink-ов.</p>
+</div>
+</div>
+</div>
+<div class="section" id="devices-ip">
+<h3>devices_ip<a class="headerlink" href="#devices-ip" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="lldp">
+<h4>Формат хранения lldp данных<a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h4>
+<p>Данные результатов lldp хранятся в 2-полях <strong>lldp_neighbor_mac</strong>, <strong>ports</strong></p>
+<p><strong>lldp_neighbor_mac</strong> (формат поля array) - хранятся списки mac адресов соседей, которые &#8220;увидел&#8221; lldp</p>
+<p><strong>ports</strong> (формат поля json) - хранятся mac адреса соседей с привязкой к порту. Пример ниже:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;ac:f1:df:a4:ce:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;ec:22:80:2d:c5:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;00:21:91:92:e7:26&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d5:00&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:91:c0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d4:60&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:fc:59:80&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;00:22:b0:04:52:f2&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:fc:57:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;1c:af:f7:7c:bc:68&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:76:20&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d3:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;84:c9:b2:1c:a6:00&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d4:20&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;ac:f1:df:a4:cd:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:90:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}]}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="inventory">
+<h2><a class="toc-backref" href="#id7">Приложение inventory</a><a class="headerlink" href="#inventory" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li>devicves - для хранения всех устройств сети с привязкой с адресу (город, улица, дом)</li>
+<li>devices_scheme - Справочник типов устройств и описание структуры данных</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Оглавление</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Расположение и краткое описание моделей</a><ul>
+<li><a class="reference internal" href="#monitor">Приложение monitor</a></li>
+<li><a class="reference internal" href="#localdicts">Приложение localdicts (большенство справочников отображены в стандартном административном интерфейсе)</a></li>
+<li><a class="reference internal" href="#equipment">Приложение equipment</a><ul>
+<li><a class="reference internal" href="#agregators">agregators</a><ul>
+<li><a class="reference internal" href="#uplink">Формат хранения uplink-ов</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#devices-ip">devices_ip</a><ul>
+<li><a class="reference internal" href="#lldp">Формат хранения lldp данных</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inventory">Приложение inventory</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Предыдущий раздел</h4>
+  <p class="topless"><a href="index.html"
+                        title="предыдущая глава">Проект обновления и модернизации ИСС</a></p>
+  <h4>Следующий раздел</h4>
+  <p class="topless"><a href="inventory.html"
+                        title="следующая глава">Инвентори</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Эта страница</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/models.txt"
+            rel="nofollow">Исходный текст</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Быстрый поиск</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Искать" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Навигация</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Алфавитный указатель"
+             >указатель</a></li>
+        <li class="right" >
+          <a href="inventory.html" title="Инвентори"
+             >вперёд</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Проект обновления и модернизации ИСС"
+             >назад</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Vladimir Komarov.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>
