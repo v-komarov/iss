@@ -40,7 +40,7 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata
 ports - список портов , mac адресов "соседей".
 
 
-
+.. index:: Onyma
 
 Запросы к Onyma
 ---------------

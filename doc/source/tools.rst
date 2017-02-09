@@ -10,6 +10,8 @@
 zenapitool
 ----------
 
+.. index:: zenoss
+
 Утилита формирования запросов командной строки к базе zenoss
 
 `github : zenapitool <https://github.com/k-vinogradov/zenapitool/>`_
