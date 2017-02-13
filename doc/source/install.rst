@@ -537,3 +537,14 @@ nginx файл /etc/nginx/iss
 
     cd /srv/django/iss
     python manage.py runserver
+
+
+Backup files
+------------
+
+:download:`iss.tar.gz <_static/iss-20170213.tar.gz>`
+:download:`iss2.json <_static/iss2.json>`_
+
+
+.. warning:: Данные формата json должны соответствовать структуре моделей.
+

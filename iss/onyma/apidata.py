@@ -4,11 +4,6 @@
 
 import json
 import commands
-import os
-import datetime
-import ssl
-import SOAPpy
-from SOAPpy import WSDL, structType, headerType, arrayType
 
 
 
@@ -85,7 +80,35 @@ def get_apidata2(request):
 
 
 
-    response = HttpResponse(response_data, content_type="text/plain")
+        ### Создание договора с предопределенными значениями
+        # дата подключения pdogdate=now()
+        # идентификатор группы pgid
+
+        if r.has_key("action") and rg("action") == 'dog_create':
+            pgid = int(request.GET["pgid"],10)
+            dogcode = request.GET["dogcode"]
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            result = commands.getoutput(
+                "/usr/bin/php iss/onyma/soap/dog_create.php %s %s %s %s" % (username2, password2, pgid, dogcode))
+
+            response_data = result
+
+
+
+        ### Установка договору даты начала
+
+        if r.has_key("action") and rg("action") == 'dog_set_date':
+            dogid = int(request.GET["dogid"], 10)
+            dogdate = request.GET["dogdate"]
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            result = commands.getoutput(
+                "/usr/bin/php iss/onyma/soap/dog_set_dogdate.php %s %s %s %s" % (username2, password2, dogid, dogdate))
+
+            response_data = result
+
+    response = HttpResponse(response_data, content_type="text/plain; charset=utf-8")
     response['Access-Control-Allow-Origin'] = "*"
     return response
 

@@ -91,7 +91,10 @@ class Command(BaseCommand):
                 manager = ", ".join(r["details"]["manager"])
 
             ### Формирование нового события или запись в существующие
-            if events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count() == 0:
+            """
+                Для severity: info, debug, clear (0,1,4) нет необходимости создавать новое событие
+            """
+            if events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count() == 0 and severity.id != 0 and severity.id != 1 and severity.id != 4:
                 events.objects.create(
                     source='zenoss_krsk',
                     uuid=uuid,
@@ -117,44 +120,31 @@ class Command(BaseCommand):
             else:
 
                 #### Завершение события (очистка) или нет - определение в зависимости от статуса
+                """
+                    для статусов closed , cleared (4,5) при обновлении открытого (с finished_date = None)
+                    аварийного события фиксируем завершение этого события установкой finished_date
+                """
                 if status.id == 4 or status.id == 5:
                     events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
                         first_seen=firsttime,
                         update_time=update_time,
                         last_seen=lasttime,
-                        event_class=eventclass,
                         severity_id=severity,
-                        manager=manager,
-                        device_net_address=ipaddress,
-                        device_location=location,
-                        device_class=deviceclass,
-                        device_group=devicegroup,
-                        device_system=devicesystem,
-                        element_identifier=device,
-                        element_sub_identifier="",
                         status_id=status,
-                        summary=summary,
                         finished_date = lasttime
                     )
 
                 #### Если событие не завершено
+                    """
+                        Обновление открытых аварийных событий
+                    """
                 else:
                     events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
                         first_seen=firsttime,
                         update_time=update_time,
                         last_seen=lasttime,
-                        event_class=eventclass,
                         severity_id=severity,
-                        manager=manager,
-                        device_net_address=ipaddress,
-                        device_location=location,
-                        device_class=deviceclass,
-                        device_group=devicegroup,
-                        device_system=devicesystem,
-                        element_identifier=device,
-                        element_sub_identifier="",
-                        status_id=status,
-                        summary=summary
+                        status_id=status
                     )
 
         print "ok"

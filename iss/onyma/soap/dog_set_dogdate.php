@@ -55,7 +55,12 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         $header =  new SoapHeader($ns, "credentials", $AuthHeader, false);
         $client->__setSoapHeaders(array($header));
 
-        $data=$client->onyma_api_groups()->return;
-        print(json_encode($data, JSON_PRETTY_PRINT));
+        $dogid = 1*$argv[3];
+        $date = date("Y-m-d\T00:00:00.000\Z",strtotime($argv[4]));
+
+        $data=$client->o_mdb_api_change_dog_set_dogdate(array(pdogid=>$dogid,pdogdate=>$date))->return;
+
+        print_r($data);
+
 
 ?>
