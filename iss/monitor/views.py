@@ -9,6 +9,8 @@ SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 import datetime
 from pytz import timezone
 
+from django.core.cache import cache
+
 from django.db import connections
 from django.db.models import Q
 from django.db.models import Count
@@ -34,13 +36,22 @@ from iss.monitor.jsondata import head_order
 from iss.localdicts.models import accident_cats,accident_list,email_templates
 
 
-#cursor = connections["default"].cursor()
-#cursor.execute('SELECT DISTINCT manager FROM monitor_events')
-#managers = cursor.fetchall()
 
-managers = []
-for m in events.objects.distinct('manager'):
-    managers.append(m.manager)
+
+"""
+    Список manager сохраняем в кеше
+
+"""
+if cache.get("manager") == None:
+    managers = []
+    for m in events.objects.distinct('manager'):
+        managers.append(m.manager)
+
+    cache.get("manager", pickle.dumps(managers), 1200)
+
+else:
+    managers = pickle.loads(cache.get("manager"))
+
 
 
 
