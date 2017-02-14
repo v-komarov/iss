@@ -167,6 +167,24 @@ def get_apidata2(request):
 
 
 
+        ### Установка адреса договора
+
+        if r.has_key("action") and rg("action") == 'dog_set_dognum':
+            dogid = int(request.GET["dogid"], 10)
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            dognum = urllib.unquote(request.GET["dognum"])
+
+            cmd = "/usr/bin/php iss/onyma/soap/dog_set_dognum.php %s %s %s %s" % (
+                username2, password2, dogid, dognum)
+
+            result = commands.getoutput(cmd.encode("utf-8"))
+
+            response_data = result
+
+
+
+
     response = HttpResponse(response_data, content_type="text/plain; charset=utf-8")
     response['Access-Control-Allow-Origin'] = "*"
     return response

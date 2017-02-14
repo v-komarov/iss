@@ -284,3 +284,29 @@ url http://10.6.0.22:8000/onyma/apidata2
  ::
 
     http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_address&dogid=2381953&username=iss2&password=111111&city=Красноярск&street=Совсем Любая&house=5 а&room=100
+
+
+
+Установка номера договора
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+
+Запрос **GET**
+
+Параметры:
+
+#. action=dog_set_dognum
+#. username=<логин для onyma>
+#. password=<пароль для onyma>
+#. dogid=<id договора>
+#. dognum=<Номер договора> кодировка utf-8
+
+Вывод : Нет
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_dognum&dogid=2381953&username=iss2&password=111111&dognum=9999999999

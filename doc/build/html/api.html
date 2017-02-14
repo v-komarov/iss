@@ -53,18 +53,19 @@
   <div class="contents topic" id="id1">
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
-<li><a class="reference internal" href="#api" id="id11">Описание API</a><ul>
-<li><a class="reference internal" href="#id2" id="id12">Список агрегаторов</a></li>
-<li><a class="reference internal" href="#lldp" id="id13">Данные lldp</a></li>
-<li><a class="reference internal" href="#onyma" id="id14">Запросы к Onyma</a><ul>
-<li><a class="reference internal" href="#id3" id="id15">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id4" id="id16">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id5" id="id17">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id6" id="id18">Создание договора</a></li>
-<li><a class="reference internal" href="#id7" id="id19">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id8" id="id20">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id9" id="id21">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id10" id="id22">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#api" id="id12">Описание API</a><ul>
+<li><a class="reference internal" href="#id2" id="id13">Список агрегаторов</a></li>
+<li><a class="reference internal" href="#lldp" id="id14">Данные lldp</a></li>
+<li><a class="reference internal" href="#onyma" id="id15">Запросы к Onyma</a><ul>
+<li><a class="reference internal" href="#id3" id="id16">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li><a class="reference internal" href="#id4" id="id17">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id5" id="id18">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id6" id="id19">Создание договора</a></li>
+<li><a class="reference internal" href="#id7" id="id20">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id8" id="id21">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id9" id="id22">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id10" id="id23">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id11" id="id24">Установка номера договора</a></li>
 </ul>
 </li>
 </ul>
@@ -72,9 +73,9 @@
 </ul>
 </div>
 <div class="section" id="api">
-<h1><a class="toc-backref" href="#id11">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
+<h1><a class="toc-backref" href="#id12">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id12">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id13">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -86,7 +87,7 @@
 <p>uplink_ports - список uplink портов</p>
 </div>
 <div class="section" id="lldp">
-<h2><a class="toc-backref" href="#id13">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -98,9 +99,9 @@
 <p>ports - список портов , mac адресов &#8220;соседей&#8221;.</p>
 </div>
 <div class="section" id="onyma">
-<span id="index-0"></span><h2><a class="toc-backref" href="#id14">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
+<span id="index-0"></span><h2><a class="toc-backref" href="#id15">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
 <div class="section" id="id3">
-<h3><a class="toc-backref" href="#id15">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata">http://10.6.0.22:8000/onyma/apidata</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -123,7 +124,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id4">
-<h3><a class="toc-backref" href="#id16">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id17">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -147,7 +148,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id17">Получение справочника групп (городов)</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">Получение справочника групп (городов)</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -176,7 +177,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id6">
-<h3><a class="toc-backref" href="#id18">Создание договора</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">Создание договора</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -202,7 +203,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id7">
-<h3><a class="toc-backref" href="#id19">Установка даты договора</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">Установка даты договора</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -222,7 +223,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id8">
-<h3><a class="toc-backref" href="#id20">Установка ФИО договора</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">Установка ФИО договора</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -244,7 +245,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id9">
-<h3><a class="toc-backref" href="#id21">Установка телефона договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">Установка телефона договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -264,7 +265,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id10">
-<h3><a class="toc-backref" href="#id22">Установка адреса договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">Установка адреса договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -282,6 +283,26 @@
 <p>Пример запрос:</p>
 <blockquote>
 <div><div class="highlight-default"><div class="highlight"><pre><span></span>http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_address&amp;dogid=2381953&amp;username=iss2&amp;password=111111&amp;city=Красноярск&amp;street=Совсем Любая&amp;house=5 а&amp;room=100
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id11">
+<h3><a class="toc-backref" href="#id24">Установка номера договора</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
+<p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=dog_set_dognum</li>
+<li>username=&lt;логин для onyma&gt;</li>
+<li>password=&lt;пароль для onyma&gt;</li>
+<li>dogid=&lt;id договора&gt;</li>
+<li>dognum=&lt;Номер договора&gt; кодировка utf-8</li>
+</ol>
+<p>Вывод : Нет</p>
+<p>Пример запрос:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span>http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_dognum&amp;dogid=2381953&amp;username=iss2&amp;password=111111&amp;dognum=9999999999
 </pre></div>
 </div>
 </div></blockquote>
@@ -309,6 +330,7 @@
 <li><a class="reference internal" href="#id8">Установка ФИО договора</a></li>
 <li><a class="reference internal" href="#id9">Установка телефона договора</a></li>
 <li><a class="reference internal" href="#id10">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id11">Установка номера договора</a></li>
 </ul>
 </li>
 </ul>
