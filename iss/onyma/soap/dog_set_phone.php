@@ -55,10 +55,13 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         $header =  new SoapHeader($ns, "credentials", $AuthHeader, false);
         $client->__setSoapHeaders(array($header));
 
-        $ls = 1*$argv[3];
-        $dogid=$client->o_mdb_api_func_get_dogid_for_dognum(array(pdognum=>$ls))->return;
-        $balans=$client->o_mdb_api_func_get_remainder_dog(array(pdogid=>$dogid,pdate=>$date))->return;
+        $dogid = 1*$argv[3];
+        $phone = $argv[4]; // Номер телефона
 
-	print_r($balans);
+        // Телефон
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>114,pval=>$phone))->return;
+
+        print_r($data);
+
 
 ?>

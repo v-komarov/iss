@@ -200,3 +200,87 @@ url http://10.6.0.22:8000/onyma/apidata2
 
     http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_date&dogid=2381953&dogdate=15.02.2017&username=iss2&password=111111
 
+
+
+Установка ФИО договора
+~~~~~~~~~~~~~~~~~~~~~~
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+
+Запрос **GET**
+
+Параметры:
+
+#. action=dog_set_fio
+#. username=<логин для onyma>
+#. password=<пароль для onyma>
+#. dogid=<id договора>
+#. lastname=<Фамилия> кодировка utf-8
+#. firstname=<Имя> кодировка utf-8
+#. secondname=<Отчество> кодировка utf-8
+
+Вывод : Нет
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_fio&dogid=2381953&username=iss2&password=111111&lastname=Иванов&firstname=Иван&secondname=Иванович
+
+
+
+
+Установка телефона договора
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+
+Запрос **GET**
+
+Параметры:
+
+#. action=dog_set_phone
+#. username=<логин для onyma>
+#. password=<пароль для onyma>
+#. dogid=<id договора>
+#. phone=<Номер телефона> кодировка utf-8
+
+Вывод : Нет
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_phone&dogid=2381953&username=iss2&password=111111&phone=8-905-222-8888
+
+
+
+
+Установка адреса договора
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+
+Запрос **GET**
+
+Параметры:
+
+#. action=dog_set_address
+#. username=<логин для onyma>
+#. password=<пароль для onyma>
+#. dogid=<id договора>
+#. city=<Город> кодировка utf-8
+#. street=<Улица> кодировка utf-8
+#. house=<Дом> кодировка utf-8
+#. room=<Квартира> кодировка utf-8
+
+Вывод : Нет
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_address&dogid=2381953&username=iss2&password=111111&city=Красноярск&street=Совсем Любая&house=5 а&room=100

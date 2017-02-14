@@ -55,10 +55,22 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         $header =  new SoapHeader($ns, "credentials", $AuthHeader, false);
         $client->__setSoapHeaders(array($header));
 
-        $ls = 1*$argv[3];
-        $dogid=$client->o_mdb_api_func_get_dogid_for_dognum(array(pdognum=>$ls))->return;
-        $balans=$client->o_mdb_api_func_get_remainder_dog(array(pdogid=>$dogid,pdate=>$date))->return;
+        $dogid = 1*$argv[3];
+        $city = str_replace("#"," ",$argv[4]); // город
+        $street = str_replace("#"," ",$argv[5]); // улица
+        $house = str_replace("#"," ",$argv[6]); // дом
+        $room = str_replace("#"," ",$argv[7]); // квартира
 
-	print_r($balans);
+        // Адрес
+
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>289,pval=>$room,pattridup=>292))->return;
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>287,pval=>$house,pattridup=>292))->return;
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>286,pval=>$street,pattridup=>292))->return;
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>284,pval=>$city,pattridup=>292))->return;
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>292,pval=>$city." ".$street." ".$house." ".$room))->return;
+
+
+        print_r($data);
+
 
 ?>

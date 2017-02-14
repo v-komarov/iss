@@ -4,7 +4,7 @@
 
 import json
 import commands
-
+import urllib
 
 
 from django.http import HttpResponse
@@ -107,6 +107,65 @@ def get_apidata2(request):
                 "/usr/bin/php iss/onyma/soap/dog_set_dogdate.php %s %s %s %s" % (username2, password2, dogid, dogdate))
 
             response_data = result
+
+
+
+        ### Установка ФИО договора
+
+        if r.has_key("action") and rg("action") == 'dog_set_fio':
+            dogid = int(request.GET["dogid"], 10)
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            lastname = urllib.unquote(request.GET["lastname"])
+            firstname = urllib.unquote(request.GET["firstname"])
+            secondname = urllib.unquote(request.GET["secondname"])
+
+            cmd = "/usr/bin/php iss/onyma/soap/dog_set_fio.php %s %s %s %s %s %s" % (username2, password2, dogid, lastname, firstname, secondname)
+
+            result = commands.getoutput(cmd.encode("utf-8"))
+
+            response_data = result
+
+
+
+
+        ### Установка номера телефона договора
+
+        if r.has_key("action") and rg("action") == 'dog_set_phone':
+            dogid = int(request.GET["dogid"], 10)
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            phone = urllib.unquote(request.GET["phone"])
+
+            cmd = "/usr/bin/php iss/onyma/soap/dog_set_phone.php %s %s %s %s" % (
+            username2, password2, dogid, phone)
+
+            result = commands.getoutput(cmd.encode("utf-8"))
+
+            response_data = result
+
+
+
+        ### Установка адреса договора
+
+        if r.has_key("action") and rg("action") == 'dog_set_address':
+            dogid = int(request.GET["dogid"], 10)
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            city = urllib.unquote(request.GET["city"]).replace(" ","#")
+            street = urllib.unquote(request.GET["street"]).replace(" ","#")
+            house = urllib.unquote(request.GET["house"]).replace(" ","#")
+            room = urllib.unquote(request.GET["room"]).replace(" ","#")
+
+            cmd = "/usr/bin/php iss/onyma/soap/dog_set_address.php %s %s %s %s %s %s %s" % (
+                username2, password2, dogid, city, street, house, room)
+
+            result = commands.getoutput(cmd.encode("utf-8"))
+
+            response_data = result
+
+
+
 
     response = HttpResponse(response_data, content_type="text/plain; charset=utf-8")
     response['Access-Control-Allow-Origin'] = "*"
