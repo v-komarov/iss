@@ -12,6 +12,7 @@ from iss.monitor.models import events
 import time
 import datetime
 import binascii
+import logging
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
 import json
@@ -20,6 +21,7 @@ import commands
 import tempfile
 
 import iss.dbconn
+import iss.settings
 
 
 
@@ -27,6 +29,7 @@ username = iss.dbconn.ZENOSS_API_USERNAME
 password = iss.dbconn.ZENOSS_API_PASSWORD
 
 
+logger = logging.getLogger('monitor')
 
 
 tz = 'Asia/Krasnoyarsk'
@@ -59,7 +62,7 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-
+        cache.clear()
 
         cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"lastTime\":\"2017-02-01T00:00:00/2017-03-01T00:00:00\",\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
@@ -70,6 +73,7 @@ class Command(BaseCommand):
         data = json.loads(commands.getoutput("cat %s" % tf.name))
 
         for r in (data["result"]["events"])[::-1]:
+        #for r in (data["result"]["events"]):
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
             print event_str
 
@@ -78,6 +82,7 @@ class Command(BaseCommand):
 
             ### Обработка записи только если с такой записью еще работы не было
             if cache.get(evid) == None and r["device"].has_key("uuid"):
+            #if r["device"].has_key("uuid"):
 
                 #print evid
 
@@ -90,7 +95,7 @@ class Command(BaseCommand):
                 ipaddress = ", ".join(r["ipAddress"])  # ip
 
                 ### Фиксируем значение id_row в memcache
-                cache.set(evid, True, 1200)
+                cache.set(evid, True)
 
                 uuid = r["device"]["uuid"] # uuid
                 status = Status.objects.get(name=r["eventState"]) # Статус
@@ -114,8 +119,9 @@ class Command(BaseCommand):
                 """
                     Для severity: info, debug, clear (0,1,4) нет необходимости создавать новое событие
                 """
+                nrows = events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count()
+                if nrows == 0 and severity.id != 0 and severity.id != 1 and severity.id != 4:
 
-                if events.objects.filter(uuid=uuid,finished_date=None,event_class=eventclass).count() == 0 and severity.id != 0 and severity.id != 1 and severity.id != 4:
                     events.objects.create(
                         source='zenoss_krsk',
                         uuid=uuid,
@@ -141,6 +147,13 @@ class Command(BaseCommand):
 
                 else:
 
+                    ### Отладка задваивания
+                    if iss.settings.DEBUG == True and nrows > 1:
+                        logger.info(
+                            'evid:{evid} uuid:{uuid} nrows:{nrows} eventclass:{eventclass} location:{location} firstTime:{firstTime} lastTime:{lastTime}'.format(location=location,evid=evid,uuid=uuid,eventclass=eventclass,nrows=nrows,firstTime=r["firstTime"],lastTime=r["lastTime"])
+                        )
+
+
                     #### Завершение события (очистка) или нет - определение в зависимости от статуса
                     """
                         для статусов closed , cleared (4,5) при обновлении открытого (с finished_date = None)
@@ -153,6 +166,7 @@ class Command(BaseCommand):
                             last_seen=lasttime,
                             severity_id=severity,
                             status_id=status,
+                            summary=summary,
                             finished_date = lasttime
                         )
 
@@ -166,6 +180,7 @@ class Command(BaseCommand):
                             update_time=update_time,
                             last_seen=lasttime,
                             severity_id=severity,
+                            summary=summary,
                             status_id=status
                         )
 

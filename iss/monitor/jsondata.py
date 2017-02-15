@@ -936,7 +936,7 @@ def get_json(request):
             if len(file_list) != 0:
                 file_list = sorted(file_list, key=operator.itemgetter('datetime_order'),reverse=True)
 
-            logger.info(datetime.datetime.now().replace(tzinfo=krsk_tz).strftime("%d.%m.%Y %H:%M:%S %Z%z")+"\t"+request.user.get_username()+"\t")
+            #logger.info(datetime.datetime.now().replace(tzinfo=krsk_tz).strftime("%d.%m.%Y %H:%M:%S %Z%z")+"\t"+request.user.get_username()+"\t")
 
             response_data["accident_name"] = acc.acc_name
             response_data["file_list"] = file_list

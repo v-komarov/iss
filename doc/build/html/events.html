@@ -25,8 +25,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="top" title="Документация iss 1.0" href="index.html" />
-    <link rel="next" title="Примеры конфигов" href="example_conf.html" />
-    <link rel="prev" title="Проект обновления и модернизации ИСС" href="index.html" /> 
+    <link rel="next" title="Описание API" href="api.html" />
+    <link rel="prev" title="Инвентори" href="inventory.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -36,10 +36,10 @@
           <a href="genindex.html" title="Алфавитный указатель"
              accesskey="I">указатель</a></li>
         <li class="right" >
-          <a href="example_conf.html" title="Примеры конфигов"
+          <a href="api.html" title="Описание API"
              accesskey="N">вперёд</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Проект обновления и модернизации ИСС"
+          <a href="inventory.html" title="Инвентори"
              accesskey="P">назад</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
       </ul>
@@ -76,15 +76,49 @@
 <li><p class="first">Ручной ввод диспетчера</p>
 </li>
 <li><dl class="first docutils">
-<dt>База данных Zenoss</dt>
-<dd><ul class="first last simple">
-<li>адрес 10.6.0.129</li>
-<li>user iss</li>
+<dt>api zenoss</dt>
+<dd><ul class="first simple">
+<li>адрес <a class="reference external" href="http://10.6.0.129:8080">http://10.6.0.129:8080</a></li>
 </ul>
+<p class="last">Используемый скрипт:</p>
 </dd>
 </dl>
 </li>
 </ol>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span>#!/bin/sh
+
+# Your Zenoss server settings.
+# The URL to access your Zenoss5 Endpoint
+ZENOSS_URL=&quot;http://10.6.0.129:8080&quot;
+
+ZENOSS_USERNAME=$6
+ZENOSS_PASSWORD=$7
+
+
+# Generic call to make Zenoss JSON API calls easier on the shell.
+    ROUTER_ENDPOINT=$1
+    ROUTER_ACTION=$2
+    ROUTER_METHOD=$3
+    DATA=$4
+    FILE=$5
+
+    if [ -z &quot;${DATA}&quot; ]; then
+        echo &quot;Usage: zenoss_api &lt;endpoint&gt; &lt;action&gt; &lt;method&gt; &lt;data&gt;&quot;
+        return 1
+    fi
+# add a -k for the curl call to ignore the default cert
+    curl \
+        -k \
+        -u &quot;$ZENOSS_USERNAME:$ZENOSS_PASSWORD&quot; \
+        -X POST \
+        -H &quot;Content-Type: application/json&quot; \
+        -d &quot;{\&quot;action\&quot;:\&quot;$ROUTER_ACTION\&quot;,\&quot;method\&quot;:\&quot;$ROUTER_METHOD\&quot;,\&quot;data\&quot;:[$DATA], \&quot;tid\&quot;:1}&quot; \
+        -o $FILE \
+        &quot;$ZENOSS_URL/zport/dmd/$ROUTER_ENDPOINT&quot;.
+</pre></div>
+</div>
+</div></blockquote>
 </div>
 </div>
 
@@ -103,11 +137,11 @@
 </ul>
 
   <h4>Предыдущий раздел</h4>
-  <p class="topless"><a href="index.html"
-                        title="предыдущая глава">Проект обновления и модернизации ИСС</a></p>
+  <p class="topless"><a href="inventory.html"
+                        title="предыдущая глава">Инвентори</a></p>
   <h4>Следующий раздел</h4>
-  <p class="topless"><a href="example_conf.html"
-                        title="следующая глава">Примеры конфигов</a></p>
+  <p class="topless"><a href="api.html"
+                        title="следующая глава">Описание API</a></p>
   <div role="note" aria-label="source link">
     <h3>Эта страница</h3>
     <ul class="this-page-menu">
@@ -136,10 +170,10 @@
           <a href="genindex.html" title="Алфавитный указатель"
              >указатель</a></li>
         <li class="right" >
-          <a href="example_conf.html" title="Примеры конфигов"
+          <a href="api.html" title="Описание API"
              >вперёд</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Проект обновления и модернизации ИСС"
+          <a href="inventory.html" title="Инвентори"
              >назад</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
       </ul>

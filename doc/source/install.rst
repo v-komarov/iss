@@ -542,9 +542,35 @@ nginx файл /etc/nginx/iss
 Backup files
 ------------
 
-:download:`iss.tar.gz <_static/iss-20170213.tar.gz>`
-:download:`iss2.json <_static/iss2.json>`_
-
 
 .. warning:: Данные формата json должны соответствовать структуре моделей.
 
+
+
+Установка и настройка memcachedb
+--------------------------------
+
+
+Установка
+~~~~~~~~~
+ ::
+
+    #apt-get install memcachedb
+
+
+Подключение к django
+~~~~~~~~~~~~~~~~~~~~
+
+Добавить параметр в settings.py
+
+ ::
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+            'LOCATION': '127.0.0.1:21201',
+        }
+    }
+
+
+.. warning:: Необходимо убедиться, то memcachedb принимает запросы по указанному в **CACHES** адресу и порту.

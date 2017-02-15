@@ -53,23 +53,28 @@
   <div class="contents topic" id="id1">
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
-<li><a class="reference internal" href="#id2" id="id4">Инвентори</a><ul>
-<li><a class="reference internal" href="#id3" id="id5">Модели (схемы)</a><ul>
-<li><a class="reference internal" href="#json" id="id6">Поля структуры json</a></li>
+<li><a class="reference internal" href="#id2" id="id12">Инвентори</a><ul>
+<li><a class="reference internal" href="#id3" id="id13">Модели (схемы)</a><ul>
+<li><a class="reference internal" href="#id4" id="id14">Модель устройств</a></li>
+<li><a class="reference internal" href="#id5" id="id15">Модель сетевых элементов</a></li>
+<li><a class="reference internal" href="#id8" id="id16">Модель логических интерфейсов</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#id11" id="id17">Связь моделей</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="id2">
-<h1><a class="toc-backref" href="#id4">Инвентори</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
+<h1><a class="toc-backref" href="#id12">Инвентори</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id5">Модели (схемы)</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id13">Модели (схемы)</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="#id14">Модель устройств</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
 <p>Обработка и хранение данных по оборудованию основана на модели (схемы) данных.</p>
 <p>Схема храниться в справочнике devices_scheme в виде описания структуры данных формат json</p>
 <div class="section" id="json">
-<h3><a class="toc-backref" href="#id6">Поля структуры json</a><a class="headerlink" href="#json" title="Ссылка на этот заголовок">¶</a></h3>
+<h4>Поля структуры json<a class="headerlink" href="#json" title="Ссылка на этот заголовок">¶</a></h4>
 <ol class="arabic">
 <li><p class="first"><strong>model_name</strong> - Название модели оборудования - совпадает с полем <strong>name</strong> справочника <strong>devices_scheme</strong></p>
 </li>
@@ -199,6 +204,76 @@
 </div></blockquote>
 </div>
 </div>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id15">Модель сетевых элементов</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id6">
+<h4>Поля модели<a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h4>
+<ol class="arabic simple">
+<li><strong>name</strong> - название модели сетевого элемента</li>
+<li><strong>group</strong> - связь с элементом стравочника топологии (признака места расположения)</li>
+<li><strong>system</strong> - связь с элементом справочника функционального назначения элемента</li>
+</ol>
+</div>
+<div class="section" id="id7">
+<h4>Поля структуры json<a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h4>
+<ol class="arabic simple">
+<li><strong>address</strong> - список допустимых типов адресации (например, &#8220;ipv4&#8221;,&#8221;ipv6&#8221;,&#8221;mac&#8221;, ...)</li>
+<li><strong>comment</strong> - поле коментария</li>
+</ol>
+<p>Пример:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;address&#39;</span><span class="p">:[</span><span class="s1">&#39;mac&#39;</span><span class="p">,</span><span class="s1">&#39;ipv4&#39;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id16">Модель логических интерфейсов</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id9">
+<h4>Поля модели<a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h4>
+<ol class="arabic simple">
+<li><strong>name</strong> - название модели</li>
+<li><strong>ne</strong> - идентификатор сетевого элемента (для связи сетевого элемента и логического элемента - один ко многим)</li>
+</ol>
+</div>
+<div class="section" id="id10">
+<h4>Поля структуры json<a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h4>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt><strong>interfaces</strong> допустимые типы логического интерфейса</dt>
+<dd><ol class="first last arabic simple">
+<li><strong>req</strong> True/False - флаг необходимости связки с физическим интерфейсом</li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Пример:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;interfaces&#39;</span><span class="p">:[</span>
+        <span class="s1">&#39;ilo&#39;</span><span class="p">:{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span><span class="kc">True</span> <span class="p">},</span>
+        <span class="s1">&#39;layer3sub&#39;</span><span class="p">:{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span><span class="kc">False</span> <span class="p">},</span>
+        <span class="s1">&#39;layer3&#39;</span><span class="p">:{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span><span class="kc">True</span> <span class="p">},</span>
+        <span class="s1">&#39;eth_access&#39;</span><span class="p">:{</span><span class="s2">&quot;req&quot;</span><span class="p">:</span><span class="kc">False</span> <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h2><a class="toc-backref" href="#id17">Связь моделей</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li>Сущности, созданные на основе <strong>модели устройств</strong> имеют связи класса <strong>многие ко многим</strong> с сущностями, созданными на основе модели <strong>сетевых элементов</strong></li>
+<li>Сущности на основе <strong>логичсеких интерфейсов</strong> могут иметь связи с сущностями <strong>порты</strong> как состовной части сущностей на основе <strong>модели устройств</strong></li>
+</ol>
+</div>
 </div>
 
 
@@ -211,9 +286,23 @@
   <ul>
 <li><a class="reference internal" href="#">Инвентори</a><ul>
 <li><a class="reference internal" href="#id3">Модели (схемы)</a><ul>
+<li><a class="reference internal" href="#id4">Модель устройств</a><ul>
 <li><a class="reference internal" href="#json">Поля структуры json</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#id5">Модель сетевых элементов</a><ul>
+<li><a class="reference internal" href="#id6">Поля модели</a></li>
+<li><a class="reference internal" href="#id7">Поля структуры json</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">Модель логических интерфейсов</a><ul>
+<li><a class="reference internal" href="#id9">Поля модели</a></li>
+<li><a class="reference internal" href="#id10">Поля структуры json</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id11">Связь моделей</a></li>
 </ul>
 </li>
 </ul>
