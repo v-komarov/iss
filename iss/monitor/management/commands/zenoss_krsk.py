@@ -62,6 +62,7 @@ class Command(BaseCommand):
 
 
         cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
+        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"lastTime\":\"2017-02-01T00:00:00/2017-03-01T00:00:00\",\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
 
         print cmd
         commands.getoutput(cmd)
@@ -73,9 +74,12 @@ class Command(BaseCommand):
             print event_str
 
             id_row = r["id"]  # id
+            evid = r["evid"]
 
             ### Обработка записи только если с такой записью еще работы не было
-            if cache.get(id_row) == None and r["device"].has_key("uuid"):
+            if cache.get(evid) == None and r["device"].has_key("uuid"):
+
+                #print evid
 
                 firsttime = krsk_tz.localize(datetime.datetime.strptime(r["firstTime"], "%Y-%m-%d %H:%M:%S"))
                 lasttime = krsk_tz.localize(datetime.datetime.strptime(r["lastTime"], "%Y-%m-%d %H:%M:%S"))
@@ -86,7 +90,7 @@ class Command(BaseCommand):
                 ipaddress = ", ".join(r["ipAddress"])  # ip
 
                 ### Фиксируем значение id_row в memcache
-                cache.get(id_row, True, 1200)
+                cache.set(evid, True, 1200)
 
                 uuid = r["device"]["uuid"] # uuid
                 status = Status.objects.get(name=r["eventState"]) # Статус
