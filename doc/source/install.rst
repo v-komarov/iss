@@ -523,11 +523,23 @@ nginx файл /etc/nginx/iss
     python manage.py migrate
 
 
+
 Перенос данных
 ~~~~~~~~~~~~~~
 
 #. Способ : используя штатные средства создания резервных копий и загрузки сервера баз данных
 #. Способ : использую штатные средства django - dumpdata и loaddata
+
+
+Общие рекомендации по переносу миграций (из 6-ти шагов)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#. delete from django_migrations; (sql server)
+#. rm -f <app>/migrations/*
+#. python manage.py migrate --fake
+#. python manage.py makemigrations
+#. python manage.py migrate --fake-initial
+#. python manage.py migrate
+
 
 
 Запуск проекта в режиме использования собственного сервера

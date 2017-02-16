@@ -62,12 +62,15 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-        cache.clear()
+        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
+        endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"lastTime\":\"2017-02-01T00:00:00/2017-03-01T00:00:00\",\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
+        #cache.clear()
 
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
+        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"2017-02-16T00:00:00/2017-02-17T00:00:00\"}}' %s %s %s" % (tf.name,username,password)
         print cmd
+
         commands.getoutput(cmd)
 
         data = json.loads(commands.getoutput("cat %s" % tf.name))
@@ -81,8 +84,8 @@ class Command(BaseCommand):
             evid = r["evid"]
 
             ### Обработка записи только если с такой записью еще работы не было
-            if cache.get(evid) == None and r["device"].has_key("uuid"):
-            #if r["device"].has_key("uuid"):
+            #if cache.get(evid) == None and r["device"].has_key("uuid"):
+            if r["device"].has_key("uuid"):
 
                 #print evid
 
@@ -95,7 +98,7 @@ class Command(BaseCommand):
                 ipaddress = ", ".join(r["ipAddress"])  # ip
 
                 ### Фиксируем значение id_row в memcache
-                cache.set(evid, True)
+                #cache.set(evid, True)
 
                 uuid = r["device"]["uuid"] # uuid
                 status = Status.objects.get(name=r["eventState"]) # Статус
