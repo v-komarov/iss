@@ -156,16 +156,29 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(name)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'users': {
+            'format': '%(levelname)s %(asctime)s %(name)s %(module)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR+'/log/monitor.log',
+            'formatter':'users',
         },
         'file_debug': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/log/debugging.log',
+            'formatter':'verbose',
         },
     },
     'loggers': {
@@ -173,7 +186,6 @@ LOGGING = {
             'handlers': ['file'],
             'level': 'INFO',
             'propagate': True,
-            'format':'[%(asctime)s] %(levelname)s %(module)s %(message)s %(user)s',
         },
         'debugging': {
             'handlers': ['file_debug'],

@@ -936,7 +936,7 @@ def get_json(request):
             if len(file_list) != 0:
                 file_list = sorted(file_list, key=operator.itemgetter('datetime_order'),reverse=True)
 
-            #logger.info(datetime.datetime.now().replace(tzinfo=krsk_tz).strftime("%d.%m.%Y %H:%M:%S %Z%z")+"\t"+request.user.get_username()+"\t")
+            #logger.info(request.user.get_username()+"\t"+"")
 
             response_data["accident_name"] = acc.acc_name
             response_data["file_list"] = file_list
@@ -1134,8 +1134,7 @@ def get_json(request):
             a.acc_addr_dict = {'address_list' : accident_dict(a.id)}
             a.save()
 
-
-
+            logger.info("{user}    создал аварию id:{acc_id} name:{name}".format(user=request.user.get_username(),acc_id=a.id,name=a.acc_name))
 
 
 
@@ -1208,8 +1207,7 @@ def get_json(request):
 
             acc.save()
 
-
-
+            logger.info("{user}    отредактировал аварию id:{acc_id} name:{name}".format(user=request.user.get_username(), acc_id=acc.id,name=acc.acc_name))
 
 
         ## создание оповещения email сообщения
@@ -1340,6 +1338,8 @@ def get_json(request):
 
             acc.save()
 
+            logger.info("{user}    отредактировал аварию id:{acc_id} name:{name}".format(user=request.user.get_username(),acc_id=acc.id, name=acc.acc_name))
+
 
 
 
@@ -1392,6 +1392,11 @@ def get_json(request):
 
             response_data = {'result': "ok"}
 
+            logger.info("{user}    добавил в группировку id={id} {cont} события".format(user=request.user.get_username(),id=e.id,cont=e.device_location))
+
+
+
+
 
 
         # Удаление из группировки
@@ -1415,6 +1420,8 @@ def get_json(request):
             e.save()
 
             response_data = {'result': "ok"}
+
+            logger.info("{user}    удалил из группировки id={id} {cont} события".format(user=request.user.get_username(), id=e.id,cont=e.device_location))
 
 
 

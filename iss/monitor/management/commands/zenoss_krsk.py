@@ -134,8 +134,8 @@ class Command(BaseCommand):
                 ### Отладка
                 if iss.settings.DEBUG == True:
                     logger.debug(
-                        'evid:{evid} action:{action} last_action:{last_action} severity:{severity}'.format(
-                            evid=evid,action=action,last_action=last_action,severity=severity.id)
+                        'hashkey:{hashkey} action:{action} last_action:{last_action} severity:{severity}'.format(
+                            hashkey=hashkey,action=action,last_action=last_action,severity=severity.id)
                     )
 
 
