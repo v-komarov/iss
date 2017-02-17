@@ -83,7 +83,7 @@ class Command(BaseCommand):
             print event_str
 
             id_row = r["id"]  # id
-            evid = r["evid"]
+            evid = r["evid"].strip()
 
 
             ### Обработка записи только такая запись уже не обрабатывалась
@@ -116,7 +116,7 @@ class Command(BaseCommand):
 
 
                 ## Фиксируем (считаем) hash строки события - по сумме некоторых полей
-                #hashkey = hashlib.md5("%s%s%s%s%s%s%s" % (devicegroup,deviceclass,eventclass,devicesystem,ipaddress,location,device)).hexdigest()
+                hashkey = hashlib.md5("%s%s%s%s%s%s%s" % (devicegroup,deviceclass,eventclass,devicesystem,ipaddress,location,device)).hexdigest()
 
                 last_action = cache.get(evid)
                 ### Если такого ключа нет, добавить запись
@@ -134,8 +134,8 @@ class Command(BaseCommand):
                 ### Отладка
                 if iss.settings.DEBUG == True:
                     logger.debug(
-                        'hashkey:{hashkey} action:{action} last_action:{last_action} severity:{severity}'.format(
-                            hashkey=hashkey,action=action,last_action=last_action,severity=severity.id)
+                        'evid:{evid} action:{action} lasttime:{lasttime} firsttime:{firsttime} last_action:{last_action} severity:{severity}'.format(
+                            evid=evid,action=action,last_action=last_action,severity=severity.id,firsttime=firsttime,lasttime=lasttime)
                     )
 
 
