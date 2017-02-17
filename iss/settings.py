@@ -162,6 +162,11 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': BASE_DIR+'/log/monitor.log',
         },
+        'file_debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/log/debugging.log',
+        },
     },
     'loggers': {
         'monitor': {
@@ -169,6 +174,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
             'format':'[%(asctime)s] %(levelname)s %(module)s %(message)s %(user)s',
+        },
+        'debugging': {
+            'handlers': ['file_debug'],
+            'level': 'DEBUG',
+            'propagate': True,
         },
     },
 }
