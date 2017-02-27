@@ -310,3 +310,39 @@ url http://10.6.0.22:8000/onyma/apidata2
  ::
 
     http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_dognum&dogid=2381953&username=iss2&password=111111&dognum=9999999999
+
+
+
+
+
+Получение учетного имени, тарифного плана, ресурса, логина, даты начала
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+Запрос **GET**
+
+Параметры:
+
+#. action=get_user_services_dognum
+#. dognum=<Номер договора>
+
+Вывод : text
+srv:<Значение>;start_date:<Значение>;login:<Значение>;tarif:<Значение>;sitename:<Значение>;
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=get_user_services_dognum&dognum=241115694
+
+
+Пример ответ:
+
+ ::
+
+    srv:[ТТК] Подключение ШПД;start_date:2016-11-28T21:00:00.000Z;login:241115694;tarif:Сибирь вТТКайся 290р 60000К Красноярск, Минусинск 2016;sitename:i.241115694;
+    srv:[ТТК] Доступ в личный кабинет;start_date:2016-11-28T21:00:00.000Z;login:241115694;tarif:Technological;sitename:lc.241115694;
+    srv:[ТТК] Доп.услуги Интернет;start_date:2016-11-30T21:00:00.000Z;login:ttk_dop;tarif:Сибирь Доп. услуги ФЛ;sitename:du.241115694;
+

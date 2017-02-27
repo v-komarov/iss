@@ -133,7 +133,7 @@ class Command(BaseCommand):
                 ### Определение что делать с записью по информации в кэше
                 if last_action == None:
                     action = "insert"
-                ### Если ключ есть  - обновить запись
+                ### Если ключ есть  - обновить запись или ничего не делать
                 elif last_action == "done":
                     action = ""
                 else:
@@ -179,7 +179,7 @@ class Command(BaseCommand):
                     )
 
                     # Запись кэш об insert для evid
-                    cache.set(hash_key, "insert", 36000)
+                    cache.set(hash_key, "insert", 360000)
 
 
                 elif action == "update":
@@ -209,7 +209,7 @@ class Command(BaseCommand):
                             finished_date = lasttime
                         )
                         # Запись кэш об завершении события для evid
-                        cache.set(hash_key,"done", 36000)
+                        cache.set(hash_key,"done", 60)
 
                         #### Если событие не завершено
                         """
@@ -225,7 +225,7 @@ class Command(BaseCommand):
                             status_id=status
                         )
                         # Запись кэш об обновлении события для evid
-                        cache.set(hash_key,"update", 36000)
+                        cache.set(hash_key,"update", 360000)
 
         print "ok"
 
