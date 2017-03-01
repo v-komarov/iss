@@ -74,13 +74,13 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
+        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
         #cache.clear()
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"2017-02-16T00:00:00/2017-02-17T00:00:00\"}}' %s %s %s" % (tf.name,username,password)
+        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
         commands.getoutput(cmd)
@@ -123,7 +123,8 @@ class Command(BaseCommand):
                     manager = ", ".join(r["details"]["manager"])
 
                 key = "%s%s%s" % (uuid,eventclass,location) # 20.02.2017
-                hash_key = hashlib.md5(key).hexdigest() # 20.02.2017
+                #hash_key = hashlib.md5(key).hexdigest() # 20.02.2017
+                hash_key = evid
                 #key = evid # 20.02.2017
 
 
@@ -131,11 +132,12 @@ class Command(BaseCommand):
                 ### Если такого ключа нет, добавить запись
 
                 ### Определение что делать с записью по информации в кэше
-                if last_action == None:
-                    action = "insert"
-                ### Если ключ есть  - обновить запись или ничего не делать
-                elif last_action == "done":
-                    action = ""
+                if last_action == None and severity.id != 0 and severity.id != 1 and severity.id != 4:
+                    if events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).exists() == False:
+                        action = "insert"
+                    else:
+                        action = "update"
+                ### Если ключ есть  - обновить запись
                 else:
                     action = "update"
 
@@ -154,8 +156,7 @@ class Command(BaseCommand):
                 """
                     Для severity: info, debug, clear (0,1,4) нет необходимости создавать новое событие
                 """
-                if severity.id != 0 and severity.id != 1 and severity.id != 4 and action == "insert":
-
+                if action == "insert":
                     events.objects.create(
                         source='zenoss_krsk',
                         uuid=uuid,
@@ -209,7 +210,7 @@ class Command(BaseCommand):
                             finished_date = lasttime
                         )
                         # Запись кэш об завершении события для evid
-                        cache.set(hash_key,"done", 60)
+                        cache.delete(hash_key)
 
                         #### Если событие не завершено
                         """

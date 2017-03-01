@@ -72,6 +72,13 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         }
 
 
+        // Название услуги
+        function ServName($client,$pservid) {
+            $res = $client->o_mdb_api_func_get_service_name(array(pservid=>(int)$pservid,plang=>1))->return;
+            return $res;
+        }
+
+
         // Название ресурса
         function ServiceName($client,$serviceid) {
             $data=$client->o_res_api_resources(array(id=>array(is=>(int)$serviceid)))->return;
@@ -88,8 +95,20 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
             $srv = ServiceName($client,$row->service);
             $start_date = $row->startdate;
             $login = $row->name;
-            $tmidname = TarifName($client,$row->tmid);
             $sitename = SiteName($client,$row->dmid);
+
+
+            // Для фингерпринта du
+            if (substr($sitename,0,3) == "du.") {
+                $r = $client->o_mdb_api_dog_serv_f(array(dmid=>array(is=>(int)$row->dmid)))->return;
+                $tmidname = ServName($client,$r->row->servid);
+
+            }
+            else {
+                $tmidname = TarifName($client,$row->tmid);
+            }
+
+
 
             print("srv:".$srv.";start_date:".$start_date.";login:".$login.";tarif:".$tmidname.";sitename:".$sitename.";\n");
 

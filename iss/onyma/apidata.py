@@ -196,6 +196,24 @@ def get_apidata2(request):
 
 
 
+        ## Запрос данных по номеру договора - id договора
+        if r.has_key("action") and rg("action") == 'get_dogid':
+            dognum = request.GET["dognum"]
+            data = commands.getoutput(
+                "/usr/bin/php iss/onyma/soap/get_dogid.php %s %s %s" % (username, password, dognum))
+
+            response_data = data
+
+
+
+        ## Запрос данных по номеру договора - id договора
+        if r.has_key("action") and rg("action") == 'test':
+
+            response_data = "1"
+
+
+
+
     response = HttpResponse(response_data, content_type="text/plain; charset=utf-8")
     response['Access-Control-Allow-Origin'] = "*"
     return response

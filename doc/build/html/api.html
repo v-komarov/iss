@@ -53,20 +53,22 @@
   <div class="contents topic" id="id1">
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
-<li><a class="reference internal" href="#api" id="id13">Описание API</a><ul>
-<li><a class="reference internal" href="#id2" id="id14">Список агрегаторов</a></li>
-<li><a class="reference internal" href="#lldp" id="id15">Данные lldp</a></li>
-<li><a class="reference internal" href="#onyma" id="id16">Запросы к Onyma</a><ul>
-<li><a class="reference internal" href="#id3" id="id17">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id4" id="id18">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id5" id="id19">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id6" id="id20">Создание договора</a></li>
-<li><a class="reference internal" href="#id7" id="id21">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id8" id="id22">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id9" id="id23">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id10" id="id24">Установка адреса договора</a></li>
-<li><a class="reference internal" href="#id11" id="id25">Установка номера договора</a></li>
-<li><a class="reference internal" href="#id12" id="id26">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#api" id="id14">Описание API</a><ul>
+<li><a class="reference internal" href="#id2" id="id15">Список агрегаторов</a></li>
+<li><a class="reference internal" href="#lldp" id="id16">Данные lldp</a></li>
+<li><a class="reference internal" href="#onyma" id="id17">Запросы к Onyma</a><ul>
+<li><a class="reference internal" href="#id3" id="id18">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li><a class="reference internal" href="#id4" id="id19">Тест</a></li>
+<li><a class="reference internal" href="#id5" id="id20">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id6" id="id21">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id7" id="id22">Создание договора</a></li>
+<li><a class="reference internal" href="#id8" id="id23">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id9" id="id24">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id10" id="id25">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id11" id="id26">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id12" id="id27">Установка номера договора</a></li>
+<li><a class="reference internal" href="#id13" id="id28">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id" id="id29">Получение id договора по номеру договора</a></li>
 </ul>
 </li>
 </ul>
@@ -74,9 +76,9 @@
 </ul>
 </div>
 <div class="section" id="api">
-<h1><a class="toc-backref" href="#id13">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
+<h1><a class="toc-backref" href="#id14">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id14">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -88,7 +90,7 @@
 <p>uplink_ports - список uplink портов</p>
 </div>
 <div class="section" id="lldp">
-<h2><a class="toc-backref" href="#id15">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id16">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -100,9 +102,9 @@
 <p>ports - список портов , mac адресов &#8220;соседей&#8221;.</p>
 </div>
 <div class="section" id="onyma">
-<span id="index-0"></span><h2><a class="toc-backref" href="#id16">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
+<span id="index-0"></span><h2><a class="toc-backref" href="#id17">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
 <div class="section" id="id3">
-<h3><a class="toc-backref" href="#id17">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata">http://10.6.0.22:8000/onyma/apidata</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -125,7 +127,30 @@
 </div></blockquote>
 </div>
 <div class="section" id="id4">
-<h3><a class="toc-backref" href="#id18">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">Тест</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
+<p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=test</li>
+</ol>
+<p>Вывод : text
+1</p>
+<p>Пример запрос:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span>http://10.6.0.22:8000/onyma/apidata2/?action=test
+</pre></div>
+</div>
+</div></blockquote>
+<p>Пример ответ:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id20">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -148,8 +173,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id5">
-<h3><a class="toc-backref" href="#id19">Получение справочника групп (городов)</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id6">
+<h3><a class="toc-backref" href="#id21">Получение справочника групп (городов)</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -177,8 +202,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id20">Создание договора</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id7">
+<h3><a class="toc-backref" href="#id22">Создание договора</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -203,8 +228,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id7">
-<h3><a class="toc-backref" href="#id21">Установка даты договора</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id23">Установка даты договора</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -223,8 +248,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id22">Установка ФИО договора</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id24">Установка ФИО договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -245,8 +270,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id23">Установка телефона договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id25">Установка телефона договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -265,8 +290,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id10">
-<h3><a class="toc-backref" href="#id24">Установка адреса договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id11">
+<h3><a class="toc-backref" href="#id26">Установка адреса договора</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -288,8 +313,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id11">
-<h3><a class="toc-backref" href="#id25">Установка номера договора</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id27">Установка номера договора</a><a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -308,8 +333,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id26">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a><a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id28">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a><a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -329,7 +354,31 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 <blockquote>
 <div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">srv</span><span class="p">:[</span><span class="n">ТТК</span><span class="p">]</span> <span class="n">Подключение</span> <span class="n">ШПД</span><span class="p">;</span><span class="n">start_date</span><span class="p">:</span><span class="mi">2016</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">28</span><span class="n">T21</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.000</span><span class="n">Z</span><span class="p">;</span><span class="n">login</span><span class="p">:</span><span class="mi">241115694</span><span class="p">;</span><span class="n">tarif</span><span class="p">:</span><span class="n">Сибирь</span> <span class="n">вТТКайся</span> <span class="mi">290</span><span class="n">р</span> <span class="mi">60000</span><span class="n">К</span> <span class="n">Красноярск</span><span class="p">,</span> <span class="n">Минусинск</span> <span class="mi">2016</span><span class="p">;</span><span class="n">sitename</span><span class="p">:</span><span class="n">i</span><span class="o">.</span><span class="mi">241115694</span><span class="p">;</span>
 <span class="n">srv</span><span class="p">:[</span><span class="n">ТТК</span><span class="p">]</span> <span class="n">Доступ</span> <span class="n">в</span> <span class="n">личный</span> <span class="n">кабинет</span><span class="p">;</span><span class="n">start_date</span><span class="p">:</span><span class="mi">2016</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">28</span><span class="n">T21</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.000</span><span class="n">Z</span><span class="p">;</span><span class="n">login</span><span class="p">:</span><span class="mi">241115694</span><span class="p">;</span><span class="n">tarif</span><span class="p">:</span><span class="n">Technological</span><span class="p">;</span><span class="n">sitename</span><span class="p">:</span><span class="n">lc</span><span class="o">.</span><span class="mi">241115694</span><span class="p">;</span>
-<span class="n">srv</span><span class="p">:[</span><span class="n">ТТК</span><span class="p">]</span> <span class="n">Доп</span><span class="o">.</span><span class="n">услуги</span> <span class="n">Интернет</span><span class="p">;</span><span class="n">start_date</span><span class="p">:</span><span class="mi">2016</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">30</span><span class="n">T21</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.000</span><span class="n">Z</span><span class="p">;</span><span class="n">login</span><span class="p">:</span><span class="n">ttk_dop</span><span class="p">;</span><span class="n">tarif</span><span class="p">:</span><span class="n">Сибирь</span> <span class="n">Доп</span><span class="o">.</span> <span class="n">услуги</span> <span class="n">ФЛ</span><span class="p">;</span><span class="n">sitename</span><span class="p">:</span><span class="n">du</span><span class="o">.</span><span class="mi">241115694</span><span class="p">;</span>
+<span class="n">srv</span><span class="p">:[</span><span class="n">ТТК</span><span class="p">]</span> <span class="n">Доп</span><span class="o">.</span><span class="n">услуги</span> <span class="n">Интернет</span><span class="p">;</span><span class="n">start_date</span><span class="p">:</span><span class="mi">2016</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">30</span><span class="n">T21</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mf">00.000</span><span class="n">Z</span><span class="p">;</span><span class="n">login</span><span class="p">:</span><span class="n">ttk_dop</span><span class="p">;</span><span class="n">tarif</span><span class="p">:[</span><span class="n">Сибирь</span><span class="p">]</span> <span class="n">Wi</span><span class="o">-</span><span class="n">Fi</span> <span class="n">роутер</span><span class="p">(</span><span class="n">в</span> <span class="n">рассрочку</span> <span class="n">на</span> <span class="mi">18</span> <span class="n">мес</span><span class="o">.</span><span class="p">);</span><span class="n">sitename</span><span class="p">:</span><span class="n">du</span><span class="o">.</span><span class="mi">241115694</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id">
+<h3><a class="toc-backref" href="#id29">Получение id договора по номеру договора</a><a class="headerlink" href="#id" title="Ссылка на этот заголовок">¶</a></h3>
+<p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=get_dogid</li>
+<li>dognum=&lt;Номер договора&gt;</li>
+</ol>
+<p>Вывод : text
+&lt;id договора&gt;</p>
+<p>Пример запрос:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span>http://10.6.0.22:8000/onyma/apidata2/?action=get_dogid&amp;dognum=241115694
+</pre></div>
+</div>
+</div></blockquote>
+<p>Пример ответ:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">2319030</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -350,15 +399,17 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 <li><a class="reference internal" href="#lldp">Данные lldp</a></li>
 <li><a class="reference internal" href="#onyma">Запросы к Onyma</a><ul>
 <li><a class="reference internal" href="#id3">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id4">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id5">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id6">Создание договора</a></li>
-<li><a class="reference internal" href="#id7">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id8">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id9">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id10">Установка адреса договора</a></li>
-<li><a class="reference internal" href="#id11">Установка номера договора</a></li>
-<li><a class="reference internal" href="#id12">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id4">Тест</a></li>
+<li><a class="reference internal" href="#id5">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id6">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id7">Создание договора</a></li>
+<li><a class="reference internal" href="#id8">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id9">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id10">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id11">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id12">Установка номера договора</a></li>
+<li><a class="reference internal" href="#id13">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id">Получение id договора по номеру договора</a></li>
 </ul>
 </li>
 </ul>
