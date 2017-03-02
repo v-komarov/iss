@@ -206,6 +206,21 @@ def get_apidata2(request):
 
 
 
+
+        ## Запрос  id тарифного плана по названию
+        if r.has_key("action") and rg("action") == 'get_tmid':
+            tmname = urllib.unquote(request.GET["tmname"]).replace(" ","#")
+
+
+            cmd = "/usr/bin/php iss/onyma/soap/get_tmid.php %s %s %s" % (username, password, tmname)
+            data = commands.getoutput(cmd.encode("utf-8"))
+
+            response_data = data
+
+
+
+
+
         ## Запрос данных по номеру договора - id договора
         if r.has_key("action") and rg("action") == 'test':
 
