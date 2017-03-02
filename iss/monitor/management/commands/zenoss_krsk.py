@@ -80,7 +80,7 @@ class Command(BaseCommand):
         #cache.clear()
 
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":10000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
         commands.getoutput(cmd)
