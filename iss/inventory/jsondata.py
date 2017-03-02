@@ -8,14 +8,15 @@ from pprint import pformat
 
 from django.http import HttpResponse
 
-from iss.inventory.models import devices_scheme
-from iss.localdicts.models import ports,slots
+from iss.inventory.models import devices_scheme,interfaces_scheme
+from iss.localdicts.models import ports,slots,interfaces
 
 
 
 
 ports_list = []
 slots_list = []
+interfaces_list = []
 
 
 for item in ports.objects.all():
@@ -23,6 +24,11 @@ for item in ports.objects.all():
 
 for item in slots.objects.all():
     slots_list.append(item.name)
+
+
+for item in interfaces.objects.all():
+    interfaces_list.append(item.name)
+
 
 
 
@@ -55,6 +61,18 @@ def check_json_data(data):
 
 
 
+### Проверка допустимости значений для модели интерфейсов
+def check_json_data2(data):
+
+
+    for i in data["interfaces"]:
+        if i not in interfaces_list:
+            return "error interfaces value!"
+
+
+    return "ok"
+
+
 
 
 def get_json(request):
@@ -82,6 +100,19 @@ def get_json(request):
 
 
 
+        ### Получение данных схемы интерфейса
+        if r.has_key("interfacescheme") and rg("interfacescheme") != '':
+            scheme_id = int(request.GET["interfacescheme"], 10)
+
+            s = interfaces_scheme.objects.get(pk=scheme_id)
+            data = {
+                "name": s.name,
+                "scheme_interface": "%s" % pformat(s.scheme_interface),
+            }
+
+            response_data = data
+
+
 
 
     if request.method == "POST":
@@ -89,7 +120,7 @@ def get_json(request):
 
         data = eval(request.body)
 
-
+        # Создание схемы устройства
         if data.has_key("action") and data["action"] == 'create_scheme':
 
             ### Проверка корректности значений в json схеме
@@ -106,7 +137,7 @@ def get_json(request):
             response_data = {"result":check}
 
 
-
+        # Изменение схемы устройства
         if data.has_key("action") and data["action"] == 'edit_scheme':
 
             ### Проверка корректности значений в json схеме
@@ -120,6 +151,39 @@ def get_json(request):
                 s.save()
 
             response_data = {"result":check}
+
+
+
+        # Создание схемы интерфейса
+        if data.has_key("action") and data["action"] == 'create_interfacescheme':
+
+            ### Проверка корректности значений в json схеме
+            check = check_json_data2(eval(data["scheme_interface"]))
+
+            if check == "ok":
+                interfaces_scheme.objects.create(
+                    scheme_interface=eval(data["scheme_interface"]),
+                    name=data["name"],
+                    author=request.user.get_username() + " (" + request.user.get_full_name() + ")"
+                )
+
+            response_data = {"result": check}
+
+
+
+        # Изменение схемы интерфейса
+        if data.has_key("action") and data["action"] == 'edit_interfacescheme':
+
+            ### Проверка корректности значений в json схеме
+            check = check_json_data2(eval(data["scheme_interface"]))
+
+            if check == "ok":
+                s = interfaces_scheme.objects.get(pk=int(data["scheme_id"]))
+                s.scheme_interface = eval(data["scheme_interface"])
+                s.name = data["name"]
+                s.save()
+
+            response_data = {"result": check}
 
 
 

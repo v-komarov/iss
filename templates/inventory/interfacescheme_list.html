@@ -7,8 +7,8 @@
 {% load tz %}
 
 
-<link href="{{ MY_STATIC_URL }}inventory/devicescheme.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="{{ MY_STATIC_URL }}inventory/devicescheme.js"></script>
+<link href="{{ MY_STATIC_URL }}inventory/interfacescheme.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}inventory/interfacescheme.js"></script>
 
 
 
@@ -51,7 +51,7 @@
 
 
 
-    <table group="devicescheme" class="table table-bordered table-striped draggable" width="100%">
+    <table group="interfacescheme" class="table table-bordered table-striped draggable" width="100%">
 
 
         <thead class="small">
@@ -75,12 +75,8 @@
 
 
                         <td>{{ row.name }}</td>
-                        <td>{{ row.scheme_device.model_name }}</td>
-                        <td>{{ row.scheme_device.properties }}</td>
-                        <td>{{ row.scheme_device.slots_number }}</td>
-                        <td><a id="tooltip" title="{{ row.scheme_device.ports }}">{{ row.scheme_device.ports|truncatechars:25 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.scheme_device.slots }}">{{ row.scheme_device.slots|truncatechars:25 }}</a></td>
-                        <td>{{ row.scheme_device.allowed_parrents }}</td>
+                        <td>{{ row.scheme_interface.interfaces }}</td>
+                        <td>{{ row.scheme_interface.comment }}</td>
                         {% timezone tz %}
                         <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
                         {% endtimezone %}
@@ -116,7 +112,7 @@
 </div>
 
 
-{% include "inventory/schemeform.html" %}
+{% include "inventory/schemeform2.html" %}
 
 
 {% endblock %}

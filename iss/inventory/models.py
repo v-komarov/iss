@@ -12,13 +12,28 @@ from iss.localdicts.models import address_companies,address_house
 
 ### Виды и модели устройств
 class devices_scheme(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Вид устройства', unique=True)
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
     scheme_device = JSONField(default={})
     author = models.CharField(max_length=100,default="")
     datetime_create = models.DateTimeField(auto_now_add=True,null=True)
 
     def __unicode__(self):
         return self.name
+
+
+
+
+
+### Модели интерфейсов
+class interfaces_scheme(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    scheme_interface = JSONField(default={})
+    author = models.CharField(max_length=100, default="")
+    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
 
 
 

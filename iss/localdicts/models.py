@@ -227,3 +227,17 @@ class slots(models.Model):
         verbose_name = 'Вид слота'
         verbose_name_plural = 'Виды слотов'
 
+
+
+
+# Допустимые логические интерфейсы
+class interfaces(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Интерфейс', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Интерфейс'
+        verbose_name_plural = 'Интерфейсы'
+

@@ -1,0 +1,26 @@
+.row {
+    margin: 0;
+}
+
+thead.small > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=interfacescheme] > tbody > tr > td {
+    padding:0;
+}
+
+
+#namescheme, #jsonscheme {
+    margin-left: 10px;
+    width: 500px;
+}
+
+
+#editschemeform2 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1),
+#editschemeform2 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) {
+    vertical-align: top;
+}

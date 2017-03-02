@@ -23,7 +23,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 
 
-from iss.inventory.models import devices_scheme
+from iss.inventory.models import devices_scheme,interfaces_scheme
 from iss.localdicts.models import Status,Severity
 
 from iss.mydecorators import group_required,anonymous_required
@@ -115,9 +115,9 @@ class InterfaceSchemeList(ListView):
 
     def get_queryset(self):
 
-        data = devices_scheme.objects.order_by('name')
+        data = interfaces_scheme.objects.order_by('name')
 
-        return []
+        return data
 
 
 
