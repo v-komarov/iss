@@ -586,3 +586,116 @@ Backup files
 
 
 .. warning:: Необходимо убедиться, то memcachedb принимает запросы по указанному в **CACHES** адресу и порту.
+
+
+
+
+
+
+.. index:: gunicorn
+
+Использование gunicorn
+----------------------
+
+
+gunicorn
+~~~~~~~~
+
+**root@iss:/etc# cat /etc/gunicorn.d/iss.conf**
+
+ ::
+
+    CONFIG = {
+        'working_dir': '/srv/django/iss',
+        'args': (
+            '--bind=127.0.0.1:5000',
+            '--workers=4',
+            '--timeout=260',
+            '--max-requests=500',
+            '--reload',
+            'iss.wsgi',
+            'iss.wsgi:application',
+            #'--log-level=debug',
+        ),
+    }
+
+
+nginx
+~~~~~
+
+**root@iss:/etc/nginx# cat /etc/nginx/sites-available/iss**
+
+ ::
+
+    server {
+            listen        10000;
+            server_name   10.6.0.22;
+
+        root /srv/django/iss/static;
+        index index.html;
+
+        location / {
+            add_header Access-Control-Allow-Origin *;
+            autoindex on;
+        }
+
+        location /static/admin {
+            alias /usr/local/lib/python2.7/dist-packages/django/contrib/admin/static/;
+            autoindex on;
+        }
+
+
+
+    }
+
+
+    server {
+
+            listen        8000;
+            server_name   10.6.0.22;
+
+
+        location / {
+                include proxy_params;
+                proxy_pass http://127.0.0.1:5000;
+        }
+
+
+        location /doc {
+            alias /srv/django/iss/doc/build/html/;
+            index index.html;
+            autoindex on;
+        }
+
+
+    }
+
+Управление
+~~~~~~~~~~
+
+Пример:
+
+ ::
+
+    root@iss:/etc/nginx# systemctl status gunicorn
+    ● gunicorn.service
+       Loaded: loaded (/etc/init.d/gunicorn; bad; vendor preset: enabled)
+       Active: active (running) since Чт 2017-03-02 21:36:48 +07; 11h ago
+         Docs: man:systemd-sysv-generator(8)
+        Tasks: 9
+       Memory: 138.8M
+          CPU: 21min 5.808s
+       CGroup: /system.slice/gunicorn.service
+               ├─30097 /usr/bin/python /usr/bin/gunicorn --pid /var/run/gunicorn/iss.conf.pid --name iss.conf --user www-data --group www-data --daemon --log-file /var/log/gunic
+               ├─30102 /usr/bin/python /usr/bin/gunicorn --pid /var/run/gunicorn/iss.conf.pid --name iss.conf --user www-data --group www-data --daemon --log-file /var/log/gunic
+               ├─30106 /usr/bin/python /usr/bin/gunicorn --pid /var/run/gunicorn/iss.conf.pid --name iss.conf --user www-data --group www-data --daemon --log-file /var/log/gunic
+               ├─30108 /usr/bin/python /usr/bin/gunicorn --pid /var/run/gunicorn/iss.conf.pid --name iss.conf --user www-data --group www-data --daemon --log-file /var/log/gunic
+               └─30110 /usr/bin/python /usr/bin/gunicorn --pid /var/run/gunicorn/iss.conf.pid --name iss.conf --user www-data --group www-data --daemon --log-file /var/log/gunic
+
+    мар 02 21:36:47 iss systemd[1]: Stopped gunicorn.service.
+    мар 02 21:36:47 iss systemd[1]: Starting gunicorn.service...
+    мар 02 21:36:47 iss gunicorn[30088]:  * Starting Gunicorn workers
+    мар 02 21:36:48 iss gunicorn[30088]:  [iss.conf] *
+    мар 02 21:36:48 iss systemd[1]: Started gunicorn.service.
+
+

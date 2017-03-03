@@ -67,36 +67,41 @@
 <div class="section" id="monitor">
 <h2><a class="toc-backref" href="#id4">Приложение monitor</a><a class="headerlink" href="#monitor" title="Ссылка на этот заголовок">¶</a></h2>
 <ol class="arabic simple">
-<li>Profile - для хранения интерфейсных настроек пользователей Оперативного журнала</li>
-<li>events - для хранения событий (загружается из zenoss Красноярска, можно добавлять вручную оператором или формировать на основе почтовых сообщений)</li>
-<li>accidents - для хранения созданных оператором аварий на основе одиночного события или группы событий.</li>
-<li>messages - для хранения подготовленных для рассылки оповещений.</li>
+<li><strong>Profile</strong> - для хранения интерфейсных настроек пользователей Оперативного журнала</li>
+<li><strong>events</strong> - для хранения событий (загружается из zenoss Красноярска, можно добавлять вручную оператором или формировать на основе почтовых сообщений)</li>
+<li><strong>accidents</strong> - для хранения созданных оператором аварий на основе одиночного события или группы событий.</li>
+<li><strong>messages</strong> - для хранения подготовленных для рассылки оповещений.</li>
+<li><strong>drp_list</strong> - список ДРП , наполняется данными из ИСС</li>
 </ol>
 </div>
 <div class="section" id="localdicts">
 <h2><a class="toc-backref" href="#id5">Приложение localdicts (большенство справочников отображены в стандартном административном интерфейсе)</a><a class="headerlink" href="#localdicts" title="Ссылка на этот заголовок">¶</a></h2>
 <ol class="arabic simple">
-<li>TzList - Список часовых поясов для выбора отображения даты и времени пользователем.</li>
-<li>Status - для &#8220;расшифровки&#8221; статусов событий events</li>
-<li>Severity - для &#8220;расшифровки&#8221; важности событий events</li>
-<li>accident_group - Название группы аварий (унаследован от iss)</li>
-<li>accident_list  - Название аварии (унаследован от iss)</li>
-<li>accident_cats - Категории аварий (унаследован от iss)</li>
-<li>address_city - Справочник городов (унаследован от iss)</li>
-<li>address_street - Справочник улиц (унаследован от iss)</li>
-<li>address_house - Хранимые адреса (номера домов , коды городов, коды улиц) (унаследован от iss)</li>
-<li>address_companies - Справочник компаний (пока две ТТК-Сибирь и РК-Сибирь)</li>
-<li>email_templates - Справочник шаблонов оповещений по email.</li>
+<li><strong>TzList</strong> - Список часовых поясов для выбора отображения даты и времени пользователем.</li>
+<li><strong>Status</strong> - для &#8220;расшифровки&#8221; статусов событий events</li>
+<li><strong>Severity</strong> - для &#8220;расшифровки&#8221; важности событий events</li>
+<li><strong>accident_group</strong> - Название группы аварий (унаследован от iss)</li>
+<li><strong>accident_list</strong>  - Название аварии (унаследован от iss)</li>
+<li><strong>accident_cats</strong> - Категории аварий (унаследован от iss)</li>
+<li><strong>address_city</strong> - Справочник городов (унаследован от iss)</li>
+<li><strong>address_street</strong> - Справочник улиц (унаследован от iss)</li>
+<li><strong>address_house</strong> - Хранимые адреса (номера домов , коды городов, коды улиц) (унаследован от iss)</li>
+<li><strong>address_companies</strong> - Справочник компаний (пока две ТТК-Сибирь и РК-Сибирь)</li>
+<li><strong>email_templates</strong> - Справочник шаблонов оповещений по email.</li>
+<li><strong>address_templates</strong> - Шаблоны для формирования адресов в требуемых для отчетов формах</li>
+<li><strong>ports</strong> - Справочник списков разрешенных для использования наименования портов при создании и использовании <strong>devices_scheme</strong></li>
+<li><strong>slots</strong> - Справочник списков разрешенных для использования наименования слотов при создании и использовании <strong>devices_scheme</strong></li>
+<li><strong>interfaces</strong> - Справочник списков разрешенных для использования наименований логических интерфейсов</li>
 </ol>
 </div>
 <div class="section" id="equipment">
 <h2><a class="toc-backref" href="#id6">Приложение equipment</a><a class="headerlink" href="#equipment" title="Ссылка на этот заголовок">¶</a></h2>
 <ol class="arabic simple">
-<li>devices_ip - Сведения по ip устройствам, полученные динамически (snmp,lldp)</li>
-<li>device_access_error - (Лог) Список ip устройств , доступ к которым при опросе не был получен.</li>
-<li>footnodes - Справочник опорных узлов.</li>
-<li>agregators - Спраовчник агрегаторов.</li>
-<li>scan_iplist - Справочник ip адресов , по которым происходит опрос устройств по snmp,lldp</li>
+<li><strong>devices_ip</strong> - Сведения по ip устройствам, полученные динамически (snmp,lldp)</li>
+<li><strong>device_access_error</strong> - (Лог) Список ip устройств , доступ к которым при опросе не был получен.</li>
+<li><strong>footnodes</strong> - Справочник опорных узлов.</li>
+<li><strong>agregators</strong> - Спраовчник агрегаторов.</li>
+<li><strong>scan_iplist</strong> - Справочник ip адресов , по которым происходит опрос устройств по snmp,lldp</li>
 </ol>
 <div class="section" id="agregators">
 <h3>agregators<a class="headerlink" href="#agregators" title="Ссылка на этот заголовок">¶</a></h3>
@@ -125,8 +130,9 @@
 <div class="section" id="inventory">
 <h2><a class="toc-backref" href="#id7">Приложение inventory</a><a class="headerlink" href="#inventory" title="Ссылка на этот заголовок">¶</a></h2>
 <ol class="arabic simple">
-<li>devicves - для хранения всех устройств сети с привязкой с адресу (город, улица, дом)</li>
-<li>devices_scheme - Справочник типов устройств и описание структуры данных</li>
+<li><strong>devicves</strong> - для хранения всех устройств сети с привязкой с адресу (город, улица, дом)</li>
+<li><strong>devices_scheme</strong> - Справочник типов(моделей) устройств и описание структуры данных</li>
+<li><strong>interfaces_scheme</strong> - Справочник типов(моделей) сетевых интерфейсов</li>
 </ol>
 </div>
 </div>

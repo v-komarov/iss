@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="top" title="Документация iss 1.0" href="index.html" />
-    <link rel="next" title="Примеры конфигов" href="example_conf.html" />
+    <link rel="next" title="Вспомогательные утилиты" href="tools.html" />
     <link rel="prev" title="Расчет ЗКЛ" href="zkl.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
           <a href="genindex.html" title="Алфавитный указатель"
              accesskey="I">указатель</a></li>
         <li class="right" >
-          <a href="example_conf.html" title="Примеры конфигов"
+          <a href="tools.html" title="Вспомогательные утилиты"
              accesskey="N">вперёд</a> |</li>
         <li class="right" >
           <a href="zkl.html" title="Расчет ЗКЛ"
@@ -55,12 +55,12 @@
 <ul class="simple">
 <li><a class="reference internal" href="#id2" id="id3">Взаимодействие с другими системами</a><ul>
 <li><a class="reference internal" href="#crontab" id="id4">crontab</a></li>
-<li><a class="reference internal" href="#zenoss-krsk" id="id5">zenoss_krsk</a></li>
-<li><a class="reference internal" href="#mail-sibttk-ru" id="id6">mail_sibttk_ru</a></li>
-<li><a class="reference internal" href="#snmp-devices" id="id7">snmp_devices</a></li>
-<li><a class="reference internal" href="#get-issdata" id="id8">get_issdata</a></li>
-<li><a class="reference internal" href="#send-reports-accident" id="id9">send_reports_accident</a></li>
-<li><a class="reference internal" href="#send-iss-accident" id="id10">send_iss_accident</a></li>
+<li><a class="reference internal" href="#mail-sibttk-ru" id="id5">mail_sibttk_ru</a></li>
+<li><a class="reference internal" href="#snmp-devices" id="id6">snmp_devices</a></li>
+<li><a class="reference internal" href="#get-issdata" id="id7">get_issdata</a></li>
+<li><a class="reference internal" href="#send-reports-accident" id="id8">send_reports_accident</a></li>
+<li><a class="reference internal" href="#send-iss-accident" id="id9">send_iss_accident</a></li>
+<li><a class="reference internal" href="#zenoss-krsk" id="id10">zenoss_krsk</a></li>
 </ul>
 </li>
 </ul>
@@ -71,7 +71,6 @@
 <h2><a class="toc-backref" href="#id4">crontab</a><a class="headerlink" href="#crontab" title="Ссылка на этот заголовок">¶</a></h2>
 <blockquote>
 <div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># m h  dom mon dow   command</span>
-<span class="o">*/</span><span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">zenoss_krsk</span>
 <span class="o">*/</span><span class="mi">10</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">mail_sibttk_ru</span>
 <span class="mi">10</span> <span class="mi">14</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">zenoss_krsk</span> <span class="nb">all</span>
 <span class="mi">10</span> <span class="mi">9</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">snmp_devices</span> <span class="n">zenoss_krsk</span>
@@ -82,30 +81,54 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="zenoss-krsk">
-<h2><a class="toc-backref" href="#id5">zenoss_krsk</a><a class="headerlink" href="#zenoss-krsk" title="Ссылка на этот заголовок">¶</a></h2>
-<p>Получение данных из zenoss Красноярска через api</p>
-</div>
 <div class="section" id="mail-sibttk-ru">
-<h2><a class="toc-backref" href="#id6">mail_sibttk_ru</a><a class="headerlink" href="#mail-sibttk-ru" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">mail_sibttk_ru</a><a class="headerlink" href="#mail-sibttk-ru" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Получение сообщения с почтового адреса.</p>
 </div>
 <div class="section" id="snmp-devices">
-<h2><a class="toc-backref" href="#id7">snmp_devices</a><a class="headerlink" href="#snmp-devices" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">snmp_devices</a><a class="headerlink" href="#snmp-devices" title="Ссылка на этот заголовок">¶</a></h2>
 <p>snmp сканирование сетевых устройств</p>
 </div>
 <div class="section" id="get-issdata">
-<h2><a class="toc-backref" href="#id8">get_issdata</a><a class="headerlink" href="#get-issdata" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">get_issdata</a><a class="headerlink" href="#get-issdata" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Получение данных из ИСС по используемым портам на оборудовании.</p>
 </div>
 <div class="section" id="send-reports-accident">
-<h2><a class="toc-backref" href="#id9">send_reports_accident</a><a class="headerlink" href="#send-reports-accident" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">send_reports_accident</a><a class="headerlink" href="#send-reports-accident" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Обмен данными с системой подготовки статистических отчетов через api.
 Реализован функционал создания в reports записи об аварии, обновления, удаления.</p>
 </div>
 <div class="section" id="send-iss-accident">
-<h2><a class="toc-backref" href="#id10">send_iss_accident</a><a class="headerlink" href="#send-iss-accident" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id9">send_iss_accident</a><a class="headerlink" href="#send-iss-accident" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Обмен данными с ИСС. Создание работ на стороне ИСС. Получение id работ, открытие интерфейса ИИС работ из интерфейса &#8220;Оперативный журнал&#8221;.</p>
+</div>
+<div class="section" id="zenoss-krsk">
+<h2><a class="toc-backref" href="#id10">zenoss_krsk</a><a class="headerlink" href="#zenoss-krsk" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Получение данных из zenoss Красноярска через api</p>
+<p>Реализовано через самозацикленный скрипт:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@iss</span><span class="p">:</span><span class="o">~</span><span class="c1"># cat /srv/django/iss/reget_zenoss_data.sh</span>
+<span class="c1">#!/bin/sh</span>
+
+
+<span class="k">while</span> <span class="n">true</span>
+<span class="n">do</span>
+
+<span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">zenoss_krsk</span>
+
+<span class="n">sleep</span> <span class="mi">1</span>
+
+<span class="n">done</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Запуск через rc.local</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">screen</span> <span class="o">-</span><span class="n">dmS</span> <span class="n">zenoss</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="o">/</span><span class="n">reget_zenoss_data</span><span class="o">.</span><span class="n">sh</span> <span class="o">&amp;</span>
+</pre></div>
+</div>
+</div></blockquote>
 </div>
 </div>
 
@@ -119,12 +142,12 @@
   <ul>
 <li><a class="reference internal" href="#">Взаимодействие с другими системами</a><ul>
 <li><a class="reference internal" href="#crontab">crontab</a></li>
-<li><a class="reference internal" href="#zenoss-krsk">zenoss_krsk</a></li>
 <li><a class="reference internal" href="#mail-sibttk-ru">mail_sibttk_ru</a></li>
 <li><a class="reference internal" href="#snmp-devices">snmp_devices</a></li>
 <li><a class="reference internal" href="#get-issdata">get_issdata</a></li>
 <li><a class="reference internal" href="#send-reports-accident">send_reports_accident</a></li>
 <li><a class="reference internal" href="#send-iss-accident">send_iss_accident</a></li>
+<li><a class="reference internal" href="#zenoss-krsk">zenoss_krsk</a></li>
 </ul>
 </li>
 </ul>
@@ -133,8 +156,8 @@
   <p class="topless"><a href="zkl.html"
                         title="предыдущая глава">Расчет ЗКЛ</a></p>
   <h4>Следующий раздел</h4>
-  <p class="topless"><a href="example_conf.html"
-                        title="следующая глава">Примеры конфигов</a></p>
+  <p class="topless"><a href="tools.html"
+                        title="следующая глава">Вспомогательные утилиты</a></p>
   <div role="note" aria-label="source link">
     <h3>Эта страница</h3>
     <ul class="this-page-menu">
@@ -163,7 +186,7 @@
           <a href="genindex.html" title="Алфавитный указатель"
              >указатель</a></li>
         <li class="right" >
-          <a href="example_conf.html" title="Примеры конфигов"
+          <a href="tools.html" title="Вспомогательные утилиты"
              >вперёд</a> |</li>
         <li class="right" >
           <a href="zkl.html" title="Расчет ЗКЛ"

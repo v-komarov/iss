@@ -13,7 +13,6 @@ crontab
  ::
 
     # m h  dom mon dow   command
-    */1 * * * * cd /srv/django/iss;/usr/bin/python manage.py zenoss_krsk
     */10 * * * * cd /srv/django/iss;/usr/bin/python manage.py mail_sibttk_ru
     10 14 * * * cd /srv/django/iss;/usr/bin/python manage.py zenoss_krsk all
     10 9 * * * cd /srv/django/iss;/usr/bin/python manage.py snmp_devices zenoss_krsk
@@ -21,11 +20,6 @@ crontab
     */5 * * * * cd /srv/django/iss;/usr/bin/python manage.py send_reports_accident
     */1 * * * * cd /srv/django/iss;/usr/bin/python manage.py send_iss_accident
 
-
-zenoss_krsk
------------
-
-Получение данных из zenoss Красноярска через api
 
 
 mail_sibttk_ru
@@ -58,4 +52,36 @@ send_iss_accident
 
 Обмен данными с ИСС. Создание работ на стороне ИСС. Получение id работ, открытие интерфейса ИИС работ из интерфейса "Оперативный журнал".
 
+
+.. index:: zenoss
+zenoss_krsk
+-----------
+
+Получение данных из zenoss Красноярска через api
+
+Реализовано через самозацикленный скрипт:
+
+ ::
+
+    root@iss:~# cat /srv/django/iss/reget_zenoss_data.sh
+    #!/bin/sh
+
+
+    while true
+    do
+
+    cd /srv/django/iss
+    /usr/bin/python manage.py zenoss_krsk
+
+    sleep 1
+
+    done
+
+
+
+Запуск через rc.local
+
+ ::
+
+    /usr/bin/screen -dmS zenoss /srv/django/iss/reget_zenoss_data.sh &
 
