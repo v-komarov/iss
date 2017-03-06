@@ -76,7 +76,7 @@
         </a>
         <ul class="dropdown-menu">
           <li id="#" {% if request.path|slice:'0:24' == "/inventory/devicescheme/" %}class="active"{% endif %}><a href="#">Устройства</a></li>
-          <li id="#" {% if request.path|slice:'0:24' == "/inventory/devicescheme/" %}class="active"{% endif %}><a href="#">Сетевые элементы</a></li>
+          <li id="menunetelements" {% if request.path|slice:'0:23' == "/inventory/netelements/" %}class="active"{% endif %}><a href="/inventory/netelements/page/1/">Сетевые элементы</a></li>
           <li class="divider"></li>
           <li id="menudevicesschemes" {% if request.path|slice:'0:24' == "/inventory/devicescheme/" %}class="active"{% endif %}><a href="/inventory/devicescheme/page/1/">Модели устройств</a></li>
           <li id="menuinterfaceschemes" {% if request.path|slice:'0:27' == "/inventory/interfacescheme/" %}class="active"{% endif %}><a href="/inventory/interfacescheme/page/1/">Модели логических интерфейсов</a></li>

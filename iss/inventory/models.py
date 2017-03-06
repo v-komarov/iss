@@ -70,7 +70,7 @@ class devices_slots(models.Model):
 
 ### Сетевые интерфейсы
 class netinterfaces(models.Model):
-    name = models.CharField(max_length=100)
+    value = models.CharField(max_length=100)
     interface = models.ForeignKey(interfaces,null=True)
     port = models.ManyToManyField(devices_ports)
 
@@ -79,10 +79,11 @@ class netinterfaces(models.Model):
 
 ### Сетевые элементы
 class netelems(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
     netinterface = models.ManyToManyField(netinterfaces)
     device = models.ManyToManyField(devices)
-
+    author = models.CharField(max_length=100, default="")
+    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
 
 
 

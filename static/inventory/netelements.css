@@ -1,0 +1,43 @@
+.row {
+    margin: 0;
+}
+
+thead.small > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+#namenetelement {
+    margin-left: 5px;
+    width: 380px;
+}
+
+
+table[group=netelements] > tbody > tr > td {
+    padding:0;
+}
+
+
+#elem {
+    width: 500px;
+}
+
+
+#rowelem {
+    padding-top:10px;
+}
+
+
+#elemdata {
+    padding-top:70px;
+}
+
+
+
+div.col-md-6 > table > thead > tr > th,
+div.col-md-4 > table > thead > tr > th {
+    padding:0;
+    background-color:#DCDCDC;
+}

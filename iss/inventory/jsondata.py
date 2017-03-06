@@ -6,10 +6,12 @@ import json
 from pytz import timezone
 from pprint import pformat
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from iss.inventory.models import devices_scheme,interfaces_scheme
 from iss.localdicts.models import ports,slots,interfaces
+from django.shortcuts import redirect
+
 
 
 
@@ -184,6 +186,16 @@ def get_json(request):
                 s.save()
 
             response_data = {"result": check}
+
+
+
+
+        # Изменение схемы интерфейса
+        if data.has_key("action") and data["action"] == 'create_netelement':
+
+            #return HttpResponseRedirect("/inventory/netelement/")
+
+            response_data = {"result": "ok"}
 
 
 
