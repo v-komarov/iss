@@ -68,18 +68,12 @@ class devices_slots(models.Model):
 
 
 
-### Договора клиентов на порту
-class client_dogovor(models.Model):
-    port = models.ForeignKey(devices_ports)
-    dogovor = models.CharField(max_length=20)
-
-
-
-
 ### Сетевые интерфейсы
 class netinterfaces(models.Model):
     name = models.CharField(max_length=100)
-    interface = models.ForeignKey(interfaces)
+    interface = models.ForeignKey(interfaces,null=True)
+    port = models.ManyToManyField(devices_ports)
+
 
 
 
@@ -88,3 +82,14 @@ class netelems(models.Model):
     name = models.CharField(max_length=100)
     netinterface = models.ManyToManyField(netinterfaces)
     device = models.ManyToManyField(devices)
+
+
+
+
+### Договора клиентов на порту
+class client_dogovor(models.Model):
+    port = models.OneToOneField(netinterfaces)
+    dogovor = models.CharField(max_length=20)
+
+
+
