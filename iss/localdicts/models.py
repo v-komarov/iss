@@ -241,3 +241,32 @@ class interfaces(models.Model):
         verbose_name = 'Интерфейс'
         verbose_name_plural = 'Интерфейсы'
 
+
+
+
+# Статусы слотов
+class slot_status(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Статус слота', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Статус слота'
+        verbose_name_plural = 'Статусы слотов'
+
+
+
+
+# Статусы портов
+class port_status(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Статус порта', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Статус порта'
+        verbose_name_plural = 'Статусы портов'
+
+

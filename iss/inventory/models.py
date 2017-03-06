@@ -6,7 +6,7 @@ import datetime
 
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from iss.localdicts.models import address_companies,address_house
+from iss.localdicts.models import address_companies,address_house,ports,slots,port_status,slot_status,interfaces
 
 
 
@@ -50,5 +50,41 @@ class devices(models.Model):
 
 
 
+### Порты на устройствах
+class devices_ports(models.Model):
+    device = models.ForeignKey(devices)
+    port = models.ForeignKey(ports)
+    num = models.IntegerField()
+    status = models.ForeignKey(port_status)
 
 
+
+### Слоты на устройствах
+class devices_slots(models.Model):
+    device = models.ForeignKey(devices)
+    slot = models.ForeignKey(slots)
+    status = models.ForeignKey(slot_status)
+
+
+
+
+### Договора клиентов на порту
+class client_dogovor(models.Model):
+    port = models.ForeignKey(devices_ports)
+    dogovor = models.CharField(max_length=20)
+
+
+
+
+### Сетевые интерфейсы
+class netinterfaces(models.Model):
+    name = models.CharField(max_length=100)
+    interface = models.ForeignKey(interfaces)
+
+
+
+### Сетевые элементы
+class netelems(models.Model):
+    name = models.CharField(max_length=100)
+    netinterface = models.ManyToManyField(netinterfaces)
+    device = models.ManyToManyField(devices)
