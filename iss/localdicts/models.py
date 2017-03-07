@@ -31,8 +31,8 @@ class Status(models.Model):
 
 
     class Meta:
-        verbose_name = 'Статус'
-        verbose_name_plural = 'Статусы'
+        verbose_name = 'Статус оперативного журнала'
+        verbose_name_plural = 'Статусы оперативного журнала'
 
 
 
@@ -45,8 +45,8 @@ class Severity(models.Model):
 
 
     class Meta:
-        verbose_name = 'Важность'
-        verbose_name_plural = 'Важность'
+        verbose_name = 'Важность оперативного журнала'
+        verbose_name_plural = 'Важность оперативного журнала'
 
 
 
@@ -268,5 +268,20 @@ class port_status(models.Model):
     class Meta:
         verbose_name = 'Статус порта'
         verbose_name_plural = 'Статусы портов'
+
+
+
+
+
+# Статусы устройств
+class device_status(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Статус устройства', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Статус устройства'
+        verbose_name_plural = 'Статусы устройств'
 
 

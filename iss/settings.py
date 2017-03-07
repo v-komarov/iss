@@ -174,6 +174,12 @@ LOGGING = {
             'filename': BASE_DIR+'/log/monitor.log',
             'formatter':'users',
         },
+        'file_inventory': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR+'/log/inventory.log',
+            'formatter':'users',
+        },
         'file_debug': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
@@ -184,6 +190,11 @@ LOGGING = {
     'loggers': {
         'monitor': {
             'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'inventory': {
+            'handlers': ['file_inventory'],
             'level': 'INFO',
             'propagate': True,
         },

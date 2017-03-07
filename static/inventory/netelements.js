@@ -1,11 +1,26 @@
 $(document).ready(function() {
 
-
+    // Добавление списка сетевых элементов
     $("#additem").bind("click",AddNetElement);
     //$("#edititem").bind("click",EditScheme);
+    // Для списка сетевых элементов
     $("table[group=netelements] tbody tr").bind("click",ClickEventRow);
+    // Для списка сетевых интерфейсов
+    $("table[group=interfaces] tbody tr").bind("click",ClickEventRowInterfaces);
+    // Для списка устройств
+    $("table[group=devices] tbody tr").bind("click",ClickEventRowDevices);
 
+
+    // Для интерфейса списка сетевых элементов
     $("#edititem").hide();
+
+
+    // Для интерфейса наполнения сетевого элемента
+    $("#editinterface").hide();
+    $("#deleteinterface").hide();
+    $("#editdevice").hide();
+    $("#deletedevice").hide();
+
 
 });
 
@@ -43,7 +58,7 @@ function getCookie(name) {
 
 
 
-// Выделение строки
+// Выделение строки сетевых элементов
 function ClickEventRow(e) {
 
         $("table[group=netelements] tbody tr").css("background-color","");
@@ -56,6 +71,31 @@ function ClickEventRow(e) {
 }
 
 
+// Выделение строки списка интерфейсов
+function ClickEventRowInterfaces(e) {
+
+        $("table[group=interfaces] tbody tr").css("background-color","");
+        $(this).css("background-color","#F0E68C");
+        $("table[group=interfaces] tbody tr").attr("marked","no");
+        $(this).attr("marked","yes");
+
+        $("#edititem").show();
+
+}
+
+
+
+// Выделение строки списка устройств
+function ClickEventRowDevices(e) {
+
+        $("table[group=devices] tbody tr").css("background-color","");
+        $(this).css("background-color","#F0E68C");
+        $("table[group=devices] tbody tr").attr("marked","no");
+        $(this).attr("marked","yes");
+
+        $("#edititem").show();
+
+}
 
 
 

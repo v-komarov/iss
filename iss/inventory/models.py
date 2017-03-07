@@ -6,7 +6,7 @@ import datetime
 
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from iss.localdicts.models import address_companies,address_house,ports,slots,port_status,slot_status,interfaces
+from iss.localdicts.models import address_companies,address_house,ports,slots,port_status,slot_status,interfaces,device_status
 
 
 
@@ -19,6 +19,7 @@ class devices_scheme(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 
 
@@ -46,6 +47,36 @@ class devices(models.Model):
     serial = models.CharField(max_length=100, db_index=True, default="")
     data = JSONField(default={})
     device_scheme = models.ForeignKey(devices_scheme,null=True)
+    author = models.CharField(max_length=100, default="")
+    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
+    status = models.ForeignKey(device_status,null=True)
+
+
+    def __unicode__(self):
+        return self.name
+
+
+
+### Перемещение устройств
+class devices_removal(models.Model):
+    device = models.ForeignKey(devices)
+    address = models.ForeignKey(address_house)
+    author = models.CharField(max_length=100, default="")
+    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
+    comment = models.TextField(default="")
+    status = models.ForeignKey(device_status, null=True)
+
+
+
+
+### Набор свойств устройства (определяется моделью)
+class devices_properties(models.Model):
+    device = models.ForeignKey(devices)
+    name = models.CharField(max_length=50)
+    value = models.CharField(max_length=255,default="")
+
+    def __unicode__(self):
+        return self.name
 
 
 
@@ -54,8 +85,12 @@ class devices(models.Model):
 class devices_ports(models.Model):
     device = models.ForeignKey(devices)
     port = models.ForeignKey(ports)
-    num = models.IntegerField()
+    num = models.CharField(max_length=5,default="")
     status = models.ForeignKey(port_status)
+
+    def __unicode__(self):
+        return self.num
+
 
 
 
@@ -63,7 +98,26 @@ class devices_ports(models.Model):
 class devices_slots(models.Model):
     device = models.ForeignKey(devices)
     slot = models.ForeignKey(slots)
+    num = models.CharField(max_length=5,default="")
     status = models.ForeignKey(slot_status)
+
+    def __unicode__(self):
+        return self.num
+
+
+
+
+### Для комбо
+class devices_combo(models.Model):
+    device = models.ForeignKey(devices)
+    slot = models.ForeignKey(slots)
+    port = models.ForeignKey(ports)
+    num = models.CharField(max_length=5,default="")
+    status_slot = models.ForeignKey(slot_status)
+    status_port = models.ForeignKey(port_status)
+
+    def __unicode__(self):
+        return self.num
 
 
 
@@ -84,6 +138,10 @@ class netelems(models.Model):
     device = models.ManyToManyField(devices)
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
 
 
 

@@ -1,0 +1,14 @@
+.row {
+    margin: 0;
+}
+
+thead.small > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+table[group=devices] > tbody > tr.small > td {
+    padding:0;
+}
+

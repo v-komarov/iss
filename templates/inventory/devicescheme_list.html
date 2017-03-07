@@ -66,6 +66,7 @@
                 <th>allowed_parrents</th>
                 <th>Создано</th>
                 <th>Создал</th>
+                <th>json</th>
             </tr>
 
         </thead>
@@ -89,6 +90,7 @@
                         <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
                         {% endtimezone %}
                         <td>{{ row.author }}</td>
+                        <td><a href="/inventory/jsondata/scheme_device/?sch={{ row.id }}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a></td>
 
                     </tr>
 

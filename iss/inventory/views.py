@@ -24,7 +24,7 @@ from django.views.generic.base import TemplateView,RedirectView
 
 
 
-from iss.inventory.models import devices_scheme,interfaces_scheme,netelems
+from iss.inventory.models import devices_scheme,interfaces_scheme,netelems,devices
 from iss.localdicts.models import Status,Severity
 
 from iss.mydecorators import group_required,anonymous_required
@@ -229,3 +229,57 @@ class NetElement(TemplateView):
         #elem = netelems.objects.get(pk=self.request["elem"])
 
         return context
+
+
+
+
+
+
+
+
+### Устройства
+class DevicesList(ListView):
+
+    model = devices
+    template_name = "inventory/devices_list.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+        data = devices.objects.order_by('address')
+
+        return data
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(DevicesList, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+        return context
+
+

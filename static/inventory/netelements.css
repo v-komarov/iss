@@ -41,3 +41,9 @@ div.col-md-4 > table > thead > tr > th {
     padding:0;
     background-color:#DCDCDC;
 }
+
+
+#searchdevice {
+    width: 300px;
+}
+

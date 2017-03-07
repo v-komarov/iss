@@ -2,6 +2,7 @@
 
 import datetime
 import json
+import logging
 
 from pytz import timezone
 from pprint import pformat
@@ -13,6 +14,8 @@ from iss.localdicts.models import ports,slots,interfaces
 from django.shortcuts import redirect
 
 
+
+logger = logging.getLogger('inventory')
 
 
 
@@ -152,6 +155,8 @@ def get_json(request):
                 s.name = data["name"]
                 s.save()
 
+                logger.info("{user} внес изменение в модель устройства {name}".format(user=request.user.get_username(),name=s.name))
+
             response_data = {"result":check}
 
 
@@ -184,6 +189,8 @@ def get_json(request):
                 s.scheme_interface = eval(data["scheme_interface"])
                 s.name = data["name"]
                 s.save()
+
+                logger.info("{user} внес изменение в модель интерфейса {name}".format(user=request.user.get_username(), name=s.name))
 
             response_data = {"result": check}
 
