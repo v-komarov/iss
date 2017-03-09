@@ -12,3 +12,9 @@ table[group=devices] > tbody > tr.small > td {
     padding:0;
 }
 
+
+#table-info {
+    margin-top:30px;
+    margin-bottom:30px;
+}
+

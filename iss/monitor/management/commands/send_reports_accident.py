@@ -116,6 +116,9 @@ class Command(BaseCommand):
     help = 'send data to reports'
 
 
+    def check(self, *args, **kwargs):
+        self.stdout.write(self.style.WARNING("SKIPPING SYSTEM CHECKS!\n"))
+
 
     def handle(self, *args, **options):
 

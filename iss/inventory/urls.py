@@ -2,7 +2,7 @@
 
 
 from django.conf.urls import url
-from iss.inventory.views import DeviceSchemeList,InterfaceSchemeList,NetElementsList,NetElement,DevicesList
+from iss.inventory.views import DeviceSchemeList,InterfaceSchemeList,NetElementsList,NetElement,DevicesList,Device
 from iss.inventory.jsondata import get_json
 from iss.inventory.filedata import get_device_scheme
 
@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'netelements/page/(?P<page>\d+)/$', NetElementsList.as_view()),
     url(r'devices/page/(?P<page>\d+)/$', DevicesList.as_view()),
     url(r'netelement/$', NetElement.as_view()),
+    url(r'device/$', Device.as_view()),
     url(r'jsondata/$', get_json),
     url(r'jsondata/scheme_device/$', get_device_scheme),
 ]

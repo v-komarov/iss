@@ -283,3 +283,44 @@ class DevicesList(ListView):
         return context
 
 
+
+
+
+
+### Редактирование и наполнение данными устройства
+class Device(TemplateView):
+
+    template_name = 'inventory/edit_device.html'
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+        #if self.request.GET.has_key("dev"):
+        #    self.session["dev"] = self.request.GET["dev"]
+
+
+        return super(Device, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Device, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+        #context["elem"] = self.session["elem"]
+        #elem = netelems.objects.get(pk=self.request["elem"])
+
+        return context
+
+

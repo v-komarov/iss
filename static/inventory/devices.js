@@ -3,6 +3,8 @@ $(document).ready(function() {
     // Для списка устройств
     $("table[group=devices] tbody tr").bind("click",ClickEventRow);
 
+    // Управление закладками
+    $("ul.nav-tabs li a").bind("click",ChangeNav);
 
     // Для интерфейса списка устройств
     $("#edititem").hide();
@@ -56,3 +58,33 @@ function ClickEventRow(e) {
 
 }
 
+
+
+
+
+// Переключение закладок
+function ChangeNav(e) {
+    $("#nav-ports").toggleClass("active",false);
+    $("#nav-slots").toggleClass("active",false);
+    $("#nav-combo").toggleClass("active",false);
+    $("#nav-statuses").toggleClass("active",false);
+    $("#nav-removal").toggleClass("active",false);
+    $("#nav-children").toggleClass("active",false);
+    $("#nav-parents").toggleClass("active",false);
+
+    $(this).parent("li").toggleClass("active",true);
+
+    $("#page-ports").hide();
+    $("#page-slots").hide();
+    $("#page-combo").hide();
+    $("#page-statuses").hide();
+    $("#page-removal").hide();
+    $("#page-children").hide();
+    $("#page-parents").hide();
+
+    // Название отображаемой страницы (на закладке)
+    var a = $(this).parent("li").attr("id").split("-");
+    b = "#page-"+a[1];
+    $(b).show();
+
+}

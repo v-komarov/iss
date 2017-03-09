@@ -35,6 +35,9 @@ class Command(BaseCommand):
     help = 'saving zenoss message'
 
 
+    def check(self, *args, **kwargs):
+        self.stdout.write(self.style.WARNING("SKIPPING SYSTEM CHECKS!\n"))
+
 
 
     def handle(self, *args, **options):
