@@ -64,8 +64,17 @@ class devices_removal(models.Model):
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
     comment = models.TextField(default="")
-    status = models.ForeignKey(device_status, null=True)
 
+
+
+
+### Статусы устройств
+class devices_statuses(models.Model):
+    device = models.ForeignKey(devices)
+    author = models.CharField(max_length=100, default="")
+    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
+    comment = models.TextField(default="")
+    status = models.ForeignKey(device_status, null=True)
 
 
 
@@ -96,10 +105,13 @@ class devices_ports(models.Model):
 
 ### Слоты на устройствах
 class devices_slots(models.Model):
-    device = models.ForeignKey(devices)
+    device = models.ForeignKey(devices,related_name="device_link")
     slot = models.ForeignKey(slots)
     num = models.CharField(max_length=5,default="")
     status = models.ForeignKey(slot_status)
+    device_component = models.ForeignKey(devices,null=True,related_name="slots_link")
+    author = models.CharField(max_length=100, default="")
+    datetime_update = models.DateTimeField(auto_now=True, null=True)
 
     def __unicode__(self):
         return self.num
@@ -115,6 +127,8 @@ class devices_combo(models.Model):
     num = models.CharField(max_length=5,default="")
     status_slot = models.ForeignKey(slot_status)
     status_port = models.ForeignKey(port_status)
+    author = models.CharField(max_length=100, default="")
+    datetime_update = models.DateTimeField(auto_now=True, null=True)
 
     def __unicode__(self):
         return self.num

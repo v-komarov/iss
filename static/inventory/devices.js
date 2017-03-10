@@ -69,8 +69,8 @@ function ChangeNav(e) {
     $("#nav-combo").toggleClass("active",false);
     $("#nav-statuses").toggleClass("active",false);
     $("#nav-removal").toggleClass("active",false);
-    $("#nav-children").toggleClass("active",false);
     $("#nav-parents").toggleClass("active",false);
+    $("#nav-properties").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -79,8 +79,8 @@ function ChangeNav(e) {
     $("#page-combo").hide();
     $("#page-statuses").hide();
     $("#page-removal").hide();
-    $("#page-children").hide();
     $("#page-parents").hide();
+    $("#page-properties").hide();
 
     // Название отображаемой страницы (на закладке)
     var a = $(this).parent("li").attr("id").split("-");

@@ -18,3 +18,12 @@ table[group=devices] > tbody > tr.small > td {
     margin-bottom:30px;
 }
 
+table[group=slots] > thead > tr > th {
+    padding:0;
+}
+
+
+table[group=slots],table[group=ports],table[group=combo],table[group=statuses],table[group=removal],table[group=properties] {
+    margin-top:20px;
+}
+

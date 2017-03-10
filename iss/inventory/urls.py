@@ -13,8 +13,8 @@ urlpatterns = [
     url(r'interfacescheme/page/(?P<page>\d+)/$', InterfaceSchemeList.as_view()),
     url(r'netelements/page/(?P<page>\d+)/$', NetElementsList.as_view()),
     url(r'devices/page/(?P<page>\d+)/$', DevicesList.as_view()),
-    url(r'netelement/$', NetElement.as_view()),
-    url(r'device/$', Device.as_view()),
+    url(r'netelementdata/$', NetElement.as_view()),
+    url(r'devicedata/$', Device.as_view()),
     url(r'jsondata/$', get_json),
     url(r'jsondata/scheme_device/$', get_device_scheme),
 ]

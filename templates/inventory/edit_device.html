@@ -35,10 +35,6 @@
                 <td>Статус</td>
                 <td></td>
             </tr>
-            <tr>
-                <td>Родитель</td>
-                <td></td>
-            </tr>
         </tbody>
     </table>
 </div>
@@ -56,8 +52,8 @@
       <li id="nav-combo" role="presentation"><a href="#">Комбо</a></li>
       <li id="nav-statuses" role="presentation"><a href="#">Статусы</a></li>
       <li id="nav-removal" role="presentation"><a href="#">Перемещение</a></li>
-      <li id="nav-children" role="presentation"><a href="#">Компоненты</a></li>
       <li id="nav-parents" role="presentation"><a href="#">Установлен в</a></li>
+      <li id="nav-properties" role="presentation"><a href="#">Свойства</a></li>
     </ul>
 </div>
 
@@ -69,8 +65,8 @@
 {% include "inventory/statuses.html" %}
 {% include "inventory/combo.html" %}
 {% include "inventory/removal.html" %}
-{% include "inventory/children.html" %}
 {% include "inventory/parents.html" %}
+{% include "inventory/prop_device.html" %}
 
 
 {% endblock %}
