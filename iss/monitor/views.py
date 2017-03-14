@@ -317,12 +317,14 @@ class EventList(ListView):
         # Категории аварий
         context["accident_cats"] = accident_cats.objects.all().distinct('cat')
 
+
         # Вид аварии
         context["accident_list"] = accident_list.objects.all()
 
 
         ## Шаблоны сообщений
         context["email_templates"] = email_templates.objects.all()
+
 
 
         # Значение через сколько обновлять таблицу

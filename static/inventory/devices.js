@@ -3,11 +3,12 @@ $(document).ready(function() {
     // Для списка устройств
     $("table[group=devices] tbody tr").bind("click",ClickEventRow);
 
-    // Управление закладками
-    $("ul.nav-tabs li a").bind("click",ChangeNav);
-
     // Для интерфейса списка устройств
     $("#edititem").hide();
+
+    $("#edititem").bind("click",DeviceData);
+
+
 
 
 });
@@ -62,29 +63,17 @@ function ClickEventRow(e) {
 
 
 
-// Переключение закладок
-function ChangeNav(e) {
-    $("#nav-ports").toggleClass("active",false);
-    $("#nav-slots").toggleClass("active",false);
-    $("#nav-combo").toggleClass("active",false);
-    $("#nav-statuses").toggleClass("active",false);
-    $("#nav-removal").toggleClass("active",false);
-    $("#nav-parents").toggleClass("active",false);
-    $("#nav-properties").toggleClass("active",false);
 
-    $(this).parent("li").toggleClass("active",true);
 
-    $("#page-ports").hide();
-    $("#page-slots").hide();
-    $("#page-combo").hide();
-    $("#page-statuses").hide();
-    $("#page-removal").hide();
-    $("#page-parents").hide();
-    $("#page-properties").hide();
 
-    // Название отображаемой страницы (на закладке)
-    var a = $(this).parent("li").attr("id").split("-");
-    b = "#page-"+a[1];
-    $(b).show();
+// Данные устройства - переход
+function DeviceData(e) {
+    var dev_id = $("table[group=devices] tbody tr[marked=yes]").attr("row_id");
+    var jqxhr = $.getJSON("/inventory/jsondata?dev_id="+dev_id+"&action=savedevid",
+    function(data) {
+        console.log(data);
+        if (data["result"] == "ok") { window.location.href = "/inventory/devicedata/?dev="+dev_id; }
 
+    });
 }
+

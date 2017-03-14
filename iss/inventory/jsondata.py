@@ -119,6 +119,14 @@ def get_json(request):
 
 
 
+        ### Сохранение device_id
+        if r.has_key("savedevid") and rg("savedevid") != '':
+            dev_id = int(request.GET["dev_id"], 10)
+            request.session["dev_id"] = dev_id
+
+            response_data = {"result":"ok"}
+
+
 
     if request.method == "POST":
 

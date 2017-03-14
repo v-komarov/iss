@@ -56,6 +56,144 @@ class devices(models.Model):
         return self.name
 
 
+    ### Создание портов устройства согласно модели
+    def mkports(self,author=""):
+        if self.device_scheme != None:
+            if self.device_scheme.scheme_device.has_key("ports"):
+                for item in self.device_scheme.scheme_device["ports"].keys():
+                    ### Тип порта
+                    port_type = ((self.device_scheme.scheme_device["ports"])[item])["type"]
+                    p = ports.objects.get(name=port_type)
+                    ### Статус порта
+                    status = port_status.objects.get(pk=3)
+                    devices_ports.objects.create(
+                        device=self,
+                        port=p,
+                        num = item,
+                        status = status,
+                        author=author
+                    )
+            else:
+
+                return "ports doesn't exist!"
+
+        else:
+
+            return "scheme is empty!"
+
+        return "ok"
+
+
+
+
+    ### Создание слотов устройства согласно модели
+    def mkslots(self,author=""):
+        if self.device_scheme != None:
+            if self.device_scheme.scheme_device.has_key("slots"):
+                for item in self.device_scheme.scheme_device["slots"].keys():
+                    ### Тип слота
+                    slot_type = ((self.device_scheme.scheme_device["slots"])[item])["type"]
+                    s = slots.objects.get(name=slot_type)
+                    ### Статус слота
+                    status = slot_status.objects.get(pk=2)
+                    devices_slots.objects.create(
+                        device=self,
+                        slot=s,
+                        num = item,
+                        status = status,
+                        author = author
+                    )
+
+            else:
+
+                return "slots doesn't exist!"
+
+        else:
+
+            return "scheme is empty!"
+
+        return "ok"
+
+
+
+
+    ### Создание комбо портов
+    def mkcombo(self,author=""):
+
+        if self.device_scheme != None:
+            if self.device_scheme.scheme_device.has_key("combo"):
+                for item in self.device_scheme.scheme_device["combo"].keys():
+                    ### Тип порта
+                    port_type = (((self.device_scheme.scheme_device["combo"])[item])["port"] )["type"]
+                    p = ports.objects.get(name=port_type)
+                    ### Тип слота
+                    slot_type = (((self.device_scheme.scheme_device["combo"])[item])["slot"])["type"]
+                    s = slots.objects.get(name=slot_type)
+                    ### Статус слота
+                    status_s = slot_status.objects.get(pk=2)
+                    ### Статус порта
+                    status_p = port_status.objects.get(pk=3)
+
+                    devices_combo.objects.create(
+                        device = self,
+                        slot = s,
+                        port = p,
+                        num = item,
+                        status_port = status_p,
+                        status_slot = status_s,
+                        author = author
+                    )
+
+            else:
+
+                return "combo doesn't exist!"
+
+        else:
+
+            return "scheme is empty!"
+
+        return "ok"
+
+
+
+
+    ### Создание списка свойств
+    def mkprop(self,author=""):
+
+        if self.device_scheme != None:
+            if self.device_scheme.scheme_device.has_key("properties"):
+                for item in self.device_scheme.scheme_device["properties"]:
+
+                    devices_properties.objects.create(
+                        device = self,
+                        name = item,
+                        author=author
+                    )
+
+            else:
+
+                return "properties doesn't exist!"
+
+        else:
+
+            return "scheme is empty!"
+
+        return "ok"
+
+
+
+
+    ### Удаление свойств , портов, слотов и комбо элемента
+    def clearenv(self):
+        devices_properties.objects.filter(device=self).delete()
+        devices_ports.objects.filter(device=self).delete()
+        devices_slots.objects.filter(device=self).delete()
+        devices_combo.objects.filter(device=self).delete()
+
+        return "ok"
+
+
+
 
 ### Перемещение устройств
 class devices_removal(models.Model):
@@ -78,14 +216,21 @@ class devices_statuses(models.Model):
 
 
 
+
+
 ### Набор свойств устройства (определяется моделью)
 class devices_properties(models.Model):
     device = models.ForeignKey(devices)
     name = models.CharField(max_length=50)
     value = models.CharField(max_length=255,default="")
+    author = models.CharField(max_length=100,default="")
+    datetime_update = models.DateTimeField(auto_now=True,null=True)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        unique_together = ('device', 'name', 'value')
 
 
 
@@ -96,9 +241,16 @@ class devices_ports(models.Model):
     port = models.ForeignKey(ports)
     num = models.CharField(max_length=5,default="")
     status = models.ForeignKey(port_status)
+    author = models.CharField(max_length=100,default="")
+    datetime_update = models.DateTimeField(auto_now=True,null=True)
 
     def __unicode__(self):
         return self.num
+
+    class Meta:
+        unique_together = ('device', 'port', 'num')
+
+
 
 
 
@@ -110,11 +262,15 @@ class devices_slots(models.Model):
     num = models.CharField(max_length=5,default="")
     status = models.ForeignKey(slot_status)
     device_component = models.ForeignKey(devices,null=True,related_name="slots_link")
-    author = models.CharField(max_length=100, default="")
-    datetime_update = models.DateTimeField(auto_now=True, null=True)
+    author = models.CharField(max_length=100,default="")
+    datetime_update = models.DateTimeField(auto_now=True,null=True)
 
     def __unicode__(self):
         return self.num
+
+    class Meta:
+        unique_together = ('device', 'slot', 'num')
+
 
 
 
@@ -127,11 +283,14 @@ class devices_combo(models.Model):
     num = models.CharField(max_length=5,default="")
     status_slot = models.ForeignKey(slot_status)
     status_port = models.ForeignKey(port_status)
-    author = models.CharField(max_length=100, default="")
-    datetime_update = models.DateTimeField(auto_now=True, null=True)
+    author = models.CharField(max_length=100,default="")
+    datetime_update = models.DateTimeField(auto_now=True,null=True)
 
     def __unicode__(self):
         return self.num
+
+    class Meta:
+        unique_together = ('device', 'port', 'slot', 'num')
 
 
 

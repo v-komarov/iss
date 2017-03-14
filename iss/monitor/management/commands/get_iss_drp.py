@@ -30,18 +30,18 @@ class Command(BaseCommand):
         cursor = conn.cursor()
 
         ### Выбор аварий без acc_iss_id
-        for ac in accidents.objects.exclude(acc_iss_id=None):
+        for ac in accidents.objects.exclude(acc_iss_id=None).filter(acc_iss_id__gt=30000):
 
             ## Для отладки 30081 вложенных файлов
             q = """
-                SELECT
+                SELECT TOP 50
                   work_actions.work_id as accident,
                   work_actions.work_action_date as datetime_drp,
                   work_actions.work_action as message_drp,
                   users.user_name as author,
                   work_actions.work_action_num as num_drp
                 FROM
-                  dbo.work_actions INNER JOIN users on users.user_id=work_actions.user_id where work_actions.work_id={iss_id}
+                  dbo.work_actions INNER JOIN users on users.user_id=work_actions.user_id where work_actions.work_id={iss_id} ORDER BY datetime_drp DESC
             """.format(iss_id=ac.acc_iss_id)
 
             #print q

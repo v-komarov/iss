@@ -64,6 +64,40 @@ class events(models.Model):
 
 
 
+### Исторические события
+class events_history(models.Model):
+    events_id = models.CharField(max_length=255, default=uuid.uuid4, db_index=True)
+
+    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
+    source = models.CharField(max_length=255, db_index=True, default="")
+    datetime_evt = models.DateTimeField(db_index=True, null=True, auto_now=True)
+    uuid = models.CharField(max_length=255, db_index=True, null=True, default=uuid.uuid4, )
+    first_seen = models.DateTimeField(db_index=True, null=True)
+    update_time = models.DateTimeField(db_index=True, null=True)
+    last_seen = models.DateTimeField(db_index=True, null=True)
+    event_class = models.CharField(max_length=255, db_index=True, null=True)
+    severity_id = models.ForeignKey(Severity, db_index=True, null=True)
+    manager = models.CharField(max_length=255, db_index=True, null=True)
+    device_system = models.CharField(max_length=255, db_index=True, null=True)
+    device_group = models.CharField(max_length=255, db_index=True, null=True)
+    device_class = models.CharField(max_length=255, db_index=True, null=True)
+    device_net_address = models.CharField(max_length=255, db_index=True, null=True)
+    device_location = models.CharField(max_length=255, db_index=True, null=True)
+    element_identifier = models.CharField(max_length=255, db_index=True, null=True)
+    element_sub_identifier = models.CharField(max_length=255, null=True)
+    status_id = models.ForeignKey(Status, db_index=True, null=True)
+    update_row = models.DateTimeField(auto_now=True, null=True)
+
+    data = JSONField(default={})
+
+    summary = models.CharField(max_length=255, db_index=True, null=True)
+
+    ### дата и время начала и завершения события
+    started_date = models.DateTimeField(db_index=True, null=True)
+    finished_date = models.DateTimeField(db_index=True, null=True)
+
+
+
 
 
 
@@ -89,6 +123,7 @@ class accidents(models.Model):
     acc_addr_dict = JSONField(default={}) ### Словарь данных адресов
     acc_events_list = JSONField(default={}) ### Список событий, на основании которых сформирована авария
     author = models.CharField(max_length=100,default="")
+
 
 
 

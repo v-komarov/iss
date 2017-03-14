@@ -7,10 +7,11 @@ from django.db.models import Q
 from django.core.cache import cache
 
 
-from iss.monitor.models import events
+from iss.monitor.models import events,events_history
 
 from pprint import pformat
 
+import pickle
 import time
 import datetime
 import binascii
@@ -78,13 +79,12 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
+        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=10)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
-        #cache.clear()
 
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
+        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
         commands.getoutput(cmd)
@@ -204,15 +204,45 @@ class Command(BaseCommand):
                         аварийного события фиксируем завершение этого события установкой finished_date
                     """
                     if status.id == 4 or status.id == 5:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
-                            first_seen=firsttime,
-                            update_time=update_time,
-                            last_seen=lasttime,
-                            severity_id=severity,
-                            status_id=status,
-                            summary=summary,
-                            finished_date = lasttime
-                        )
+                        ### Перенос данных в events_history при определенных условиях
+                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass)
+                        if r0.count() == 1:
+                            e = r0[0]
+                            if e.agregator == False and e.agregation == False:
+                                events_history.objects.create(
+                                    events_id=e.id,
+                                    datetime_evt=e.datetime_evt,
+                                    source='zenoss_krsk',
+                                    uuid=e.uuid,
+                                    first_seen=e.first_seen,
+                                    update_time=e.update_time,
+                                    last_seen=e.last_seen,
+                                    event_class=e.event_class,
+                                    severity_id=e.severity_id,
+                                    manager=e.manager,
+                                    device_net_address=e.device_net_address,
+                                    device_location=e.device_location,
+                                    device_class=e.device_class,
+                                    device_group=e.device_group,
+                                    device_system=e.device_system,
+                                    element_identifier=e.element_identifier,
+                                    element_sub_identifier="",
+                                    status_id=e.status_id,
+                                    summary=e.summary,
+                                    started_date=e.started_date,
+                                    finished_date=lasttime
+                                )
+                                e.delete()
+                        else:
+                            events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
+                                first_seen=firsttime,
+                                update_time=update_time,
+                                last_seen=lasttime,
+                                severity_id=severity,
+                                status_id=status,
+                                summary=summary,
+                                finished_date = lasttime
+                            )
                         # Запись кэш об завершении события для evid
                         cache.delete(hash_key)
 
@@ -231,6 +261,8 @@ class Command(BaseCommand):
                         )
                         # Запись кэш об обновлении события для evid
                         cache.set(hash_key,"update", 360000)
+
+
 
         print "ok"
 
