@@ -229,6 +229,19 @@ def get_apidata2(request):
 
 
 
+
+        ## Запрос данных по номеру договора - учетное имя, тарифный план, название ресурса
+        if r.has_key("action") and rg("action") == 'get_user_services_dogid':
+            dogid = request.GET["dogid"]
+            data = commands.getoutput(
+                "/usr/bin/php iss/onyma/soap/get_user_services2.php %s %s %s" % (username, password, dogid))
+
+            response_data = data
+
+
+
+
+
     response = HttpResponse(response_data, content_type="text/plain; charset=utf-8")
     response['Access-Control-Allow-Origin'] = "*"
     return response

@@ -206,9 +206,9 @@ class Command(BaseCommand):
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
                         r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass)
-                        if r0.count() == 1:
+                        if r0.count() > 0:
                             e = r0[0]
-                            if e.agregator == False and e.agregation == False:
+                            if e.agregator == False and e.agregation == False and e.accident == False:
                                 events_history.objects.create(
                                     events_id=e.id,
                                     datetime_evt=e.datetime_evt,
@@ -232,17 +232,18 @@ class Command(BaseCommand):
                                     started_date=e.started_date,
                                     finished_date=lasttime
                                 )
-                                e.delete()
-                        else:
-                            events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
-                                first_seen=firsttime,
-                                update_time=update_time,
-                                last_seen=lasttime,
-                                severity_id=severity,
-                                status_id=status,
-                                summary=summary,
-                                finished_date = lasttime
-                            )
+                                r0.delete()
+
+                            else:
+                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
+                                    first_seen=firsttime,
+                                    update_time=update_time,
+                                    last_seen=lasttime,
+                                    severity_id=severity,
+                                    status_id=status,
+                                    summary=summary,
+                                    finished_date = lasttime
+                                )
                         # Запись кэш об завершении события для evid
                         cache.delete(hash_key)
 

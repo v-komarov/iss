@@ -55,7 +55,7 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         $header =  new SoapHeader($ns, "credentials", $AuthHeader, false);
         $client->__setSoapHeaders(array($header));
 
-        $dognum = 1*$argv[3];
+        $dogid = 1*$argv[3];
 
 
         // Учетное имя
@@ -85,11 +85,10 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
             return $data->row->srvname;
         }
 
-        $dogid=$client->o_mdb_api_pay_gate_get_dogid_for_dogcode(array(pdogcode=>$dognum))->return;
-
 
         //$data=$client->o_mdb_api_client_services(array(dogid=>array(is=>(int)$dogid),status=>array(is=>0)))->return;
         $data=$client->o_mdb_api_client_services(array(dogid=>array(is=>(int)$dogid)))->return;
+
 
         foreach ($data->row as &$row) {
             // Услуга
