@@ -83,7 +83,7 @@ class Command(BaseCommand):
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
@@ -91,7 +91,8 @@ class Command(BaseCommand):
 
         data = json.loads(commands.getoutput("cat %s" % tf.name))
 
-        for r in (data["result"]["events"])[::-1]:
+        #for r in (data["result"]["events"])[::-1]:
+        for r in (data["result"]["events"]):
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
             print event_str
 
