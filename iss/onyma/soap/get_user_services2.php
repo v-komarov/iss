@@ -86,6 +86,9 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         }
 
 
+        $balans=$client->o_mdb_api_func_get_remainder_dog(array(pdogid=>$dogid,pdate=>$date))->return;
+        print("balans:".$balans.";\n");
+
         //$data=$client->o_mdb_api_client_services(array(dogid=>array(is=>(int)$dogid),status=>array(is=>0)))->return;
         $data=$client->o_mdb_api_client_services(array(dogid=>array(is=>(int)$dogid)))->return;
 

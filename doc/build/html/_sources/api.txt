@@ -462,10 +462,11 @@ url http://10.6.0.22:8000/onyma/apidata2
 
 Параметры:
 
-#. action=get_user_services_dognum
+#. action=get_user_services_dogid
 #. dognum=<Номер договора>
 
 Вывод : text
+Первой строкой баланс
 srv:<Значение>;start_date:<Значение>;login:<Значение>;tarif:<Значение>;sitename:<Значение>;
 
 Пример запрос:
@@ -479,8 +480,8 @@ srv:<Значение>;start_date:<Значение>;login:<Значение>;ta
 
  ::
 
+    balans:185.691798;
     srv:[ТТК] Подключение ШПД;start_date:2016-11-28T21:00:00.000Z;login:241115694;tarif:Сибирь вТТКайся 290р 60000К Красноярск, Минусинск 2016;sitename:i.241115694;
     srv:[ТТК] Доступ в личный кабинет;start_date:2016-11-28T21:00:00.000Z;login:241115694;tarif:Technological;sitename:lc.241115694;
     srv:[ТТК] Доп.услуги Интернет;start_date:2016-11-30T21:00:00.000Z;login:ttk_dop;tarif:[Сибирь] Wi-Fi роутер(в рассрочку на 18 мес.);sitename:du.241115694;
-
 

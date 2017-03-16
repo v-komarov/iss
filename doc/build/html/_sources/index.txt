@@ -5,6 +5,7 @@
 .. toctree::
    :maxdepth: 4
 
+   net_stru
    models
    inventory
    events
