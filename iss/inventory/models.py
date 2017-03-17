@@ -243,6 +243,7 @@ class devices_ports(models.Model):
     status = models.ForeignKey(port_status)
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
+    comment = models.CharField(max_length=255,default="")
 
     def __unicode__(self):
         return self.num
@@ -264,6 +265,7 @@ class devices_slots(models.Model):
     device_component = models.ForeignKey(devices,null=True,related_name="slots_link")
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
+    comment = models.CharField(max_length=255,default="")
 
     def __unicode__(self):
         return self.num
@@ -285,6 +287,7 @@ class devices_combo(models.Model):
     status_port = models.ForeignKey(port_status)
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
+    comment = models.CharField(max_length=255,default="")
 
     def __unicode__(self):
         return self.num

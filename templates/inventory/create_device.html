@@ -1,0 +1,44 @@
+<div id="createdevice" title="" hidden>
+    <form id="createdeviceform">
+        <table>
+            <tbody>
+                <tr class="small">
+                    <td><label for="namescheme">Схема</label></td>
+                    <td>
+
+                        <select id="namescheme" name="namescheme" class="form-control input-sm">
+                        {% for item in scheme %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="devicecompany">Компания (владелец)</label></td>
+                    <td>
+
+                        <select id="devicecompany" name="devicecompany" class="form-control input-sm">
+                        {% for item in company %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="deviceaddress">Адрес</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="deviceaddress" name="deviceaddress" placeholder="" />
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="deviceserial">Серийный номер</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="deviceserial" name="deviceserial" placeholder="" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

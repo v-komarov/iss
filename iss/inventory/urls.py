@@ -16,5 +16,5 @@ urlpatterns = [
     url(r'netelementdata/$', NetElement.as_view()),
     url(r'devicedata/$', Device.as_view()),
     url(r'jsondata/$', get_json),
-    url(r'jsondata/scheme_device/$', get_device_scheme),
+    url(r'scheme_device/$', get_device_scheme),
 ]

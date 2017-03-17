@@ -27,3 +27,10 @@ table[group=slots],table[group=ports],table[group=combo],table[group=statuses],t
     margin-top:20px;
 }
 
+
+/* Форма создания устройства */
+#namescheme,#devicecompany,#deviceaddress,#deviceserial {
+    width:400px;
+    margin-left:10px;
+}
+

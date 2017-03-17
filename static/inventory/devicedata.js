@@ -3,6 +3,8 @@ $(document).ready(function() {
     // Управление закладками
     $("ul.nav-tabs li a").bind("click",ChangeNav);
 
+    // Отображение данных
+    ShowDeviceData();
 
 
 });
@@ -65,3 +67,23 @@ function ChangeNav(e) {
 
 }
 
+
+
+
+
+
+// Отображение данных по устройству
+function ShowDeviceData() {
+    var jqxhr = $.getJSON("/inventory/jsondata?action=getdevicedata",
+    function(data) {
+        console.log(data);
+        if (data["result"] != "error") {
+
+            $("#device_model").text(data["result"]["model"]);
+            $("#device_address").text(data["result"]["address"]);
+            $("#device_company").text(data["result"]["company"]);
+            $("#device_status").text(data["result"]["status"]);
+
+        }
+    });
+}

@@ -8,10 +8,73 @@ $(document).ready(function() {
 
     $("#edititem").bind("click",DeviceData);
 
+    // Форма создания устройства
+    $("#additem").bind("click",AddDevice);
 
+    // Поиск
+    $("#runsearch_device").bind("click",RunSearch);
+
+    // Сброс поиска
+    $("#clearsearch_device").bind("click",ClearSearch);
+
+
+
+    // Поиск адреса
+    $("#deviceaddress").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#createdevice',
+        position: 'top',
+        select: function (event,ui) {
+            $("#deviceaddress").val(ui.item.label);
+            window.address_id = ui.item.value;
+            window.address_label = ui.item.label;
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("#deviceaddress").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    })
 
 
 });
+
+
+
+
+
+
+// Поиск
+function RunSearch(e) {
+    var search = $("#search_device").val();
+    var jqxhr = $.getJSON("/inventory/jsondata?search="+search,
+        function(data) {
+            window.location=$("#menu4devices a").attr("href");
+        })
+}
+
+
+
+// Отмена Search
+function ClearSearch(e) {
+    $("#search_device").val("");
+    $("#search_device").attr("placeholder","");
+
+    var search = "";
+    var jqxhr = $.getJSON("/inventory/jsondata?search="+search,
+        function(data) {
+            window.location=$("#menu4devices a").attr("href");
+        })
+}
+
 
 
 
@@ -66,14 +129,97 @@ function ClickEventRow(e) {
 
 
 
-// Данные устройства - переход
+// устройства - переход
 function DeviceData(e) {
     var dev_id = $("table[group=devices] tbody tr[marked=yes]").attr("row_id");
     var jqxhr = $.getJSON("/inventory/jsondata?dev_id="+dev_id+"&action=savedevid",
     function(data) {
-        console.log(data);
-        if (data["result"] == "ok") { window.location.href = "/inventory/devicedata/?dev="+dev_id; }
+        if (data["result"] == "ok")
+        { window.location.href = "/inventory/devicedata/"; }
 
     });
 }
+
+
+
+
+
+
+
+
+
+
+function AddDevice() {
+
+    // Очистка полей
+    $("#deviceserial").val("");
+    $("#deviceaddress").val("");
+
+
+    $("#createdevice").dialog({
+        title:"Создание устройства",
+        buttons:[{ text:"Создать",click: function() {
+            if ($("#namescheme option:selected").val() && $("#devicecompany option:selected").val() && (window.address_id) && $("#deviceserial").val().length != 0 ) {
+                var scheme = $("#namescheme option:selected").val();
+                var company = $("#devicecompany option:selected").val();
+                var address = window.address_id;
+                var serial = $("#deviceserial").val();
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+
+                var data = {};
+                data.scheme = scheme;
+                data.company = company;
+                data.address = address;
+                data.serial = serial;
+                data.action = "create-device";
+
+
+                $.ajax({
+                  url: "/inventory/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok")
+                        { window.location.href = "/inventory/devicedata/"; }
+                    }
+
+                });
+
+
+            }
+            else { alert("Необходимо заполнить поля");}
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:400,
+        width:600,
+        minHeight:400,
+
+    });
+
+}
+
+
+
+
+
+
+
+
 

@@ -9,10 +9,10 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,interfaces_scheme
-from iss.localdicts.models import ports,slots,interfaces
+from iss.inventory.models import devices_scheme,interfaces_scheme,devices
+from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house
 from django.shortcuts import redirect
-
+from django.core import serializers
 
 
 logger = logging.getLogger('inventory')
@@ -90,7 +90,6 @@ def get_json(request):
         rg = request.GET.get
 
 
-
         ### Получение данных схемы
         if r.has_key("scheme") and rg("scheme") != '':
             scheme_id = int(request.GET["scheme"],10)
@@ -120,11 +119,51 @@ def get_json(request):
 
 
         ### Сохранение device_id
-        if r.has_key("savedevid") and rg("savedevid") != '':
+        if r.has_key("action") and rg("action") == 'savedevid':
+
             dev_id = int(request.GET["dev_id"], 10)
             request.session["dev_id"] = dev_id
 
             response_data = {"result":"ok"}
+
+
+
+        ### Поиск
+        if r.has_key("search"):
+
+            search = request.GET["search"]
+            request.session["search_device"] = search
+
+            response_data = {"result":"ok"}
+
+
+
+        ### Данные по устройству в целом
+        if r.has_key("action") and rg("action") == 'getdevicedata':
+
+            if request.session.has_key("dev_id"):
+                dev_id = request.session["dev_id"]
+                d = devices.objects.get(pk=dev_id)
+
+
+
+                data = {
+                    "tz":request.session["tz"],
+                    "model":d.device_scheme.name,
+                    "address":d.address.city.name,
+                    "status":d.status,
+                    "company":d.company.name,
+                    "ports":serializers.serialize('json', d.devices_ports_set.all()),
+                    "slots":serializers.serialize('json', d.device_link.all()),
+                    "combo":serializers.serialize('json', d.devices_combo_set.all()),
+                    "properties":serializers.serialize('json', d.devices_properties_set.all()),
+                }
+                response_data = {"result": data}
+            else:
+                response_data = {"result": "error"}
+
+
+
 
 
 
@@ -211,6 +250,42 @@ def get_json(request):
             #return HttpResponseRedirect("/inventory/netelement/")
 
             response_data = {"result": "ok"}
+
+
+
+
+        # Создание устройства
+        if data.has_key("action") and data["action"] == 'create-device':
+
+            scheme = int(data["scheme"],10)
+            company = int(data["company"],10)
+            address = data["address"]
+            serial = data["serial"]
+
+            s = devices_scheme.objects.get(pk=scheme)
+            c = address_companies.objects.get(pk=company)
+            a = address_house.objects.get(pk=address)
+
+            u = request.user.get_username()+ " ("+request.user.get_full_name()+")"
+
+            d = devices.objects.create(
+                name = s.name,
+                company = c,
+                address = a,
+                serial = serial,
+                device_scheme = s,
+                author = u
+            )
+
+
+            d.mkports(author=u)
+            d.mkslots(author=u)
+            d.mkcombo(author=u)
+            d.mkprop(author=u)
+
+            request.session["dev_id"] = d.id
+
+            response_data = {"result": "ok" }
 
 
 

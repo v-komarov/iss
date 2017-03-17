@@ -25,7 +25,7 @@ from django.views.generic.base import TemplateView,RedirectView
 
 
 from iss.inventory.models import devices_scheme,interfaces_scheme,netelems,devices
-from iss.localdicts.models import Status,Severity
+from iss.localdicts.models import Status,Severity,address_companies
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -261,9 +261,25 @@ class DevicesList(ListView):
 
     def get_queryset(self):
 
-        data = devices.objects.order_by('address')
+        q = []
 
-        return data
+
+        if self.session.has_key("search_device"):
+            if len(self.session['search_device']) >= 3:
+                for search in self.session['search_device'].split(" "):
+                    if search != " ":
+                        q.append("Q(name__icontains='%s') | Q(serial__icontains='%s') | Q(address__street__name__icontains='%s') | Q(address__house__icontains='%s')" % (search,search,search,search))
+
+        if len(q) == 0:
+            return devices.objects.order_by('address')
+        else:
+            str_q = " & ".join(q)
+            str_sql = "devices.objects.filter(%s).order_by('address')" % str_q
+
+        return eval(str_sql)
+
+
+
 
 
 
@@ -278,6 +294,18 @@ class DevicesList(ListView):
             context['tz']= self.session['tz']
         else:
             context['tz']= 'UTC'
+
+        # Справочник схем
+        context['scheme'] = devices_scheme.objects.order_by('name')
+        # Справочник компаний
+        context['company'] = address_companies.objects.order_by('name')
+
+
+        # search
+        if self.session.has_key('search_device'):
+            context['search_device'] = self.session['search_device']
+        else:
+            context['search_device'] = ""
 
 
         return context
