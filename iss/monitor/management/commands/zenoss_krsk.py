@@ -34,7 +34,7 @@ password = iss.dbconn.ZENOSS_API_PASSWORD
 
 
 logger = logging.getLogger('debugging')
-
+loggerjson = logging.getLogger('events')
 
 
 tz = 'Asia/Krasnoyarsk'
@@ -94,6 +94,7 @@ class Command(BaseCommand):
         #for r in (data["result"]["events"])[::-1]:
         for r in (data["result"]["events"]):
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
+            loggerjson.debug("{ev}\n".format(ev=event_str))
             print event_str
 
             id_row = r["id"]  # id

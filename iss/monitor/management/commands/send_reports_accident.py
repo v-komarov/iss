@@ -123,7 +123,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         ### Выбор аварий без acc_reports_id
-        for ac in accidents.objects.order_by("-update_datetime")[:100]:
+        for ac in accidents.objects.order_by("-update_datetime")[:50]:
 
             ### Учитываем или нет в статистике
             if ac.acc_stat == True:
@@ -217,11 +217,10 @@ class Command(BaseCommand):
 
                 data = json.dumps(values)
 
-                #print data
+                print data
 
 
                 req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
-
                 f = urllib2.urlopen(req)
                 result = f.read()
                 r = json.loads(result)

@@ -186,11 +186,22 @@ LOGGING = {
             'filename': BASE_DIR + '/log/debugging.log',
             'formatter':'verbose',
         },
+        'events_json': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/log/events.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'monitor': {
             'handlers': ['file'],
             'level': 'INFO',
+            'propagate': True,
+        },
+        'events': {
+            'handlers': ['events_json'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'inventory': {

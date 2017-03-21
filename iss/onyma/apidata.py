@@ -5,6 +5,7 @@
 import json
 import commands
 import urllib
+from pprint import pformat
 
 
 from django.http import HttpResponse
@@ -238,6 +239,14 @@ def get_apidata2(request):
 
             response_data = data
 
+
+
+
+        # вывод списка доменов
+        if r.has_key("action") and rg("action") == 'get_domain_list':
+            domains = commands.getoutput("/usr/bin/php iss/onyma/soap/get_domain_list.php %s %s" % (username, password))
+
+            response_data = domains
 
 
 

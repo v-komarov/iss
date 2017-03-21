@@ -3,6 +3,7 @@
 import datetime
 import json
 import logging
+import operator
 
 from pytz import timezone
 from pprint import pformat
@@ -13,6 +14,9 @@ from iss.inventory.models import devices_scheme,interfaces_scheme,devices
 from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house
 from django.shortcuts import redirect
 from django.core import serializers
+from django import template
+from django.db.models import F,Func,Value
+from django.db import models
 
 
 logger = logging.getLogger('inventory')
@@ -33,6 +37,99 @@ for item in slots.objects.all():
 
 for item in interfaces.objects.all():
     interfaces_list.append(item.name)
+
+
+
+
+# Преобразование даты в строку + таймзона
+def DateTimeString(vardatetime,request):
+    tz = request.session["tz"]
+    t = template.Template("""
+        {% load tz %}
+        {% timezone tz %}
+        {{ vardatetime|date:"d.m.Y H:i e" }}
+        {% endtimezone %}
+    """)
+    c = template.Context({'vardatetime': vardatetime, 'tz':tz})
+    return t.render(c)
+
+
+
+# Порты в json
+def ports_list(d,request):
+
+    result = []
+    for row in d.devices_ports_set.all():
+        result.append({
+            'id': row.id,
+            'datetime_str':DateTimeString(row.datetime_update,request).strip(),
+            'num':row.num,
+            'comment':row.comment,
+            'status':row.status.name,
+            'port':row.port.name,
+            'author':row.author
+        })
+
+    return result
+
+
+
+# Слоты в json
+def slots_list(d, request):
+
+    result = []
+    for row in d.device_link.all():
+        result.append({
+            'id': row.id,
+            'datetime_str': DateTimeString(row.datetime_update, request).strip(),
+            'num': row.num,
+            'comment': row.comment,
+            'status': row.status.name,
+            'slot': row.slot.name,
+            'author': row.author
+        })
+
+    return result
+
+
+
+# Комбо в json
+def combo_list(d, request):
+
+    result = []
+    for row in d.devices_combo_set.all():
+        result.append({
+            'id': row.id,
+            'datetime_str': DateTimeString(row.datetime_update, request).strip(),
+            'num': row.num,
+            'comment': row.comment,
+            'status_port': row.status_port.name,
+            'status_slot': row.status_slot.name,
+            'slot': row.slot.name,
+            'port': row.port.name,
+            'author': row.author
+        })
+
+    return result
+
+
+
+
+# Свойства в json
+def properties_list(d, request):
+
+    result = []
+    for row in d.devices_properties_set.all():
+        result.append({
+            'id': row.id,
+            'datetime_str': DateTimeString(row.datetime_update, request).strip(),
+            'name': row.name,
+            'value': row.value,
+            'author': row.author
+        })
+
+    return result
+
 
 
 
@@ -141,28 +238,26 @@ def get_json(request):
         ### Данные по устройству в целом
         if r.has_key("action") and rg("action") == 'getdevicedata':
 
+            tz = request.session['tz']
+
             if request.session.has_key("dev_id"):
                 dev_id = request.session["dev_id"]
                 d = devices.objects.get(pk=dev_id)
 
 
-
                 data = {
-                    "tz":request.session["tz"],
                     "model":d.device_scheme.name,
                     "address":d.address.city.name,
                     "status":d.status,
                     "company":d.company.name,
-                    "ports":serializers.serialize('json', d.devices_ports_set.all()),
-                    "slots":serializers.serialize('json', d.device_link.all()),
-                    "combo":serializers.serialize('json', d.devices_combo_set.all()),
-                    "properties":serializers.serialize('json', d.devices_properties_set.all()),
+                    "ports": ports_list(d,request),
+                    "slots": slots_list(d,request),
+                    "combo": combo_list(d,request),
+                    "properties": properties_list(d,request),
                 }
                 response_data = {"result": data}
             else:
                 response_data = {"result": "error"}
-
-
 
 
 
