@@ -28,6 +28,8 @@ import iss.dbconn
 import iss.settings
 
 
+zenoss = "http://10.6.0.129:8080"
+
 
 username = iss.dbconn.ZENOSS_API_USERNAME
 password = iss.dbconn.ZENOSS_API_PASSWORD
@@ -83,7 +85,7 @@ class Command(BaseCommand):
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s" % (startTime,endTime,tf.name,username,password)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
@@ -207,7 +209,7 @@ class Command(BaseCommand):
                     """
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
-                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass)
+                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_krsk')
                         if r0.count() > 0:
                             e = r0[0]
                             if e.agregator == False and e.agregation == False and e.accident == False:
@@ -237,7 +239,7 @@ class Command(BaseCommand):
                                 r0.delete()
 
                             else:
-                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).update(
+                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_krsk').update(
                                     first_seen=firsttime,
                                     update_time=update_time,
                                     last_seen=lasttime,
@@ -254,7 +256,7 @@ class Command(BaseCommand):
                             Обновление открытых аварийных событий
                         """
                     else:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, datetime_evt__gt=fd).update(
+                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, datetime_evt__gt=fd, source='zenoss_krsk').update(
                             first_seen=firsttime,
                             update_time=update_time,
                             last_seen=lasttime,

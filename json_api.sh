@@ -2,7 +2,7 @@
 
 # Your Zenoss server settings.
 # The URL to access your Zenoss5 Endpoint
-ZENOSS_URL="http://10.6.0.129:8080"
+ZENOSS_URL=$8
 
 ZENOSS_USERNAME=$6
 ZENOSS_PASSWORD=$7
