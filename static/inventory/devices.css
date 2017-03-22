@@ -34,3 +34,9 @@ table[group=slots],table[group=ports],table[group=combo],table[group=statuses],t
     margin-left:10px;
 }
 
+
+
+/* Форма редактирования порта */
+form#editportform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
+    padding-right: 10px;
+}

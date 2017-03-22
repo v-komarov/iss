@@ -138,7 +138,18 @@ class address_house(models.Model):
 
 
     def __unicode__(self):
-        return self.house
+
+        return self.name
+
+
+
+    def getaddress(self):
+
+        city = self.city.name if self.city else ""
+        street = self.street.name if self.street else ""
+        house = self.house if self.house else ""
+
+        return ("{city} {street} {house}".format(city=city,street=street,house=house)).strip()
 
 
     class Meta:

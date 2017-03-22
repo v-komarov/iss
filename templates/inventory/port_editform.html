@@ -1,0 +1,32 @@
+<div id="editport" title="" hidden>
+    <form id="editportform">
+        <table>
+            <tbody>
+                <tr class="small">
+                    <td><label for="num">Номер*</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="num" name="num" placeholder="" />
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="status">Статус порта*</label></td>
+                    <td>
+
+                        <select id="status" name="status" class="form-control input-sm">
+                        {% for item in status_port_list %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="comment">Коментарий</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="comment" name="comment" placeholder="" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
