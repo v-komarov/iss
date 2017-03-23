@@ -76,6 +76,8 @@ class Command(BaseCommand):
         ### Поиск неотправленных сообщений в очереди (в таблице)
         for m in messages.objects.filter(send_done=False):
 
+
+
             ### Выбор сообщений с оповещение об аварии на МСС
             if m.data["acc_email_templates"] == "1":
 
@@ -126,6 +128,65 @@ class Command(BaseCommand):
 
                 ### Отправка сообщения в ИСС для создания ДРП
                 send_iss_drp(acc_number,sbj)
+
+
+
+
+
+            ### Выбор сообщений с оповещение об устранении аварии на МСС
+            elif m.data["acc_email_templates"] == "2":
+
+                temp_id = int(m.data["acc_email_templates"], 10)
+                temp = email_templates.objects.get(pk=temp_id)
+
+                if m.accident.acc_iss_id:
+                    acc_number = m.accident.acc_iss_id
+                else:
+                    acc_number = ""
+
+                acc_type_cat = "%s,%s" % (m.data["acc_cat_type"].split(",")[1], m.data["acc_cat_type"].split(",")[0])
+
+                body = temp.template.format(accnum=acc_number, begin=m.data["acc_datetime_begin"], acctype=acc_type_cat,
+                                            stoplist=m.data["acc_service_stoplist"], reason=m.data["acc_reason"],
+                                            cities=m.data["acc_cities"], addresslist=m.data["acc_address_list"],
+                                            repair_acctions=m.data["acc_repair_acctions"], repair_end=m.data["acc_repair_end"])
+                sbj = "Оповещение об устранении аварии МР-Сибирь № %s" % acc_number
+                mto = m.data["acc_email_list"].split(";")
+
+                ### Подпись
+                signature = u"""
+                <p>
+                Исп: %s<br>
+                Диспетчер отдела мониторинга и управления<br>
+                сетями доступа Макрорегион Сибирь<br>
+                Тел. (806) 3721. E-Mail: DS@sibir.ttk.ru<br>
+                --------------------------------------------------<br>
+                Данное сообщение сформировано автоматически<br>
+                ISS2 %s.
+                </p>
+                """ % (
+                m.author[m.author.find("(") + 1:m.author.find(")")], now.astimezone(msk_tz).strftime("%d.%m.%Y %H:%M %Z"))
+
+                issid = u"<p style=\"color:white;\">ISS-ID:%s:ISS-ID</p>" % (m.accident.acc_event.uuid)
+
+                email = EmailMessage(
+                    subject=sbj,
+                    body=body + signature + issid,
+                    from_email='GAMMA <gamma@sibttk.ru>',
+                    to=mto,
+                    reply_to=['ds@sibir.ttk.ru', ]
+                )
+
+                email.content_subtype = "html"
+                m.mail_body = pickle.dumps(email)
+                email.send()
+
+                m.send_done = True
+                m.save()
+
+                ### Отправка сообщения в ИСС для создания ДРП
+                send_iss_drp(acc_number, sbj)
+
 
 
         print "ok"

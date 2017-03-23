@@ -6,6 +6,7 @@ $(document).ready(function() {
     $("ul.dropdown-menu li a[action=accident-iss]").bind("click",AccidentISS);
     $("button#addaddr").bind("click",AddAccidentAddressList);
     $("ul.dropdown-menu li a[action=message-accidentmmsbegin]").bind("click",MessageMssBegin);
+    $("ul.dropdown-menu li a[action=message-accidentmmsend]").bind("click",MessageMssEnd);
 
     $("#write-address-data").bind("click",WriteAddressData);
 
@@ -1236,7 +1237,7 @@ function AddRow(e) {
 
 
 
-// Оповещение об аварии на MCC
+// Оповещение о начале аварии на MCC
 function MessageMssBegin(e) {
 
 
@@ -1303,7 +1304,7 @@ function MessageMssBegin(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?issaccidentok="+row_id,
     function(data) {
 
-        if (data["iss"] == "yes") {
+        //if (data["iss"] == "yes") {
 
             $("#message-mss-begin").dialog({
                 open:function() {
@@ -1388,8 +1389,137 @@ function MessageMssBegin(e) {
 
             });
 
-        }
-        else { alert("Авария не зарегистрирована в ИСС!"); }
+        //}
+        //else { alert("Авария не зарегистрирована в ИСС!"); }
+
+    })
+
+
+}
+
+
+
+
+
+
+
+
+
+
+// Оповещение об устранении аварии на MCC
+function MessageMssEnd(e) {
+
+
+    // Для формы отправки оповещения - отображение списка адресов
+    $( "#acc-email-templates-end" ).change(function() {
+        var address_list = $("#acc-email-templates-end option:selected").attr("address_list");
+        $("#acc-email-list-end").val(address_list);
+    });
+
+
+    // Сообщение еще не создавалось
+    var row_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+    var accident = $("table[group=events] tbody tr[row_id="+row_id+"]").attr("accident");
+    // Авария не создавалась - ничего не делать
+    if (accident != "yes") { return;}
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?mailaccidentdataend="+row_id,
+
+        function(data) {
+
+
+            $("#acc-datetime-begin-end").val(data['acc_start']);
+            $("#acc-cat-type-end").val(data['acccattype']);
+            $("#acc-reason-end").val(data['accreason']);
+            $("#acc-cities-end").val(data['acccities']);
+            $("#acc-address-list-end").val(data['accaddresslist']);
+            $("#acc-email-templates-end").val(data['acc_email_templates']);
+            $("#acc-email-list-end").val(data['acc_email_list']);
+            $("#acc-repair-end2").val(data['acc_repair_end']);
+            $("#acc-repair-acctions-end").val(data['acc_repair']);
+            $("#acc-service-stoplist-end").val(data['acc_service_stoplist']);
+
+        })
+
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?issaccidentok="+row_id,
+    function(data) {
+
+        //if (data["iss"] == "yes") {
+
+            $("#message-mss-end").dialog({
+                open:function() {
+                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar-close").remove();
+                $("table[group=events]").attr("refresh","no");
+                },
+                title:"Оповещение об устранении аварии на MCC",
+                closeOnEscape: false,
+                buttons:[{ text:"Отправить",click: function() {
+
+                    if ($('#acc-datetime-begin-end').valid() && $('#acc-cat-type-end').valid() && $('#acc-reason-end').valid() && $('#acc-cities-end').valid() && $('#acc-address-list-end').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
+
+
+                        var data = {};
+                        data.acc_datetime_begin = $("#acc-datetime-begin-end").val();
+                        data.acc_cat_type = $("#acc-cat-type-end").val();
+                        data.acc_reason = $("#acc-reason-end").val();
+                        data.acc_cities = $("#acc-cities-end").val();
+                        data.acc_address_list = $("#acc-address-list-end").val();
+                        data.acc_email_templates = $("#acc-email-templates-end").val();
+                        data.acc_email_list = $("#acc-email-list-end").val();
+                        data.acc_service_stoplist = $("#acc-service-stoplist-end").val();
+                        data.acc_repair_end = $("#acc-repair-end2").val();
+                        data.acc_repair_acctions = $("#acc-repair-acctions-end").val();
+                        data.event_id = $("table[group=events] tbody tr[marked=yes]").attr("row_id");
+                        data.action = "create-mcc-message-email-end";
+
+
+
+
+                        var csrftoken = getCookie('csrftoken');
+
+                        $.ajaxSetup({
+                            beforeSend: function(xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                }
+                            }
+                        });
+
+
+
+                        $.ajax({
+                          url: "/monitor/events/jsondata/",
+                          type: "POST",
+                          dataType: 'json',
+                          data:$.toJSON(data),
+                            success: function(result) {
+                                location.reload();
+                            }
+
+                        });
+
+
+                        $(this).dialog("close");
+                        $("table[group=events]").attr("refresh","yes");
+
+
+
+
+                    }
+
+                }},
+                    {text:"Закрыть",click: function() {
+                    $(this).dialog("close");$("table[group=events]").attr("refresh","yes");}}
+                ],
+                modal:true,
+                minWidth:600,
+                width:900
+
+            });
+
+        //}
+        //else { alert("Авария не зарегистрирована в ИСС!"); }
 
     })
 

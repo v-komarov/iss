@@ -28,24 +28,19 @@ import iss.dbconn
 import iss.settings
 
 
-zenoss = "http://10.6.0.129:8080"
+zenoss = "http://10.5.16.99:8080"
 
 
-username = iss.dbconn.ZENOSS_API_KRSK_USERNAME
-password = iss.dbconn.ZENOSS_API_KRSK_PASSWORD
+username = iss.dbconn.ZENOSS_API_IRK_USERNAME
+password = iss.dbconn.ZENOSS_API_IRK_PASSWORD
 
 
 logger = logging.getLogger('debugging')
 loggerjson = logging.getLogger('events')
 
 
-tz = 'Asia/Krasnoyarsk'
-krsk_tz = timezone(tz)
-
-
-
-### Дата появления поля finished_date 30.01.2017
-fd = datetime.datetime.strptime("2017-01-30","%Y-%m-%d").replace(tzinfo=krsk_tz)
+tz = 'Asia/Irkutsk'
+irk_tz = timezone(tz)
 
 
 
@@ -81,12 +76,12 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=10)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
-        endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
+        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=30)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
+        endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=3)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
 
         cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
+        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s %s" % (tf.name,username,password,zenoss)
         print cmd
 
         commands.getoutput(cmd)
@@ -107,9 +102,9 @@ class Command(BaseCommand):
             if r["device"].has_key("uuid"):
 
 
-                firsttime = krsk_tz.localize(datetime.datetime.strptime(r["firstTime"], "%Y-%m-%d %H:%M:%S"))
-                lasttime = krsk_tz.localize(datetime.datetime.strptime(r["lastTime"], "%Y-%m-%d %H:%M:%S"))
-                update_time = krsk_tz.localize(datetime.datetime.strptime(r["stateChange"], "%Y-%m-%d %H:%M:%S"))  # update_time
+                firsttime = irk_tz.localize(datetime.datetime.strptime(r["firstTime"], "%Y-%m-%d %H:%M:%S"))
+                lasttime = irk_tz.localize(datetime.datetime.strptime(r["lastTime"], "%Y-%m-%d %H:%M:%S"))
+                update_time = irk_tz.localize(datetime.datetime.strptime(r["stateChange"], "%Y-%m-%d %H:%M:%S"))  # update_time
 
                 severity = Severity.objects.get(pk=r["severity"])
                 summary = r["summary"]
@@ -132,7 +127,7 @@ class Command(BaseCommand):
 
                 key = "%s%s%s" % (uuid,eventclass,location) # 20.02.2017
                 #hash_key = hashlib.md5(key).hexdigest() # 20.02.2017
-                hash_key = evid+"zenoss_krsk"
+                hash_key = evid+"zenoss_irk"
                 #key = evid # 20.02.2017
 
 
@@ -166,7 +161,7 @@ class Command(BaseCommand):
                 """
                 if action == "insert":
                     events.objects.create(
-                        source='zenoss_krsk',
+                        source='zenoss_irk',
                         uuid=uuid,
                         first_seen=firsttime,
                         update_time=update_time,
@@ -209,14 +204,14 @@ class Command(BaseCommand):
                     """
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
-                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_krsk')
+                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_irk')
                         if r0.count() > 0:
                             e = r0[0]
                             if e.agregator == False and e.agregation == False and e.accident == False:
                                 events_history.objects.create(
                                     events_id=e.id,
                                     datetime_evt=e.datetime_evt,
-                                    source='zenoss_krsk',
+                                    source='zenoss_irk',
                                     uuid=e.uuid,
                                     first_seen=e.first_seen,
                                     update_time=e.update_time,
@@ -239,7 +234,7 @@ class Command(BaseCommand):
                                 r0.delete()
 
                             else:
-                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_krsk').update(
+                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_irk').update(
                                     first_seen=firsttime,
                                     update_time=update_time,
                                     last_seen=lasttime,
@@ -256,7 +251,7 @@ class Command(BaseCommand):
                             Обновление открытых аварийных событий
                         """
                     else:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, datetime_evt__gt=fd, source='zenoss_krsk').update(
+                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_irk').update(
                             first_seen=firsttime,
                             update_time=update_time,
                             last_seen=lasttime,

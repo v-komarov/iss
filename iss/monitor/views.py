@@ -135,6 +135,9 @@ class EventList(ListView):
     def get_queryset(self):
 
         q = []
+        if self.session.has_key("filteraccident"):
+            q.append("Q(accident=%s)" % True)
+
         if self.session.has_key("filtergroup"):
             q.append("Q(agregator=%s)" % True)
 
@@ -163,7 +166,7 @@ class EventList(ListView):
             if len(self.session['search']) >= 3:
                 for search in self.session['search'].split(" "):
                     if search != " ":
-                        q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s'))" % (search,search,search,search,search,search))
+                        q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s') | Q(source__icontains='%s'))" % (search,search,search,search,search,search,search))
 
         if self.session.has_key("first_seen"):
             if self.session["first_seen"] != "":
@@ -308,6 +311,14 @@ class EventList(ListView):
             context["filtergroup"] = True
         else:
             context["filtergroup"] = False
+
+
+
+        if self.session.has_key('filteraccident'):
+            context["filteraccident"] = True
+        else:
+            context["filteraccident"] = False
+
 
 
         # Чередование полей

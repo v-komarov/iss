@@ -141,6 +141,7 @@ class messages(models.Model):
 
 
 
+
 ### Список ДРП
 class drp_list(models.Model):
     datetime_drp = models.DateTimeField(db_index=True,null=True)

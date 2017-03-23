@@ -47,8 +47,10 @@
 
         <form class="form-inline">
                 <button id="filtergroup" title="Только группы" type="button" {% if filtergroup %}class="btn btn-default btn-xs active"{% else %}class="btn btn-default btn-xs"{% endif %}><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></button>
-                <button id="filtermess" title="С оповещением" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
-                <button id="filterworking" title="С работами" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button>
+                <button id="filteraccident" title="Только с авариями" type="button" {% if filteraccident %}class="btn btn-default btn-xs active"{% else %}class="btn btn-default btn-xs"{% endif %}><span class="glyphicon glyphicon-flag" aria-hidden="true"></span></button>
+                <button id="filterhistory" title="Только архивные" type="button" {% if filterhistory %}class="btn btn-default btn-xs active"{% else %}class="btn btn-default btn-xs"{% endif %}><span class="glyphicon glyphicon-open-file" aria-hidden="true"></span></button>
+                {# <button id="filtermess" title="С оповещением" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-check" aria-hidden="true"></span></button> #}
+                {# <button id="filterworking" title="С работами" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button> #}
 
             <div class="form-group">
                 <label for="filter-status"><small>Status</small></label>
@@ -172,6 +174,7 @@
 {% include "monitor/mailform.html" %}
 {% include "monitor/mailform2.html" %}
 {% include "monitor/message_mss.html" %}
+{% include "monitor/message_mss2.html" %}
 {% include "monitor/zkllist.html" %}
 {% include "monitor/usersettings.html" %}
 {% include "monitor/accidentform.html" %}

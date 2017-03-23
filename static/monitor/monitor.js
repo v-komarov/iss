@@ -26,6 +26,7 @@ $(document).ready(function() {
     $("#runseverity").bind("click",FilterSeverity);
     $("#runmanager").bind("click",FilterManager);
     $("#filtergroup").bind("click",FilterGroup);
+    $("#filteraccident").bind("click",FilterAccident);
 
     //$("table[group=events] tbody tr td a").bind("click",ChooseActions);
     $("ul.dropdown-menu li a[action=zkl]").bind("click",GetZkl);
@@ -730,6 +731,19 @@ function CheckBoxRow(e) {
 function FilterGroup(e) {
 
     var jqxhr = $.getJSON("/monitor/events/jsondata?filtergroup=ok",
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+
+}
+
+
+
+
+// Фильтр по авариям
+function FilterAccident(e) {
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?filteraccident=ok",
         function(data) {
             window.location=$("#menumonitor a").attr("href");
         })

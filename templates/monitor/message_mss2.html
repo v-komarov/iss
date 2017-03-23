@@ -1,0 +1,45 @@
+<div id="message-mss-end" title="" hidden>
+    <form id="message-mb">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="acc-datetime-begin-end">Дата времени начала</label></td>
+                    <td><input type="text" class="form-control" id="acc-datetime-begin-end" name="acc-datetime-begin-end" placeholder="" /></td>
+                    <td><label for="acc-cat-type-end">Категория и вид аварии</label></td>
+                    <td><input type="text" class="form-control" id="acc-cat-type-end" name="acc-cat-type-end" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label for="acc-service-stoplist-end">Список услуг недоступных клиентам</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-service-stoplist-end" name="acc-service-stoplist-end" placeholder=""></textarea></td>
+                    <td><label for="acc-reason-end">Причина отсутствия услуги, для информирования клиентов</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-reason-end" name="acc-reason-end" placeholder=""></textarea></td>
+                </tr>
+                <tr>
+                    <td><label style="margin-right:10px;" for="acc-cities-end">Город</label></td>
+                    <td><input type="text" class="form-control" id="acc-cities-end" name="acc-cities-end" placeholder="" /></td>
+                    <td><label for="acc-address-list-end">Адреса (улицы, номера домов)</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-address-list-end" name="acc-address-list-end" placeholder=""></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="acc-repair-acctions-end">Меры, принятые для устранения</label></td>
+                    <td><textarea class="form-control" rows="3" id="acc-repair-acctions-end" name="acc-service-stoplist-end" placeholder=""></textarea></td>
+                    <td><label style="margin-right:10px;" for="acc-repair-end2">Дата и время устранения</label></td>
+                    <td><input type="text" class="form-control" id="acc-repair-end2" name="acc-repair-end" placeholder="" /></td>
+                </tr>
+                <tr>
+                    <td><label for="acc-email-templates-end">Шаблон</label></td>
+                    <td>
+                        <select class="form-control" id="acc-email-templates-end" name="acc-email-templates" placeholder="">
+                            {% for e in email_templates %}
+                                <option value="{{ e.id }}" address_list="{{ e.address_list }}">{{ e.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><label style="margin-right:10px;" for="acc-email-list-end">Список email</label></td>
+                    <td><input type="text" class="form-control" id="acc-email-list-end" placeholder="" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+</div>

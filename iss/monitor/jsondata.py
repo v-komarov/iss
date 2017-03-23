@@ -291,6 +291,7 @@ def get_json(request):
                 request.session['searchaccident'] = request.GET["searchaccident"]
 
 
+
         ### Показывать только группировки
         if r.has_key("filtergroup") and rg("filtergroup") != '':
             if request.session.has_key("filtergroup"):
@@ -298,11 +299,25 @@ def get_json(request):
             else:
                 request.session['filtergroup'] = "ok"
 
+
+
+
         if r.has_key("containergroup") and rg("containergroup") != '':
             if request.GET["containergroup"] == "_____":
                 del request.session['containergroup']
             else:
                 request.session['containergroup'] = request.GET["containergroup"]
+
+
+
+
+        ### Показывать только только с авариями
+        if r.has_key("filteraccident") and rg("filteraccident") != '':
+            if request.session.has_key("filteraccident"):
+                del request.session['filteraccident']
+            else:
+                request.session['filteraccident'] = "ok"
+
 
 
         """
@@ -801,7 +816,7 @@ def get_json(request):
 
             else:
             # Почтовое сообщение уже было создано
-                m = messages.objects.filter(accident=acc).order_by('-datetime_message').first()
+                m = messages.objects.filter(accident=acc,data__acc_email_templates="1").order_by('-datetime_message').first()
 
 
                 accjson = {
@@ -819,6 +834,65 @@ def get_json(request):
 
 
             response_data = accjson
+
+
+
+
+
+
+
+
+        #### Данные по устранении аварии для отправки email сообщения МСС
+        if r.has_key("mailaccidentdataend") and rg("mailaccidentdataend") != "":
+            ### id строки события (контейнера)
+            row_id = request.GET["mailaccidentdataend"]
+            ev = events.objects.get(pk=row_id)
+            acc = accidents.objects.get(acc_event=row_id)
+
+            tzm = 'Europe/Moscow'
+
+            m = messages.objects.filter(accident=acc, data__acc_email_templates="2").order_by('-datetime_message')
+            # Сообщение о завершении еще не отправлялось - ,берем даннные из сообщения о начале
+            if m.count() == 0:
+                me = messages.objects.filter(accident=acc, data__acc_email_templates="1").order_by('-datetime_message').first()
+
+                accjson = {
+                    'acc_start': me.data['acc_datetime_begin'],
+                    'acccattype': me.data['acc_cat_type'],
+                    'accreason': acc.acc_reason,
+                    'acccities': me.data['acc_cities'],
+                    'accaddresslist': me.data['acc_address_list'],
+                    'acc_email_templates': me.data['acc_email_templates'],
+                    'acc_email_list': me.data['acc_email_list'],
+                    'acc_service_stoplist': me.data['acc_service_stoplist'],
+                    'acc_repair_end':acc.acc_end.astimezone(timezone(tzm)).strftime('%d.%m.%Y %H:%M'),
+                    'acc_repair':acc.acc_repair
+                }
+
+
+            ### Сообщение об устранении уже отправлялось - берем данные от последнего
+            else:
+                me = m.first()
+
+                accjson = {
+                    'acc_start': me.data['acc_datetime_begin'],
+                    'acccattype': me.data['acc_cat_type'],
+                    'accreason': me.data['acc_reason'],
+                    'acccities': me.data['acc_cities'],
+                    'accaddresslist': me.data['acc_address_list'],
+                    'acc_email_templates': me.data['acc_email_templates'],
+                    'acc_email_list': me.data['acc_email_list'],
+                    'acc_service_stoplist': me.data['acc_service_stoplist'],
+                    'acc_repair_end':me.data['acc_repair_end'],
+                    'acc_repair': me.data['acc_repair_acctions']
+                }
+
+
+            response_data = accjson
+
+
+
+
 
 
 
@@ -1210,7 +1284,7 @@ def get_json(request):
             logger.info("{user}    отредактировал аварию id:{acc_id} name:{name}".format(user=request.user.get_username(), acc_id=acc.id,name=acc.acc_name))
 
 
-        ## создание оповещения email сообщения
+        ## создание оповещения email сообщения о начале аварии
         if data.has_key("action") and data["action"] == 'create-mcc-message-email':
             values = eval(str(data))
             event_id = values["event_id"]
@@ -1221,6 +1295,16 @@ def get_json(request):
             ev.save()
 
             #print values
+
+
+
+        ## создание оповещения email сообщения о завершении аварии
+        if data.has_key("action") and data["action"] == 'create-mcc-message-email-end':
+            values = eval(str(data))
+            event_id = values["event_id"]
+            ev = events.objects.get(pk=event_id)
+            ac = accidents.objects.get(acc_event=ev)
+            messages.objects.create(accident=ac,data=values,author=request.user.get_username()+ " ("+request.user.get_full_name()+")")
 
 
 
