@@ -127,7 +127,7 @@ class Command(BaseCommand):
                 m.save()
 
                 ### Отправка сообщения в ИСС для создания ДРП
-                send_iss_drp(acc_number,sbj)
+                #send_iss_drp(acc_number,sbj)
 
 
 
@@ -185,7 +185,7 @@ class Command(BaseCommand):
                 m.save()
 
                 ### Отправка сообщения в ИСС для создания ДРП
-                send_iss_drp(acc_number, sbj)
+                #send_iss_drp(acc_number, sbj)
 
 
 
