@@ -239,7 +239,7 @@ class Command(BaseCommand):
 
                 #print ac.id
 
-                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
+                req = urllib2.Request(url='http://noclite.sib.transtk.ru/api/reports/accidents/delete/',data=data,headers={'Content-Type': 'application/json'})
 
                 f = urllib2.urlopen(req)
                 result = f.read()
