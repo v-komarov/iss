@@ -1315,7 +1315,7 @@ function MessageMssBegin(e) {
                 closeOnEscape: false,
                 buttons:[{ text:"Отправить",click: function() {
 
-                    if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
+                    if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid() && $("#acc-email-templates").val() == "1") {
 
 
                         var acc_datetime_begin = $("#acc-datetime-begin").val();
@@ -1378,6 +1378,8 @@ function MessageMssBegin(e) {
 
 
                     }
+
+                    else { alert("Проверьте правильность заполнения полей!"); }
 
                 }},
                     {text:"Закрыть",click: function() {
@@ -1456,7 +1458,7 @@ function MessageMssEnd(e) {
                 closeOnEscape: false,
                 buttons:[{ text:"Отправить",click: function() {
 
-                    if ($('#acc-datetime-begin-end').valid() && $('#acc-cat-type-end').valid() && $('#acc-reason-end').valid() && $('#acc-cities-end').valid() && $('#acc-address-list-end').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid()) {
+                    if ($('#acc-datetime-begin-end').valid() && $('#acc-cat-type-end').valid() && $('#acc-reason-end').valid() && $('#acc-cities-end').valid() && $('#acc-address-list-end').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid() && $("#acc-email-templates-end").val() == "2") {
 
 
                         var data = {};
@@ -1507,6 +1509,8 @@ function MessageMssEnd(e) {
 
 
                     }
+
+                    else { alert("Проверьте правильность заполнения полей!"); }
 
                 }},
                     {text:"Закрыть",click: function() {

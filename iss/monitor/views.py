@@ -469,10 +469,12 @@ class MessageList(ListView):
 
         data = messages.objects.order_by('-datetime_message')
 
+
         for row in data:
-            m = pickle.loads(row.mail_body)
-            row.subject = m.subject
-            row.body = m.body
+            if row.send_done:
+                m = pickle.loads(row.mail_body)
+                row.subject = m.subject
+                row.body = m.body
 
         return data
 
