@@ -320,6 +320,16 @@ def get_json(request):
 
 
 
+
+        ### Показывать только только закрытые (c finished_date=True)
+        if r.has_key("filterhistory") and rg("filterhistory") != '':
+            if request.session.has_key("filterhistory"):
+                del request.session['filterhistory']
+            else:
+                request.session['filterhistory'] = "ok"
+
+
+
         """
         # Добавление в группировку (контейнер)
         if r.has_key("addgroup") and rg("addgroup") != '[]':

@@ -135,26 +135,36 @@ class EventList(ListView):
     def get_queryset(self):
 
         q = []
+
+        # Показывать архивные
+        if self.session.has_key("filterhistory"):
+            q.append("Q(finished_date__isnull=False)")
+
+        # Показывать события с заведенными авариями
         if self.session.has_key("filteraccident"):
             q.append("Q(accident=%s)" % True)
 
+        # Показывать группировки
         if self.session.has_key("filtergroup"):
             q.append("Q(agregator=%s)" % True)
 
-        if self.session.has_key("status_id"):
+        # Фильтр по статусам
+        if self.session.has_key("status_id") and self.session.has_key("filterhistory") == False:
             if pickle.loads(self.session["status_id"]) != []:
                 qs = []
                 for s in pickle.loads(self.session["status_id"]):
                     qs.append("Q(status_id=Status.objects.get(pk=%s))" % s)
                 q.append("("+" | ".join(qs)+")")
 
-        if self.session.has_key("severity_id"):
+        # Фильтр по важности
+        if self.session.has_key("severity_id") and self.session.has_key("filterhistory") == False:
             if pickle.loads(self.session["severity_id"]) != []:
                 qv = []
                 for v in pickle.loads(self.session["severity_id"]):
                     qv.append("Q(severity_id=Severity.objects.get(pk=%s))" % v)
                 q.append("("+" | ".join(qv)+")")
 
+        # Фильтр по источникам
         if self.session.has_key("manager"):
             if pickle.loads(self.session["manager"]) != []:
                 qm = []
@@ -162,11 +172,13 @@ class EventList(ListView):
                     qm.append("Q(manager='%s')" % m)
                 q.append("("+" | ".join(qm)+")")
 
+        # Поиск
         if self.session.has_key("search"):
             if len(self.session['search']) >= 3:
                 for search in self.session['search'].split(" "):
                     if search != " ":
                         q.append("(Q(device_net_address__icontains='%s') | Q(device_system__icontains='%s') | Q(device_group__icontains='%s') | Q(device_class__icontains='%s') | Q(device_location__icontains='%s') | Q(event_class__icontains='%s') | Q(source__icontains='%s'))" % (search,search,search,search,search,search,search))
+
 
         if self.session.has_key("first_seen"):
             if self.session["first_seen"] != "":
@@ -318,6 +330,12 @@ class EventList(ListView):
             context["filteraccident"] = True
         else:
             context["filteraccident"] = False
+
+
+        if self.session.has_key('filterhistory'):
+            context["filterhistory"] = True
+        else:
+            context["filterhistory"] = False
 
 
 

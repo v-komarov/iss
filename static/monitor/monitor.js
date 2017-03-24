@@ -27,6 +27,7 @@ $(document).ready(function() {
     $("#runmanager").bind("click",FilterManager);
     $("#filtergroup").bind("click",FilterGroup);
     $("#filteraccident").bind("click",FilterAccident);
+    $("#filterhistory").bind("click",FilterHistory);
 
     //$("table[group=events] tbody tr td a").bind("click",ChooseActions);
     $("ul.dropdown-menu li a[action=zkl]").bind("click",GetZkl);
@@ -744,6 +745,18 @@ function FilterGroup(e) {
 function FilterAccident(e) {
 
     var jqxhr = $.getJSON("/monitor/events/jsondata?filteraccident=ok",
+        function(data) {
+            window.location=$("#menumonitor a").attr("href");
+        })
+
+}
+
+
+
+// Фильтр по архивным событиям
+function FilterHistory(e) {
+
+    var jqxhr = $.getJSON("/monitor/events/jsondata?filterhistory=ok",
         function(data) {
             window.location=$("#menumonitor a").attr("href");
         })
