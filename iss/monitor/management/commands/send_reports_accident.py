@@ -195,6 +195,7 @@ class Command(BaseCommand):
 
 
                 values = {
+                    'gamma_id':ac.id,
                     'companies':companies,
                     'cities':ci,
                     'start_datetime':time.mktime(ac.acc_start.astimezone(timezone('UTC')).timetuple()),
@@ -220,7 +221,7 @@ class Command(BaseCommand):
                 print data
 
 
-                req = urllib2.Request(url='http://10.6.0.129:8000/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
+                req = urllib2.Request(url='http://noclite.sib.transtk.ru/api/reports/accidents/update/',data=data,headers={'Content-Type': 'application/json'})
                 f = urllib2.urlopen(req)
                 result = f.read()
                 r = json.loads(result)

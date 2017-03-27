@@ -149,7 +149,7 @@ class EventList(ListView):
             q.append("Q(agregator=%s)" % True)
 
         # Фильтр по статусам
-        if self.session.has_key("status_id") and self.session.has_key("filterhistory") == False:
+        if self.session.has_key("status_id") and self.session.has_key("filterhistory") == False and self.session.has_key("filteraccident") == False and self.session.has_key("filtergroup") == False:
             if pickle.loads(self.session["status_id"]) != []:
                 qs = []
                 for s in pickle.loads(self.session["status_id"]):
@@ -157,7 +157,7 @@ class EventList(ListView):
                 q.append("("+" | ".join(qs)+")")
 
         # Фильтр по важности
-        if self.session.has_key("severity_id") and self.session.has_key("filterhistory") == False:
+        if self.session.has_key("severity_id") and self.session.has_key("filterhistory") == False and self.session.has_key("filteraccident") == False and self.session.has_key("filtergroup") == False:
             if pickle.loads(self.session["severity_id"]) != []:
                 qv = []
                 for v in pickle.loads(self.session["severity_id"]):

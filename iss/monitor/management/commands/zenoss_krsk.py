@@ -96,7 +96,7 @@ class Command(BaseCommand):
         #for r in (data["result"]["events"])[::-1]:
         for r in (data["result"]["events"]):
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
-            #loggerjson.debug("{ev}\n".format(ev=event_str))
+            loggerjson.debug("{ev}\n".format(ev=event_str))
             print event_str
 
             id_row = r["id"]  # id
@@ -209,7 +209,7 @@ class Command(BaseCommand):
                     """
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
-                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_krsk')
+                        r0 = events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, source='zenoss_krsk')
                         if r0.count() > 0:
                             e = r0[0]
                             if e.agregator == False and e.agregation == False and e.accident == False:
@@ -239,7 +239,7 @@ class Command(BaseCommand):
                                 r0.delete()
 
                             else:
-                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_krsk').update(
+                                events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, source='zenoss_krsk').update(
                                     first_seen=firsttime,
                                     update_time=update_time,
                                     last_seen=lasttime,
@@ -256,7 +256,7 @@ class Command(BaseCommand):
                             Обновление открытых аварийных событий
                         """
                     else:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, datetime_evt__gt=fd, source='zenoss_krsk').update(
+                        events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, datetime_evt__gt=fd, source='zenoss_krsk').update(
                             first_seen=firsttime,
                             update_time=update_time,
                             last_seen=lasttime,
