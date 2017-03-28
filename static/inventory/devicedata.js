@@ -10,6 +10,16 @@ $(document).ready(function() {
     // Диалог редактирование порта
     $("#page-ports table[group=ports] tbody").on("click", "a", EditPort);
 
+    // Диалог редактирование слота
+    $("#page-slots table[group=slots] tbody").on("click", "a", EditSlot);
+
+    // Диалог редактирование комбо порта
+    $("#page-combo table[group=combo] tbody").on("click", "a", EditCombo);
+
+
+    // Диалог редактирование свойств
+    $("#page-properties table[group=properties] tbody").on("click", "a", EditProp);
+
 
 
 });
@@ -242,6 +252,243 @@ function EditPort(e) {
                     success: function(result) {
                         if (result["result"] == "ok")
                         { $("#editport").dialog("close"); ShowDeviceData(); }
+                    }
+
+                });
+
+            }
+            else { alert("Необходимо заполнить поля *");}
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:200,
+        width:310,
+        minHeight:200,
+
+    });
+
+}
+
+
+
+
+
+
+
+// Редактирование слота
+function EditSlot(e) {
+
+    //
+    var slot_id = $(this).parents("tr").attr("row_id");
+    var status_name = $(this).parents("tr").children("td").eq(2).text();
+    var num = $(this).parents("tr").children("td").eq(0).text();
+    var comment = $(this).parents("tr").children("td").eq(4).text();
+
+
+    $("form#editslotform table tbody tr td input#num").val(num);
+    $("form#editslotform table tbody tr td input#comment").val(comment);
+    var select_id = $("form#editslotform table tbody tr td select#status").find("option:contains("+status_name+")").attr("value");
+    $("form#editslotform table tbody tr td select#status").val(select_id);
+
+
+    $("#editslot").dialog({
+        title:"Изменение слота",
+        buttons:[{ text:"Сохранить",click: function() {
+            if ($("form#editslotform table tbody tr td input#num").val().length != 0 && $("form#editslotform table tbody tr td select#status").val() ) {
+
+                var status = $("form#editslotform table tbody tr td select#status").val();
+                var num = $("form#editslotform table tbody tr td input#num").val();
+                var comment = $("form#editslotform table tbody tr td input#comment").val();
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+                var data = {};
+                data.slot_id = slot_id;
+                data.num = num;
+                data.status = status;
+                data.comment = comment;
+                data.action = "edit-slot";
+
+
+                $.ajax({
+                  url: "/inventory/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok")
+                        { $("#editslot").dialog("close"); ShowDeviceData(); }
+                    }
+
+                });
+
+            }
+            else { alert("Необходимо заполнить поля *");}
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:200,
+        width:310,
+        minHeight:200,
+
+    });
+
+}
+
+
+
+
+
+
+
+
+
+// Редактирование комбо
+function EditCombo(e) {
+
+    //
+    var port_id = $(this).parents("tr").attr("row_id");
+    var status_name_port = $(this).parents("tr").children("td").eq(3).text();
+    var status_name_slot = $(this).parents("tr").children("td").eq(4).text();
+    var num = $(this).parents("tr").children("td").eq(0).text();
+    var comment = $(this).parents("tr").children("td").eq(6).text();
+
+
+    $("form#editcomboform table tbody tr td input#num").val(num);
+    $("form#editcomboform table tbody tr td input#comment").val(comment);
+    var select_id_port = $("form#editcomboform table tbody tr td select#status_port").find("option:contains("+status_name_port+")").attr("value");
+    $("form#editcomboform table tbody tr td select#status_port").val(select_id_port);
+    var select_id_slot = $("form#editcomboform table tbody tr td select#status_slot").find("option:contains("+status_name_slot+")").attr("value");
+    $("form#editcomboform table tbody tr td select#status_slot").val(select_id_slot);
+
+
+    $("#editcombo").dialog({
+        title:"Изменение комбо порта",
+        buttons:[{ text:"Сохранить",click: function() {
+            if ($("form#editcomboform table tbody tr td input#num").val().length != 0 && $("form#editcomboform table tbody tr td select#status_port").val() && $("form#editcomboform table tbody tr td select#status_slot").val() ) {
+
+                var status_port = $("form#editcomboform table tbody tr td select#status_port").val();
+                var status_slot = $("form#editcomboform table tbody tr td select#status_slot").val();
+                var num = $("form#editcomboform table tbody tr td input#num").val();
+                var comment = $("form#editcomboform table tbody tr td input#comment").val();
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+                var data = {};
+                data.port_id = port_id;
+                data.num = num;
+                data.status_port = status_port;
+                data.status_slot = status_slot;
+                data.comment = comment;
+                data.action = "edit-combo";
+
+
+                $.ajax({
+                  url: "/inventory/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok")
+                        { $("#editcombo").dialog("close"); ShowDeviceData(); }
+                    }
+
+                });
+
+            }
+            else { alert("Необходимо заполнить поля *");}
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:200,
+        width:310,
+        minHeight:200,
+
+    });
+
+}
+
+
+
+
+
+
+
+
+// Редактирование свойств
+function EditProp(e) {
+
+    var prop_id = $(this).parents("tr").attr("row_id");
+    var name = $(this).parents("tr").children("td").eq(0).text();
+    var value = $(this).parents("tr").children("td").eq(1).text();
+
+
+    $("form#editpropform table tbody tr td input#value").val(value);
+
+
+
+    $("#editprop").dialog({
+        title:"Изменение "+name,
+        buttons:[{ text:"Сохранить",click: function() {
+            if ($("form#editpropform table tbody tr td input#value").val().length != 0 ) {
+
+                var value = $("form#editpropform table tbody tr td input#value").val();
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+                var data = {};
+                data.prop_id = prop_id;
+                data.value = value;
+                data.action = "edit-prop";
+
+
+                $.ajax({
+                  url: "/inventory/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok")
+                        { $("#editprop").dialog("close"); ShowDeviceData(); }
                     }
 
                 });

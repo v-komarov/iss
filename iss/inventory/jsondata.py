@@ -10,8 +10,8 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports
-from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status
+from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties
+from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status
 from django.shortcuts import redirect
 from django.core import serializers
 from django import template
@@ -23,20 +23,20 @@ logger = logging.getLogger('inventory')
 
 
 
-ports_list = []
-slots_list = []
-interfaces_list = []
+ports_list2 = []
+slots_list2 = []
+interfaces_list2 = []
 
 
 for item in ports.objects.all():
-    ports_list.append(item.name)
+    ports_list2.append(item.name)
 
 for item in slots.objects.all():
-    slots_list.append(item.name)
+    slots_list2.append(item.name)
 
 
 for item in interfaces.objects.all():
-    interfaces_list.append(item.name)
+    interfaces_list2.append(item.name)
 
 
 
@@ -134,25 +134,28 @@ def properties_list(d, request):
 
 
 
+
 ### Проверка допустимости значений
 def check_json_data(data):
 
+
     for i in data["slots"].keys():
-        if data["slots"].get(i)["type"] not in slots_list:
+        print slots_list2
+        if data["slots"].get(i)["type"] not in slots_list2:
             return "error slots value!"
 
     for i in data["ports"].keys():
-        if data["ports"].get(i)["type"] not in ports_list:
+        if data["ports"].get(i)["type"] not in ports_list2:
             return "error ports value!"
 
     for i in data["allowed_parrents"]:
-        if i not in slots_list:
+        if i not in slots_list2:
             return "error allowed_parents value!"
 
     for i in data["combo"].keys():
-        if data["combo"].get(i)["port"]["type"] not in ports_list:
+        if data["combo"].get(i)["port"]["type"] not in ports_list2:
             return "error combo value!"
-        if data["combo"].get(i)["slot"]["type"] not in slots_list:
+        if data["combo"].get(i)["slot"]["type"] not in slots_list2:
             return "error combo value!"
 
 
@@ -168,7 +171,7 @@ def check_json_data2(data):
 
 
     for i in data["interfaces"]:
-        if i not in interfaces_list:
+        if i not in interfaces_list2:
             return "error interfaces value!"
 
 
@@ -401,6 +404,73 @@ def get_json(request):
             p.num = num
             p.status = s
             p.comment = comment
+            p.author = u
+            p.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        # Изменение порта
+        if data.has_key("action") and data["action"] == 'edit-slot':
+            slot_id = int(data["slot_id"], 10)
+            status = int(data["status"], 10)
+            num = data["num"]
+            comment = data["comment"]
+
+            st = slot_status.objects.get(pk=status)
+            s = devices_slots.objects.get(pk=slot_id)
+            u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
+
+            s.num = num
+            s.status = st
+            s.comment = comment
+            s.author = u
+            s.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        # Изменение комбо порта
+        if data.has_key("action") and data["action"] == 'edit-combo':
+            port_id = int(data["port_id"], 10)
+            status_port = int(data["status_port"], 10)
+            status_slot = int(data["status_slot"], 10)
+            num = data["num"]
+            comment = data["comment"]
+
+            ss = slot_status.objects.get(pk=status_slot)
+            sp = port_status.objects.get(pk=status_port)
+            c = devices_combo.objects.get(pk=port_id)
+            u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
+
+            c.num = num
+            c.status_port = sp
+            c.status_slot = ss
+            c.comment = comment
+            c.author = u
+            c.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        # Изменение свойства
+        if data.has_key("action") and data["action"] == 'edit-prop':
+            prop_id = int(data["prop_id"], 10)
+            value = data["value"]
+
+            p = devices_properties.objects.get(pk=prop_id)
+
+            u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
+
+            p.value = value
             p.author = u
             p.save()
 

@@ -1,3 +1,8 @@
+table > thead > tr > th {
+    background-color:#DCDCDC;
+}
+
+
 .row {
     margin: 0;
 }
@@ -23,7 +28,7 @@ table[group=slots] > thead > tr > th {
 }
 
 
-table[group=slots],table[group=ports],table[group=combo],table[group=statuses],table[group=removal],table[group=properties] {
+table[group=slots],table[group=ports],table[group=combo],table[group=statuses],table[group=removal],table[group=properties],table[group=device-parents],table[group=device-children] {
     margin-top:20px;
 }
 
@@ -38,5 +43,25 @@ table[group=slots],table[group=ports],table[group=combo],table[group=statuses],t
 
 /* Форма редактирования порта */
 form#editportform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
+    padding-right: 10px;
+}
+
+
+
+/* Форма редактирования слота */
+form#editslotform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
+    padding-right: 10px;
+}
+
+
+
+/* Форма редактирования комбо порта */
+form#editcomboform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
+    padding-right: 10px;
+}
+
+
+/* Форма редактирования свойства */
+form#editpropform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
     padding-right: 10px;
 }
