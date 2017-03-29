@@ -1,15 +1,45 @@
 <div id="page-statuses" class="row col-md-8 col-md-offset-1" hidden>
 
+
+    <form id="add-device-statusform" class="small">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="device-status2">Статус</label></td>
+                    <td>
+                        <select id="device-status2" name="device-status2" class="form-control input-sm">
+                        {% for item in status_device_list %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="device-status-comment">Коментарий</label></td>
+                    <td><textarea class="form-control input-sm" rows="5" id="device-status-comment" name="device-status-comment"></textarea></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button id="set-device-status" title="Искать" type="button" class="btn btn-default btn-xs">Сохранить</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+
     <table group="statuses" class="table-bordered small">
         <thead>
             <tr>
                 <th>Дата</th>
                 <th>Статус</th>
-                <th>Пользователь</th>
                 <th>Коментарий</th>
-                <th><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></th>
+                <th>Пользователь</th>
             </tr>
         </thead>
+        <tbody></tbody>
     </table>
 
 </div>

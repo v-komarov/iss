@@ -288,8 +288,10 @@ class port_status(models.Model):
 class device_status(models.Model):
     name = models.CharField(max_length=100, verbose_name='Статус устройства', unique=True)
 
+
     def __unicode__(self):
         return self.name
+
 
     class Meta:
         verbose_name = 'Статус устройства'

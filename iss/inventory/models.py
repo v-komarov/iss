@@ -50,10 +50,18 @@ class devices(models.Model):
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
     status = models.ForeignKey(device_status,null=True)
+    device_parent = models.ForeignKey('devices',default=None,null=True)
+
 
 
     def __unicode__(self):
         return self.name
+
+
+    def getstatus(self):
+        status = self.status.name if self.status else ""
+        return status
+
 
 
     ### Создание портов устройства согласно модели

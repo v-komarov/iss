@@ -10,8 +10,8 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties
-from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status
+from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses
+from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status
 from django.shortcuts import redirect
 from django.core import serializers
 from django import template
@@ -129,6 +129,26 @@ def properties_list(d, request):
         })
 
     return result
+
+
+
+
+# История статусов в json
+def statuses_list(d, request):
+
+    result = []
+    for row in d.devices_statuses_set.all():
+        result.append({
+            'id': row.id,
+            'datetime_str': DateTimeString(row.datetime_create, request).strip(),
+            'status': row.status.name,
+            'comment': row.comment,
+            'author': row.author
+        })
+
+    return result
+
+
 
 
 
@@ -252,12 +272,13 @@ def get_json(request):
                     "serial":d.serial,
                     "model":d.device_scheme.name,
                     "address":d.address.getaddress(),
-                    "status":d.status,
+                    "status":d.getstatus(),
                     "company":d.company.name,
                     "ports": ports_list(d,request),
                     "slots": slots_list(d,request),
                     "combo": combo_list(d,request),
                     "properties": properties_list(d,request),
+                    "statuses": statuses_list(d,request),
                 }
                 response_data = {"result": data}
             else:
@@ -286,6 +307,7 @@ def get_json(request):
                 )
 
             response_data = {"result":check}
+
 
 
         # Изменение схемы устройства
@@ -476,6 +498,33 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+
+        # Установка статуса устройства
+        if data.has_key("action") and data["action"] == 'set-device-status':
+
+            status_id = int(data["status_id"],10)
+            comment = data["comment"]
+
+            ds = device_status.objects.get(pk=status_id)
+
+            d = devices.objects.get(pk=request.session["dev_id"])
+
+            u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
+
+            d.status = ds
+            d.author = u
+            d.save()
+
+            devices_statuses.objects.create(
+                device = d,
+                status = ds,
+                author = u,
+                comment = comment
+            )
+
+            response_data = {"result": "ok"}
 
 
 

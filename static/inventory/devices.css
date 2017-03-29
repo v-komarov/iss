@@ -65,3 +65,15 @@ form#editcomboform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
 form#editpropform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
     padding-right: 10px;
 }
+
+
+/* Форма добавления (установки) статуса устройства */
+#add-device-statusform > table > tbody > tr > td > label {
+    padding-right: 10px;
+}
+#add-device-statusform > table > tbody > tr > td {
+    vertical-align:top;
+}
+#add-device-statusform {
+    margin-top:20px;
+}

@@ -21,6 +21,9 @@ $(document).ready(function() {
     $("#page-properties table[group=properties] tbody").on("click", "a", EditProp);
 
 
+    // Установка статуса устройства
+    $("#set-device-status").bind("click", SetDeviceStatus);
+
 
 });
 
@@ -188,6 +191,26 @@ function ShowDeviceData() {
                 $("table[group=properties] tbody").append(t);
 
             });
+
+
+
+
+            // история статусов устройства
+            $("table[group=statuses] tbody").empty();
+            $.each(data["result"]["statuses"], function(key,value) {
+
+
+                var t = "<tr row_id=" + value["id"] +">"
+                +"<td>"+value['datetime_str']+"</td>"
+                +"<td>"+value['status']+"</td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td>"+value['author']+"</td>"
+                +"</tr>";
+
+                $("table[group=statuses] tbody").append(t);
+
+            });
+
 
 
 
@@ -508,6 +531,49 @@ function EditProp(e) {
         minHeight:200,
 
     });
+
+}
+
+
+
+
+
+
+// Установка статуса устройства
+function SetDeviceStatus(e) {
+
+
+
+
+        var data = {};
+        data.status_id = $("form#add-device-statusform table tbody tr td select#device-status2").val();
+        data.comment = $("form#add-device-statusform table tbody tr td textarea#device-status-comment").val();
+        data.action = "set-device-status";
+
+
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+        $.ajax({
+          url: "/inventory/jsondata/",
+          type: "POST",
+          dataType: 'json',
+          data:$.toJSON(data),
+            success: function(result) {
+                if (result["result"] == "ok")
+                { ShowDeviceData(); }
+            }
+
+        });
+
 
 }
 

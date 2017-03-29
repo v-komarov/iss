@@ -25,7 +25,7 @@ from django.views.generic.base import TemplateView,RedirectView
 
 
 from iss.inventory.models import devices_scheme,interfaces_scheme,netelems,devices
-from iss.localdicts.models import Status,Severity,address_companies,port_status,slot_status
+from iss.localdicts.models import Status,Severity,address_companies,port_status,slot_status,device_status
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -347,6 +347,7 @@ class Device(TemplateView):
 
         context['status_port_list'] = port_status.objects.all()
         context['status_slot_list'] = slot_status.objects.all()
+        context['status_device_list'] = device_status.objects.all()
 
         #context["elem"] = self.session["elem"]
         #elem = netelems.objects.get(pk=self.request["elem"])
