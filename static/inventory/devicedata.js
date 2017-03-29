@@ -25,6 +25,9 @@ $(document).ready(function() {
     $("#set-device-status").bind("click", SetDeviceStatus);
 
 
+    // Перемещение
+    $("#set-device-removal").bind("click", DeviceRemoval);
+
 
 
 
@@ -243,6 +246,26 @@ function ShowDeviceData() {
                 $("table[group=statuses] tbody").append(t);
 
             });
+
+
+
+
+            // история перемещений устройства
+            $("table[group=removal] tbody").empty();
+            $.each(data["result"]["removal"], function(key,value) {
+
+
+                var t = "<tr row_id=" + value["id"] +">"
+                +"<td>"+value['datetime_str']+"</td>"
+                +"<td>"+value['address']+"</td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td>"+value['author']+"</td>"
+                +"</tr>";
+
+                $("table[group=removal] tbody").append(t);
+
+            });
+
 
 
 
@@ -583,6 +606,49 @@ function SetDeviceStatus(e) {
         data.comment = $("form#add-device-statusform table tbody tr td textarea#device-status-comment").val();
         data.action = "set-device-status";
 
+
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+        $.ajax({
+          url: "/inventory/jsondata/",
+          type: "POST",
+          dataType: 'json',
+          data:$.toJSON(data),
+            success: function(result) {
+                if (result["result"] == "ok")
+                { ShowDeviceData(); }
+            }
+
+        });
+
+
+}
+
+
+
+
+
+
+
+// Перемещение устройства
+function DeviceRemoval(e) {
+
+
+
+
+        var data = {};
+        data.address_id = window.address_id;
+        data.comment = $("form#add-device-removal table tbody tr td textarea#device-removal-comment").val();
+        data.action = "device-removal";
 
         var csrftoken = getCookie('csrftoken');
 

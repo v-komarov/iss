@@ -10,7 +10,7 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses
+from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal
 from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status
 from django.shortcuts import redirect
 from django.core import serializers
@@ -151,6 +151,23 @@ def statuses_list(d, request):
 
 
 
+# История перемещений в json
+def removal_list(d, request):
+
+    result = []
+    for row in d.devices_removal_set.all():
+        result.append({
+            'id': row.id,
+            'datetime_str': DateTimeString(row.datetime_create, request).strip(),
+            'address': row.address.getaddress(),
+            'comment': row.comment,
+            'author': row.author
+        })
+
+    return result
+
+
+
 
 
 
@@ -279,6 +296,7 @@ def get_json(request):
                     "combo": combo_list(d,request),
                     "properties": properties_list(d,request),
                     "statuses": statuses_list(d,request),
+                    "removal": removal_list(d,request)
                 }
                 response_data = {"result": data}
             else:
@@ -525,6 +543,35 @@ def get_json(request):
             )
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        # Перемещение
+        if data.has_key("action") and data["action"] == 'device-removal':
+            address_id = data["address_id"]
+            comment = data["comment"]
+
+            a = address_house.objects.get(pk=address_id)
+
+            d = devices.objects.get(pk=request.session["dev_id"])
+
+            u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
+
+            d.address = a
+            d.author = u
+            d.save()
+
+            devices_removal.objects.create(
+                device=d,
+                address=a,
+                author=u,
+                comment=comment
+            )
+
+            response_data = {"result": "ok"}
+
 
 
 
