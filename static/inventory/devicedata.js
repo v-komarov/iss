@@ -625,7 +625,7 @@ function SetDeviceStatus(e) {
           data:$.toJSON(data),
             success: function(result) {
                 if (result["result"] == "ok")
-                { ShowDeviceData(); }
+                { ShowDeviceData(); $("form#add-device-statusform table tbody tr td textarea#device-status-comment").val(""); }
             }
 
         });
@@ -668,7 +668,7 @@ function DeviceRemoval(e) {
           data:$.toJSON(data),
             success: function(result) {
                 if (result["result"] == "ok")
-                { ShowDeviceData(); }
+                { ShowDeviceData(); $("form#add-device-removal table tbody tr td textarea#device-removal-comment").val(""); $("#device-removal-address").val(""); }
             }
 
         });
