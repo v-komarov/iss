@@ -77,3 +77,20 @@ form#editpropform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
 #add-device-statusform {
     margin-top:20px;
 }
+
+
+
+/* Форма добавления перемещения */
+#add-device-removal {
+    margin-top:20px;
+}
+#add-device-removal > table > tbody > tr > td > label {
+    padding-right: 10px;
+}
+#add-device-removal > table > tbody > tr > td {
+    vertical-align:top;
+}
+#device-removal-address {
+    width: 400px;
+}
+

@@ -1,15 +1,39 @@
 <div id="page-removal" class="row col-md-8 col-md-offset-1" hidden>
 
+    <form id="add-device-removal" class="small">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="device-removal-address">Адрес</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="device-removal-address" name="device-removal-address" placeholder="" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="device-removal-comment">Коментарий</label></td>
+                    <td><textarea class="form-control input-sm" rows="5" id="device-removal-comment" name="device-removal-comment"></textarea></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button id="set-device-removal" title="Сохранить" type="button" class="btn btn-default btn-xs">Сохранить</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+
     <table group="removal" class="table-bordered small">
         <thead>
             <tr>
                 <th>Дата</th>
                 <th>Адрес</th>
-                <th>Пользователь</th>
                 <th>Коментарий</th>
-                <th><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></th>
+                <th>Пользователь</th>
             </tr>
         </thead>
+        <tbody></tbody>
     </table>
 
 </div>

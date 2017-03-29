@@ -25,6 +25,39 @@ $(document).ready(function() {
     $("#set-device-status").bind("click", SetDeviceStatus);
 
 
+
+
+
+    // Поиск адреса
+    $("#device-removal-address").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#page-removal',
+        position: 'top',
+        select: function (event,ui) {
+            $("#device-removal-address").val(ui.item.label);
+            window.address_id = ui.item.value;
+            window.address_label = ui.item.label;
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("#device-removal-address").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    })
+
+
+
+
+
+
 });
 
 
