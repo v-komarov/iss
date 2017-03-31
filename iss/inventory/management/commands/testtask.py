@@ -20,5 +20,6 @@ class Command(BaseCommand):
         # тестовая задача
 
         for row in devices.objects.all():
-            print row.data["ipaddress"],row.data["name"]
+            if row.data.has_key("ipaddress"):
+                print row.data["ipaddress"],row.data["name"]
 
