@@ -92,11 +92,13 @@ class Command(BaseCommand):
         commands.getoutput(cmd)
 
         data = json.loads(commands.getoutput("cat %s" % tf.name))
+        loggerjson.debug("{d}\n".format(d=data)) ## Ловля ошибки попадания неправильных severity
+
 
         #for r in (data["result"]["events"])[::-1]:
         for r in (data["result"]["events"]):
             event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
-            loggerjson.debug("{ev}\n".format(ev=event_str))
+            #loggerjson.debug("{ev}\n".format(ev=event_str))
             print event_str
 
             id_row = r["id"]  # id

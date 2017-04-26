@@ -27,6 +27,9 @@ class devices_ip(models.Model):
     class Meta:
         unique_together = ('ipaddress', 'device_domen')
 
+
+
+
 ### Лог ошибок доступа
 class device_access_error(models.Model):
     ipaddress = models.GenericIPAddressField(max_length=255,db_index=True,null=True)
