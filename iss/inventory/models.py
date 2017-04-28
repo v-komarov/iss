@@ -293,33 +293,17 @@ class devices_combo(models.Model):
 
 
 
-### Сетевые интерфейсы
-#class netinterfaces(models.Model):
-#    value = models.CharField(max_length=100)
-#    interface = models.ForeignKey(interfaces,null=True)
-#    port = models.ManyToManyField(devices_ports)
-
-
-
 
 ### Сетевые элементы
 class netelems(models.Model):
     name = models.CharField(max_length=100,unique=True)
-#    netinterface = models.ManyToManyField(netinterfaces)
-    device = models.ManyToManyField(devices)
+    device = models.ManyToManyField(devices) # связь с аппаратной частью
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
 
+
     def __unicode__(self):
         return self.name
-
-
-
-
-### Договора клиентов на порту
-#class client_dogovor(models.Model):
-#    port = models.OneToOneField(netinterfaces)
-#    dogovor = models.CharField(max_length=20)
 
 
 
@@ -339,5 +323,6 @@ class logical_interfaces(models.Model):
 class logical_interfaces_prop(models.Model):
     logical_interface = models.ForeignKey(logical_interfaces)
     prop = models.ForeignKey(logical_interfaces_prop_list)
-    val = models.CharField(max_length=100)
+    val = models.CharField(max_length=100,null=True)
     comment = models.CharField(max_length=200)
+    ports = models.ManyToManyField(devices_ports)

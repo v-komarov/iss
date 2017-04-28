@@ -129,8 +129,8 @@ class DeviceStatusAdmin(admin.ModelAdmin):
 
 class LogicalInterfacePropAdmin(admin.ModelAdmin):
 
-    fields = ('name',)
-    list_display = ('name',)
+    fields = ('name','comment')
+    list_display = ('name','comment')
 
 
 
