@@ -6,7 +6,7 @@ import datetime
 
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from iss.localdicts.models import address_companies,address_house,ports,slots,port_status,slot_status,interfaces,device_status
+from iss.localdicts.models import address_companies,address_house,ports,slots,port_status,slot_status,interfaces,device_status,logical_interfaces_prop_list
 
 
 
@@ -21,19 +21,6 @@ class devices_scheme(models.Model):
         return self.name
 
 
-
-
-
-
-### Модели интерфейсов
-class interfaces_scheme(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
-    scheme_interface = JSONField(default={})
-    author = models.CharField(max_length=100, default="")
-    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __unicode__(self):
-        return self.name
 
 
 
@@ -307,10 +294,10 @@ class devices_combo(models.Model):
 
 
 ### Сетевые интерфейсы
-class netinterfaces(models.Model):
-    value = models.CharField(max_length=100)
-    interface = models.ForeignKey(interfaces,null=True)
-    port = models.ManyToManyField(devices_ports)
+#class netinterfaces(models.Model):
+#    value = models.CharField(max_length=100)
+#    interface = models.ForeignKey(interfaces,null=True)
+#    port = models.ManyToManyField(devices_ports)
 
 
 
@@ -318,7 +305,7 @@ class netinterfaces(models.Model):
 ### Сетевые элементы
 class netelems(models.Model):
     name = models.CharField(max_length=100,unique=True)
-    netinterface = models.ManyToManyField(netinterfaces)
+#    netinterface = models.ManyToManyField(netinterfaces)
     device = models.ManyToManyField(devices)
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
@@ -330,9 +317,27 @@ class netelems(models.Model):
 
 
 ### Договора клиентов на порту
-class client_dogovor(models.Model):
-    port = models.OneToOneField(netinterfaces)
-    dogovor = models.CharField(max_length=20)
+#class client_dogovor(models.Model):
+#    port = models.OneToOneField(netinterfaces)
+#    dogovor = models.CharField(max_length=20)
 
 
 
+
+
+### Логические интерфейсы
+class logical_interfaces(models.Model):
+    name = models.CharField(max_length=100,unique=True)
+    netelem = models.ForeignKey(netelems)
+    comment = models.CharField(max_length=200)
+
+
+
+
+
+### Свойства логических интерфейсов
+class logical_interfaces_prop(models.Model):
+    logical_interface = models.ForeignKey(logical_interfaces)
+    prop = models.ForeignKey(logical_interfaces_prop_list)
+    val = models.CharField(max_length=100)
+    comment = models.CharField(max_length=200)

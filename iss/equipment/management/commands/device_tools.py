@@ -3,7 +3,7 @@
 import json
 from django.core.management.base import BaseCommand, CommandError
 from iss.equipment.models import agregators,scan_iplist,devices_ip,footnodes
-from iss.localdicts.models import address_city,address_street,address_house,address_companies,devices_type
+from iss.localdicts.models import address_city,address_street,address_house,address_companies
 from iss.inventory.models import devices
 
 
@@ -50,7 +50,8 @@ class Command(BaseCommand):
                 a.save()
 
         """
-        """
+
+
         import pymssql
         import tabulate
 
@@ -63,11 +64,16 @@ class Command(BaseCommand):
         #print tabulate.tabulate(data)
         for r in data:
             id = r[0]
+            if address_street.objects.filter(name=r[2].encode("utf-8")).count() == 0:
+                address_street.objects.create(name=r[2].encode("utf-8"))
             street = address_street.objects.get(name=r[2].encode("utf-8"))
+            if address_city.objects.filter(name=r[1].encode("utf-8")).count() == 0:
+                address_city.objects.create(name=r[1].encode("utf-8"))
             city = address_city.objects.get(name=r[1].encode("utf-8"))
             dom = r[3].encode("utf-8")
             address_house.objects.update_or_create(house=dom,city=city,street=street,iss_address_id=id)
-        """
+
+
 
         """
         for c in address_city.objects.all():
@@ -75,10 +81,13 @@ class Command(BaseCommand):
                 if h.city != None and h.street != None:
                     print h.city.name,h.street.name
                     if address_house.objects.filter(city=h.city,street=h.street,house=None).count() == 0:
-                        address_house.objects.create(house=None,iss_address_id=None,city=h.city,street=h.street)
+                        address_house.objects.update_or_create(house=None,iss_address_id=None,city=h.city,street=h.street)
 
+                    if address_house.objects.filter(city=h.city,street=None,house=None).count() == 0:
+                        address_house.objects.update_or_create(house=None,iss_address_id=None,city=h.city,street=None)
         """
 
+        """
         company = address_companies.objects.get(pk=2)
 
         with open('MP-Sibir.txt', 'r') as ip:
@@ -90,7 +99,7 @@ class Command(BaseCommand):
                     d.company = company
                     d.save()
                     print d.data['ipaddress']
-
+        """
 
 
         """

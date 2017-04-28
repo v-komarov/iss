@@ -24,7 +24,7 @@ from django.views.generic.base import TemplateView,RedirectView
 
 
 
-from iss.inventory.models import devices_scheme,interfaces_scheme,netelems,devices
+from iss.inventory.models import devices_scheme,netelems,devices
 from iss.localdicts.models import Status,Severity,address_companies,port_status,slot_status,device_status
 
 from iss.mydecorators import group_required,anonymous_required
@@ -91,51 +91,6 @@ class DeviceSchemeList(ListView):
 
 
 
-
-### Схемы данных логических интерфейсов
-class InterfaceSchemeList(ListView):
-
-    model = devices_scheme
-    template_name = "inventory/interfacescheme_list.html"
-
-    paginate_by = 100
-
-
-
-    @method_decorator(login_required(login_url='/'))
-    @method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
-    def dispatch(self, request, *args, **kwargs):
-        self.request = request
-        self.session = request.session
-        self.user = request.user
-        return super(ListView, self).dispatch(request, *args, **kwargs)
-
-
-
-
-
-    def get_queryset(self):
-
-        data = interfaces_scheme.objects.order_by('name')
-
-        return data
-
-
-
-
-
-
-
-    def get_context_data(self, **kwargs):
-        context = super(InterfaceSchemeList, self).get_context_data(**kwargs)
-
-        if self.session.has_key('tz'):
-            context['tz']= self.session['tz']
-        else:
-            context['tz']= 'UTC'
-
-
-        return context
 
 
 

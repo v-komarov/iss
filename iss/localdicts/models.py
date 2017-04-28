@@ -298,3 +298,18 @@ class device_status(models.Model):
         verbose_name_plural = 'Статусы устройств'
 
 
+
+
+### Справочник свойств логических интерфейсов
+class logical_interfaces_prop_list(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Свойство логического интерфейса', unique=True)
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Свойство логического интерфейса'
+        verbose_name_plural = 'Свойства логических интерфейсов'
+

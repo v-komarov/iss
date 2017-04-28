@@ -1,7 +1,7 @@
 #!coding:utf-8
 
 from django.contrib import admin
-from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status
+from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list
 
 class StatusAdmin(admin.ModelAdmin):
     pass
@@ -127,6 +127,14 @@ class DeviceStatusAdmin(admin.ModelAdmin):
 
 
 
+class LogicalInterfacePropAdmin(admin.ModelAdmin):
+
+    fields = ('name',)
+    list_display = ('name',)
+
+
+
+
 
 admin.site.register(TzList)
 admin.site.register(Status,StatusAdmin)
@@ -147,4 +155,5 @@ admin.site.register(interfaces,InterfacesAdmin)
 admin.site.register(port_status,PortStatusAdmin)
 admin.site.register(slot_status,SlotStatusAdmin)
 admin.site.register(device_status,DeviceStatusAdmin)
+admin.site.register(logical_interfaces_prop_list,LogicalInterfacePropAdmin)
 

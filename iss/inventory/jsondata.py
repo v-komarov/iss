@@ -10,7 +10,7 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,interfaces_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal
+from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal
 from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status
 from django.shortcuts import redirect
 from django.core import serializers
@@ -241,18 +241,6 @@ def get_json(request):
 
 
 
-        ### Получение данных схемы интерфейса
-        if r.has_key("interfacescheme") and rg("interfacescheme") != '':
-            scheme_id = int(request.GET["interfacescheme"], 10)
-
-            s = interfaces_scheme.objects.get(pk=scheme_id)
-            data = {
-                "name": s.name,
-                "scheme_interface": "%s" % pformat(s.scheme_interface),
-            }
-
-            response_data = data
-
 
 
         ### Сохранение device_id
@@ -345,40 +333,6 @@ def get_json(request):
 
             response_data = {"result":check}
 
-
-
-        # Создание схемы интерфейса
-        if data.has_key("action") and data["action"] == 'create_interfacescheme':
-
-            ### Проверка корректности значений в json схеме
-            check = check_json_data2(eval(data["scheme_interface"]))
-
-            if check == "ok":
-                interfaces_scheme.objects.create(
-                    scheme_interface=eval(data["scheme_interface"]),
-                    name=data["name"],
-                    author=request.user.get_username() + " (" + request.user.get_full_name() + ")"
-                )
-
-            response_data = {"result": check}
-
-
-
-        # Изменение схемы интерфейса
-        if data.has_key("action") and data["action"] == 'edit_interfacescheme':
-
-            ### Проверка корректности значений в json схеме
-            check = check_json_data2(eval(data["scheme_interface"]))
-
-            if check == "ok":
-                s = interfaces_scheme.objects.get(pk=int(data["scheme_id"]))
-                s.scheme_interface = eval(data["scheme_interface"])
-                s.name = data["name"]
-                s.save()
-
-                logger.info("{user} внес изменение в модель интерфейса {name}".format(user=request.user.get_username(), name=s.name))
-
-            response_data = {"result": check}
 
 
 

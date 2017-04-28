@@ -527,7 +527,7 @@ def get_json(request):
             if len(t) == 1:
                 t1 = t[0]
                 data = address_house.objects.filter(Q(house=None) & Q(city__name__icontains=t1) & Q(street=None))
-
+                #data = address_house.objects.filter(Q(house=None) & Q(street=None))
 
             elif len(t) == 2:
                 t1 = t[0]
