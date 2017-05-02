@@ -308,9 +308,9 @@ def get_json(request):
 
 
 
-            for item in devices.objects.filter(Q(address__city__name__icontains=term) | Q(address__street__name__icontains=term) | Q(serial__icontains=term)):
+            for item in devices.objects.filter(Q(address__city__name__icontains=term) | Q(address__street__name__icontains=term) | Q(serial__icontains=term)).order_by("address__city__name","address__street__name"):
 
-                label =  "{name} серийник:{serial} адрес: {city} {street} {house}".format(name=item.name.encode("utf-8") if item.name else '',serial=item.serial.encode("utf-8") if item.serial else '',city=item.address.city.name.encode("utf-8") if item.address.city.name else '',street=item.address.street.name.encode("utf-8") if item.address.street.name else '',house=item.address.house.encode("utf-8") if item.address.house else '')
+                label =  "{name} серийник:{serial} адрес: {city} {street} {house}".format(name=item.name.encode("utf-8")[:40] if item.name else '',serial=item.serial.encode("utf-8")[:20] if item.serial else '',city=item.address.city.name.encode("utf-8") if item.address.city.name else '',street=item.address.street.name.encode("utf-8") if item.address.street.name else '',house=item.address.house.encode("utf-8") if item.address.house else '')
                 obj.append(
                     {
                         "label": label,

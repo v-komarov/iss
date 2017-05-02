@@ -36,8 +36,8 @@ table[group=netelements] > tbody > tr > td {
 
 
 
-div.col-md-6 > table > thead > tr > th,
-div.col-md-4 > table > thead > tr > th {
+table[group=devices] > thead > tr > th,
+table[group=interfaces] > thead > tr > th {
     padding:0;
     background-color:#DCDCDC;
 }
