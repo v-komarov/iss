@@ -10,13 +10,15 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal
+from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal,netelems
 from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status
 from django.shortcuts import redirect
 from django.core import serializers
 from django import template
 from django.db.models import F,Func,Value
 from django.db import models
+from django.db.models import Q
+
 
 
 logger = logging.getLogger('inventory')
@@ -227,6 +229,12 @@ def get_json(request):
         rg = request.GET.get
 
 
+
+
+
+
+
+
         ### Получение данных схемы
         if r.has_key("scheme") and rg("scheme") != '':
             scheme_id = int(request.GET["scheme"],10)
@@ -293,6 +301,119 @@ def get_json(request):
 
 
 
+        #### Поиск устройства
+        if r.has_key("term") and rg("term") != "":
+            term = request.GET["term"]
+            obj = []
+
+
+
+            for item in devices.objects.filter(Q(address__city__name__icontains=term) | Q(address__street__name__icontains=term) | Q(serial__icontains=term)):
+
+                label =  "{name} серийник:{serial} адрес: {city} {street} {house}".format(name=item.name.encode("utf-8") if item.name else '',serial=item.serial.encode("utf-8") if item.serial else '',city=item.address.city.name.encode("utf-8") if item.address.city.name else '',street=item.address.street.name.encode("utf-8") if item.address.street.name else '',house=item.address.house.encode("utf-8") if item.address.house else '')
+                obj.append(
+                    {
+                        "label": label,
+                        "value": item.id
+                    }
+                )
+
+            response_data = obj
+
+
+
+
+
+        ### Сохранение id сетевого элемента
+        if r.has_key("savenetelem") and rg("savenetelem") != '':
+
+            netelemid = int(request.GET["savenetelem"],10)
+            request.session["netelemid"] = netelemid
+
+            response_data = {"result":"ok"}
+
+
+
+
+        ### Получение названия сетевого элемента
+        if r.has_key("action") and rg("action") == 'getelemname':
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+
+            response_data = {"result": "ok","name":ne.name}
+
+
+
+
+        ### Получение названия сетевого элемента
+        if r.has_key("action") and rg("action") == 'saveelemname':
+            name = request.GET["name"]
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+
+            if netelems.objects.filter(name=name).exclude(pk=netelemid).count() == 0:
+                ne.name = name
+                ne.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Добавление устройства к сетевому элементу
+        if r.has_key("action") and rg("action") == 'adddevice':
+            deviceid = request.GET["deviceid"]
+            d = devices.objects.get(pk=deviceid)
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+
+            # Проверка есть ли уже такая запись
+            if not ne.device.filter(pk=d.pk).exists():
+                ne.device.add(d)
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Удаление устройства из сетевому элементу
+        if r.has_key("action") and rg("action") == 'deldevice':
+            deviceid = request.GET["deviceid"]
+            d = devices.objects.get(pk=deviceid)
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+
+            ne.device.remove(d)
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Список устройств по сетевому элементу
+        if r.has_key("action") and rg("action") == 'listdevice':
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+            device_list = []
+            for item in ne.device.all():
+                device_list.append({
+                    "id":item.id,
+                    "name":item.name,
+                    "address_city":item.address.city.name,
+                    "address_street": item.address.street.name,
+                    "address_house": item.address.house,
+                    "serial":item.serial
+
+                })
+
+            response_data = {"result": "ok","device_list":device_list}
+
+
+
+
+
     if request.method == "POST":
 
 
@@ -335,14 +456,6 @@ def get_json(request):
 
 
 
-
-
-        # Изменение схемы интерфейса
-        if data.has_key("action") and data["action"] == 'create_netelement':
-
-            #return HttpResponseRedirect("/inventory/netelement/")
-
-            response_data = {"result": "ok"}
 
 
 
@@ -525,6 +638,41 @@ def get_json(request):
             )
 
             response_data = {"result": "ok"}
+
+
+
+
+        # Создание сетевого элемента
+        if data.has_key("action") and data["action"] == 'create_netelement':
+            name = data["name"]
+
+            if netelems.objects.filter(name=name).count() == 0:
+
+                u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
+                ne = netelems.objects.create(name=name,author=u)
+                response_data = {"result": "ok", "neid":ne.id}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+
+
+        # Изменение сетевого элемента
+        if data.has_key("action") and data["action"] == 'edit_netelement':
+            ne = data["ne"]
+            name = data["name"]
+
+            if netelems.objects.filter(name=name).count() == 0:
+
+                netelems.objects.create(name=name)
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
 
 
 

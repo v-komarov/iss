@@ -30,7 +30,7 @@ table[group=netelements] > tbody > tr > td {
 }
 
 
-#elemdata {
+#elemdata,#devices {
     padding-top:70px;
 }
 
@@ -43,7 +43,12 @@ div.col-md-4 > table > thead > tr > th {
 }
 
 
+table[group=devices] > tbody > tr > td {
+    padding:0;
+}
+
+
 #searchdevice {
-    width: 300px;
+    width: 600px;
 }
 

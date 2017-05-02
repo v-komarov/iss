@@ -122,9 +122,9 @@ class NetElementsList(ListView):
 
     def get_queryset(self):
 
-        #data = interfaces_scheme.objects.order_by('name')
+        data = netelems.objects.order_by('name')
 
-        return []
+        return data
 
 
 

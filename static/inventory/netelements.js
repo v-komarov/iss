@@ -5,21 +5,11 @@ $(document).ready(function() {
     //$("#edititem").bind("click",EditScheme);
     // Для списка сетевых элементов
     $("table[group=netelements] tbody tr").bind("click",ClickEventRow);
-    // Для списка сетевых интерфейсов
-    $("table[group=interfaces] tbody tr").bind("click",ClickEventRowInterfaces);
-    // Для списка устройств
-    $("table[group=devices] tbody tr").bind("click",ClickEventRowDevices);
-
+    // Редактирование сетевого элемента
+    $("#edititem").bind("click",EditNetElement);
 
     // Для интерфейса списка сетевых элементов
     $("#edititem").hide();
-
-
-    // Для интерфейса наполнения сетевого элемента
-    $("#editinterface").hide();
-    $("#deleteinterface").hide();
-    $("#editdevice").hide();
-    $("#deletedevice").hide();
 
 
 });
@@ -71,31 +61,30 @@ function ClickEventRow(e) {
 }
 
 
-// Выделение строки списка интерфейсов
-function ClickEventRowInterfaces(e) {
-
-        $("table[group=interfaces] tbody tr").css("background-color","");
-        $(this).css("background-color","#F0E68C");
-        $("table[group=interfaces] tbody tr").attr("marked","no");
-        $(this).attr("marked","yes");
-
-        $("#edititem").show();
-
-}
 
 
 
-// Выделение строки списка устройств
-function ClickEventRowDevices(e) {
 
-        $("table[group=devices] tbody tr").css("background-color","");
-        $(this).css("background-color","#F0E68C");
-        $("table[group=devices] tbody tr").attr("marked","no");
-        $(this).attr("marked","yes");
 
-        $("#edititem").show();
+
+
+// Редактирование элемента
+function EditNetElement(e) {
+
+    // определение id
+    var row_id = $("table[group=netelements] tbody tr[marked=yes]").attr("row_id");
+
+
+    // Сохранение id элемента
+    var jqxhr = $.getJSON("/inventory/jsondata?savenetelem="+row_id,
+    function(data) {
+        window.location.href = "/inventory/netelementdata/?elem="+row_id;
+    })
 
 }
+
+
+
 
 
 
@@ -135,7 +124,7 @@ function AddNetElement(e) {
                   data:$.toJSON(data),
                     success: function(result) {
                         if (result["result"] == "error") { alert("Возможно элемент\nс таким именем уже существует!"); }
-                        else {window.location.href = "/inventory/netelement/?elem=12";}
+                        else {window.location.href = "/inventory/netelementdata/?elem="+result["neid"];}
                     }
 
                 });

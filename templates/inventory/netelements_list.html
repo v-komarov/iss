@@ -78,17 +78,13 @@
 
             {% for row in object_list %}
 
-
-                    <tr class="small" marked="no" row_id="{{ row.id }}">
+                    <tr class="small" marked="no" row_id={{ row.id }}>
 
 
                         <td>{{ row.name }}</td>
-                        <td>{{ row.scheme_device.model_name }}</td>
-                        <td>{{ row.scheme_device.properties }}</td>
-                        <td>{{ row.scheme_device.slots_number }}</td>
-                        <td><a id="tooltip" title="{{ row.scheme_device.ports }}">{{ row.scheme_device.ports|truncatechars:25 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.scheme_device.slots }}">{{ row.scheme_device.slots|truncatechars:25 }}</a></td>
-                        <td>{{ row.scheme_device.allowed_parrents }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         {% timezone tz %}
                         <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
                         {% endtimezone %}
