@@ -52,3 +52,28 @@ table[group=devices] > tbody > tr > td {
     width: 600px;
 }
 
+
+
+/* Окно управления логическими интерфейсами */
+table[group=devices-ports] > thead > tr > th {
+    padding:0;
+    background-color:#DCDCDC;
+}
+
+table[group=devices-ports] > tbody > tr > td {
+    padding:0;
+    vertical-align:text-top;
+}
+table[group=devices-ports] > tbody > tr > td > input {
+    margin:0;
+}
+table[group=devices-ports] {
+    margin-top:20px;
+}
+#logicalinterfaceform > table > tbody > tr > td {
+    vertical-align:text-top;
+}
+
+/* Окно управления логическими интерфейсами - окончание */
+
+

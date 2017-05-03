@@ -413,6 +413,26 @@ def get_json(request):
 
 
 
+        ### Список портов на основе списка устройств
+        if r.has_key("action") and rg("action") == 'interfaceform':
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+            ports_list = []
+            for item in ne.device.all():
+                for i in item.devices_ports_set.all():
+                    ports_list.append({
+                        "port_id":i.id,
+                        "device_name":item.name,
+                        "device_status":item.status.name,
+                        "port_num":i.num,
+                        "port":i.port.name,
+                        "port_status":i.status.name
+                    })
+
+            response_data = {"result":"ok","ports_list":ports_list}
+
+
+
 
     if request.method == "POST":
 
@@ -673,6 +693,20 @@ def get_json(request):
             else:
 
                 response_data = {"result": "error"}
+
+
+
+
+
+
+        # Создание логического интерфейса
+        if data.has_key("action") and data["action"] == 'createinterface':
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+
+
+            response_data = {"result": "ok"}
+
 
 
 

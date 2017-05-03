@@ -314,6 +314,7 @@ class logical_interfaces(models.Model):
     name = models.CharField(max_length=100,unique=True)
     netelem = models.ForeignKey(netelems)
     comment = models.CharField(max_length=200)
+    ports = models.ManyToManyField(devices_ports)
 
 
 
@@ -325,4 +326,3 @@ class logical_interfaces_prop(models.Model):
     prop = models.ForeignKey(logical_interfaces_prop_list)
     val = models.CharField(max_length=100,null=True)
     comment = models.CharField(max_length=200)
-    ports = models.ManyToManyField(devices_ports)
