@@ -52,6 +52,10 @@ table[group=devices] > tbody > tr > td {
     width: 600px;
 }
 
+table[group=interfaces] > tbody > tr > td {
+    padding:0;
+}
+
 
 
 /* Окно управления логическими интерфейсами */

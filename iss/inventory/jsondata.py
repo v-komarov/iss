@@ -10,7 +10,7 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal,netelems
+from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal,netelems,logical_interfaces
 from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status
 from django.shortcuts import redirect
 from django.core import serializers
@@ -434,6 +434,67 @@ def get_json(request):
 
 
 
+
+
+
+        ### Список связанных портов , название интерфейса, комментарий
+        if r.has_key("action") and rg("action") == 'interfaceform2':
+            interface_id = request.GET["interface_id"]
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+            interface = logical_interfaces.objects.get(pk=int(interface_id,10))
+            ports_list = []
+            for item in interface.ports.all():
+                ports_list.append(item.id)
+
+            response_data = {"result":"ok","ports_list":ports_list,"name":interface.name,"comment":interface.comment}
+
+
+
+
+
+
+
+        ### Список сетевых интерфейсов по текущему сетевому элементу
+        if r.has_key("action") and rg("action") == 'interfacedata':
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+            interfaces_list = []
+            for item in ne.logical_interfaces_set.all():
+                ports = []
+                for i in item.ports.all():
+                    ports.append({
+                        "num":i.num,
+                        "port":i.port.name,
+                        "device":i.device.name
+                    })
+
+                interfaces_list.append({
+                    "interface_id": item.id,
+                    "interface_name": item.name,
+                    "interface_comment": item.comment,
+                    "devices_ports": ports
+                })
+
+            response_data = {"result": "ok", "interfaces_list": interfaces_list}
+
+
+
+
+        ### Удаление логического интерфейса
+        if r.has_key("action") and rg("action") == 'deleteinterface':
+            interface_id = request.GET["interface_id"]
+            interface = logical_interfaces.objects.get(pk=int(interface_id,10))
+            for port in interface.ports.all():
+                interface.ports.remove(port)
+
+            interface.delete()
+
+            response_data = {"result": "ok"}
+
+
+
+
     if request.method == "POST":
 
 
@@ -704,9 +765,68 @@ def get_json(request):
             netelemid = request.session["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
 
+            # Проверка есть ли такой интерфейс
+            if not logical_interfaces.objects.filter(name=data["name"],netelem=ne).exists():
 
-            response_data = {"result": "ok"}
+                ports = data["ports"]
+                # Создание логического интерфейса
+                lint = logical_interfaces.objects.create(name=data["name"],comment=data["comment"],netelem=ne)
+                ## Связывание по физическим портам
+                for a in ports:
+                    p = devices_ports.objects.get(pk=a)
+                    lint.ports.add(p)
 
+
+                response_data = {"result": "ok"}
+
+            ### Интерфейс с таким именем уже есть
+            else:
+                response_data = {"result": "error"}
+
+
+
+
+        # редактирование логического интерфейса
+        if data.has_key("action") and data["action"] == 'editinterface':
+            netelemid = request.session["netelemid"]
+            ne = netelems.objects.get(pk=netelemid)
+            interfaceid = data["interfaceid"]
+
+            # Проверка есть ли такой интерфейс с таким же именем за исключением этого
+            if not logical_interfaces.objects.filter(name=data["name"], netelem=ne).exclude(pk=interfaceid).exists():
+
+                # порты , которые отмечены
+                ports_click = data["ports"]
+                # порты в данные момент связанные
+                ports_link = []
+
+                lint = logical_interfaces.objects.get(pk=interfaceid)
+                lint.name = data["name"]
+                lint.comment = data["comment"]
+                lint.save()
+
+                for p in lint.ports.all():
+                    ports_link.append(p.id)
+
+                ### Проверка и добавление связанности по портам
+                for port_id in ports_click:
+                    if port_id not in ports_link:
+                        n = devices_ports.objects.get(pk=port_id)
+                        lint.ports.add(n)
+
+                ### Проверка на отсутсвие и удаление
+                for port_id in ports_link:
+                    if port_id not in ports_click:
+                        n = devices_ports.objects.get(pk=port_id)
+                        lint.ports.remove(n)
+
+
+
+                response_data = {"result": "ok"}
+
+            ### Интерфейс с таким именем уже есть
+            else:
+                response_data = {"result": "error"}
 
 
 
