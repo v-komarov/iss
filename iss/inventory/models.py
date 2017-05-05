@@ -311,7 +311,7 @@ class netelems(models.Model):
 
 ### Логические интерфейсы
 class logical_interfaces(models.Model):
-    name = models.CharField(max_length=100,unique=True)
+    name = models.CharField(max_length=100)
     netelem = models.ForeignKey(netelems)
     comment = models.CharField(max_length=200)
     ports = models.ManyToManyField(devices_ports)

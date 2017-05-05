@@ -243,7 +243,7 @@ function ListInterfacesData() {
                 +"<td></td>"
                 +"<td></td>"
                 +"<td></td>"
-                +"<td class=\"text-center\"><a do=\"addproperties\" title=\"добавить свойство\"><span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span></a></td>"
+                +"<td class=\"text-center\"><a do=\"addproperties\" title=\"добавить свойство\"><span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span></a></td>"
                 +"<td class=\"text-center\"><a do=\"editinterface\" title=\"редактировать интерфейс\"><span class=\"glyphicon glyphicon-edit\" aria-hidden=\"true\"></span></a></td>"
                 +"<td class=\"text-center\"><a do=\"deleteinterface\" title=\"удалить интерфейс\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
                 +"</tr>";
