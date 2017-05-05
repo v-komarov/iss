@@ -81,3 +81,8 @@ table[group=devices-ports] {
 /* Окно управления логическими интерфейсами - окончание */
 
 
+/* Окно свойств логического интерфейса */
+tr.small:nth-child(3) > td:nth-child(1) > label:nth-child(1) {
+    padding-right:10px;
+}
+

@@ -10,8 +10,8 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal,netelems,logical_interfaces
-from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status
+from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal,netelems,logical_interfaces,logical_interfaces_prop
+from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status,logical_interfaces_prop_list
 from django.shortcuts import redirect
 from django.core import serializers
 from django import template
@@ -455,12 +455,15 @@ def get_json(request):
 
 
 
-        ### Список сетевых интерфейсов по текущему сетевому элементу
+        ### Список логических интерфейсов по текущему сетевому элементу
         if r.has_key("action") and rg("action") == 'interfacedata':
             netelemid = request.session["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
             interfaces_list = []
+
             for item in ne.logical_interfaces_set.all():
+
+                ## Порты
                 ports = []
                 for i in item.ports.all():
                     ports.append({
@@ -469,11 +472,25 @@ def get_json(request):
                         "device":i.device.name
                     })
 
+                # свойства логического интерфейса
+                props = []
+
+                for j in logical_interfaces_prop.objects.filter(logical_interface=item):
+                    props.append({
+                        "interface_id":item.id,
+                        "prop_id":j.id,
+                        "prop_name":j.prop.name,
+                        "prop_select_id":j.prop.id,
+                        "prop_val":j.val,
+                        "prop_comment":j.comment
+                    })
+
                 interfaces_list.append({
                     "interface_id": item.id,
                     "interface_name": item.name,
                     "interface_comment": item.comment,
-                    "devices_ports": ports
+                    "devices_ports": ports,
+                    "props":props
                 })
 
             response_data = {"result": "ok", "interfaces_list": interfaces_list}
@@ -488,9 +505,25 @@ def get_json(request):
             for port in interface.ports.all():
                 interface.ports.remove(port)
 
+            ## Удаление созданных свойств
+            logical_interfaces_prop.objects.filter(logical_interface=interface).delete()
+
             interface.delete()
 
             response_data = {"result": "ok"}
+
+
+
+        ### Удаление устройства из сетевому элементу
+        if r.has_key("action") and rg("action") == 'deleteprop':
+            prop_id = int(request.GET["prop_id"],10)
+            p = logical_interfaces_prop.objects.get(pk=prop_id)
+            p.delete()
+
+            response_data = {"result": "ok"}
+
+
+
 
 
 
@@ -828,6 +861,38 @@ def get_json(request):
             else:
                 response_data = {"result": "error"}
 
+
+
+
+        # Создание свойства логического интерфейса
+        if data.has_key("action") and data["action"] == 'createprop':
+
+            prop = logical_interfaces_prop_list.objects.get(pk=int(data["prop"],10))
+            lint = logical_interfaces.objects.get(pk=int(data["interface_id"],10))
+
+            logical_interfaces_prop.objects.create(
+                logical_interface = lint,
+                prop = prop,
+                val = data["value"],
+                comment = data["comment"]
+            )
+
+
+            response_data = {"result": "ok"}
+
+
+
+        # Редактирование свойства логического интерфейса
+        if data.has_key("action") and data["action"] == 'editprop':
+            lintprop = logical_interfaces_prop.objects.get(pk=int(data["prop_id"],10))
+            prop = logical_interfaces_prop_list.objects.get(pk=int(data["prop"], 10))
+
+            lintprop.prop = prop
+            lintprop.val = data["value"]
+            lintprop.comment = data["comment"]
+            lintprop.save()
+
+            response_data = {"result": "ok"}
 
 
 

@@ -303,7 +303,7 @@ class device_status(models.Model):
 ### Справочник свойств логических интерфейсов
 class logical_interfaces_prop_list(models.Model):
     name = models.CharField(max_length=100, verbose_name='Свойство логического интерфейса', unique=True)
-    comment = models.CharField(max_length=200, verbose_name='Описание',null=True)
+    comment = models.CharField(max_length=200, verbose_name='Описание',null=True,blank=True)
 
 
     def __unicode__(self):

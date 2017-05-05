@@ -43,6 +43,13 @@ $(document).ready(function() {
     $("table[group=interfaces] tbody").on("click","a[do=editinterface]",EditLogicalInterface);
     // Редактирование логического интерфейса
     $("table[group=interfaces] tbody").on("click","a[do=deleteinterface]",DeleteLogicalInterface);
+    // Добавление свойства логического интерфейса
+    $("table[group=interfaces] tbody").on("click","a[do=addproperties]",AddPropInterface);
+    // Удаление свойства логического интерфейса
+    $("table[group=interfaces] tbody").on("click","a[do=deleteprop]",DeleteProp);
+    // Редактирование свойства логического интерфейса
+    $("table[group=interfaces] tbody").on("click","a[do=editprop]",EditPropInterface);
+
 
 
     // Отображение названия элемента
@@ -242,6 +249,25 @@ function ListInterfacesData() {
                 +"</tr>";
 
                 $("table[group=interfaces] tbody").append(t);
+
+                // Формирование отображения свойств логического интерфейса
+                $.each(value["props"], function(k,v) {
+                    var tt = "<tr interface_id=" + v["interface_id"] + " prop_id=" + v["prop_id"] + " prop_select_id=" +v["prop_select_id"]+">"
+                    +"<td></td>"
+                    +"<td></td>"
+                    +"<td></td>"
+                    +"<td></td>"
+                    +"<td>"+v["prop_name"]+"</td>"
+                    +"<td>"+v["prop_val"]+"</td>"
+                    +"<td>"+v["prop_comment"]+"</td>"
+                    +"<td></td>"
+                    +"<td class=\"text-center\"><a do=\"editprop\" title=\"редактировать свойство\"><span class=\"glyphicon glyphicon-edit\" aria-hidden=\"true\"></span></a></td>"
+                    +"<td class=\"text-center\"><a do=\"deleteprop\" title=\"удалить свойство\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                    +"</tr>";
+
+                    $("table[group=interfaces] tbody").append(tt);
+
+                });
 
             });
 
@@ -488,8 +514,24 @@ function LogicalInterfaceData() {
     });
 
 
+}
 
 
+
+
+
+// Добавление свойства логического интерфейса
+function AddPropInterface(e) {
+
+    var interface_id = $(this).closest("tr").attr("interface_id");
+    $("#interfaceprop").attr("interface_id",interface_id);
+    $("#interfaceprop").attr("action","createprop");
+    $("#interfaceprop").attr("prop_id","");
+
+    $("form#interfacepropform table tbody tr td input#value").val("");
+    $("form#interfacepropform table tbody tr td input#comment").val("");
+
+    PropInterfaceData();
 
 }
 
@@ -497,3 +539,114 @@ function LogicalInterfaceData() {
 
 
 
+
+// Изменение свойства логического интерфейса
+function EditPropInterface(e) {
+
+    var interface_id = $(this).closest("tr").attr("interface_id");
+    var prop_id = $(this).closest("tr").attr("prop_id");
+    var select_id = $(this).closest("tr").attr("prop_select_id");
+    $("#interfaceprop").attr("interface_id",interface_id);
+    $("#interfaceprop").attr("action","editprop");
+    $("#interfaceprop").attr("prop_id",prop_id);
+
+
+    var prop_val = $(this).closest("tr").children("td").eq(5).text();
+    var prop_comment = $(this).closest("tr").children("td").eq(6).text();
+    $("form#interfacepropform table tbody tr td select#prop").val(select_id);
+    $("form#interfacepropform table tbody tr td input#value").val(prop_val);
+    $("form#interfacepropform table tbody tr td input#comment").val(prop_comment);
+
+    PropInterfaceData();
+
+}
+
+
+
+
+
+
+
+// Наполнение данными свойства логического интерфейса
+function PropInterfaceData() {
+
+
+
+    $("#interfaceprop").dialog({
+        title:"Свойство интерфейса",
+        buttons:[{ text:"Сохранить",click: function() {
+
+            if ($("form#interfacepropform table tbody tr td select#prop").val() ) {
+
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+                var data = {};
+                data.interface_id = $("#interfaceprop").attr("interface_id");
+                data.prop_id = $("#interfaceprop").attr("prop_id");
+                data.prop = $("form#interfacepropform table tbody tr td select#prop").val();
+                data.value = $("form#interfacepropform table tbody tr td input#value").val();
+                data.comment = $("form#interfacepropform table tbody tr td input#comment").val();
+                data.action = $("#interfaceprop").attr("action");
+
+
+                $.ajax({
+                  url: "/inventory/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok")
+                        { $("#interfaceprop").dialog("close");  ListInterfacesData(); }
+                    }
+
+                });
+
+            }
+            else { alert("Необходимо заполнить поля *");}
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:200,
+        width:310,
+        minHeight:200,
+
+    });
+
+
+}
+
+
+
+
+// Удаление свойства логического интерфейса
+function DeleteProp(e) {
+
+
+    var prop_id = $(this).closest("tr").attr("prop_id");
+    var prop_name = $(this).closest("tr").children("td").eq(4).text();
+    var a = confirm("Удаляем свойство "+prop_name+" ?");
+
+    if (a) {
+
+        var jqxhr = $.getJSON("/inventory/jsondata?action=deleteprop&prop_id="+prop_id,
+        function(data) {
+
+            if (data["result"] == "ok") { ListInterfacesData();}
+
+        })
+    }
+}

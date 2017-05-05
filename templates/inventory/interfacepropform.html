@@ -1,0 +1,32 @@
+<div id="interfaceprop" title="" hidden>
+    <form id="interfacepropform">
+        <table>
+            <tbody>
+                <tr class="small">
+                    <td><label for="prop">Свойство *</label></td>
+                    <td>
+
+                        <select id="prop" name="prop" class="form-control input-sm">
+                        {% for item in interface_prop_list %}
+                            <option value="{{ item.id }}">{{ item.name }}</option>
+                        {% endfor %}
+                        </select>
+
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="value">Значение</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="value" name="value" placeholder="" />
+                    </td>
+                </tr>
+                <tr class="small">
+                    <td><label for="comment">Коментарий</label></td>
+                    <td>
+                        <input type="text" class="form-control input-sm" id="comment" name="comment" placeholder="" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
