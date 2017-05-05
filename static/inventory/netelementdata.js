@@ -196,7 +196,7 @@ function ListDevice(e) {
                 +"<td>"+value['name']+"</td>"
                 +"<td>"+value['serial']+"</td>"
                 +"<td>"+value['address_city']+" "+value['address_street']+" "+value['address_house']+"</td>"
-                +"<td class=\"text-center\"><a><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"<td class=\"text-center\"><a title=\"Удалить устройство\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
                 +"</tr>";
 
                 $("table[group=devices] tbody").append(t);
