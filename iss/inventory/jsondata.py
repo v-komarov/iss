@@ -58,7 +58,7 @@ def DateTimeString(vardatetime,request):
 
 
 # Порты в json
-def ports_list(d,request):
+def Ports_List(d,request):
 
     result = []
     for row in d.devices_ports_set.all():
@@ -77,7 +77,7 @@ def ports_list(d,request):
 
 
 # Слоты в json
-def slots_list(d, request):
+def Slots_List(d, request):
 
     result = []
     for row in d.device_link.all():
@@ -96,7 +96,7 @@ def slots_list(d, request):
 
 
 # Комбо в json
-def combo_list(d, request):
+def Combo_List(d, request):
 
     result = []
     for row in d.devices_combo_set.all():
@@ -287,9 +287,9 @@ def get_json(request):
                     "address":d.address.getaddress(),
                     "status":d.getstatus(),
                     "company":d.company.name,
-                    "ports": ports_list(d,request),
-                    "slots": slots_list(d,request),
-                    "combo": combo_list(d,request),
+                    "ports": Ports_List(d,request),
+                    "slots": Slots_List(d,request),
+                    "combo": Combo_List(d,request),
                     "properties": properties_list(d,request),
                     "statuses": statuses_list(d,request),
                     "removal": removal_list(d,request)
