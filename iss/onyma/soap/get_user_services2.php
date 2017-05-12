@@ -99,13 +99,24 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
             $start_date = $row->startdate;
             $login = $row->name;
             $sitename = SiteName($client,$row->dmid);
-
+            $status = $row->status;
 
             // Для фингерпринта du
             if (substr($sitename,0,3) == "du.") {
                 $r = $client->o_mdb_api_dog_serv_f(array(dmid=>array(is=>(int)$row->dmid)))->return;
-                $tmidname = ServName($client,$r->row->servid);
+                // Если значение servid одно
+                if (isset($r->row->servid)) {
+                    $tmidname = ServName($client,$r->row->servid);
+                }
+                // Если значений servid много
+                else {
+                        // Перебор и выбор названия
+                        foreach ($r->row as &$row2) {
 
+                          $tmidname = ServName($client,$row2->servid);
+
+                        }
+                }
             }
             else {
                 $tmidname = TarifName($client,$row->tmid);
@@ -113,7 +124,7 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
 
 
 
-            print("srv:".$srv.";start_date:".$start_date.";login:".$login.";tarif:".$tmidname.";sitename:".$sitename.";\n");
+            print("srv:".$srv.";start_date:".$start_date.";login:".$login.";tarif:".$tmidname.";sitename:".$sitename.";status:".$status.";\n");
 
         }
 

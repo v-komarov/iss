@@ -61,7 +61,7 @@ def DateTimeString(vardatetime,request):
 def Ports_List(d,request):
 
     result = []
-    for row in d.devices_ports_set.all():
+    for row in d.devices_ports_set.order_by('num'):
         result.append({
             'id': row.id,
             'datetime_str':DateTimeString(row.datetime_update,request).strip(),
@@ -261,13 +261,24 @@ def get_json(request):
 
 
 
-        ### Поиск
+        ### Поиск для устройств
         if r.has_key("search"):
 
             search = request.GET["search"]
             request.session["search_device"] = search
 
             response_data = {"result":"ok"}
+
+
+
+        ### Поиск для сетевых элементов
+        if r.has_key("search2"):
+
+            search = request.GET["search2"]
+            request.session["search_netelem"] = search
+
+            response_data = {"result":"ok"}
+
 
 
 

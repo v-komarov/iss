@@ -12,7 +12,47 @@ $(document).ready(function() {
     $("#edititem").hide();
 
 
+
+    // Поиск
+    $("#runsearch_netelem").bind("click",RunSearch);
+
+    // Сброс поиска
+    $("#clearsearch_netelem").bind("click",ClearSearch);
+
+
 });
+
+
+
+
+
+
+// Поиск
+function RunSearch(e) {
+    var search = $("#search_netelem").val();
+    var jqxhr = $.getJSON("/inventory/jsondata?search2="+search,
+        function(data) {
+            window.location=$("#menunetelements a").attr("href");
+        })
+}
+
+
+
+// Отмена Search
+function ClearSearch(e) {
+    $("#search_netelem").val("");
+    $("#search_netelem").attr("placeholder","");
+
+    var search = "";
+    var jqxhr = $.getJSON("/inventory/jsondata?search2="+search,
+        function(data) {
+            window.location=$("#menunetelements a").attr("href");
+        })
+}
+
+
+
+
 
 
 

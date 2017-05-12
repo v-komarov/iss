@@ -224,7 +224,7 @@ class DevicesList(ListView):
             if len(self.session['search_device']) >= 3:
                 for search in self.session['search_device'].split(" "):
                     if search != " ":
-                        q.append("Q(name__icontains='%s') | Q(serial__icontains='%s') | Q(address__street__name__icontains='%s') | Q(address__house__icontains='%s')" % (search,search,search,search))
+                        q.append("Q(device_scheme__name__icontains='%s') | Q(serial__icontains='%s') | Q(address__street__name__icontains='%s') | Q(address__house__icontains='%s')" % (search,search,search,search))
 
         if len(q) == 0:
             return devices.objects.order_by('address')
