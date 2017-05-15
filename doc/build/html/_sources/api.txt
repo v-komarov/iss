@@ -78,6 +78,8 @@ url http://10.6.0.22:8000/onyma/apidata
 
 
 
+
+
 Тест
 ~~~~
 
@@ -484,4 +486,65 @@ srv:<Значение>;start_date:<Значение>;login:<Значение>;ta
     srv:[ТТК] Подключение ШПД;start_date:2016-11-28T21:00:00.000Z;login:241115694;tarif:Сибирь вТТКайся 290р 60000К Красноярск, Минусинск 2016;sitename:i.241115694;
     srv:[ТТК] Доступ в личный кабинет;start_date:2016-11-28T21:00:00.000Z;login:241115694;tarif:Technological;sitename:lc.241115694;
     srv:[ТТК] Доп.услуги Интернет;start_date:2016-11-30T21:00:00.000Z;login:ttk_dop;tarif:[Сибирь] Wi-Fi роутер(в рассрочку на 18 мес.);sitename:du.241115694;
+
+
+
+Получение списка доменов
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+Запрос **GET**
+
+Параметры:
+
+#. action=get_domain_list
+
+
+Вывод : text
+domainid:<id домена>;domainidup:<id родительского домена>;domain:<Название домена>;domaincod:<Код домена>;
+
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=get_domain_list
+
+
+Пример ответ:
+
+ ::
+
+    domainid:18971;domainidup:18970;domain:Фролово;domaincod:;
+    domainid:28152;domainidup:19790;domain:cttc_slk;domaincod:;
+    domainid:28153;domainidup:28152;domain:vzm;domaincod:;
+    domainid:28158;domainidup:28152;domain:kirov;domaincod:;
+    domainid:28159;domainidup:28152;domain:kaluga;domaincod:;
+    domainid:20410;domainidup:19790;domain:moskow;domaincod:;
+    domainid:21155;domainidup:18310;domain:sever;domaincod:;
+    domainid:22619;domainidup:22610;domain:e-tihoretsk;domaincod:;
+    domainid:24392;domainidup:22150;domain:birobidzhan;domaincod:;
+    domainid:22610;domainidup:19670;domain:e-rostov_reg;domaincod:;
+    domainid:22612;domainidup:22610;domain:e-kamensk_sh;domaincod:;
+    domainid:29474;domainidup:22150;domain:vladivostok;domaincod:;
+    domainid:18311;domainidup:18310;domain:sankt-petersburg;domaincod:;
+    domainid:21072;domainidup:18310;domain:kavkaz;domaincod:;
+    domainid:28154;domainidup:28152;domain:dsk;domaincod:;
+    domainid:29472;domainidup:22150;domain:vanino;domaincod:;
+    domainid:21071;domainidup:18310;domain:sakhalin;domaincod:;
+    domainid:21073;domainidup:18310;domain:ttknn;domaincod:;
+    domainid:21074;domainidup:18310;domain:sibir;domaincod:;
+    domainid:32431;domainidup:21074;domain:sibir.krasnoyarsk;domaincod:;
+    domainid:22150;domainidup:18310;domain:dalny_vostok;domaincod:;
+    domainid:22330;domainidup:18690;domain:Саратов;domaincod:;
+    domainid:19790;domainidup:18310;domain:cttk;domaincod:;
+    domainid:21373;domainidup:18310;domain:Ural;domaincod:;
+    domainid:25674;domainidup:25271;domain:e-n_rtk;domaincod:;
+    domainid:30232;domainidup:30231;domain:Саратовская_обл;domaincod:;
+    domainid:18690;domainidup:18310;domain:volga;domaincod:;
+
+
+
+
 
