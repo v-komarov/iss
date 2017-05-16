@@ -71,6 +71,8 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
 
         $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>291,pval=>$lastname." ".$firstname." ".$secondname))->return;
 
+        $data=$client->o_mdb_api_change_dog_add_dog_attrib_insert(array(pdogid=>$dogid,pattrid=>12,pval=>$lastname." ".$firstname." ".$secondname))->return;
+
 
         print_r($data);
 
