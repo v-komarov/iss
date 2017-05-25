@@ -291,8 +291,39 @@ url http://10.6.0.22:8000/onyma/apidata2
 
 
 
-Установка адреса договора
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Установка адреса договора 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+url http://10.6.0.22:8000/onyma/apidata2
+
+
+Запрос **GET**
+
+Параметры:
+
+#. action=dog_set_address2
+#. username=<логин для onyma>
+#. password=<пароль для onyma>
+#. dogid=<id договора>
+#. city=<Город> кодировка utf-8
+#. street=<Улица> кодировка utf-8
+#. house=<Дом> кодировка utf-8
+#. room=<Квартира> кодировка utf-8
+
+Вывод : Нет
+
+Пример запрос:
+
+ ::
+
+    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_address&dogid=2381953&username=iss2&password=111111&city=Красноярск&street=Совсем Любая&house=5 а&room=100
+
+
+
+
+
+Установка адреса договора 2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 url http://10.6.0.22:8000/onyma/apidata2
 
@@ -310,13 +341,19 @@ url http://10.6.0.22:8000/onyma/apidata2
 #. house=<Дом> кодировка utf-8
 #. room=<Квартира> кодировка utf-8
 
+(Пробелы в адресе заменены символами подчеркивания)
+
 Вывод : Нет
 
 Пример запрос:
 
  ::
 
-    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_address&dogid=2381953&username=iss2&password=111111&city=Красноярск&street=Совсем Любая&house=5 а&room=100
+    http://10.6.0.22:8000/onyma/apidata2/?action=dog_set_address&dogid=2381953&username=iss2&password=111111&city=Красноярск&street=Совсем_Любая&house=5_а&room=100
+
+
+
+
 
 
 

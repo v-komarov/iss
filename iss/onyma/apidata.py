@@ -147,9 +147,9 @@ def get_apidata2(request):
 
 
 
-        ### Установка адреса договора
+        ### Установка адреса договора 2
 
-        if r.has_key("action") and rg("action") == 'dog_set_address':
+        if r.has_key("action") and rg("action") == 'dog_set_address2':
             dogid = int(request.GET["dogid"], 10)
             username2 = request.GET["username"]
             password2 = request.GET["password"]
@@ -168,7 +168,29 @@ def get_apidata2(request):
 
 
 
-        ### Установка адреса договора
+        ### Установка адреса договора (пробелы заменены подчеркиванием)
+
+        if r.has_key("action") and rg("action") == 'dog_set_address':
+            dogid = int(request.GET["dogid"], 10)
+            username2 = request.GET["username"]
+            password2 = request.GET["password"]
+            city = urllib.unquote(request.GET["city"]).replace("_","#")
+            street = urllib.unquote(request.GET["street"]).replace("_","#")
+            house = urllib.unquote(request.GET["house"]).replace("_","#")
+            room = urllib.unquote(request.GET["room"]).replace("_","#")
+
+            cmd = "/usr/bin/php iss/onyma/soap/dog_set_address.php %s %s %s %s %s %s %s" % (
+                username2, password2, dogid, city, street, house, room)
+
+            result = commands.getoutput(cmd.encode("utf-8"))
+
+            response_data = result
+
+
+
+
+
+        ### Установка номера договора
 
         if r.has_key("action") and rg("action") == 'dog_set_dognum':
             dogid = int(request.GET["dogid"], 10)

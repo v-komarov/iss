@@ -98,4 +98,4 @@ devices_ip
 #. **devices_combo** - Комбо порты устройства
 #. **netelems** - Сетевые элементы
 #. **logical_interfaces** - Логические интерфейсы
-#. **logical_interfaces_pop** - Свойства логических интерфейсов
+#. **logical_interfaces_prop** - Свойства логических интерфейсов
