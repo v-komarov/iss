@@ -40,6 +40,39 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata
 ports - список портов , mac адресов "соседей".
 
 
+
+
+Загрузка mac адресов клиентов и ip адресов и портов коммутаторов
+----------------------------------------------------------------
+http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&ipaddress=192.168.0.111&macaddress=ad00-2187-3400&port=21
+
+Формат вывода json
+
+Пример вывода
+
+ ::
+
+    {"result": "OK"}
+
+
+
+Вывод mac адресов клиентов по ip адресу коммутатора
+---------------------------------------------------
+http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&ipaddress=192.168.0.111
+
+Формат вывода json
+
+Пример вывода
+
+ ::
+
+    [
+        {"macaddress": "ad:00:21:87:34:00", "ipaddress": "192.168.0.111", "port": "21", "datetime": "2017-05-26 01:51:07"},
+        {"macaddress": "ad:00:21:87:34:11", "ipaddress": "192.168.0.111", "port": "21", "datetime": "2017-05-26 01:51:59"}
+    ]
+
+
+
 .. index:: Onyma
 
 Запросы к Onyma

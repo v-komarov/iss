@@ -7,13 +7,14 @@ import pickle
 import operator
 import uuid
 import email
+import re
 
 from email.utils import parsedate_tz, mktime_tz, formatdate
 from pytz import timezone
 
 from django.http import HttpResponse
 
-from iss.equipment.models import devices_ip,footnodes,agregators
+from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log
 
 
 
@@ -62,6 +63,47 @@ def get_apidata(request):
                 })
 
             response_data = result
+
+
+
+
+        ### Загрузка данных для отловленных mac адресов клиентов
+        if r.has_key("action") and rg("action") == 'push_client_mac' and r.has_key("ipaddress") and r.has_key("port") and r.has_key("macaddress"):
+            ### Получение ip адреса комутатора,порта,mac клиента
+            ipaddress = request.GET["ipaddress"]
+            macaddress = request.GET["macaddress"]
+            port = request.GET["port"]
+
+            ### Убрать из mac лишние символы
+            reg = re.compile('[^a-zA-Z0-9 ]')
+            m = reg.sub('', macaddress).lower()
+
+            client_mac_log.objects.create(
+                ipaddress=ipaddress,
+                macaddress=m[0:2] + ":" + m[2:4] + ":" + m[4:6] + ":" + m[6:8] + ":" + m[8:10] + ":" + m[10:12],
+                port=port
+            )
+
+            response_data = {'result':'OK'}
+
+
+
+
+        ### Вывод отловленных mac адресов клиентов по ip коммутатора
+        if r.has_key("action") and rg("action") == 'get_client_mac' and r.has_key("ipaddress"):
+            ### Получение ip адреса комутатора
+            ipaddress = request.GET["ipaddress"]
+
+            for i in client_mac_log.objects.filter(ipaddress=ipaddress).order_by('create'):
+                result.append({
+                    'datetime':i.create.strftime('%Y-%m-%d %H:%M:%S'),
+                    'ipaddress':i.ipaddress,
+                    'port':i.port,
+                    'macaddress':i.macaddress
+                })
+
+            response_data = result
+
 
 
 

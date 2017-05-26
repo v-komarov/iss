@@ -84,3 +84,17 @@ class scan_iplist(models.Model):
         unique_together = ('ipaddress', 'device_domen')
         verbose_name = 'Адрес'
         verbose_name_plural = 'Список адресов'
+
+
+
+### Лог отловленных mac адресов клиентов на портах коммутаторов
+class client_mac_log(models.Model):
+    ipaddress = models.GenericIPAddressField(max_length=255,db_index=True)
+    port = models.CharField(max_length=255,db_index=True)
+    macaddress = models.CharField(max_length=255,db_index=True)
+    create = models.DateTimeField(auto_now_add=True,null=True,db_index=True)
+
+    def __unicode__(self):
+        return self.ipaddress
+
+

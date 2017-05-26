@@ -1,3 +1,16 @@
+#coding:utf-8
+
 from django.test import TestCase
 
-# Create your tests here.
+
+
+
+class ApiTestCase(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_write_client_mac(self):
+        """Проверка работоспособности api записи mac адресов клиентов"""
+        print "тестирование"
+        pass
