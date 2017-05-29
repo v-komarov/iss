@@ -55,7 +55,7 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
         $header =  new SoapHeader($ns, "credentials", $AuthHeader, false);
         $client->__setSoapHeaders(array($header));
 
-        $dognum = 1*$argv[3];
+        $dognum = (string)$argv[3];
 
 
         $dogid=$client->o_mdb_api_pay_gate_get_dogid_for_dogcode(array(pdogcode=>$dognum))->return;
