@@ -18,7 +18,8 @@ from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log
 
 
 
-
+tz = 'Asia/Krasnoyarsk'
+krsk_tz = timezone(tz)
 
 
 def get_apidata(request):
@@ -77,12 +78,22 @@ def get_apidata(request):
             ### Убрать из mac лишние символы
             reg = re.compile('[^a-zA-Z0-9 ]')
             m = reg.sub('', macaddress).lower()
+            m2 = m[0:2] + ":" + m[2:4] + ":" + m[4:6] + ":" + m[6:8] + ":" + m[8:10] + ":" + m[10:12]
 
-            client_mac_log.objects.create(
-                ipaddress=ipaddress,
-                macaddress=m[0:2] + ":" + m[2:4] + ":" + m[4:6] + ":" + m[6:8] + ":" + m[8:10] + ":" + m[10:12],
-                port=port
-            )
+            ### Если такая запись уже есть - обновляем (дату)
+            if client_mac_log.objects.filter(ipaddress=ipaddress,macaddress=m2,port=port).exists():
+
+                client_mac_log.objects.filter(ipaddress=ipaddress,macaddress=m2,port=port).update(
+                    create_update = krsk_tz.localize(datetime.datetime.now())
+                )
+
+            ### Если такой записи нет - добавляем
+            else:
+                client_mac_log.objects.create(
+                    ipaddress=ipaddress,
+                    macaddress=m2,
+                    port=port
+                )
 
             response_data = {'result':'OK'}
 
