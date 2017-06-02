@@ -46,6 +46,16 @@ ports - список портов , mac адресов "соседей".
 ----------------------------------------------------------------
 http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&ipaddress=192.168.0.111&macaddress=ad00-2187-3400&port=21
 
+Запрос **GET**
+
+Параметры:
+
+#. action=push_client_mac
+#. ipaddress=<ip адрес коммутатора>
+#. macaddress=<mac адрес клиента>
+#. port=<номер порта коммутатора>
+
+
 Формат вывода json
 
 Пример вывода
@@ -60,6 +70,14 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&ipaddres
 ---------------------------------------------------
 http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&ipaddress=192.168.0.111
 
+Запрос **GET**
+
+Параметры:
+
+#. action=get_client_mac
+#. ipaddress=<ip адрес коммутатора>
+
+
 Формат вывода json
 
 Пример вывода
@@ -70,6 +88,30 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&ipaddress
         {"macaddress": "ad:00:21:87:34:00", "ipaddress": "192.168.0.111", "port": "21", "datetime": "2017-05-26 01:51:07"},
         {"macaddress": "ad:00:21:87:34:11", "ipaddress": "192.168.0.111", "port": "21", "datetime": "2017-05-26 01:51:59"}
     ]
+
+
+
+
+Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации
+---------------------------------------------------------------------------------
+http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&login=test&macaddress=ad00-2187-3400
+
+Запрос **GET**
+
+Параметры:
+
+#. action=push_client_login
+#. login=<login>
+#. macaddress=<mac адрес>
+
+
+Формат вывода json
+
+Пример вывода
+
+ ::
+
+    {"result": "OK"}
 
 
 

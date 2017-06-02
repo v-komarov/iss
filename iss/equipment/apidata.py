@@ -13,8 +13,9 @@ from email.utils import parsedate_tz, mktime_tz, formatdate
 from pytz import timezone
 
 from django.http import HttpResponse
+from django.core.cache import cache
 
-from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log
+from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log,client_login_log
 
 
 
@@ -115,6 +116,24 @@ def get_apidata(request):
 
             response_data = result
 
+
+
+        ### Загрузка отловленных логинов и mac адресов клиентов radius авторизации
+        if r.has_key("action") and rg("action") == 'push_client_login' and r.has_key("macaddress") and r.has_key("login") and rg("macaddress") != "" and rg("login") != "":
+            login = request.GET["login"]
+            circuit_id = request.GET["circuit_id"]
+            m = request.GET["macaddress"]
+            m2 = m[0:2] + ":" + m[2:4] + ":" + m[4:6] + ":" + m[6:8] + ":" + m[8:10] + ":" + m[10:12]
+            # Проверка наличие логина в кэше
+            if not cache.get(login):
+                client_login_log.objects.update_or_create(
+                    login = login,
+                    macaddress = m2
+                )
+                client_login_log.objects.filter(login=login,macaddress=m2).update(create_update=krsk_tz.localize(datetime.datetime.now()),circuit_id_tag=circuit_id)
+                cache.set(login, m, 3600)
+
+            response_data = {'result': 'OK'}
 
 
 
