@@ -105,6 +105,8 @@ class client_login_log(models.Model):
     macaddress = models.CharField(max_length=100,db_index=True)
     circuit_id_tag = models.CharField(max_length=50,db_index=True,default="")
     create_update = models.DateTimeField(auto_now=True,null=True,db_index=True)
+    onyma_dogid = models.IntegerField(default=0) ### id договора
+    onyma_dogcode = models.CharField(max_length=50,db_index=True,default="") ### Номер договора
 
     def __unicode__(self):
         return self.login

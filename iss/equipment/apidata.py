@@ -133,8 +133,11 @@ def get_apidata(request):
                 client_login_log.objects.filter(login=login,macaddress=m2).update(create_update=krsk_tz.localize(datetime.datetime.now()),circuit_id_tag=circuit_id)
                 cache.set(login, m, 3600)
 
-            response_data = {'result': 'OK'}
+                response_data = {'result': 'OK','comment':'updated or inserted'}
 
+            else:
+
+                response_data = {'result': 'OK','comment':'found in cache'}
 
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")

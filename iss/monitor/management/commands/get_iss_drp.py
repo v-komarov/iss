@@ -26,7 +26,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        conn = pymssql.connect(server='10.6.3.7', user='django', password='django2016', database='sibttkdb')
+        conn = pymssql.connect(server='10.6.3.77', user='django', password='django2016', database='sibttkdb')
         cursor = conn.cursor()
 
         ### Выбор аварий без acc_iss_id

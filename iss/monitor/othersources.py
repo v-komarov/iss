@@ -15,7 +15,7 @@ from iss.equipment.models import devices_ip
 import pymssql
 
 
-conn=pymssql.connect(server='10.6.3.7',user='django',password='django2016',database='sibttkdb')
+conn=pymssql.connect(server='10.6.3.77',user='django',password='django2016',database='sibttkdb')
 cursor = conn.cursor()
 
 
