@@ -19,6 +19,24 @@ password = iss.dbconn.ONYMA_PASSWORD
 
 
 
+
+
+
+### Функции внутреннего использования
+def get_dogcodebylogin(loginlist):
+    """
+    :param loginlist:
+    :return: json
+    """
+
+    result = commands.getoutput("/usr/bin/php iss/onyma/soap/get_dogcode_by_login.php %s %s %s" % (username, password, loginlist))
+
+    return result
+
+
+
+
+
 ### Вывод в формате json
 def get_apidata(request):
 
