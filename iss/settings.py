@@ -192,6 +192,12 @@ LOGGING = {
             'filename': BASE_DIR + '/log/events.log',
             'formatter': 'verbose',
         },
+        'load_data': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/log/loaddata.log',
+            'formatter': 'verbose',
+        },
     },
     'loggers': {
         'monitor': {
@@ -214,8 +220,15 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'loadding': {
+            'handlers': ['load_data'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
+
+
 
 
 

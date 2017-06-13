@@ -1,10 +1,14 @@
 #coding:utf8
 
 import json
+import logging
 from django.core.management.base import BaseCommand, CommandError
 from iss.equipment.models import agregators,scan_iplist,devices_ip,footnodes
 from iss.localdicts.models import address_city,address_street,address_house,address_companies
 from iss.inventory.models import devices
+
+
+logger = logging.getLogger('loadding')
 
 
 
@@ -16,6 +20,14 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
+
+        """
+
+        :param args:
+        :param options:
+        :return:
+        """
+
 
         """
         filename = args[0]
@@ -52,6 +64,7 @@ class Command(BaseCommand):
         """
 
 
+        """
         import pymssql
         import tabulate
 
@@ -72,7 +85,7 @@ class Command(BaseCommand):
             city = address_city.objects.get(name=r[1].encode("utf-8"))
             dom = r[3].encode("utf-8")
             address_house.objects.update_or_create(house=dom,city=city,street=street,iss_address_id=id)
-
+        """
 
 
         """
@@ -132,3 +145,47 @@ class Command(BaseCommand):
 
                 print a.city,a.street,a.house
         """
+
+
+        """
+        Переадресация и изменение sysname согласно предоставленных данных Ириной Кокшаровой
+        """
+        import csv
+        from iss.inventory.models import logical_interfaces_prop,netelems,devices
+        from iss.localdicts.models import logical_interfaces_prop_list
+
+        prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+
+
+        with open('iss/equipment/csv/znodelist_4gamma.csv') as csvfile:
+            spamreader = csv.reader(csvfile,delimiter=";")
+            next(spamreader, None)
+            for row in spamreader:
+                ip_old = row[0]
+                name_old = row[1]
+                ip_new = row[2]
+                name_new = row[3]
+
+                ### Поиск по ip адресу на интерфейсе manager
+                if logical_interfaces_prop.objects.filter(prop=prop,val=ip_old).exists():
+                    p = logical_interfaces_prop.objects.get(prop=prop,val=ip_old)
+                    if p.logical_interface.name == 'manage':
+
+                        #### Определение серевого элемента
+                        ne = p.logical_interface.netelem
+                        ne.name = name_new
+                        ne.save()
+
+                        p.val = ip_new
+                        p.save()
+
+                        #for d in ne.device.all():
+                        #    print d.name
+
+                    else:
+                        logger.info("Интерфейс manager для адреса {ipaddress} не определен!".format(ipaddress=ip_old))
+                else:
+
+                    logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=ip_old))
+
+
