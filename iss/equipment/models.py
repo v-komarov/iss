@@ -104,6 +104,7 @@ class client_login_log(models.Model):
     login = models.CharField(max_length=255,db_index=True)
     macaddress = models.CharField(max_length=100,db_index=True)
     ipaddress = models.GenericIPAddressField(max_length=25,db_index=True,null=True) ### ip адрес коммутатора
+    port = models.CharField(max_length=10,db_index=True, default="") ## Порт коммутатора
     circuit_id_tag = models.CharField(max_length=50,db_index=True,default="")
     create_update = models.DateTimeField(auto_now=True,null=True,db_index=True)
     onyma_dogid = models.IntegerField(default=0) ### id договора

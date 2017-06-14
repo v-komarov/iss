@@ -160,7 +160,7 @@ class Command(BaseCommand):
 
             #data = json.dumps(values)
 
-            req = urllib2.Request(url='http://10.6.3.77/departs/rcu/works/create_work_mss_post.soap',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
+            req = urllib2.Request(url='http://10.6.3.77:8080/departs/rcu/works/create_work_mss_post.soap',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
             f = urllib2.urlopen(req)
             result = f.read()
             start = result.find("[")

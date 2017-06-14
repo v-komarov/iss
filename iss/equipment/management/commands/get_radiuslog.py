@@ -51,7 +51,7 @@ class Command(BaseCommand):
                             tag = circuit_id.split("::")
 
                             client_login_log.objects.filter(login=login.group(1), macaddress=m2).update(
-                                create_update=krsk_tz.localize(datetime.datetime.now()), circuit_id_tag=circuit_id, ipaddress=tag[1])
+                                create_update=krsk_tz.localize(datetime.datetime.now()), circuit_id_tag=circuit_id, ipaddress=tag[1], port=tag[2])
                         else:
                             client_login_log.objects.filter(login=login, macaddress=m2).update(
                                 create_update=krsk_tz.localize(datetime.datetime.now()))
