@@ -19,7 +19,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         dogcode_list = []
-        for item in client_login_log.objects.filter(onyma_dogid=0).order_by("-create_update")[:100]:
+        for item in client_login_log.objects.filter(onyma_dogid=0).order_by("?")[:100]:
             dogcode_list.append(item.login)
 
 
