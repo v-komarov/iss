@@ -159,7 +159,7 @@ class Command(BaseCommand):
 
         with open('iss/equipment/csv/znodelist_4gamma.csv') as csvfile:
             spamreader = csv.reader(csvfile,delimiter=";")
-            next(spamreader, None)
+            #next(spamreader, None)
             for row in spamreader:
                 ip_old = row[0]
                 name_old = row[1]
