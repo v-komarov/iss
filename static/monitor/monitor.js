@@ -220,42 +220,33 @@ function GetZkl(e) {
     var jqxhr = $.getJSON("/monitor/events/jsondata?getzkl=ok&event_id="+row_id,
         function(data) {
 
-
+            //console.log(data);
             $("table[group=zkllist] tbody").empty();
             $("table[group=zkllist] tfoot").empty();
 
-            var used = 0;
-            var reservation = 0;
-            var free = 0;
-            var defective = 0;
+            var use = 0;
+            var reserv = 0;
             var tech = 0;
-            var unconnected = 0;
 
 
             $.each(data, function(key,value) {
 
 
                 var t = "<tr group=zkllist>"
-                +"<td style=\"padding:0;\">"+value['name']+"</td>"
+                +"<td style=\"padding:0;\">"+value['sysname']+"</td>"
                 +"<td style=\"padding:0;\">"+value['address']+"</td>"
                 +"<td style=\"padding:0;\">"+value['ip']+"</td>"
-                +"<td style=\"padding:0;\">"+value['ports_info']['used']+"</td>"
-                +"<td style=\"padding:0;\">"+value['ports_info']['reservation']+"</td>"
-                +"<td style=\"padding:0;\">"+value['ports_info']['free']+"</td>"
-                +"<td style=\"padding:0;\">"+value['ports_info']['defective']+"</td>"
-                +"<td style=\"padding:0;\">"+value['ports_info']['tech']+"</td>"
-                +"<td style=\"padding:0;\">"+value['ports_info']['unconnected']+"</td>"
+                +"<td style=\"padding:0;\">"+value['port_use']+"</td>"
+                +"<td style=\"padding:0;\">"+value['port_reserv']+"</td>"
+                +"<td style=\"padding:0;\">"+value['port_tech']+"</td>"
                 +"</tr>";
 
                 $("table[group=zkllist] tbody").append(t);
 
 
-                used = used + value['ports_info']['used'];
-                reservation = reservation = value['ports_info']['reservation'];
-                free = free + value['ports_info']['free'];
-                defective = defective + value['ports_info']['defective'];
-                tech = tech + value['ports_info']['tech'];
-                unconnected = unconnected + value['ports_info']['unconnected'];
+                use = use + value['port_use'];
+                reserv = reserv + value['port_reserv'];
+                tech = tech + value['port_tech'];
 
                 //console.log(key,value);
 
@@ -266,12 +257,9 @@ function GetZkl(e) {
             +"<td style=\"padding:0;\">Всего</td>"
             +"<td></td>"
             +"<td></td>"
-            +"<td style=\"padding:0;\">"+used+"</td>"
-            +"<td style=\"padding:0;\">"+reservation+"</td>"
-            +"<td style=\"padding:0;\">"+free+"</td>"
-            +"<td style=\"padding:0;\">"+defective+"</td>"
+            +"<td style=\"padding:0;\">"+use+"</td>"
+            +"<td style=\"padding:0;\">"+reserv+"</td>"
             +"<td style=\"padding:0;\">"+tech+"</td>"
-            +"<td style=\"padding:0;\">"+unconnected+"</td>"
             +"</tr>";
 
             $("table[group=zkllist] tfoot").append(tt);

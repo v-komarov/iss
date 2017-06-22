@@ -67,7 +67,7 @@ class Command(BaseCommand):
                        p.datetime_update=krsk_tz.localize(datetime.datetime.now())
                        p.save()
 
-                       print "Установлен пользовательских порт {port} по адресу {ipaddress}".format(port=port,ipaddress=ip)
+                       print "Установлен пользовательский порт {port} по адресу {ipaddress}".format(port=port,ipaddress=ip)
 
                     else:
                         logger.info("Порт {port} не найден на устройстве {ipaddress}".format(port=port,ipaddress=ip))

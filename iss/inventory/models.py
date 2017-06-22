@@ -49,6 +49,16 @@ class devices(models.Model):
         status = self.status.name if self.status else ""
         return status
 
+    ### Строка географического адреса
+    def getaddress(self):
+
+        city = self.address.city.name if self.address.city else ''
+        street = self.address.street.name if self.address.street else ''
+        house = self.address.house if self.address.house else ''
+
+        return "%s %s %s" % (city,street,house)
+
+
 
 
     ### Создание портов устройства согласно модели
@@ -316,6 +326,34 @@ class logical_interfaces(models.Model):
     comment = models.CharField(max_length=200)
     ports = models.ManyToManyField(devices_ports)
 
+    def __unicode__(self):
+        return self.name
+
+
+    ### Вывод информации по зкл
+    def get_zkl(self,ip):
+
+        port_use = port_status.objects.get(name='Используется')
+        port_reserv = port_status.objects.get(name='Резерв')
+        port_tech = port_status.objects.get(name='Технологический')
+
+        ### Определение сетевого элемента
+        ne = self.netelem
+        ### Список связанных устройств
+        use =  []
+        for dev in ne.device.all():
+
+
+            use.append({
+                'sysname':ne.name,
+                'ip':ip,
+                'address':dev.getaddress(),
+                'port_use':dev.devices_ports_set.filter(status=port_use).count(),
+                'port_reserv':dev.devices_ports_set.filter(status=port_reserv).count(),
+                'port_tech':dev.devices_ports_set.filter(status=port_tech).count()
+            })
+
+        return use
 
 
 
