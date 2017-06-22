@@ -61,16 +61,17 @@ class Command(BaseCommand):
 
                     device_port = device.devices_ports_set.get(num=rec.port)
                     ### Перевод порта в статус ИСПОЛЬЗУЕТСЯ и запись в комментарий mac адрес
+                    print u"перевод в статус используется порта %s" % rec.port
                     device_port.status = port_use
                     device_port.comment = rec.macaddress
                     device_port.datetime_update = krsk_tz.localize(datetime.datetime.now())
-                    #device_port.save()
+                    device_port.save()
 
 
 
                     ### Проверка наличия одноименного с портом сетевого элемента логического интерфейса, связь между интерфейсом и портом
                     if not ne.logical_interfaces_set.filter(name=rec.port).exists():
-                        pass
+                        print u"создание логического интерфейса %s" % rec.port
                         ### Создание логического интерфейса
                         li = logical_interfaces.objects.create(
                             name = rec.port,

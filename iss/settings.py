@@ -235,7 +235,7 @@ LOGGING = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:21201',
+        'LOCATION': '10.6.0.88:11211',
         'TIMEOUT':360000,
         'OPTIONS': {
             'MAX_ENTRIES':10000000,

@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
         """
 
-        for login in client_login_log.objects.exclude(dogid=0).exclude(port="").exclude(ipaddress=""):
+        for login in client_login_log.objects.exclude(onyma_dogid=0).exclude(port="").exclude(ipaddress=""):
             ### Поиск по ip адресу на интерфейсе manager
             if logical_interfaces_prop.objects.filter(prop=prop, val=login.ipaddress, logical_interface__name='manage').exists():
                 intf = logical_interfaces_prop.objects.get(prop=prop, val=login.ipaddress)
