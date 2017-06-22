@@ -16,11 +16,16 @@ from django.http import HttpResponse
 from django.core.cache import cache
 
 from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log,client_login_log
-
+from iss.localdicts.models import logical_interfaces_prop_list
+from iss.inventory.models import logical_interfaces_prop
 
 
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
+
+
+prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+
 
 
 def get_apidata(request):
@@ -52,6 +57,7 @@ def get_apidata(request):
             response_data = result
 
         if r.has_key("action") and rg("action") == 'get_lldpdata':
+
             for d in devices_ip.objects.all():
                 result.append({
                     'ipaddress':d.ipaddress,
@@ -63,6 +69,21 @@ def get_apidata(request):
                     'serial':d.device_serial,
                     'lldp':d.ports
                 })
+
+            response_data = result
+
+
+
+        ### Проверка расчета ЗКЛ по ip адресу
+        if r.has_key("action") and rg("action") == 'get_zkllist'  and r.has_key("ipaddress"):
+            ipaddress = request.GET["ipaddress"]
+            result = []
+            ### Поиск по ip адресу на интерфейсе manager
+            if logical_interfaces_prop.objects.filter(prop=prop, val=ipaddress,
+                                                      logical_interface__name='manage').exists():
+                p = logical_interfaces_prop.objects.get(prop=prop, val=ipaddress)
+                ### Добавление строк с зкл
+                result.extend(p.logical_interface.get_zkl(ipaddress))
 
             response_data = result
 

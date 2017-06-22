@@ -53,29 +53,30 @@
   <div class="contents topic" id="id1">
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
-<li><a class="reference internal" href="#api" id="id19">Описание API</a><ul>
-<li><a class="reference internal" href="#id2" id="id20">Список агрегаторов</a></li>
-<li><a class="reference internal" href="#lldp" id="id21">Данные lldp</a></li>
-<li><a class="reference internal" href="#mac-ip" id="id22">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a></li>
-<li><a class="reference internal" href="#id3" id="id23">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
-<li><a class="reference internal" href="#mac-login-radius" id="id24">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a></li>
-<li><a class="reference internal" href="#onyma" id="id25">Запросы к Onyma</a><ul>
-<li><a class="reference internal" href="#id4" id="id26">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id5" id="id27">Тест</a></li>
-<li><a class="reference internal" href="#id6" id="id28">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id7" id="id29">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id8" id="id30">Создание договора</a></li>
-<li><a class="reference internal" href="#id9" id="id31">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id10" id="id32">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id11" id="id33">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id12" id="id34">Установка адреса договора 2</a></li>
-<li><a class="reference internal" href="#id13" id="id35">Установка адреса договора</a></li>
-<li><a class="reference internal" href="#id14" id="id36">Установка номера договора</a></li>
-<li><a class="reference internal" href="#id15" id="id37">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
-<li><a class="reference internal" href="#id" id="id38">Получение id договора по номеру договора</a></li>
-<li><a class="reference internal" href="#id16" id="id39">Получение id тарифного плана по его названию</a></li>
-<li><a class="reference internal" href="#id17" id="id40">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
-<li><a class="reference internal" href="#id18" id="id41">Получение списка доменов</a></li>
+<li><a class="reference internal" href="#api" id="id20">Описание API</a><ul>
+<li><a class="reference internal" href="#id2" id="id21">Список агрегаторов</a></li>
+<li><a class="reference internal" href="#lldp" id="id22">Данные lldp</a></li>
+<li><a class="reference internal" href="#id3" id="id23">Проверка списка ЗКЛ</a></li>
+<li><a class="reference internal" href="#mac-ip" id="id24">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a></li>
+<li><a class="reference internal" href="#id4" id="id25">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
+<li><a class="reference internal" href="#mac-login-radius" id="id26">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a></li>
+<li><a class="reference internal" href="#onyma" id="id27">Запросы к Onyma</a><ul>
+<li><a class="reference internal" href="#id5" id="id28">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li><a class="reference internal" href="#id6" id="id29">Тест</a></li>
+<li><a class="reference internal" href="#id7" id="id30">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id8" id="id31">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id9" id="id32">Создание договора</a></li>
+<li><a class="reference internal" href="#id10" id="id33">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id11" id="id34">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id12" id="id35">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id13" id="id36">Установка адреса договора 2</a></li>
+<li><a class="reference internal" href="#id14" id="id37">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id15" id="id38">Установка номера договора</a></li>
+<li><a class="reference internal" href="#id16" id="id39">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id" id="id40">Получение id договора по номеру договора</a></li>
+<li><a class="reference internal" href="#id17" id="id41">Получение id тарифного плана по его названию</a></li>
+<li><a class="reference internal" href="#id18" id="id42">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
+<li><a class="reference internal" href="#id19" id="id43">Получение списка доменов</a></li>
 </ul>
 </li>
 </ul>
@@ -83,9 +84,9 @@
 </ul>
 </div>
 <div class="section" id="api">
-<h1><a class="toc-backref" href="#id19">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
+<h1><a class="toc-backref" href="#id20">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id20">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id21">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -97,7 +98,7 @@
 <p>uplink_ports - список uplink портов</p>
 </div>
 <div class="section" id="lldp">
-<h2><a class="toc-backref" href="#id21">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id22">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -108,8 +109,25 @@
 </div></blockquote>
 <p>ports - список портов , mac адресов &#8220;соседей&#8221;.</p>
 </div>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id23">Проверка списка ЗКЛ</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&amp;ipaddress=55.33.3.13">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&amp;ipaddress=55.33.3.13</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=get_zkllist</li>
+<li>ipaddress=&lt;ip адрес коммутатора&gt;</li>
+</ol>
+<p>Формат вывода json</p>
+<p>Пример вывода</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s2">&quot;sysname&quot;</span><span class="p">:</span> <span class="s2">&quot;abk-3-sa1x52-13g5&quot;</span><span class="p">,</span> <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;55.33.3.13&quot;</span><span class="p">,</span> <span class="s2">&quot;port_reserv&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;port_use&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\u0433</span><span class="s2">.</span><span class="se">\u0410\u0431\u0430\u043a\u0430\u043d</span><span class="s2"> </span><span class="se">\u0421\u043e\u0432\u0435\u0442\u0441\u043a\u0430\u044f</span><span class="s2"> 113&quot;</span><span class="p">,</span> <span class="s2">&quot;port_tech&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
 <div class="section" id="mac-ip">
-<h2><a class="toc-backref" href="#id22">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a><a class="headerlink" href="#mac-ip" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id24">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a><a class="headerlink" href="#mac-ip" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&amp;ipaddress=192.168.0.111&amp;macaddress=ad00-2187-3400&amp;port=21">http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&amp;ipaddress=192.168.0.111&amp;macaddress=ad00-2187-3400&amp;port=21</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -127,8 +145,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id3">
-<h2><a class="toc-backref" href="#id23">Вывод mac адресов клиентов по ip адресу коммутатора</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id4">
+<h2><a class="toc-backref" href="#id25">Вывод mac адресов клиентов по ip адресу коммутатора</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&amp;ipaddress=192.168.0.111">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&amp;ipaddress=192.168.0.111</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -148,14 +166,15 @@
 </div></blockquote>
 </div>
 <div class="section" id="mac-login-radius">
-<h2><a class="toc-backref" href="#id24">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a><a class="headerlink" href="#mac-login-radius" title="Ссылка на этот заголовок">¶</a></h2>
-<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&amp;login=test&amp;macaddress=ad00-2187-3400">http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&amp;login=test&amp;macaddress=ad00-2187-3400</a></p>
+<h2><a class="toc-backref" href="#id26">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a><a class="headerlink" href="#mac-login-radius" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&amp;login=test&amp;macaddress=ad00-2187-3400&amp;circuit_id=">http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&amp;login=test&amp;macaddress=ad00-2187-3400&amp;circuit_id=</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
 <ol class="arabic simple">
 <li>action=push_client_login</li>
 <li>login=&lt;login&gt;</li>
 <li>macaddress=&lt;mac адрес&gt;</li>
+<li>circuit_id=&lt;circuit-id-tag&gt;</li>
 </ol>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -166,9 +185,9 @@
 </div></blockquote>
 </div>
 <div class="section" id="onyma">
-<span id="index-0"></span><h2><a class="toc-backref" href="#id25">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
-<div class="section" id="id4">
-<h3><a class="toc-backref" href="#id26">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h3>
+<span id="index-0"></span><h2><a class="toc-backref" href="#id27">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id5">
+<h3><a class="toc-backref" href="#id28">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata">http://10.6.0.22:8000/onyma/apidata</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -190,8 +209,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id5">
-<h3><a class="toc-backref" href="#id27">Тест</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id6">
+<h3><a class="toc-backref" href="#id29">Тест</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -213,8 +232,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id28">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id7">
+<h3><a class="toc-backref" href="#id30">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -237,8 +256,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id7">
-<h3><a class="toc-backref" href="#id29">Получение справочника групп (городов)</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id31">Получение справочника групп (городов)</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -266,8 +285,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id30">Создание договора</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id32">Создание договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -292,8 +311,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id31">Установка даты договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id33">Установка даты договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -312,8 +331,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id10">
-<h3><a class="toc-backref" href="#id32">Установка ФИО договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id11">
+<h3><a class="toc-backref" href="#id34">Установка ФИО договора</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -334,8 +353,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id11">
-<h3><a class="toc-backref" href="#id33">Установка телефона договора</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id35">Установка телефона договора</a><a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -354,8 +373,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id34">Установка адреса договора 2</a><a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id36">Установка адреса договора 2</a><a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -377,8 +396,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id35">Установка адреса договора</a><a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id37">Установка адреса договора</a><a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -401,8 +420,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id36">Установка номера договора</a><a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id15">
+<h3><a class="toc-backref" href="#id38">Установка номера договора</a><a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -421,8 +440,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id15">
-<h3><a class="toc-backref" href="#id37">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a><a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id16">
+<h3><a class="toc-backref" href="#id39">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a><a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -448,7 +467,7 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div></blockquote>
 </div>
 <div class="section" id="id">
-<h3><a class="toc-backref" href="#id38">Получение id договора по номеру договора</a><a class="headerlink" href="#id" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id40">Получение id договора по номеру договора</a><a class="headerlink" href="#id" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -471,8 +490,8 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id16">
-<h3><a class="toc-backref" href="#id39">Получение id тарифного плана по его названию</a><a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id17">
+<h3><a class="toc-backref" href="#id41">Получение id тарифного плана по его названию</a><a class="headerlink" href="#id17" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -501,8 +520,8 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id17">
-<h3><a class="toc-backref" href="#id40">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a><a class="headerlink" href="#id17" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id18">
+<h3><a class="toc-backref" href="#id42">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a><a class="headerlink" href="#id18" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -529,8 +548,8 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id18">
-<h3><a class="toc-backref" href="#id41">Получение списка доменов</a><a class="headerlink" href="#id18" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id19">
+<h3><a class="toc-backref" href="#id43">Получение списка доменов</a><a class="headerlink" href="#id19" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -592,26 +611,27 @@ domainid:&lt;id домена&gt;;domainidup:&lt;id родительского д
 <li><a class="reference internal" href="#">Описание API</a><ul>
 <li><a class="reference internal" href="#id2">Список агрегаторов</a></li>
 <li><a class="reference internal" href="#lldp">Данные lldp</a></li>
+<li><a class="reference internal" href="#id3">Проверка списка ЗКЛ</a></li>
 <li><a class="reference internal" href="#mac-ip">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a></li>
-<li><a class="reference internal" href="#id3">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
+<li><a class="reference internal" href="#id4">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
 <li><a class="reference internal" href="#mac-login-radius">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a></li>
 <li><a class="reference internal" href="#onyma">Запросы к Onyma</a><ul>
-<li><a class="reference internal" href="#id4">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id5">Тест</a></li>
-<li><a class="reference internal" href="#id6">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id7">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id8">Создание договора</a></li>
-<li><a class="reference internal" href="#id9">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id10">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id11">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id12">Установка адреса договора 2</a></li>
-<li><a class="reference internal" href="#id13">Установка адреса договора</a></li>
-<li><a class="reference internal" href="#id14">Установка номера договора</a></li>
-<li><a class="reference internal" href="#id15">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id5">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li><a class="reference internal" href="#id6">Тест</a></li>
+<li><a class="reference internal" href="#id7">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id8">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id9">Создание договора</a></li>
+<li><a class="reference internal" href="#id10">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id11">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id12">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id13">Установка адреса договора 2</a></li>
+<li><a class="reference internal" href="#id14">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id15">Установка номера договора</a></li>
+<li><a class="reference internal" href="#id16">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
 <li><a class="reference internal" href="#id">Получение id договора по номеру договора</a></li>
-<li><a class="reference internal" href="#id16">Получение id тарифного плана по его названию</a></li>
-<li><a class="reference internal" href="#id17">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
-<li><a class="reference internal" href="#id18">Получение списка доменов</a></li>
+<li><a class="reference internal" href="#id17">Получение id тарифного плана по его названию</a></li>
+<li><a class="reference internal" href="#id18">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
+<li><a class="reference internal" href="#id19">Получение списка доменов</a></li>
 </ul>
 </li>
 </ul>
