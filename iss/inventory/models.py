@@ -348,9 +348,9 @@ class logical_interfaces(models.Model):
                 'sysname':ne.name,
                 'ip':ip,
                 'address':dev.getaddress(),
-                'port_use':dev.devices_ports_set.filter(status=port_use).count(),
-                'port_reserv':dev.devices_ports_set.filter(status=port_reserv).count(),
-                'port_tech':dev.devices_ports_set.filter(status=port_tech).count()
+                'port_use':dev.devices_ports_set.filter(status=port_use).count() + dev.devices_combo_set.filter(status_port=port_use).count(),
+                'port_reserv':dev.devices_ports_set.filter(status=port_reserv).count() + dev.devices_combo_set.filter(status_port=port_reserv).count(),
+                'port_tech':dev.devices_ports_set.filter(status=port_tech).count() + dev.devices_combo_set.filter(status_port=port_tech).count()
             })
 
         return use
