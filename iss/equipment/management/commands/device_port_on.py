@@ -80,6 +80,17 @@ class Command(BaseCommand):
                         )
                         li.ports.add(device_port)
 
+                elif device.devices_combo_set.filter(num=rec.port).exists():
+
+                    device_combo = device.devices_combo_set.get(num=rec.port)
+                    ### Перевод порта в статус ИСПОЛЬЗУЕТСЯ и запись в комментарий mac адрес
+                    print u"перевод в статус используется combo %s" % rec.port
+                    device_port.status_port = port_use
+                    device_port.comment = rec.macaddress
+                    device_port.datetime_update = krsk_tz.localize(datetime.datetime.now())
+                    device_port.save()
+
+
                 else:
                     logger.info("Порт {port} не найден на устройстве {ipaddress}".format(port=rec.port,ipaddress=rec.ipaddress))
 

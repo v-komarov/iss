@@ -23,12 +23,12 @@ from django import template
 
 
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,address_templates
+from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,address_templates,logical_interfaces_prop_list
 
 from iss.monitor.othersources import get_zkl
 from iss.monitor.models import Profile,messages
 from iss.equipment.models import devices_ip
-from iss.inventory.models import devices
+from iss.inventory.models import devices,logical_interfaces_prop
 
 
 from iss.monitor.tools import groupevents_ip
@@ -44,7 +44,7 @@ tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
 
-
+prop = logical_interfaces_prop_list.objects.get(name='ipv4')
 
 ### Чередование полей по умолчанию
 head_order = [
@@ -330,31 +330,6 @@ def get_json(request):
 
 
 
-        """
-        # Добавление в группировку (контейнер)
-        if r.has_key("addgroup") and rg("addgroup") != '[]':
-            container_row = request.GET["container_row"]
-            id_group = eval(request.GET["addgroup"])
-            g = []
-            for item in id_group:
-                if container_row != item:
-                    g.append(item)
-                    i = events.objects.get(pk=item)
-                    i.agregation = True
-                    #i.agregator = False
-                    i.data['containergroup'] = []
-                    i.save()
-            e = events.objects.get(pk=container_row)
-            data = e.data
-            if data.has_key('containergroup'):
-                for a in g:
-                    data['containergroup'].append(a)
-            else:
-                data['containergroup'] = g
-            e.agregation = False
-            e.agregator = True
-            e.save()
-        """
 
         ### данные по списку событий в контейнере
         if r.has_key("getmembers") and rg("getmembers") != '':
@@ -422,26 +397,6 @@ def get_json(request):
             response_data['members'] = a
 
 
-
-        """
-        # Удаление из группировки
-        if r.has_key("delgroup") and rg("delgroup") != '[]':
-            container_row = request.GET["container_row"]
-            id_group = eval(request.GET["delgroup"])
-            e = events.objects.get(pk=container_row)
-            l = e.data['containergroup']
-            for item in id_group:
-                if item != container_row:
-                    i=l.index(item)
-                    del l[i]
-                    a = events.objects.get(pk=item)
-                    a.agregation = False
-                    a.save()
-                    del item
-
-            e.data['containergroup'] = l
-            e.save()
-        """
 
 
 
@@ -576,33 +531,38 @@ def get_json(request):
         if r.has_key("getaccidentipaddress") and rg("getaccidentipaddress") != "":
             ### id строки события (контейнера)
             row_id = request.GET["getaccidentipaddress"]
-            list_evt = [row_id]
             evt = events.objects.get(pk=row_id)
 
             #### Список ip адресов
             list_ip = groupevents_ip(evt.id)
+            #### Список id устройств
+            dev_list = []
+            #### Контроль уникальности id адресов
+            address_list = []
 
-            #### Поиск адресов на основании ip адресов
+
+            #### Поиск устройств на основании ip адресов
             addressjson = []
             for ip in list_ip:
-                if devices.objects.filter(data__domen="zenoss_krsk",data__ipaddress=ip).count() == 1:
-                    d = devices.objects.get(data__domen="zenoss_krsk",data__ipaddress=ip)
-                    ### Первоначально id адреса в списке нет
-                    address_exists = False
-                    for i in addressjson:
-                        if i["addressid"] == d.address.id:
-                            #### Адрес уже существует
-                            address_exists = True
+                ### Поиск по ip адресу на интерфейсе manager
+                if logical_interfaces_prop.objects.filter(prop=prop, val=ip,logical_interface__name='manage').exists():
+                    p = logical_interfaces_prop.objects.get(prop=prop, val=ip)
+                    ### Получение id устройств
+                    dev_list.extend(p.logical_interface.get_dev_list())
 
-                    if address_exists == False:
+            ### Обход id устройств
+            for devid in dev_list:
+                d = devices.objects.get(pk=devid)
+                if not d.address.id in address_list:
                     ### Если такого адреса нет - то добавляем
-                        addressjson.append(
-                            {
-                                'addressid':d.address.id,
-                                'addresslabel':d.address.city.name+" "+d.address.street.name+" "+d.address.house,
-                                'show':True
-                            }
-                        )
+                    address_list.append(d.address.id)
+                    addressjson.append(
+                        {
+                            'addressid':d.address.id,
+                            'addresslabel':d.getaddress(),
+                            'show':True
+                        }
+                    )
 
             response_data = {
                 'address_list':addressjson
@@ -735,22 +695,20 @@ def get_json(request):
                 ipaddress = groupevents_ip(ev.id)
 
                 iddevices = []
-                ### Поиск соответствия ip адресу id для iss
+                #### Поиск устройств на основании ip адресов
                 for ip in ipaddress:
-                    if devices_ip.objects.filter(ipaddress=ip,device_domen="zenoss_krsk").count() == 1:
-                        d = devices_ip.objects.get(ipaddress=ip,device_domen="zenoss_krsk")
-                        if d.data.has_key("iss_id_device"):
-                            iddevices.append("%s" % d.data["iss_id_device"])
+                    ### Поиск по ip адресу на интерфейсе manager
+                    if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+                        p = logical_interfaces_prop.objects.get(prop=prop, val=ip)
+                        ### Получение id устройств
+                        iddevices.extend(p.logical_interface.get_dev_list())
 
                 houses = []
                 #### Сбор id адресов
-                #### Поиск устройств по ip адресам
-                for ip in ipaddress:
-                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen).count() == 1:
-                        ### Найден коммутатор в базе инвентори
-                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen)
-                        if dev.address.house not in houses:
-                            houses.append(dev.address.id)
+                for d in iddevices:
+                    dev = devices.objects.get(pk=d)
+                    if dev.address.id not in houses:
+                        houses.append(dev.address.id)
 
 
 
@@ -803,12 +761,12 @@ def get_json(request):
 
                 address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";").replace(",;",";").replace(";,",";")
 
-                ### Рсчет ЗКЛ
+                ### Рсчет ЗКЛ на основе списка id адресов
                 zkl = 0
-                for ip in ipaddress:
-                    for d in devices_ip.objects.filter(device_domen=domen, ipaddress=ip):
-                        if d.data.has_key("ports_info"):
-                            zkl = zkl + d.data["ports_info"]["used"]
+                for addr in houses:
+                    a = address_house.objects.get(pk=addr)
+                    zkl = zkl + a.get_zkl()
+
 
                 tzm = 'Europe/Moscow'
 

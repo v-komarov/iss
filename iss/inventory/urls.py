@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'devicescheme/page/(?P<page>\d+)/$', DeviceSchemeList.as_view()),
     url(r'netelements/page/(?P<page>\d+)/$', NetElementsList.as_view()),
     url(r'devices/page/(?P<page>\d+)/$', DevicesList.as_view()),
+    url(r'auditports/$', DeviceSchemeList.as_view()),
     url(r'netelementdata/$', NetElement.as_view()),
     url(r'devicedata/$', Device.as_view()),
     url(r'jsondata/$', get_json),

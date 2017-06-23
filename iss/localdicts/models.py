@@ -152,6 +152,18 @@ class address_house(models.Model):
         return ("{city} {street} {house}".format(city=city,street=street,house=house)).strip()
 
 
+    ### расчет ЗКЛ исходя из географического адреса
+    def get_zkl(self):
+        zkl = 0
+        ### Отбор устройств по этому адресу и подсчет количиства используемых портов
+        for dev in self.devices_set.all():
+            zkl = zkl + dev.getzkl()
+
+        return zkl
+
+
+
+
     class Meta:
         verbose_name = 'Дом'
         verbose_name_plural = 'Дома'

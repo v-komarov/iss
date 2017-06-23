@@ -60,6 +60,12 @@ class devices(models.Model):
 
 
 
+    ### Подсчет количества используемых портов и комбо портов
+    def getzkl(self):
+        port_use = port_status.objects.get(name='Используется')
+        return self.devices_ports_set.all().filter(status=port_use).count() + self.devices_combo_set.all().filter(status_port=port_use).count()
+
+
 
     ### Создание портов устройства согласно модели
     def mkports(self,author=""):
@@ -354,6 +360,21 @@ class logical_interfaces(models.Model):
             })
 
         return use
+
+
+    ### Формирование списка id устройст , связанных с ip адресом управления
+    def get_dev_list(self):
+
+        dev_list = []
+
+        ### Определение сетевого элемента
+        ne = self.netelem
+        ### Список связанных устройств
+        for dev in ne.device.all():
+            if not dev.id in dev_list:
+                dev_list.append(dev.id)
+
+        return dev_list
 
 
 

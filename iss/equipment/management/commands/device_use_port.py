@@ -69,6 +69,17 @@ class Command(BaseCommand):
 
                        print "Установлен пользовательский порт {port} по адресу {ipaddress}".format(port=port,ipaddress=ip)
 
+                    elif device.devices_combo_set.filter(num=port).count() == 1:
+                        p = device.devices_combo_set.get(num=port)
+                        p.status_port = port_use
+                        p.comment = ''
+                        p.datetime_update = krsk_tz.localize(datetime.datetime.now())
+                        p.save()
+
+                        print "Установлен пользовательский combo порт {port} по адресу {ipaddress}".format(port=port,
+                                                                                                 ipaddress=ip)
+
+
                     else:
                         logger.info("Порт {port} не найден на устройстве {ipaddress}".format(port=port,ipaddress=ip))
 
