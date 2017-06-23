@@ -10,6 +10,14 @@ from iss.localdicts.models import address_companies,address_house,ports,slots,po
 
 
 
+
+port_use = port_status.objects.get(name='Используется')
+port_reserv = port_status.objects.get(name='Резерв')
+port_tech = port_status.objects.get(name='Технологический')
+prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+
+
+
 ### Виды и модели устройств
 class devices_scheme(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
@@ -62,8 +70,70 @@ class devices(models.Model):
 
     ### Подсчет количества используемых портов и комбо портов
     def getzkl(self):
-        port_use = port_status.objects.get(name='Используется')
         return self.devices_ports_set.all().filter(status=port_use).count() + self.devices_combo_set.all().filter(status_port=port_use).count()
+
+
+
+    ### Портов технологических
+    def get_tech_ports(self):
+        return self.devices_ports_set.filter(status=port_tech).count()
+
+
+    ### Портов пользовательских
+    def get_use_ports(self):
+        return self.devices_ports_set.filter(status=port_use).count()
+
+
+    ### Портов в резерве
+    def get_reserv_ports(self):
+        return self.devices_ports_set.filter(status=port_reserv).count()
+
+
+    #### Комбо порты технологические
+    def get_tech_combo(self):
+        return self.devices_combo_set.filter(status_port=port_tech).count()
+
+
+    #### Комбо порты пользовательские
+    def get_use_combo(self):
+        return self.devices_combo_set.filter(status_port=port_use).count()
+
+
+    #### Комбо порты пользовательские
+    def get_reserv_combo(self):
+        return self.devices_combo_set.filter(status_port=port_reserv).count()
+
+
+    #### Список связанных сетевых элементов
+    def get_netelems(self):
+        netelems = []
+
+        for el in self.netelems_set.all():
+            netelems.append({
+                'id':el.id,
+                'name':el.name
+            })
+
+        return netelems
+
+
+
+
+    #### ip адреса управления
+    def get_manage_ip(self):
+
+        manage = []
+
+        #### Обход связанных сетевых элементов
+        for el in self.netelems_set.all():
+            ### Обход связанных логических интерфейсов
+            for li in el.logical_interfaces_set.all():
+                ### Обход свойств логичского интерфейса
+                for p in li.logical_interfaces_prop_set.filter(prop=prop,logical_interface__name='manage'):
+                    manage.append(p.val)
+
+        return manage
+
 
 
 

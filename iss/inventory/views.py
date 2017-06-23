@@ -25,13 +25,14 @@ from django.views.generic.base import TemplateView,RedirectView
 
 
 from iss.inventory.models import devices_scheme,netelems,devices
-from iss.localdicts.models import Status,Severity,address_companies,port_status,slot_status,device_status,logical_interfaces_prop_list
+from iss.localdicts.models import Status,Severity,address_companies,port_status,slot_status,device_status,logical_interfaces_prop_list,address_house
 
 from iss.mydecorators import group_required,anonymous_required
 
 from django.contrib.auth.models import User
 
 
+dev_use = device_status.objects.get(name="Используется")
 
 
 
@@ -310,4 +311,74 @@ class Device(TemplateView):
 
         return context
 
+
+
+
+
+
+### Аудит портов
+class DevicesAuditPorts(ListView):
+
+    model = devices
+    template_name = "inventory/audit_ports.html"
+
+    paginate_by = 0
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+        if self.session.has_key("address_id") and self.session["address_id"] != 'undefined':
+
+            addr = address_house.objects.get(pk=int(self.session["address_id"],10))
+
+            ### Когда определен только город
+            if addr.city and addr.street == None and addr.house == None:
+                return devices.objects.filter(address__city = addr.city,status=dev_use).order_by('address__street__name')
+
+            ### Когда определен город и улица
+            elif addr.city and addr.street and addr.house == None:
+                return devices.objects.filter(address__city = addr.city,address__street = addr.street,status=dev_use).order_by('address__house')
+
+
+            ### Когда определены город, улица, дом
+            elif addr.city and addr.street and addr.house:
+                return devices.objects.filter(address__city=addr.city, address__street=addr.street, address__house=addr.house,status=dev_use).all()
+
+            else:
+                return []
+
+
+        else:
+            return []
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(DevicesAuditPorts, self).get_context_data(**kwargs)
+
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+
+        context["address_label"] = self.session["address_label"] if self.session.has_key("address_label") else ''
+
+
+
+        return context
 

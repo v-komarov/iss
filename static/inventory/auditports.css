@@ -1,0 +1,22 @@
+table > thead > tr > th {
+    background-color:#DCDCDC;
+}
+
+
+.row {
+    margin: 0;
+}
+
+thead.small > tr > th {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+table[group=audit] > tbody > tr.small > td {
+    padding:0;
+}
+
+#address {
+    width: 600px;
+}

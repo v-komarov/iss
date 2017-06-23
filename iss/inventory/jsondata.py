@@ -463,6 +463,18 @@ def get_json(request):
 
 
 
+        ### Задание id адреса для отображения устройств аудита портов
+        if r.has_key("action") and rg("action") == 'get_devices_byaddress':
+            address_id = request.GET["address_id"]
+            address_label = request.GET["address_label"]
+
+            request.session['address_id'] = address_id
+            request.session['address_label'] = address_label
+
+            response_data = {"result":"ok"}
+
+
+
 
 
 

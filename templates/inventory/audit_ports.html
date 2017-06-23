@@ -1,0 +1,119 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}inventory/auditports.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}inventory/audit.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div id="page-audit" class="row">
+
+            <div class="form-group">
+
+                <label for="address"><small>Адрес</small></label>
+                <small>
+                    <input type="text" style="height:28px;padding-left:2px;" id="address" value="{{ address_label }}" placeholder="">
+                    <button id="getdevices" title="Выбрать" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                </small>
+
+            </div>
+
+</div>
+
+
+
+<div class="row">
+
+
+
+
+
+
+    <table group="audit" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Адрес</th>
+                <th>Модель</th>
+                <th>Серийный номер</th>
+                <th>Сетевые элементы</th>
+                <th>Управление</th>
+                <th>Порты</th>
+                <th>Порты<br>исп.</th>
+                <th>Порты<br>резерв</th>
+                <th>Порты<br>техн.</th>
+                <th>Комбо</th>
+                <th>Комбо<br>исп.</th>
+                <th>Комбо<br>резерв</th>
+                <th>Комбо<br>техн.</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for row in object_list %}
+
+
+                    <tr class="small" marked="no" row_id="{{ row.id }}">
+
+                        <td>{{ row.getaddress }}</td>
+                        <td>{{ row.device_scheme }}</td>
+                        <td>{{ row.serial }}</td>
+                        <td>
+                            {% for item in row.get_netelems %}
+                                {{ item.name }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for item in row.get_manage_ip %}
+                                {{ item }}
+                            {% endfor %}
+                        </td>
+                        <td>{{ row.devices_ports_set.all.count }}</td>
+                        <td>{{ row.get_use_ports }}</td>
+                        <td>{{ row.get_reserv_ports }}</td>
+                        <td>{{ row.get_tech_ports }}</td>
+                        <td>{{ row.devices_combo_set.all.count }}</td>
+                        <td>{{ row.get_use_combo }}</td>
+                        <td>{{ row.get_reserv_combo }}</td>
+                        <td>{{ row.get_tech_combo }}</td>
+
+                    </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+
+
+
+
+    </table>
+
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+
