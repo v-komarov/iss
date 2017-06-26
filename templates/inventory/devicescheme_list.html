@@ -60,8 +60,11 @@
                 <th>Название</th>
                 <th>model_name</th>
                 <th>properties</th>
+                <th>ports_number</th>
+                <th>combo_number</th>
                 <th>slots_number</th>
                 <th>ports</th>
+                <th>combo</th>
                 <th>slots</th>
                 <th>allowed_parrents</th>
                 <th>Создано</th>
@@ -82,8 +85,11 @@
                         <td>{{ row.name }}</td>
                         <td>{{ row.scheme_device.model_name }}</td>
                         <td>{{ row.scheme_device.properties }}</td>
-                        <td>{{ row.scheme_device.slots_number }}</td>
+                        <td>{{ row.get_ports_count }}</td>
+                        <td>{{ row.get_combo_count }}</td>
+                        <td>{{ row.get_slots_count }}</td>
                         <td><a id="tooltip" title="{{ row.scheme_device.ports }}">{{ row.scheme_device.ports|truncatechars:25 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.scheme_device.combo }}">{{ row.scheme_device.combo|truncatechars:25 }}</a></td>
                         <td><a id="tooltip" title="{{ row.scheme_device.slots }}">{{ row.scheme_device.slots|truncatechars:25 }}</a></td>
                         <td>{{ row.scheme_device.allowed_parrents }}</td>
                         {% timezone tz %}

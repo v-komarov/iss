@@ -4,6 +4,11 @@ $(document).ready(function() {
     // Освежить данные
     $("#getdevices").bind("click", GetDevices);
 
+    // Редактировать устройства
+    $("table[group=audit] tbody tr td a[device]").bind("click",DeviceEdit);
+
+    // Редактировать сетевые элементы
+    $("table[group=audit] tbody tr td a[netelem]").bind("click",NetelemEdit);
 
 
     // Поиск адреса
@@ -50,4 +55,35 @@ function GetDevices(e) {
 }
 
 
+
+
+// Редактирование устройства
+function DeviceEdit(e) {
+
+    var device_id = $(this).attr("device");
+    var jqxhr = $.getJSON("/inventory/jsondata?dev_id="+device_id+"&action=savedevid",
+    function(data) {
+        if (data["result"] == "ok")
+
+        win = window.open("/inventory/devicedata/","device");
+
+    });
+
+
+}
+
+
+
+
+// Редактирование сетевого элемента
+function NetelemEdit(e) {
+
+    var netelem_id = $(this).attr("netelem");
+    var jqxhr = $.getJSON("/inventory/jsondata?savenetelem="+netelem_id,
+    function(data) {
+        win2 = window.open("/inventory/netelementdata/","netelem");
+
+    })
+
+}
 

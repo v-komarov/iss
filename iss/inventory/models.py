@@ -28,7 +28,17 @@ class devices_scheme(models.Model):
     def __unicode__(self):
         return self.name
 
+    ### Количество портов
+    def get_ports_count(self):
+        return len(self.scheme_device["ports"])
 
+    ### Количество слотов
+    def get_slots_count(self):
+        return len(self.scheme_device["slots"])
+
+    ### Количестов комбо
+    def get_combo_count(self):
+        return len(self.scheme_device["combo"])
 
 
 

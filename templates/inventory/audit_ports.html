@@ -74,10 +74,10 @@
 
                         <td>{{ row.getaddress }}</td>
                         <td>{{ row.device_scheme }}</td>
-                        <td>{{ row.serial }}</td>
+                        <td><a device="{{ row.id }}">{{ row.serial }}</a></td>
                         <td>
                             {% for item in row.get_netelems %}
-                                {{ item.name }}
+                                <a netelem="{{ item.id }}">{{ item.name }}</a>
                             {% endfor %}
                         </td>
                         <td>
