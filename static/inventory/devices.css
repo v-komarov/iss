@@ -94,3 +94,20 @@ form#editpropform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
     width: 400px;
 }
 
+
+/* Для всех ссылок*/
+table[group=devices] > tbody > tr > td > a {
+    text-decoration:none;
+}
+
+table[group=devices] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+
+/* Курсор */
+table[group=devices] > tbody > tr > td > a {
+    cursor:pointer;
+}

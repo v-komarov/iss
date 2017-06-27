@@ -82,20 +82,20 @@
                     <tr class="small" marked="no" row_id="{{ row.id }}">
 
 
-                        <td>{{ row.name }}</td>
-                        <td>{{ row.scheme_device.model_name }}</td>
-                        <td>{{ row.scheme_device.properties }}</td>
-                        <td>{{ row.get_ports_count }}</td>
-                        <td>{{ row.get_combo_count }}</td>
-                        <td>{{ row.get_slots_count }}</td>
+                        <td><a>{{ row.name }}</a></td>
+                        <td><a>{{ row.scheme_device.model_name }}</a></td>
+                        <td><a>{{ row.scheme_device.properties }}</a></td>
+                        <td><a>{{ row.get_ports_count }}</a></td>
+                        <td><a>{{ row.get_combo_count }}</a></td>
+                        <td><a>{{ row.get_slots_count }}</a></td>
                         <td><a id="tooltip" title="{{ row.scheme_device.ports }}">{{ row.scheme_device.ports|truncatechars:25 }}</a></td>
                         <td><a id="tooltip" title="{{ row.scheme_device.combo }}">{{ row.scheme_device.combo|truncatechars:25 }}</a></td>
                         <td><a id="tooltip" title="{{ row.scheme_device.slots }}">{{ row.scheme_device.slots|truncatechars:25 }}</a></td>
-                        <td>{{ row.scheme_device.allowed_parrents }}</td>
+                        <td><a>{{ row.scheme_device.allowed_parrents }}</a></td>
                         {% timezone tz %}
-                        <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
+                        <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td>{{ row.author }}</td>
+                        <td><a>{{ row.author }}</a></td>
                         <td><a href="/inventory/scheme_device/?sch={{ row.id }}"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a></td>
 
                     </tr>

@@ -20,3 +20,20 @@ table[group=audit] > tbody > tr.small > td {
 #address {
     width: 600px;
 }
+
+
+/* Курсор */
+table[group=audit] > tbody > tr > td > a[device],
+table[group=audit] > tbody > tr > td > a[netelem] {
+    cursor:pointer;
+}
+
+
+/* Для всех ссылок*/
+table[group=audit] > tbody > tr > td > a {
+    text-decoration:none;
+}
+
+table[group=audit] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}

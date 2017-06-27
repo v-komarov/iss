@@ -86,3 +86,19 @@ tr.small:nth-child(3) > td:nth-child(1) > label:nth-child(1) {
     padding-right:10px;
 }
 
+
+
+
+/* Для всех ссылок*/
+table[group=netelements] > tbody > tr > td > a {
+    text-decoration:none;
+}
+
+table[group=netelements] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+table[group=netelements] > tbody > tr > td > a {
+    cursor:pointer;
+}

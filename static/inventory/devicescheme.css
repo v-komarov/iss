@@ -24,3 +24,18 @@ table[group=devicescheme] > tbody > tr > td {
 #editschemeform > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) {
     vertical-align: top;
 }
+
+
+/* Для всех ссылок*/
+table > tbody > tr > td > a {
+    text-decoration:none;
+}
+
+table > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+table[group=devicescheme] > tbody > tr > td > a {
+    cursor:pointer;
+}

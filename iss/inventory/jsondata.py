@@ -340,7 +340,7 @@ def get_json(request):
         if r.has_key("savenetelem") and rg("savenetelem") != '':
 
             netelemid = int(request.GET["savenetelem"],10)
-            request.session["netelemid"] = netelemid
+            request.session["elem"] = netelemid
 
             response_data = {"result":"ok"}
 

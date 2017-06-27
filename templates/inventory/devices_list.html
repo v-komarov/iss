@@ -87,20 +87,19 @@
                     <tr class="small" marked="no" row_id="{{ row.id }}">
 
 
-                        <td>{{ row.id }}</td>
-                        <td>{{ row.device_scheme }}</td>
-                        <td>{{ row.serial }}</td>
-                        <td>{{ row.status.name }}</td>
-                        <td>{{ row.company }}</td>
-                        <td>{{ row.devices_ports_set.all.count }}</td>
-                        <td>{{ row.device_link.all.count }}</td>
-                        <td>{{ row.devices_combo_set.all.count }}</td>
-                        <td>{{ row.address.city.name }} {{ row.address.street.name }} {{ row.address.house }}</td>
+                        <td><a>{{ row.id }}</a></td>
+                        <td><a>{{ row.device_scheme }}</a></td>
+                        <td><a>{{ row.serial }}</a></td>
+                        <td><a>{{ row.status.name }}</a></td>
+                        <td><a>{{ row.company }}</a></td>
+                        <td><a>{{ row.devices_ports_set.all.count }}</a></td>
+                        <td><a>{{ row.device_link.all.count }}</a></td>
+                        <td><a>{{ row.devices_combo_set.all.count }}</a></td>
+                        <td><a>{{ row.address.city.name }} {{ row.address.street.name }} {{ row.address.house }}</a></td>
                         {% timezone tz %}
-                        <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
+                        <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td>{{ row.author }}</td>
-
+                        <td><a>{{ row.author }}</a></td>
                     </tr>
 
             {% endfor %}

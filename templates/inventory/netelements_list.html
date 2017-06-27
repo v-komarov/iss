@@ -81,22 +81,22 @@
                     <tr class="small" marked="no" row_id={{ row.id }}>
 
 
-                        <td>{{ row.name }}</td>
-                        <td>
+                        <td><a>{{ row.name }}</a></td>
+                        <td><a>
                             {% for item in row.logical_interfaces_set.all %}
                                 {{ item.name }}
                             {% endfor %}
-                        </td>
-                        <td>
+                        </a></td>
+                        <td><a>
                             {% for item in row.device.all %}
                                 {{ item.name }}<br>
                             {% endfor %}
-                        </td>
-                        <td>{{ row.get_dogcode_list }}</td>
+                        </a></td>
+                        <td><a>{{ row.get_dogcode_list }}</a></td>
                         {% timezone tz %}
-                        <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
+                        <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td>{{ row.author }}</td>
+                        <td><a>{{ row.author }}</a></td>
 
                     </tr>
 
