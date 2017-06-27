@@ -81,11 +81,11 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=10)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
+        startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":10000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
