@@ -92,7 +92,7 @@
                                 {{ item.name }}<br>
                             {% endfor %}
                         </td>
-                        <td></td>
+                        <td>{{ row.get_dogcode_list }}</td>
                         {% timezone tz %}
                         <td>{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
                         {% endtimezone %}

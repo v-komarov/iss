@@ -6,23 +6,24 @@ from pytz import timezone
 
 from django.core.management.base import BaseCommand, CommandError
 
-from iss.inventory.models import logical_interfaces_prop, netelems, devices, logical_interfaces
-from iss.localdicts.models import logical_interfaces_prop_list,port_status
-from iss.equipment.models import client_mac_log
+from iss.inventory.models import logical_interfaces_prop, netelems, devices, logical_interfaces, devices_ports
+from iss.localdicts.models import logical_interfaces_prop_list,port_status,device_status
+from iss.equipment.models import client_mac_log,client_login_log
 
 logger = logging.getLogger('loadding')
 
 prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+onyma = logical_interfaces_prop_list.objects.get(name='onyma')
 port_use = port_status.objects.get(name='Используется')
-
+device_use = device_status.objects.get(name='Используется')
 
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
 
 class Command(BaseCommand):
-    args = '<Checking devices ports >'
-    help = 'checking'
+    args = '< >'
+    help = 'Проверка портов оборудования (которые пользоваиельские), проверка соответствующего интерфейса, привязка номера договора к интерфейсу'
 
 
 
@@ -42,59 +43,77 @@ class Command(BaseCommand):
 
         """
 
-        ### Выбор ip адресов устройств
-        for ip in client_mac_log.objects.distinct('ipaddress'):
-            rec = client_mac_log.objects.filter(ipaddress=ip.ipaddress).order_by('-create_update').first()
-            print rec.ipaddress,rec.macaddress,rec.port
-
-            ### Поиск по ip адресу на интерфейсе manager
-            if logical_interfaces_prop.objects.filter(prop=prop, val=rec.ipaddress, logical_interface__name='manage').exists():
-                p = logical_interfaces_prop.objects.get(prop=prop, val=rec.ipaddress)
-                #### Определение серевого элемента
-                ne = p.logical_interface.netelem
-
-                ### Поиск связанного устройства
-                device = ne.device.all().first()
-
-                ### Проверка наличие порта у устройства
-                if device.devices_ports_set.filter(num=rec.port).exists():
-
-                    device_port = device.devices_ports_set.get(num=rec.port)
-                    ### Перевод порта в статус ИСПОЛЬЗУЕТСЯ и запись в комментарий mac адрес
-                    print u"перевод в статус используется порта %s" % rec.port
-                    device_port.status = port_use
-                    device_port.comment = rec.macaddress
-                    device_port.datetime_update = krsk_tz.localize(datetime.datetime.now())
-                    device_port.save()
-
-
-
-                    ### Проверка наличия одноименного с портом сетевого элемента логического интерфейса, связь между интерфейсом и портом
-                    if not ne.logical_interfaces_set.filter(name=rec.port).exists():
-                        print u"создание логического интерфейса %s" % rec.port
-                        ### Создание логического интерфейса
+        ### Случайная выборка пользовательских портов устройств
+        for port in devices_ports.objects.filter(status=port_use).order_by("?")[:100]:
+            ### Устройство
+            device = port.device
+            ### Выволняем для устройств в статусе "используется"
+            if device.status == device_use:
+                ### Поиск связанных сетевых элементов
+                for ne in device.netelems_set.all():
+                    ### Для каждого сетевого элемента поиск одноименных с портом логических интерфейсов
+                    if not ne.logical_interfaces_set.filter(name=port.num).exists():
+                        ### Создание логического интерфейса, если такого не существует
                         li = logical_interfaces.objects.create(
-                            name = rec.port,
+                            name = port.num,
                             netelem = ne,
-                            comment = rec.macaddress
+                            comment = 'was created by robot'
                         )
-                        li.ports.add(device_port)
 
-                elif device.devices_combo_set.filter(num=rec.port).exists():
+                        li.ports.add(port)
 
-                    device_combo = device.devices_combo_set.get(num=rec.port)
-                    ### Перевод порта в статус ИСПОЛЬЗУЕТСЯ и запись в комментарий mac адрес
-                    print u"перевод в статус используется combo %s" % rec.port
-                    device_port.status_port = port_use
-                    device_port.comment = rec.macaddress
-                    device_port.datetime_update = krsk_tz.localize(datetime.datetime.now())
-                    device_port.save()
+                    ### Поиск ip адреса управления
+                    if ne.logical_interfaces_set.filter(name="manage").exists():
+                        manage = ne.logical_interfaces_set.filter(name="manage").first()
+
+                        ### Поиск ip адреса управления
+                        if logical_interfaces_prop.objects.filter(logical_interface=manage,prop=prop).exists():
+                            p = logical_interfaces_prop.objects.filter(logical_interface=manage, prop=prop).first()
+                            ip = p.val
+
+                            #### Поиск mac адреса по номеру порта и ip адресу
+                            if client_mac_log.objects.filter(ipaddress=ip,port=port.num).exists():
+                                mac = client_mac_log.objects.filter(ipaddress=ip,port=port.num).order_by('-create_update').first().macaddress
+
+                                ### Поиск по mac адресу номера договора
+                                if client_login_log.objects.filter(macaddress=mac).exclude(onyma_dogid=0).exists():
+
+                                    dogcode = client_login_log.objects.filter(macaddress=mac).exclude(onyma_dogid=0).first().onyma_dogcode
+                                    print dogcode
+
+                                    ### Проверка - существует ли уже такой договор на этом логическом интерфейсе
+                                    li = ne.logical_interfaces_set.all().filter(name=port.num).first()
+
+                                    if not li.check_dogcode(dogcode):
+                                        ### Добавление договора
+                                        logical_interfaces_prop.objects.create(
+                                            logical_interface = li,
+                                            prop = onyma,
+                                            val = dogcode,
+                                            comment = "was added by robot"
+                                        )
+
+                                        print u"Добавлен договор %s" % dogcode
+                                else:
+                                    logger.info(
+                                        "Не найден номер договора сетевого элемента {ne} , ip адрес {ip}, port {port}, mac {mac}".format(
+                                            ne=ne.name, ip=ip, port=port.num, mac=mac))
 
 
-                else:
-                    logger.info("Порт {port} не найден на устройстве {ipaddress}".format(port=rec.port,ipaddress=rec.ipaddress))
+
+                            else:
+                                logger.info("Не найден mac адрес сетевого элемента {ne} , ip адрес {ip}, port {port}".format(ne=ne.name,ip=ip,port=port.num))
 
 
-            ### ip адрес не найден
-            else:
-                logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=rec.ipaddress))
+
+                        else:
+                            logger.info("Не найден ip адрес управления сетевого элемента {ne}".format(ne=ne.name))
+
+
+
+                    else:
+                        logger.info("Не найден интерфейс управления сетевого элемнта {ne}".format(ne=ne.name))
+
+
+
+

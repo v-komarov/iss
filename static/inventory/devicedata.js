@@ -152,7 +152,7 @@ function ShowDeviceData() {
                 +"<td>"+value['port']+"</td>"
                 +"<td>"+value['status']+"</td>"
                 +"<td>"+value['datetime_str']+"</td>"
-                +"<td>"+"</td>"
+                +"<td>"+value['dogcode_list']+"</td>"
                 +"<td>"+value['comment']+"</td>"
                 +"<td>"+value['author']+"</td>"
                 +"<td><a title=\"Редактировать\" href=\"#\"><span class=\"glyphicon glyphicon-edit\" aria-hidden=\"true\"></span></a></td>"

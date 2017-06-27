@@ -15,7 +15,7 @@ port_use = port_status.objects.get(name='Используется')
 port_reserv = port_status.objects.get(name='Резерв')
 port_tech = port_status.objects.get(name='Технологический')
 prop = logical_interfaces_prop_list.objects.get(name='ipv4')
-
+onyma = logical_interfaces_prop_list.objects.get(name='onyma')
 
 
 ### Виды и модели устройств
@@ -339,6 +339,18 @@ class devices_ports(models.Model):
     def __unicode__(self):
         return self.num
 
+
+    ### Список договоров на связанном с портом интерфейсе
+    def get_dogcode_list(self):
+        result = []
+        for li in self.logical_interfaces_set.all():
+            for p in li.logical_interfaces_prop_set.filter(prop=onyma):
+                result.append(p.val)
+
+        return " ".join(result)
+
+
+
     class Meta:
         unique_together = ('device', 'port', 'num')
 
@@ -403,6 +415,16 @@ class netelems(models.Model):
 
 
 
+    ### Список договоров на сетевом элементе
+    def get_dogcode_list(self):
+        result = []
+        for li in self.logical_interfaces_set.all():
+            for p in li.logical_interfaces_prop_set.filter(prop=onyma):
+                result.append(p.val)
+
+        return " ".join(result)
+
+
 
 
 ### Логические интерфейсы
@@ -455,6 +477,19 @@ class logical_interfaces(models.Model):
                 dev_list.append(dev.id)
 
         return dev_list
+
+
+
+
+    ### Проверка существует ли приязанный к этому интерфейсу договор
+    def check_dogcode(self,dogcode):
+        if self.logical_interfaces_prop_set.all().filter(prop=onyma,val=dogcode).exists():
+            return True
+        else:
+            return False
+
+
+
 
 
 

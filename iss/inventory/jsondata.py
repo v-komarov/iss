@@ -69,7 +69,8 @@ def Ports_List(d,request):
             'comment':row.comment,
             'status':row.status.name,
             'port':row.port.name,
-            'author':row.author
+            'author':row.author,
+            'dogcode_list':row.get_dogcode_list()
         })
 
     return result
