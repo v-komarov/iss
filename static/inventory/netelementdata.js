@@ -36,7 +36,9 @@ $(document).ready(function() {
     // Сохранение названия сетевого элемента
     $("#saveelem").bind("click",SaveElemName);
     // Удаление устройства
-    $("table[group=devices] tbody").on("click","a",DelDevice);
+    $("table[group=devices] tbody").on("click","a[delete]",DelDevice);
+    // Переход к данным устройства
+    $("table[group=devices] tbody").on("click","a[device_id]",DeviceData);
     // Добавление логического интерфейса
     $("#addinterface").bind("click",AddLogicalInterface);
     // Редактирование логического интерфейса
@@ -178,6 +180,27 @@ function DelDevice(e) {
 
 
 
+// Переход к интерфейсу устройства
+function DeviceData(e) {
+
+    var device_id = $(this).attr("device_id");
+    var jqxhr = $.getJSON("/inventory/jsondata?dev_id="+device_id+"&action=savedevid",
+    function(data) {
+        if (data["result"] == "ok")
+
+        win = window.open("/inventory/devicedata/","device");
+
+    });
+
+
+}
+
+
+
+
+
+
+
 
 // Список устройств
 function ListDevice(e) {
@@ -193,10 +216,10 @@ function ListDevice(e) {
 
 
                 var t = "<tr device_id=" + value["id"] +">"
-                +"<td>"+value['name']+"</td>"
-                +"<td>"+value['serial']+"</td>"
-                +"<td>"+value['address_city']+" "+value['address_street']+" "+value['address_house']+"</td>"
-                +"<td class=\"text-center\"><a title=\"Удалить устройство\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"<td><a device_id=\""+value['id']+"\">"+value['name']+"</a></td>"
+                +"<td><a device_id=\""+value['id']+"\">"+value['serial']+"</a></td>"
+                +"<td><a device_id=\""+value['id']+"\">"+value['address_city']+" "+value['address_street']+" "+value['address_house']+"<a></td>"
+                +"<td class=\"text-center\"><a delete title=\"Удалить устройство\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
                 +"</tr>";
 
                 $("table[group=devices] tbody").append(t);

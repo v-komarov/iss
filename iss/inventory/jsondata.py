@@ -294,6 +294,7 @@ def get_json(request):
 
 
                 data = {
+                    "id":d.id,
                     "serial":d.serial,
                     "model":d.device_scheme.name,
                     "address":d.address.getaddress(),

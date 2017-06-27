@@ -90,15 +90,18 @@ tr.small:nth-child(3) > td:nth-child(1) > label:nth-child(1) {
 
 
 /* Для всех ссылок*/
-table[group=netelements] > tbody > tr > td > a {
+table[group=netelements] > tbody > tr > td > a,
+table[group=devices] > tbody > tr > td > a {
     text-decoration:none;
 }
 
-table[group=netelements] > tbody > tr > td > a:hover {
+table[group=netelements] > tbody > tr > td > a:hover,
+table[group=devices] > tbody > tr > td > a {
     text-decoration:none;
 }
 
 
-table[group=netelements] > tbody > tr > td > a {
+table[group=netelements] > tbody > tr > td > a,
+table[group=devices] > tbody > tr > td > a {
     cursor:pointer;
 }
