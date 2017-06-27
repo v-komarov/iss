@@ -39,7 +39,7 @@ logger = logging.getLogger('debugging')
 loggerjson = logging.getLogger('events')
 
 
-tz = 'Asia/Chita'
+tz = 'Europe/Moscow'
 chi_tz = timezone(tz)
 
 
@@ -76,11 +76,11 @@ class Command(BaseCommand):
 
         tf = tempfile.NamedTemporaryFile(delete=True)
 
-        startTime = time.mktime(  (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=3000)).timetuple() )
+        startTime = time.mktime(  (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=10)).timetuple() )
         endTime = time.mktime(  (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=3)).timetuple() )
         print startTime,endTime
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":10000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":10000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s %s" % (tf.name,username,password,zenoss)
         print cmd
 
@@ -107,11 +107,13 @@ class Command(BaseCommand):
                 update_time = chi_tz.localize(datetime.datetime.fromtimestamp(r["stateChange"]))  # update_time
 
                 severity = Severity.objects.get(pk=r["severity"])
+                #print severity
                 summary = r["summary"]
                 ipaddress = ", ".join(r["ipAddress"])  # ip
 
                 uuid = r["device"]["uuid"]
                 status = Status.objects.get(name=r["eventState"]) # Статус
+                #print status
                 eventclass = r["eventClass"]["text"]
 
                 device = r["device"]["text"]
@@ -151,7 +153,6 @@ class Command(BaseCommand):
                         'key:{key} action:{action} lasttime:{lasttime} firsttime:{firsttime} last_action:{last_action} severity:{severity} location:{location}'.format(
                             key=key,action=action,last_action=last_action,severity=severity.id,firsttime=firsttime,lasttime=lasttime,location=location)
                     )
-
 
 
 
