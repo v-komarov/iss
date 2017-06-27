@@ -42,7 +42,7 @@ class DeviceSchemeList(ListView):
     model = devices_scheme
     template_name = "inventory/devicescheme_list.html"
 
-    paginate_by = 100
+    paginate_by = 50
 
 
 
@@ -105,7 +105,7 @@ class NetElementsList(ListView):
     model = netelems
     template_name = "inventory/netelements_list.html"
 
-    paginate_by = 100
+    paginate_by = 50
 
 
 
@@ -200,7 +200,7 @@ class DevicesList(ListView):
     model = devices
     template_name = "inventory/devices_list.html"
 
-    paginate_by = 100
+    paginate_by = 50
 
 
 

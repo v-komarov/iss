@@ -50,7 +50,12 @@ class Command(BaseCommand):
             for row in spamreader:
                 ip = row[0]
                 port = row[1]
-                print ip,port
+                adminup = row[2]
+                operup = row[3]
+
+                status = port_use if operup == '1' else port_res
+                print ip,port,status
+
                 ### Поиск по ip адресу на интерфейсе manager
                 if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
                     p = logical_interfaces_prop.objects.get(prop=prop, val=ip)
@@ -62,7 +67,7 @@ class Command(BaseCommand):
 
                     if device.devices_ports_set.filter(num=port).count() == 1:
                        p =  device.devices_ports_set.get(num=port)
-                       p.status = port_use
+                       p.status = status
                        p.comment = ''
                        p.datetime_update=krsk_tz.localize(datetime.datetime.now())
                        p.save()
@@ -71,7 +76,7 @@ class Command(BaseCommand):
 
                     elif device.devices_combo_set.filter(num=port).count() == 1:
                         p = device.devices_combo_set.get(num=port)
-                        p.status_port = port_use
+                        p.status_port = status
                         p.comment = ''
                         p.datetime_update = krsk_tz.localize(datetime.datetime.now())
                         p.save()
@@ -86,4 +91,3 @@ class Command(BaseCommand):
                 ### ip адрес не найден
                 else:
                     logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=ip))
-
