@@ -17,6 +17,26 @@
 
  Исходный код ::
 
+    prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+
+
+    def get_zkl(rowid_list):
+
+        result = []
+
+        for rowid in rowid_list:
+            r = events.objects.get(pk=rowid)
+
+            ### Поиск по ip адресу на интерфейсе manager
+            if logical_interfaces_prop.objects.filter(prop=prop, val=r.device_net_address, logical_interface__name='manage').exists():
+                p = logical_interfaces_prop.objects.get(prop=prop, val=r.device_net_address)
+                ### Добавление строк с зкл
+                result.extend(p.logical_interface.get_zkl(r.device_net_address))
+
+        return result
+
+ Исходный код ::
+
         # Запрос расчета ЗКЛ
         if r.has_key("getzkl") and rg("getzkl") != "":
             id_event = request.GET["event_id"]
@@ -30,18 +50,9 @@
 
 
 
-
-
-#. Предварительное заполнение данными о состоянии портов из ИСС модель devices_ip поле data
+#. Предварительное заполнение данными о состоянии портов и combo модели **devices_ports** **devices_combo**
 #. Выборка всех ip устройств из группировки
 #. Отображение состояния портов по каждому устройству и сумму на интерфейсном уровне
-
-
-
- Пример json данных в поле data модели devices_ip ::
-
-    {"ports_info": {"free": 0, "tech": 24, "used": 0, "defective": 0, "reservation": 0, "unconnected": 0}, "iss_id_device": 18841, "iss_address_id": 1370}
-
 
 
 
@@ -67,6 +78,8 @@
             row_id = request.GET["mailaccidentdata"]
             ev = events.objects.get(pk=row_id)
             acc = accidents.objects.get(acc_event=row_id)
+
+
             if request.GET["mcc_mail_begin"] == "no":
             # Почтовое сообщение еще не создавалось
 
@@ -74,32 +87,24 @@
                 #####################################
                 domen = ev.source
 
-
-                ipaddress = [ev.device_net_address]
-                if ev.data.has_key("containergroup"):
-                    for item in ev.data["containergroup"]:
-                        a = events.objects.get(pk=item)
-                        ipaddress.append(a.device_net_address)
+                ### IP Адреса устройств
+                ipaddress = groupevents_ip(ev.id)
 
                 iddevices = []
-                ### Поиск соответствия ip адресу id для iss
+                #### Поиск устройств на основании ip адресов
                 for ip in ipaddress:
-                    if devices_ip.objects.filter(ipaddress=ip,device_domen="zenoss_krsk").count() == 1:
-                        d = devices_ip.objects.get(ipaddress=ip,device_domen="zenoss_krsk")
-                        if d.data.has_key("iss_id_device"):
-                            iddevices.append("%s" % d.data["iss_id_device"])
-
+                    ### Поиск по ip адресу на интерфейсе manager
+                    if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+                        p = logical_interfaces_prop.objects.get(prop=prop, val=ip)
+                        ### Получение id устройств
+                        iddevices.extend(p.logical_interface.get_dev_list())
 
                 houses = []
                 #### Сбор id адресов
-                #### Поиск устройств по ip адресам
-                for ip in ipaddress:
-                    if devices.objects.filter(data__ipaddress=ip,data__domen=domen,device_type=devicetype).count() == 1:
-                        ### Найден коммутатор в базе инвентори
-                        dev = devices.objects.get(data__ipaddress=ip,data__domen=domen,device_type=devicetype)
-                        if dev.address.house not in houses:
-                            houses.append(dev.address.id)
-
+                for d in iddevices:
+                    dev = devices.objects.get(pk=d)
+                    if dev.address.id not in houses:
+                        houses.append(dev.address.id)
 
 
 
@@ -144,21 +149,20 @@
                     address_list = address_list + "," + str(city) + ","
                     for street,houses in itertools.groupby(list(street_house),key=lambda y:y['street']):
                         hl = ""
+
                         for h in list(houses):
                             a = "%s" % h["house"]
                             hl = hl + a + ","
                         address_list = address_list + str(street) + ",%s" % hl.encode("utf-8") + ";"
 
+                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";").replace(",;",";").replace(";,",";")
 
-                address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")[:-1]
-
-
-                ### Рсчет ЗКЛ
+                ### Рсчет ЗКЛ на основе списка id адресов
                 zkl = 0
-                for ip in ipaddress:
-                    for d in devices_ip.objects.filter(device_domen=domen, ipaddress=ip):
-                        if d.data.has_key("ports_info"):
-                            zkl = zkl + d.data["ports_info"]["used"]
+                for addr in houses:
+                    a = address_house.objects.get(pk=addr)
+                    zkl = zkl + a.get_zkl()
+
 
                 tzm = 'Europe/Moscow'
 
@@ -169,14 +173,14 @@
                         'acccat': acc.acc_cat.cat,
                         'accreason': acc.acc_reason,
                         'acccities':",".join(cityname),
-                        'accaddresslist':address_list[1:-1],
+                        'accaddresslist':address_list[1:],
                         'acczkl':zkl
                     }
 
 
             else:
             # Почтовое сообщение уже было создано
-                m = messages.objects.filter(accident=acc).order_by('-datetime_message').first()
+                m = messages.objects.filter(accident=acc,data__acc_email_templates="1").order_by('-datetime_message').first()
 
 
                 accjson = {
@@ -195,7 +199,8 @@
 
             response_data = accjson
 
-#. Предварительное заполнение данными о состоянии портов из ИСС модель devices_ip поле data
+
+#. Предварительное заполнение данными о состоянии портов и комбо портов моделей **devices_ports**  **devices_combo**
 #. Выборка всех ip устройств из группировки
 #. Выборка id адресов из модели address_house (город,улица,дом) всех добавленных операторов городов, улиц, домов.
 #. Получение дополнительных ip адресов устройств по id адресов из модели devices.

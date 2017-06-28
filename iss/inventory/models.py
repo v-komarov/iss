@@ -146,6 +146,22 @@ class devices(models.Model):
 
 
 
+    ### Количество портов
+    def get_ports_count(self):
+        return self.devices_ports_set.count()
+
+
+    ### Количество комбо портов
+    def get_combo_count(self):
+        return self.devices_combo_set.count()
+
+
+    ### Количество слотов
+    def get_slots_count(self):
+        return self.device_link.count()
+
+
+
 
     ### Создание портов устройства согласно модели
     def mkports(self,author=""):

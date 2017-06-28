@@ -5,7 +5,7 @@ from django.conf.urls import url
 
 from iss.equipment.views import EquipmentList,FootNodeList,AgregatorsList,Topology
 from iss.equipment.jsondata import get_json
-from iss.equipment.apidata import get_apidata
+from iss.equipment.apidata import get_apidata,get_apidata2
 
 
 
@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'devices/page/(?P<page>\d+)/$', EquipmentList.as_view()),
     url(r'devices/jsondata/$', get_json),
     url(r'devices/apidata/$', get_apidata),
+    url(r'devices/apidata2/$', get_apidata2),
 ]

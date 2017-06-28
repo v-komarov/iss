@@ -53,30 +53,34 @@
   <div class="contents topic" id="id1">
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
-<li><a class="reference internal" href="#api" id="id20">Описание API</a><ul>
-<li><a class="reference internal" href="#id2" id="id21">Список агрегаторов</a></li>
-<li><a class="reference internal" href="#lldp" id="id22">Данные lldp</a></li>
-<li><a class="reference internal" href="#id3" id="id23">Проверка списка ЗКЛ</a></li>
-<li><a class="reference internal" href="#mac-ip" id="id24">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a></li>
-<li><a class="reference internal" href="#id4" id="id25">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
-<li><a class="reference internal" href="#mac-login-radius" id="id26">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a></li>
-<li><a class="reference internal" href="#onyma" id="id27">Запросы к Onyma</a><ul>
-<li><a class="reference internal" href="#id5" id="id28">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id6" id="id29">Тест</a></li>
-<li><a class="reference internal" href="#id7" id="id30">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id8" id="id31">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id9" id="id32">Создание договора</a></li>
-<li><a class="reference internal" href="#id10" id="id33">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id11" id="id34">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id12" id="id35">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id13" id="id36">Установка адреса договора 2</a></li>
-<li><a class="reference internal" href="#id14" id="id37">Установка адреса договора</a></li>
-<li><a class="reference internal" href="#id15" id="id38">Установка номера договора</a></li>
-<li><a class="reference internal" href="#id16" id="id39">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
-<li><a class="reference internal" href="#id" id="id40">Получение id договора по номеру договора</a></li>
-<li><a class="reference internal" href="#id17" id="id41">Получение id тарифного плана по его названию</a></li>
-<li><a class="reference internal" href="#id18" id="id42">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
-<li><a class="reference internal" href="#id19" id="id43">Получение списка доменов</a></li>
+<li><a class="reference internal" href="#api" id="id23">Описание API</a><ul>
+<li><a class="reference internal" href="#id2" id="id24">Список агрегаторов</a></li>
+<li><a class="reference internal" href="#lldp" id="id25">Данные lldp</a></li>
+<li><a class="reference internal" href="#id3" id="id26">Проверка списка ЗКЛ</a></li>
+<li><a class="reference internal" href="#mac-ip" id="id27">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a></li>
+<li><a class="reference internal" href="#id4" id="id28">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
+<li><a class="reference internal" href="#mac-login-radius" id="id29">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a></li>
+<li><a class="reference internal" href="#ip" id="id30">Список устройств, связанных с ними сетевых элементов и ip адресов управления</a></li>
+<li><a class="reference internal" href="#id5" id="id31">Список адресов (города, улицы, дома)</a></li>
+<li><a class="reference internal" href="#id6" id="id32">Список сетевых элементов без ip адреса управления</a></li>
+<li><a class="reference internal" href="#id7" id="id33">Список устройств без связанных сетевых элементов</a></li>
+<li><a class="reference internal" href="#onyma" id="id34">Запросы к Onyma</a><ul>
+<li><a class="reference internal" href="#id8" id="id35">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li><a class="reference internal" href="#id9" id="id36">Тест</a></li>
+<li><a class="reference internal" href="#id10" id="id37">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id11" id="id38">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id12" id="id39">Создание договора</a></li>
+<li><a class="reference internal" href="#id13" id="id40">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id14" id="id41">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id15" id="id42">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id16" id="id43">Установка адреса договора 2</a></li>
+<li><a class="reference internal" href="#id17" id="id44">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id18" id="id45">Установка номера договора</a></li>
+<li><a class="reference internal" href="#id19" id="id46">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id" id="id47">Получение id договора по номеру договора</a></li>
+<li><a class="reference internal" href="#id20" id="id48">Получение id тарифного плана по его названию</a></li>
+<li><a class="reference internal" href="#id21" id="id49">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
+<li><a class="reference internal" href="#id22" id="id50">Получение списка доменов</a></li>
 </ul>
 </li>
 </ul>
@@ -84,9 +88,9 @@
 </ul>
 </div>
 <div class="section" id="api">
-<h1><a class="toc-backref" href="#id20">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
+<h1><a class="toc-backref" href="#id23">Описание API</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h1>
 <div class="section" id="id2">
-<h2><a class="toc-backref" href="#id21">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id24">Список агрегаторов</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_agregators</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -98,7 +102,7 @@
 <p>uplink_ports - список uplink портов</p>
 </div>
 <div class="section" id="lldp">
-<h2><a class="toc-backref" href="#id22">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id25">Данные lldp</a><a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata</a></p>
 <p>Формат вывода json</p>
 <p>Пример вывода</p>
@@ -110,7 +114,7 @@
 <p>ports - список портов , mac адресов &#8220;соседей&#8221;.</p>
 </div>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id23">Проверка списка ЗКЛ</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id26">Проверка списка ЗКЛ</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&amp;ipaddress=55.33.3.13">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&amp;ipaddress=55.33.3.13</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -127,7 +131,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="mac-ip">
-<h2><a class="toc-backref" href="#id24">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a><a class="headerlink" href="#mac-ip" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id27">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a><a class="headerlink" href="#mac-ip" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&amp;ipaddress=192.168.0.111&amp;macaddress=ad00-2187-3400&amp;port=21">http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&amp;ipaddress=192.168.0.111&amp;macaddress=ad00-2187-3400&amp;port=21</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -146,7 +150,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="id4">
-<h2><a class="toc-backref" href="#id25">Вывод mac адресов клиентов по ip адресу коммутатора</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id28">Вывод mac адресов клиентов по ip адресу коммутатора</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&amp;ipaddress=192.168.0.111">http://10.6.0.22:8000/equipment/devices/apidata/?action=get_client_mac&amp;ipaddress=192.168.0.111</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -166,7 +170,7 @@
 </div></blockquote>
 </div>
 <div class="section" id="mac-login-radius">
-<h2><a class="toc-backref" href="#id26">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a><a class="headerlink" href="#mac-login-radius" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id29">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a><a class="headerlink" href="#mac-login-radius" title="Ссылка на этот заголовок">¶</a></h2>
 <p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&amp;login=test&amp;macaddress=ad00-2187-3400&amp;circuit_id=">http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_login&amp;login=test&amp;macaddress=ad00-2187-3400&amp;circuit_id=</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -184,10 +188,186 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="onyma">
-<span id="index-0"></span><h2><a class="toc-backref" href="#id27">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="ip">
+<span id="index-0"></span><h2><a class="toc-backref" href="#id30">Список устройств, связанных с ними сетевых элементов и ip адресов управления</a><a class="headerlink" href="#ip" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_ipnetelemdev">http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_ipnetelemdev</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=get_ipnetelemdev</li>
+</ol>
+<p>Формат вывода csv</p>
+<p>Пример вывода</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">IPADDRESS</span><span class="p">;</span><span class="n">NETELEM</span><span class="p">;</span><span class="n">MODEL</span><span class="p">;</span><span class="n">STATUS</span><span class="p">;</span><span class="n">PORTS</span><span class="p">;</span><span class="n">COMBO</span><span class="p">;</span><span class="n">SLOTS</span><span class="p">;</span><span class="n">CITY</span><span class="p">;</span><span class="n">STREET</span><span class="p">;</span><span class="n">HOUSE</span><span class="p">;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">238.81</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">138.8</span><span class="o">.</span><span class="mi">1</span><span class="n">gt1</span><span class="c1">#81 (10.210.238.81);DES-3200-28/C1 Fast Ethernet Switch;Используется;24;2;2;г.Красноярск;Молокова;31д;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">238.83</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">138.8</span><span class="o">.</span><span class="mi">3</span><span class="n">gt1</span><span class="c1">#83 (10.210.238.83);DES-3200-28/C1 Fast Ethernet Switch;Используется;24;2;2;г.Красноярск;Молокова;31в;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">135.13</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">35.1</span><span class="o">.</span><span class="mi">3</span><span class="n">gt1</span><span class="c1">#13 (10.210.135.13);DES-3200-28/C1 Fast Ethernet Switch;Используется;24;2;2;г.Красноярск;Молокова;10;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">135.21</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">35.2</span><span class="o">.</span><span class="mi">1</span><span class="n">gt5</span><span class="c1">#21 (10.210.135.21);ES-2108-G;Используется;8;1;0;г.Красноярск;Алексеева;21;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">135.25</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">35.2</span><span class="o">.</span><span class="mi">5</span><span class="n">gt2</span><span class="c1">#25 (10.210.135.25);ES-2108-G;Используется;8;1;0;г.Красноярск;Алексеева;23;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.101</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">1</span><span class="n">gt3</span><span class="c1">#101 (10.210.183.101);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;64;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.102</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">2</span><span class="n">gt1</span><span class="c1">#102 (10.210.183.102);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;66;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.103</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">3</span><span class="n">gt3</span><span class="c1">#103 (10.210.183.103);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;66;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.104</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">4</span><span class="n">gt6</span><span class="c1">#104 (10.210.183.104);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;66;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.105</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">5</span><span class="n">gt9</span><span class="c1">#105 (10.210.183.105);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;66;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.106</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">6</span><span class="n">gt2</span><span class="c1">#106 (10.210.183.106);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;68;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.107</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">7</span><span class="n">gt6</span><span class="c1">#107 (10.210.183.107);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;68;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.108</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">8</span><span class="n">gt8</span><span class="c1">#108 (10.210.183.108);DES-3010G;Используется;9;0;1;г.Красноярск;Молокова;68;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.109</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.10</span><span class="o">.</span><span class="mi">9</span><span class="n">gt4</span><span class="c1">#109 (10.210.183.109);ES-2108-G;Используется;8;1;0;г.Красноярск;Взлетная;24;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.10</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">10</span><span class="n">gt2</span><span class="c1">#10 (10.210.183.10);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.110</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.11</span><span class="o">.</span><span class="mi">0</span><span class="n">gt4</span><span class="c1">#110 (10.210.183.110);ES-2108-G;Используется;8;1;0;г.Красноярск;Молокова;62;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.11</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">1</span><span class="n">gt16</span><span class="c1">#11 (10.210.183.11);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.12</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">2</span><span class="n">gt17</span><span class="c1">#12 (10.210.183.12);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.13</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">3</span><span class="n">gt12</span><span class="c1">#13 (10.210.183.13);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.14</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">4</span><span class="n">gt6</span><span class="c1">#14 (10.210.183.14);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.15</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">5</span><span class="n">gt3</span><span class="c1">#15 (10.210.183.15);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.16</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">6</span><span class="n">gt2</span><span class="c1">#16 (10.210.183.16);DES-3010G;Используется;9;0;1;г.Красноярск;78 Добровольческой бригады;2;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.17</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">7</span><span class="n">gt1</span><span class="c1">#17 (10.210.183.17);DES-3200-28/C1 Fast Ethernet Switch;Используется;24;2;2;г.Красноярск;78 Добровольческой бригады;12;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.18</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">8</span><span class="n">gt4</span><span class="c1">#18 (10.210.183.18);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;19;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.19</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.1</span><span class="o">.</span><span class="mi">9</span><span class="n">gt7</span><span class="c1">#19 (10.210.183.19);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;19;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.20</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">10</span><span class="n">gt4</span><span class="c1">#20 (10.210.183.20);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;19;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.21</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">1</span><span class="n">gt11</span><span class="c1">#21 (10.210.183.21);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;19;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.22</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">2</span><span class="n">gt3</span><span class="c1">#22 (10.210.183.22);ES-2024A;Используется;24;2;0;г.Красноярск;78 Добровольческой бригады;21;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.23</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">3</span><span class="n">gt1</span><span class="c1">#23 (10.210.183.23);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;19;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.24</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">4</span><span class="n">gt5</span><span class="c1">#24 (10.210.183.24);ES-2108-G;Используется;8;1;0;г.Красноярск;78 Добровольческой бригады;21;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.25</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">5</span><span class="n">gt2</span><span class="c1">#25 (10.210.183.25);ES-2108-G;Используется;8;1;0;г.Красноярск;Алексеева;93;</span>
+<span class="mf">10.210</span><span class="o">.</span><span class="mf">183.26</span><span class="p">;</span><span class="mi">10</span><span class="o">-</span><span class="mf">83.2</span><span class="o">.</span><span class="mi">6</span><span class="n">gt4</span><span class="c1">#26 (10.210.183.26);DES-3028/A1;Используется;26;2;1;г.Красноярск;Алексеева;93;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
 <div class="section" id="id5">
-<h3><a class="toc-backref" href="#id28">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h3>
+<h2><a class="toc-backref" href="#id31">Список адресов (города, улицы, дома)</a><a class="headerlink" href="#id5" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_addresslist">http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_addresslist</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=get_addresslist</li>
+</ol>
+<p>Формат вывода csv</p>
+<p>Пример вывода</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ADDRESSID</span><span class="p">;</span><span class="n">CITYNAME</span><span class="p">;</span><span class="n">CITYID</span><span class="p">;</span><span class="n">STREETNAME</span><span class="p">;</span><span class="n">STREETID</span><span class="p">;</span><span class="n">HOUSE</span><span class="p">;</span>
+<span class="mi">3862</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Чертыгашева</span><span class="p">;</span><span class="mi">21</span><span class="p">;</span><span class="mi">148</span><span class="p">;</span>
+<span class="mi">3859</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Вокзальная</span><span class="p">;</span><span class="mi">57</span><span class="p">;</span><span class="mi">9</span><span class="p">;</span>
+<span class="mi">2323</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Аскизская</span><span class="p">;</span><span class="mi">229</span><span class="p">;</span><span class="mi">158</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">2005</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Грибоедова</span><span class="p">;</span><span class="mi">198</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span>
+<span class="mi">1677</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Кошурникова</span><span class="p">;</span><span class="mi">155</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span>
+<span class="mi">821</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">117</span><span class="p">;</span>
+<span class="mi">816</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">96</span><span class="p">;</span>
+<span class="mi">815</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">91</span><span class="p">;</span>
+<span class="mi">814</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">82</span><span class="p">;</span>
+<span class="mi">813</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">74</span><span class="p">;</span>
+<span class="mi">812</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">68</span><span class="p">;</span>
+<span class="mi">811</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">67</span><span class="p">;</span>
+<span class="mi">810</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">58</span><span class="p">;</span>
+<span class="mi">4505</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Дружбы</span> <span class="n">Народов</span><span class="p">;</span><span class="mi">182</span><span class="p">;</span><span class="n">О1</span><span class="p">;</span>
+<span class="mi">4345</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Чехова</span><span class="p">;</span><span class="mi">20</span><span class="p">;</span><span class="mi">122</span><span class="p">;</span>
+<span class="mi">3514</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Торосова</span><span class="p">;</span><span class="mi">33</span><span class="p">;</span><span class="mi">15</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">3223</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Северный</span> <span class="n">проезд</span><span class="p">;</span><span class="mi">75</span><span class="p">;</span><span class="mi">3</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">1828</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Карла</span> <span class="n">Маркса</span><span class="p">;</span><span class="mi">167</span><span class="p">;</span><span class="mi">59</span><span class="p">;</span>
+<span class="mi">1732</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Комарова</span><span class="p">;</span><span class="mi">161</span><span class="p">;</span><span class="mi">4</span><span class="p">;</span>
+<span class="mi">1464</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Ленинского</span> <span class="n">комсомола</span><span class="p">;</span><span class="mi">136</span><span class="p">;</span><span class="mi">11</span><span class="p">;</span>
+<span class="mi">827</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">160</span><span class="p">;</span>
+<span class="mi">820</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">115</span><span class="p">;</span>
+<span class="mi">818</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">100</span><span class="p">;</span>
+<span class="mi">817</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">97</span><span class="p">;</span>
+<span class="mi">809</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">54</span><span class="p">;</span>
+<span class="mi">808</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">52</span><span class="p">;</span>
+<span class="mi">807</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">50</span><span class="p">;</span>
+<span class="mi">806</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span><span class="mi">48</span><span class="p">;</span>
+<span class="mi">701</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Северный</span> <span class="n">проезд</span><span class="p">;</span><span class="mi">75</span><span class="p">;</span><span class="mi">31</span><span class="p">;</span>
+<span class="mi">407</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Торговая</span><span class="p">;</span><span class="mi">34</span><span class="p">;</span><span class="mi">6</span><span class="p">;</span>
+<span class="mi">307</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Хакасская</span><span class="p">;</span><span class="mi">24</span><span class="p">;</span><span class="mi">143</span><span class="p">;</span>
+<span class="mi">1</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Ярыгина</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">14</span><span class="p">;</span>
+<span class="mi">4454</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Крылова</span><span class="p">;</span><span class="mi">147</span><span class="p">;</span><span class="mi">85</span><span class="p">;</span>
+<span class="mi">4362</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Лермонтова</span><span class="p">;</span><span class="mi">135</span><span class="p">;</span><span class="mi">21</span><span class="p">;</span>
+<span class="mi">4356</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Дружбы</span> <span class="n">Народов</span><span class="p">;</span><span class="mi">182</span><span class="p">;</span><span class="mi">41</span><span class="p">;</span>
+<span class="mi">4355</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Авиаторов</span><span class="p">;</span><span class="mi">232</span><span class="p">;</span><span class="mi">4</span><span class="p">;</span>
+<span class="mi">4354</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Торосова</span><span class="p">;</span><span class="mi">33</span><span class="p">;</span><span class="mi">7</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">4353</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Торосова</span><span class="p">;</span><span class="mi">33</span><span class="p">;</span><span class="mi">7</span><span class="p">;</span>
+<span class="mi">4352</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Торосова</span><span class="p">;</span><span class="mi">33</span><span class="p">;</span><span class="mi">9</span><span class="p">;</span>
+<span class="mi">4351</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Авиаторов</span><span class="p">;</span><span class="mi">232</span><span class="p">;</span><span class="mi">16</span><span class="p">;</span>
+<span class="mi">4350</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Авиаторов</span><span class="p">;</span><span class="mi">232</span><span class="p">;</span><span class="mi">10</span><span class="p">;</span>
+<span class="mi">4349</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">Лермонтова</span><span class="p">;</span><span class="mi">135</span><span class="p">;</span><span class="mi">29</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id32">Список сетевых элементов без ip адреса управления</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_netelemnotip">http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_netelemnotip</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=get_netelemnotip</li>
+</ol>
+<p>Формат вывода csv</p>
+<p>Пример вывода</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">NETELEMID</span><span class="p">;</span><span class="n">NETELEM</span><span class="p">;</span><span class="n">MODEL</span><span class="p">;</span><span class="n">STATUS</span><span class="p">;</span><span class="n">PORTS</span><span class="p">;</span><span class="n">COMBO</span><span class="p">;</span><span class="n">SLOTS</span><span class="p">;</span><span class="n">CITY</span><span class="p">;</span><span class="n">STREET</span><span class="p">;</span><span class="n">HOUSE</span><span class="p">;</span>
+<span class="mi">2</span><span class="p">;</span><span class="n">Название</span> <span class="n">сетевого</span> <span class="n">элемента</span><span class="p">;</span><span class="n">DES</span><span class="o">-</span><span class="mi">3200</span><span class="o">-</span><span class="mi">28</span><span class="o">/</span><span class="n">C1</span> <span class="n">Fast</span> <span class="n">Ethernet</span> <span class="n">Switch</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">24</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Дивногорск</span><span class="p">;</span><span class="n">Наб</span><span class="o">.</span> <span class="n">Ленина</span><span class="p">;</span><span class="mi">27</span><span class="p">;</span>
+<span class="mi">2</span><span class="p">;</span><span class="n">Название</span> <span class="n">сетевого</span> <span class="n">элемента</span><span class="p">;</span><span class="n">DGS</span><span class="o">-</span><span class="mi">3620</span><span class="o">-</span><span class="mi">28</span><span class="n">SC</span> <span class="n">Gigabit</span> <span class="n">Ethernet</span> <span class="n">Switch</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">4</span><span class="p">;</span><span class="mi">24</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Телевизорная</span><span class="p">;</span><span class="mi">1</span> <span class="n">стр</span> <span class="mi">1</span> <span class="n">к204</span><span class="p">;</span>
+<span class="mi">2</span><span class="p">;</span><span class="n">Название</span> <span class="n">сетевого</span> <span class="n">элемента</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Ленина</span><span class="p">;</span><span class="mi">62</span><span class="p">;</span>
+<span class="mi">2</span><span class="p">;</span><span class="n">Название</span> <span class="n">сетевого</span> <span class="n">элемента</span><span class="p">;</span><span class="n">DES</span><span class="o">-</span><span class="mi">3200</span><span class="o">-</span><span class="mi">10</span><span class="o">/</span><span class="n">C1</span> <span class="n">Fast</span> <span class="n">Ethernet</span> <span class="n">Switch</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">8</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Куйбышева</span><span class="p">;</span><span class="mi">95</span><span class="p">;</span>
+<span class="mi">2</span><span class="p">;</span><span class="n">Название</span> <span class="n">сетевого</span> <span class="n">элемента</span><span class="p">;</span><span class="n">DES</span><span class="o">-</span><span class="mi">3200</span><span class="o">-</span><span class="mi">26</span><span class="o">/</span><span class="n">C1</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">24</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Крупской</span><span class="p">;</span><span class="mi">36</span><span class="p">;</span>
+<span class="mi">3</span><span class="p">;</span><span class="n">Сетевой</span> <span class="n">элемент</span><span class="p">;</span><span class="n">DES</span><span class="o">-</span><span class="mi">3200</span><span class="o">-</span><span class="mi">10</span><span class="o">/</span><span class="n">C1</span> <span class="n">Fast</span> <span class="n">Ethernet</span> <span class="n">Switch</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">8</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Крайняя</span><span class="p">;</span><span class="mi">2</span><span class="n">а</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id7">
+<h2><a class="toc-backref" href="#id33">Список устройств без связанных сетевых элементов</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h2>
+<p><a class="reference external" href="http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_devicesnotelement">http://10.6.0.22:8000/equipment/devices/apidata2/?action=get_devicesnotelement</a></p>
+<p>Запрос <strong>GET</strong></p>
+<p>Параметры:</p>
+<ol class="arabic simple">
+<li>action=get_devicesnotelement</li>
+</ol>
+<p>Формат вывода csv</p>
+<p>Пример вывода</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DEVICEID</span><span class="p">;</span><span class="n">MODEL</span><span class="p">;</span><span class="n">SERIAL</span><span class="p">;</span><span class="n">STATUS</span><span class="p">;</span><span class="n">PORTS</span><span class="p">;</span><span class="n">COMBO</span><span class="p">;</span><span class="n">SLOTS</span><span class="p">;</span><span class="n">CITY</span><span class="p">;</span><span class="n">STREET</span><span class="p">;</span><span class="n">HOUSE</span><span class="p">;</span>
+<span class="mi">12124</span><span class="p">;</span><span class="n">DES</span><span class="o">-</span><span class="mi">1210</span><span class="o">-</span><span class="mi">10</span><span class="o">/</span><span class="n">ME</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">8</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Железнодорожников</span><span class="p">;</span><span class="mi">26</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">12125</span><span class="p">;</span><span class="n">DGS</span><span class="o">-</span><span class="mi">3612</span><span class="n">G</span> <span class="n">Gigabit</span> <span class="n">Ethernet</span> <span class="n">Switch</span><span class="p">;</span><span class="n">Используется</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">4</span><span class="p">;</span><span class="mi">8</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Куйбышева</span><span class="p">;</span><span class="mi">95</span><span class="p">;</span>
+<span class="mi">6560</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Киренского</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span>
+<span class="mi">6552</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Свободный</span><span class="p">;</span><span class="mi">46</span><span class="p">;</span>
+<span class="mi">8762</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Дивногорск</span><span class="p">;</span><span class="n">Шоссейная</span><span class="p">;</span><span class="mi">1</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">6653</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Лесосибирск</span><span class="p">;</span><span class="n">Победы</span><span class="p">;</span><span class="mi">31</span><span class="n">б</span><span class="p">;</span>
+<span class="mi">6658</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">ст</span><span class="o">.</span><span class="n">Чунояр</span><span class="p">;</span><span class="n">Дом</span> <span class="n">связи</span><span class="p">;</span><span class="o">-</span><span class="p">;</span>
+<span class="mi">6719</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Кутузова</span><span class="p">;</span><span class="mi">74</span><span class="p">;</span>
+<span class="mi">9639</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">пос</span><span class="o">.</span><span class="n">Саянский</span><span class="p">;</span><span class="n">Школьная</span><span class="p">;</span><span class="mi">13</span><span class="p">;</span>
+<span class="mi">11025</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Свердловская</span><span class="p">;</span><span class="mi">59</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">8468</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">78</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">10446</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Мира</span><span class="p">;</span><span class="mi">156</span><span class="p">;</span>
+<span class="mi">11009</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Светлогорская</span><span class="p">;</span><span class="mi">27</span><span class="p">;</span>
+<span class="mi">9862</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Ачинск</span><span class="p">;</span><span class="mi">1</span><span class="o">-</span><span class="n">й</span> <span class="n">Микрорайон</span><span class="p">;</span><span class="mi">39</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">11986</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Северное</span> <span class="n">шоссе</span><span class="p">;</span><span class="mi">23</span><span class="n">д</span><span class="p">;</span>
+<span class="mi">6762</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Абакан</span><span class="p">;</span><span class="n">Пушкина</span><span class="p">;</span><span class="mi">78</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">6825</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Лесосибирск</span><span class="p">;</span><span class="n">Привокзальная</span><span class="p">;</span><span class="mi">59</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">6954</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Батурина</span><span class="p">;</span><span class="mi">10</span><span class="p">;</span>
+<span class="mi">7015</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Лесосибирск</span><span class="p">;</span><span class="n">Привокзальная</span><span class="p">;</span><span class="mi">59</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">8763</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Дивногорск</span><span class="p">;</span><span class="n">Заманская</span><span class="p">;</span><span class="n">подмостом</span><span class="p">;</span>
+<span class="mi">7019</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Лесосибирск</span><span class="p">;</span><span class="mi">5</span><span class="o">-</span><span class="n">й</span> <span class="n">Микрорайон</span><span class="p">;</span><span class="mi">6</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">7035</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Телевизорная</span><span class="p">;</span><span class="mi">1</span> <span class="n">стр</span> <span class="mi">1</span> <span class="n">к202</span><span class="p">;</span>
+<span class="mi">8766</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Сосновоборск</span><span class="p">;</span><span class="n">Ленинского</span> <span class="n">комсомола</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span>
+<span class="mi">11001</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Ачинск</span><span class="p">;</span><span class="mi">1</span><span class="o">-</span><span class="n">й</span> <span class="n">Микрорайон</span><span class="p">;</span><span class="mi">35</span><span class="p">;</span>
+<span class="mi">9863</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Ачинск</span><span class="p">;</span><span class="mi">3</span><span class="o">-</span><span class="n">й</span> <span class="n">Привокзальный</span><span class="p">;</span><span class="mi">14</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">10453</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Северное</span> <span class="n">шоссе</span><span class="p">;</span><span class="mi">23</span><span class="n">д</span><span class="p">;</span>
+<span class="mi">11472</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Киренского</span><span class="p">;</span><span class="mi">89</span><span class="p">;</span>
+<span class="mi">7187</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">пос</span><span class="o">.</span><span class="n">Кошурниково</span><span class="p">;</span><span class="n">Невского</span><span class="p">;</span><span class="mi">1</span><span class="p">;</span>
+<span class="mi">11382</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Светлогорская</span><span class="p">;</span><span class="mi">19</span><span class="p">;</span>
+<span class="mi">11887</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="n">Весны</span><span class="p">;</span><span class="mi">22</span><span class="p">;</span>
+<span class="mi">8764</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Железногорск</span><span class="p">;</span><span class="n">Школьная</span><span class="p">;</span><span class="mi">39</span><span class="n">а</span><span class="p">;</span>
+<span class="mi">11884</span><span class="p">;;;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="n">г</span><span class="o">.</span><span class="n">Красноярск</span><span class="p">;</span><span class="mi">9</span> <span class="n">Мая</span><span class="p">;</span><span class="mi">54</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="onyma">
+<span id="index-1"></span><h2><a class="toc-backref" href="#id34">Запросы к Onyma</a><a class="headerlink" href="#onyma" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="id8">
+<h3><a class="toc-backref" href="#id35">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata">http://10.6.0.22:8000/onyma/apidata</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -209,8 +389,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id6">
-<h3><a class="toc-backref" href="#id29">Тест</a><a class="headerlink" href="#id6" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id9">
+<h3><a class="toc-backref" href="#id36">Тест</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -232,8 +412,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id7">
-<h3><a class="toc-backref" href="#id30">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id7" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id10">
+<h3><a class="toc-backref" href="#id37">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -256,8 +436,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id8">
-<h3><a class="toc-backref" href="#id31">Получение справочника групп (городов)</a><a class="headerlink" href="#id8" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id11">
+<h3><a class="toc-backref" href="#id38">Получение справочника групп (городов)</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -285,8 +465,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id9">
-<h3><a class="toc-backref" href="#id32">Создание договора</a><a class="headerlink" href="#id9" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id12">
+<h3><a class="toc-backref" href="#id39">Создание договора</a><a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -311,8 +491,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id10">
-<h3><a class="toc-backref" href="#id33">Установка даты договора</a><a class="headerlink" href="#id10" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id13">
+<h3><a class="toc-backref" href="#id40">Установка даты договора</a><a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -331,8 +511,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id11">
-<h3><a class="toc-backref" href="#id34">Установка ФИО договора</a><a class="headerlink" href="#id11" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id14">
+<h3><a class="toc-backref" href="#id41">Установка ФИО договора</a><a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -353,8 +533,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id12">
-<h3><a class="toc-backref" href="#id35">Установка телефона договора</a><a class="headerlink" href="#id12" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id15">
+<h3><a class="toc-backref" href="#id42">Установка телефона договора</a><a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -373,8 +553,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id13">
-<h3><a class="toc-backref" href="#id36">Установка адреса договора 2</a><a class="headerlink" href="#id13" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id16">
+<h3><a class="toc-backref" href="#id43">Установка адреса договора 2</a><a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -396,8 +576,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id14">
-<h3><a class="toc-backref" href="#id37">Установка адреса договора</a><a class="headerlink" href="#id14" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id17">
+<h3><a class="toc-backref" href="#id44">Установка адреса договора</a><a class="headerlink" href="#id17" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -420,8 +600,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id15">
-<h3><a class="toc-backref" href="#id38">Установка номера договора</a><a class="headerlink" href="#id15" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id18">
+<h3><a class="toc-backref" href="#id45">Установка номера договора</a><a class="headerlink" href="#id18" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -440,8 +620,8 @@
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id16">
-<h3><a class="toc-backref" href="#id39">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a><a class="headerlink" href="#id16" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id19">
+<h3><a class="toc-backref" href="#id46">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a><a class="headerlink" href="#id19" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -467,7 +647,7 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div></blockquote>
 </div>
 <div class="section" id="id">
-<h3><a class="toc-backref" href="#id40">Получение id договора по номеру договора</a><a class="headerlink" href="#id" title="Ссылка на этот заголовок">¶</a></h3>
+<h3><a class="toc-backref" href="#id47">Получение id договора по номеру договора</a><a class="headerlink" href="#id" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -490,8 +670,8 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id17">
-<h3><a class="toc-backref" href="#id41">Получение id тарифного плана по его названию</a><a class="headerlink" href="#id17" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id20">
+<h3><a class="toc-backref" href="#id48">Получение id тарифного плана по его названию</a><a class="headerlink" href="#id20" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -520,8 +700,8 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id18">
-<h3><a class="toc-backref" href="#id42">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a><a class="headerlink" href="#id18" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id21">
+<h3><a class="toc-backref" href="#id49">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a><a class="headerlink" href="#id21" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -548,8 +728,8 @@ srv:&lt;Значение&gt;;start_date:&lt;Значение&gt;;login:&lt;Зн�
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="id19">
-<h3><a class="toc-backref" href="#id43">Получение списка доменов</a><a class="headerlink" href="#id19" title="Ссылка на этот заголовок">¶</a></h3>
+<div class="section" id="id22">
+<h3><a class="toc-backref" href="#id50">Получение списка доменов</a><a class="headerlink" href="#id22" title="Ссылка на этот заголовок">¶</a></h3>
 <p>url <a class="reference external" href="http://10.6.0.22:8000/onyma/apidata2">http://10.6.0.22:8000/onyma/apidata2</a></p>
 <p>Запрос <strong>GET</strong></p>
 <p>Параметры:</p>
@@ -615,23 +795,27 @@ domainid:&lt;id домена&gt;;domainidup:&lt;id родительского д
 <li><a class="reference internal" href="#mac-ip">Загрузка mac адресов клиентов и ip адресов и портов коммутаторов</a></li>
 <li><a class="reference internal" href="#id4">Вывод mac адресов клиентов по ip адресу коммутатора</a></li>
 <li><a class="reference internal" href="#mac-login-radius">Загрузка mac адресов клиентов и login-ов , полученных из логов radius авторизации</a></li>
+<li><a class="reference internal" href="#ip">Список устройств, связанных с ними сетевых элементов и ip адресов управления</a></li>
+<li><a class="reference internal" href="#id5">Список адресов (города, улицы, дома)</a></li>
+<li><a class="reference internal" href="#id6">Список сетевых элементов без ip адреса управления</a></li>
+<li><a class="reference internal" href="#id7">Список устройств без связанных сетевых элементов</a></li>
 <li><a class="reference internal" href="#onyma">Запросы к Onyma</a><ul>
-<li><a class="reference internal" href="#id5">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li><a class="reference internal" href="#id6">Тест</a></li>
-<li><a class="reference internal" href="#id7">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li><a class="reference internal" href="#id8">Получение справочника групп (городов)</a></li>
-<li><a class="reference internal" href="#id9">Создание договора</a></li>
-<li><a class="reference internal" href="#id10">Установка даты договора</a></li>
-<li><a class="reference internal" href="#id11">Установка ФИО договора</a></li>
-<li><a class="reference internal" href="#id12">Установка телефона договора</a></li>
-<li><a class="reference internal" href="#id13">Установка адреса договора 2</a></li>
-<li><a class="reference internal" href="#id14">Установка адреса договора</a></li>
-<li><a class="reference internal" href="#id15">Установка номера договора</a></li>
-<li><a class="reference internal" href="#id16">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li><a class="reference internal" href="#id8">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li><a class="reference internal" href="#id9">Тест</a></li>
+<li><a class="reference internal" href="#id10">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li><a class="reference internal" href="#id11">Получение справочника групп (городов)</a></li>
+<li><a class="reference internal" href="#id12">Создание договора</a></li>
+<li><a class="reference internal" href="#id13">Установка даты договора</a></li>
+<li><a class="reference internal" href="#id14">Установка ФИО договора</a></li>
+<li><a class="reference internal" href="#id15">Установка телефона договора</a></li>
+<li><a class="reference internal" href="#id16">Установка адреса договора 2</a></li>
+<li><a class="reference internal" href="#id17">Установка адреса договора</a></li>
+<li><a class="reference internal" href="#id18">Установка номера договора</a></li>
+<li><a class="reference internal" href="#id19">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
 <li><a class="reference internal" href="#id">Получение id договора по номеру договора</a></li>
-<li><a class="reference internal" href="#id17">Получение id тарифного плана по его названию</a></li>
-<li><a class="reference internal" href="#id18">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
-<li><a class="reference internal" href="#id19">Получение списка доменов</a></li>
+<li><a class="reference internal" href="#id20">Получение id тарифного плана по его названию</a></li>
+<li><a class="reference internal" href="#id21">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
+<li><a class="reference internal" href="#id22">Получение списка доменов</a></li>
 </ul>
 </li>
 </ul>
