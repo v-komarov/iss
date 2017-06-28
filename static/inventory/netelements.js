@@ -118,7 +118,7 @@ function EditNetElement(e) {
     // Сохранение id элемента
     var jqxhr = $.getJSON("/inventory/jsondata?savenetelem="+row_id,
     function(data) {
-        window.location.href = "/inventory/netelementdata/?elem="+row_id;
+        window.location.href = "/inventory/netelementdata/?netelemid="+row_id;
     })
 
 }

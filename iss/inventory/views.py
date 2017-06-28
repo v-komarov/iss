@@ -164,7 +164,7 @@ class NetElement(TemplateView):
         self.user = request.user
 
         if self.request.GET.has_key("elem"):
-            self.session["elem"] = self.request.GET["elem"]
+            self.session["netelemid"] = self.request.GET["netelemid"]
 
 
         return super(NetElement, self).dispatch(request, *args, **kwargs)
@@ -182,7 +182,7 @@ class NetElement(TemplateView):
 
         context["interface_prop_list"] = logical_interfaces_prop_list.objects.all()
 
-        context["elem"] = self.session["elem"]
+        context["elem"] = self.session["netelemid"]
         #elem = netelems.objects.get(pk=self.request["elem"])
 
         return context
