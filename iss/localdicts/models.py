@@ -70,7 +70,7 @@ class accident_group(models.Model):
 class accident_list(models.Model):
     name = models.CharField(max_length=100,verbose_name='Название аварии')
     name_short = models.CharField(max_length=10,verbose_name='Краткое название аварии')
-    accident_group = models.ForeignKey(accident_group, verbose_name='Группа аварии')
+    accident_group = models.ForeignKey(accident_group, verbose_name='Группа аварии',on_delete=models.PROTECT)
 
     def __unicode__(self):
         return self.name
@@ -85,7 +85,7 @@ class accident_list(models.Model):
 class accident_cats(models.Model):
     name = models.CharField(max_length=100,verbose_name='Название категории')
     cat = models.CharField(max_length=10,verbose_name='Номер категории')
-    accident = models.ForeignKey(accident_list, verbose_name='Аварии')
+    accident = models.ForeignKey(accident_list, verbose_name='Аварии',on_delete=models.PROTECT)
 
 
     def __unicode__(self):
@@ -161,6 +161,55 @@ class address_house(models.Model):
 
         return zkl
 
+
+    ### Проверка наличия и создание общего адреса для города и дома
+    def common_address(self):
+        result = []
+        city = self.city
+        street = self.street
+        if not address_house.objects.filter(city=city,street=None,house=None).exists():
+            address_house.objects.create(
+                city=city,
+                street=None,
+                house=None
+            )
+            result.append({
+                'action':'added',
+                'city':city.name,
+                'street':None,
+                'house':None
+            })
+        else:
+            result.append({
+                'action':'checked',
+                'city':city.name,
+                'street':None,
+                'house':None
+            })
+
+        if not address_house.objects.filter(city=city, street=street, house=None).exists():
+            address_house.objects.create(
+                city=city,
+                street=street,
+                house=None
+            )
+            result.append({
+                'action': 'added',
+                'city': city.name,
+                'street': street.name if street else None,
+                'house': None
+            })
+        else:
+            result.append({
+                'action': 'checked',
+                'city': city.name,
+                'street': street.name if street else None,
+                'house': None
+            })
+
+
+
+        return result
 
 
 

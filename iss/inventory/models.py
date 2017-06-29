@@ -47,14 +47,14 @@ class devices_scheme(models.Model):
 ### Все устройства
 class devices(models.Model):
     name = models.CharField(max_length=255,db_index=True,null=True)
-    company = models.ForeignKey(address_companies)
-    address = models.ForeignKey(address_house)
+    company = models.ForeignKey(address_companies,on_delete=models.PROTECT)
+    address = models.ForeignKey(address_house,on_delete=models.PROTECT)
     serial = models.CharField(max_length=100, db_index=True, default="")
     data = JSONField(default={})
-    device_scheme = models.ForeignKey(devices_scheme,null=True)
+    device_scheme = models.ForeignKey(devices_scheme,null=True,on_delete=models.PROTECT)
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
-    status = models.ForeignKey(device_status,null=True)
+    status = models.ForeignKey(device_status,null=True,on_delete=models.PROTECT)
     device_parent = models.ForeignKey('devices',default=None,null=True)
 
 
@@ -304,8 +304,8 @@ class devices(models.Model):
 
 ### Перемещение устройств
 class devices_removal(models.Model):
-    device = models.ForeignKey(devices)
-    address = models.ForeignKey(address_house)
+    device = models.ForeignKey(devices,on_delete=models.PROTECT)
+    address = models.ForeignKey(address_house,on_delete=models.PROTECT)
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
     comment = models.TextField(default="")
@@ -315,11 +315,11 @@ class devices_removal(models.Model):
 
 ### Статусы устройств
 class devices_statuses(models.Model):
-    device = models.ForeignKey(devices)
+    device = models.ForeignKey(devices,on_delete=models.PROTECT)
     author = models.CharField(max_length=100, default="")
     datetime_create = models.DateTimeField(auto_now_add=True, null=True)
     comment = models.TextField(default="")
-    status = models.ForeignKey(device_status, null=True)
+    status = models.ForeignKey(device_status, null=True, on_delete=models.PROTECT)
 
 
 
@@ -344,10 +344,10 @@ class devices_properties(models.Model):
 
 ### Порты на устройствах
 class devices_ports(models.Model):
-    device = models.ForeignKey(devices)
-    port = models.ForeignKey(ports)
+    device = models.ForeignKey(devices,on_delete=models.PROTECT)
+    port = models.ForeignKey(ports,on_delete=models.PROTECT)
     num = models.CharField(max_length=5,default="")
-    status = models.ForeignKey(port_status)
+    status = models.ForeignKey(port_status,on_delete=models.PROTECT)
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
     comment = models.CharField(max_length=255,default="")
@@ -377,10 +377,10 @@ class devices_ports(models.Model):
 
 ### Слоты на устройствах
 class devices_slots(models.Model):
-    device = models.ForeignKey(devices,related_name="device_link")
-    slot = models.ForeignKey(slots)
+    device = models.ForeignKey(devices,related_name="device_link",on_delete=models.PROTECT)
+    slot = models.ForeignKey(slots,on_delete=models.PROTECT)
     num = models.CharField(max_length=5,default="")
-    status = models.ForeignKey(slot_status)
+    status = models.ForeignKey(slot_status,on_delete=models.PROTECT)
     device_component = models.ForeignKey(devices,null=True,related_name="slots_link")
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
@@ -398,12 +398,12 @@ class devices_slots(models.Model):
 
 ### Для комбо
 class devices_combo(models.Model):
-    device = models.ForeignKey(devices)
-    slot = models.ForeignKey(slots)
-    port = models.ForeignKey(ports)
+    device = models.ForeignKey(devices,on_delete=models.PROTECT)
+    slot = models.ForeignKey(slots,on_delete=models.PROTECT)
+    port = models.ForeignKey(ports,on_delete=models.PROTECT)
     num = models.CharField(max_length=5,default="")
-    status_slot = models.ForeignKey(slot_status)
-    status_port = models.ForeignKey(port_status)
+    status_slot = models.ForeignKey(slot_status,on_delete=models.PROTECT)
+    status_port = models.ForeignKey(port_status,on_delete=models.PROTECT)
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
     comment = models.CharField(max_length=255,default="")
@@ -446,7 +446,7 @@ class netelems(models.Model):
 ### Логические интерфейсы
 class logical_interfaces(models.Model):
     name = models.CharField(max_length=100)
-    netelem = models.ForeignKey(netelems)
+    netelem = models.ForeignKey(netelems,on_delete=models.PROTECT)
     comment = models.CharField(max_length=200)
     ports = models.ManyToManyField(devices_ports)
 
@@ -512,7 +512,7 @@ class logical_interfaces(models.Model):
 
 ### Свойства логических интерфейсов
 class logical_interfaces_prop(models.Model):
-    logical_interface = models.ForeignKey(logical_interfaces)
-    prop = models.ForeignKey(logical_interfaces_prop_list)
+    logical_interface = models.ForeignKey(logical_interfaces,on_delete=models.PROTECT)
+    prop = models.ForeignKey(logical_interfaces_prop_list,on_delete=models.PROTECT)
     val = models.CharField(max_length=100,null=True)
     comment = models.CharField(max_length=200)

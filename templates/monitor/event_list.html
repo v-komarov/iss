@@ -71,14 +71,14 @@
             </div>
             <button id="runseverity" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
             <div class="form-group">
-                <label for="manager"><small>Manager</small></label>
-                <select selected_value='{{ selected_manager }}' id="manager" class="form-control input-sm" style="padding:0;width:200px;">
-                    {% for item in manager %}
+                <label for="source"><small>Источник</small></label>
+                <select selected_value='{{ selected_source }}' id="source" class="form-control input-sm" style="padding:0;width:200px;">
+                    {% for item in source %}
                         {{ item|safe }}
                     {% endfor %}
                 </select>
             </div>
-            <button id="runmanager" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
+            <button id="runsource" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-save" aria-hidden="true"></span></button>
             <div class="form-group">
                 <label for="search"><small>Search</small></label>
             <small>

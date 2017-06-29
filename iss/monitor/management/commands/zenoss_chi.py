@@ -39,7 +39,8 @@ logger = logging.getLogger('debugging')
 loggerjson = logging.getLogger('events')
 
 
-tz = 'Europe/Moscow'
+#tz = 'Europe/Moscow'
+tz = 'UTC'
 chi_tz = timezone(tz)
 
 

@@ -24,7 +24,7 @@ $(document).ready(function() {
 
     $("#runstatus").bind("click",FilterStatus);
     $("#runseverity").bind("click",FilterSeverity);
-    $("#runmanager").bind("click",FilterManager);
+    $("#runsource").bind("click",FilterSource);
     $("#filtergroup").bind("click",FilterGroup);
     $("#filteraccident").bind("click",FilterAccident);
     $("#filterhistory").bind("click",FilterHistory);
@@ -74,7 +74,7 @@ $(document).ready(function() {
 
 
     // Фильтр Менеджер
-    $("#manager").multiselect({
+    $("#source").multiselect({
         header:true,
         noneSelectedText:"Выбор источников",
         minWidth:150,
@@ -82,10 +82,10 @@ $(document).ready(function() {
         uncheckAllText:"Сбросить все",
         checkAllText:"Отметить все"
     });
-    $("#manager").multiselect("uncheckAll");
-    var manager = eval($("#manager").attr("selected_value"));
-    manager.forEach(function(item, i, arr) {
-        $("#manager").multiselect("widget").find(":checkbox[value='"+item+"']").click();
+    $("#source").multiselect("uncheckAll");
+    var source = eval($("#source").attr("selected_value"));
+    source.forEach(function(item, i, arr) {
+        $("#source").multiselect("widget").find(":checkbox[value='"+item+"']").click();
     });
     // Фильтр Менеджер конец
 
@@ -583,13 +583,13 @@ function FilterSeverity() {
 
 
 
-function FilterManager() {
+function FilterSource() {
 
-    var message = $("#manager").multiselect("getChecked").map(function(){
+    var message = $("#source").multiselect("getChecked").map(function(){
        return "'"+this.value+"'";
     }).get();
 
-    var jqxhr = $.getJSON("/monitor/events/jsondata?manager=["+message+"]",
+    var jqxhr = $.getJSON("/monitor/events/jsondata?source=["+message+"]",
         function(data) {
             window.location=$("#menumonitor a").attr("href");
         })

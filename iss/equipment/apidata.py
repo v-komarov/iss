@@ -19,6 +19,9 @@ from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log,
 from iss.localdicts.models import logical_interfaces_prop_list,address_house
 from iss.inventory.models import logical_interfaces_prop,logical_interfaces,devices,netelems
 
+from transliterate import translit
+from transliterate import detect_language
+
 
 
 prop = logical_interfaces_prop_list.objects.get(name='ipv4')
@@ -164,6 +167,25 @@ def get_apidata(request):
             else:
 
                 response_data = {'result': 'OK','comment':'found in cache'}
+
+
+
+        ### Проверка наличия общих адресов (city=None,street=None) и их создание
+        if r.has_key("action") and rg("action") == 'address_check':
+            response_data = []
+            for addr in address_house.objects.exclude(city=None).exclude(street=None).order_by("city__name","street__name","house"):
+                response_data.extend(addr.common_address())
+
+
+
+
+        ### Поиск кода города по названию на транслите
+        if r.has_key("action") and rg("action") == 'search_city_id' and rg("city_name") != '':
+            city_name = translit(request.GET["city_name"],"ru")
+
+            response_data = {'city_name':city_name}
+
+
 
 
     response = HttpResponse(json.dumps(response_data), content_type="application/json")

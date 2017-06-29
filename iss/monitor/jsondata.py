@@ -268,8 +268,9 @@ def get_json(request):
         if r.has_key("severity") and rg("severity") != '':
             request.session['severity_id'] = pickle.dumps(eval(request.GET["severity"]))
 
-        if r.has_key("manager") and rg("manager") != '':
-            request.session['manager'] = pickle.dumps(eval(request.GET["manager"]))
+        ### Сохранить список source
+        if r.has_key("source") and rg("cource") != '':
+            request.session['source'] = pickle.dumps(eval(request.GET["source"]))
 
         if r.has_key("first_seen"):
             request.session['first_seen'] = request.GET["first_seen"]

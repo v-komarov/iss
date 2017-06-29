@@ -42,6 +42,14 @@ from iss.localdicts.models import accident_cats,accident_list,email_templates
     Список manager сохраняем в кеше
 
 """
+### источники
+sources_dict = [
+    {'id':'zenoss_krsk','name':'Красноярск'},
+    {'id':'zenoss_irk', 'name': 'Иркутск'},
+    {'id': 'zenoss_chi', 'name': 'Чита'}
+]
+
+"""
 if cache.get("manager") == None:
     managers = []
     for m in events.objects.distinct('manager'):
@@ -51,7 +59,7 @@ if cache.get("manager") == None:
 
 else:
     managers = pickle.loads(cache.get("manager"))
-
+"""
 
 
 
@@ -165,11 +173,11 @@ class EventList(ListView):
                 q.append("("+" | ".join(qv)+")")
 
         # Фильтр по источникам
-        if self.session.has_key("manager"):
-            if pickle.loads(self.session["manager"]) != []:
+        if self.session.has_key("source"):
+            if pickle.loads(self.session["source"]) != []:
                 qm = []
-                for m in pickle.loads(self.session["manager"]):
-                    qm.append("Q(manager='%s')" % m)
+                for m in pickle.loads(self.session["source"]):
+                    qm.append("Q(source='%s')" % m)
                 q.append("("+" | ".join(qm)+")")
 
         # Поиск
@@ -285,19 +293,19 @@ class EventList(ListView):
             context['search'] = ""
 
 
-        # Manager
-        if self.session.has_key('manager'):
-            manager = pickle.loads(self.session['manager'])
+        # Source
+        if self.session.has_key('source'):
+            sources = pickle.loads(self.session['source'])
         else:
-            manager = []
+            sources = []
 
-        # Список manager
-        manager_list = []
-        for row in managers:
-            manager_list.append("<option value='%s'>%s</option>" % (row,row))
+        # Список источников
+        source_list = []
+        for row in sources_dict:
+            source_list.append("<option value='%s'>%s</option>" % (row['id'],row['name']))
 
-        context['manager'] = manager_list
-        context['selected_manager'] = manager
+        context['source'] = source_list
+        context['selected_source'] = sources
 
         context['members'] = 0
         if self.session.has_key('containergroup'):
