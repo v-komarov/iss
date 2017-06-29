@@ -82,6 +82,27 @@ $date = date("Y-m-d\T00:00:00.000\Z", time());
                 $resultarray[] = $resultarray0;
 
             }
+            // Пробуем искать по ip адресу (как логин)
+            else {
+
+            $result2 = $client->o_mdb_api_get_dog_get_dogid_by_prop(array(pprop=>(int)13866,pvalue=>(string)$login))->return;
+                if (property_exists($result2,'row')) {
+                if (is_array($result2->row)) {
+                    $dogid = end($result2->row)->column_value;
+                }
+                else {
+                    $dogid = $result2->row->column_value;
+                }
+                $data = $client->o_mdb_api_func_get_dogcode(array(pdogid=>(int)$dogid))->return;
+                $resultarray1['login'] = $login;
+                $resultarray1['dogid'] = $dogid;
+                $resultarray1['dogcode'] = $data;
+
+                $resultarray[] = $resultarray1;
+
+                }
+            }
+
         }
 
         print json_encode($resultarray);
