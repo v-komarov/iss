@@ -75,8 +75,8 @@ def get_audit_ports(request):
 
 
             response_data = response_data + u"{addr};{model};{status};{serial};{netelem};{manage};{ports};{ports_use};{ports_res};{ports_tech};{combo};{combo_use};{combo_res};{combo_tech};\n".format(
-                addr=d.getaddress(),model=d.device_scheme.name,status=d.status,serial=d.serial,netelem=" ".join(netelems),
-                manage=d.get_manage_ip(),ports=d.get_ports_count(),ports_use=d.get_use_ports(),ports_res=d.get_reserv_ports(),
+                addr=d.getaddress(),model=d.device_scheme.name if d.device_scheme else "",status=d.status,serial=d.serial,netelem=" ".join(netelems),
+                manage=" ".join(d.get_manage_ip()),ports=d.get_ports_count(),ports_use=d.get_use_ports(),ports_res=d.get_reserv_ports(),
                 ports_tech=d.get_tech_ports(),combo=d.get_combo_count(),combo_use=d.get_use_combo(),combo_res=d.get_reserv_combo(),
                 combo_tech=d.get_tech_combo()
             )

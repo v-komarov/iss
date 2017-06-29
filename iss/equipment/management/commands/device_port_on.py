@@ -79,7 +79,7 @@ class Command(BaseCommand):
                                 if client_login_log.objects.filter(macaddress=mac).exclude(onyma_dogid=0).exists():
 
                                     dogcode = client_login_log.objects.filter(macaddress=mac).exclude(onyma_dogid=0).first().onyma_dogcode
-                                    print dogcode
+                                    #print dogcode
 
                                     ### Проверка - существует ли уже такой договор на этом логическом интерфейсе
                                     li = ne.logical_interfaces_set.all().filter(name=port.num).first()
@@ -93,7 +93,7 @@ class Command(BaseCommand):
                                             comment = "was added by robot"
                                         )
 
-                                        print u"Добавлен договор %s" % dogcode
+                                        #print u"Добавлен договор %s" % dogcode
                                 else:
                                     logger.info(
                                         "Не найден номер договора сетевого элемента {ne} , ip адрес {ip}, port {port}, mac {mac}".format(
