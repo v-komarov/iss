@@ -4,7 +4,7 @@
 from django.conf.urls import url
 from iss.inventory.views import DeviceSchemeList,NetElementsList,NetElement,DevicesList,Device,DevicesAuditPorts
 from iss.inventory.jsondata import get_json
-from iss.inventory.filedata import get_device_scheme
+from iss.inventory.filedata import get_device_scheme,get_audit_ports
 
 
 
@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'devicedata/$', Device.as_view()),
     url(r'jsondata/$', get_json),
     url(r'scheme_device/$', get_device_scheme),
+    url(r'audit_ports/$', get_audit_ports),
 ]
