@@ -18,6 +18,8 @@
           <li class="divider"></li>
           <li id="menuaccidents" {% if request.path|slice:'0:19' == "/monitor/accidents/" %}class="active"{% endif %}><a href="/monitor/accidents/page/1/">Аварии</a></li>
           <li id="menuemailaccidents" {% if request.path|slice:'0:18' == "/monitor/messages/" %}class="active"{% endif %}><a href="/monitor/messages/page/1/">Оповещения</a></li>
+          <li class="divider"></li>
+          <li id="menuzkl" {% if request.path|slice:'0:13' == "/monitor/zkl/" %}class="active"{% endif %}><a href="/monitor/zkl/">ЗКЛ</a></li>
         </ul>
       </li>
       <li class="dropdown">

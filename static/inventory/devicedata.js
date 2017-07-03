@@ -130,7 +130,7 @@ function ChangeNav(e) {
 function ShowDeviceData() {
     var jqxhr = $.getJSON("/inventory/jsondata?action=getdevicedata",
     function(data) {
-        console.log(data);
+        //console.log(data);
         if (data["result"] != "error") {
 
             $("#device_serial").text(data["result"]["serial"]);

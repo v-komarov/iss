@@ -13,7 +13,7 @@ thead.small > tr > th {
     vertical-align: top;
 }
 
-table[group=audit] > tbody > tr.small > td {
+table[group=devices-zkl] > tbody > tr > td {
     padding:0;
 }
 
@@ -23,23 +23,27 @@ table[group=audit] > tbody > tr.small > td {
 
 
 /* Курсор */
-table[group=audit] > tbody > tr > td > a[device],
-table[group=audit] > tbody > tr > td > a[netelem] {
+table[group=devices-zkl] > tbody > tr > td > a[device],
+table[group=devices-zkl] > tbody > tr > td > a[netelem] {
     cursor:pointer;
 }
 
 
 /* Для всех ссылок*/
-table[group=audit] > tbody > tr > td > a {
+table[group=devices-zkl] > tbody > tr > td > a {
     text-decoration:none;
 }
 
-table[group=audit] > tbody > tr > td > a:hover {
+table[group=devices-zkl] > tbody > tr > td > a:hover {
     text-decoration:none;
 }
-
 
 /* Отступить от меню */
-#page-audit {
+#page-zkl {
     margin-top:30px;
+}
+
+/* Дистанция между группами ввода */
+#getaddress,#getip {
+    margin-right: 20px;
 }

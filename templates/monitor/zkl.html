@@ -1,0 +1,89 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}monitor/zkl.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/devicezkl.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div id="page-zkl" class="row">
+
+            <div class="form-group">
+
+                <label for="address"><small>Адрес</small></label>
+                <small>
+                    <input type="text" style="height:28px;padding-left:2px;" id="address" value="" placeholder="">
+                    <button id="getaddress" title="Добавить адрес" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                </small>
+                <label for="ipaddress"><small>IP</small></label>
+                <small>
+                    <input type="text" style="height:28px;padding-left:2px;" id="ipaddress" value="" placeholder="">
+                    <button id="getip" title="Добавить IP" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                </small>
+                <small>
+                    <button id="clear" title="Очистить" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                </small>
+            </div>
+
+</div>
+
+
+
+<div class="row">
+
+
+    <table group="devices-zkl" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Адрес</th>
+                <th>Модель</th>
+                <th>Серийный номер</th>
+                <th>Сетевые элементы</th>
+                <th>Управление</th>
+                <th>Порты</th>
+                <th>Порты<br>исп.</th>
+                <th>Порты<br>резерв</th>
+                <th>Порты<br>техн.</th>
+                <th>Комбо</th>
+                <th>Комбо<br>исп.</th>
+                <th>Комбо<br>резерв</th>
+                <th>Комбо<br>техн.</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+
+        </tbody>
+
+
+
+    </table>
+
+
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+

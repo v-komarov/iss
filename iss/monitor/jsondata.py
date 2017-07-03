@@ -23,11 +23,11 @@ from django import template
 
 
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,address_templates,logical_interfaces_prop_list
+from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,address_templates,logical_interfaces_prop_list,device_status
 
 from iss.monitor.othersources import get_zkl
 from iss.monitor.models import Profile,messages
-from iss.equipment.models import devices_ip
+#from iss.equipment.models import devices_ip
 from iss.inventory.models import devices,logical_interfaces_prop
 
 
@@ -43,7 +43,7 @@ logger = logging.getLogger('monitor')
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
-
+dev_use = device_status.objects.get(name="Используется")
 prop = logical_interfaces_prop_list.objects.get(name='ipv4')
 
 ### Чередование полей по умолчанию
@@ -479,7 +479,7 @@ def get_json(request):
             term = request.GET["term"]
             obj = []
 
-            t = term.split(" ")
+            t = term.split(",")
             if len(t) == 1:
                 t1 = t[0]
                 data = address_house.objects.filter(Q(house=None) & Q(city__name__icontains=t1) & Q(street=None))
@@ -505,9 +505,9 @@ def get_json(request):
             for item in data:
 
                 if item.city != None and item.street != None and item.house != None:
-                    label = item.city.name+" "+item.street.name+" "+item.house
+                    label = item.city.name+","+item.street.name+","+item.house
                 elif item.city != None and item.street != None:
-                    label = item.city.name+" "+item.street.name
+                    label = item.city.name+","+item.street.name
                 elif item.city != None:
                     label = item.city.name
                 else:
@@ -985,6 +985,121 @@ def get_json(request):
             response_data["accident_name"] = acc.acc_name
             response_data["file_list"] = file_list
             response_data["mess_list"] = mess_list
+
+
+
+        ### Установка id адреса устройств для интерфейса ЗКЛ
+        if r.has_key("action") and r["action"] == "set_zkl_address" and r.has_key("address_id") and r["address_id"] != "":
+            address_id = int(request.GET["address_id"], 10)
+            addr = address_house.objects.get(pk=address_id)
+            dev_list = []
+            ### Когда определен только город
+            if addr.city and addr.street == None and addr.house == None:
+                for dev in devices.objects.filter(address__city = addr.city,status=dev_use):
+                    if dev.id not in dev_list:
+                        dev_list.append(dev.id)
+
+            ### Когда определен город и улица
+            elif addr.city and addr.street and addr.house == None:
+                for dev in devices.objects.filter(address__city = addr.city,address__street = addr.street,status=dev_use):
+                    if dev.id not in dev_list:
+                        dev_list.append(dev.id)
+
+
+            ### Когда определены город, улица, дом
+            elif addr.city and addr.street and addr.house:
+                for dev in devices.objects.filter(address__city=addr.city, address__street=addr.street, address__house=addr.house,status=dev_use):
+                    if dev.id not in dev_list:
+                        dev_list.append(dev.id)
+
+
+
+            if request.session.has_key("device_zkl_list"):
+                devs = pickle.loads(request.session["device_zkl_list"])
+                for i in dev_list:
+                    if i not in devs:
+                        devs.append(i)
+                request.session["device_zkl_list"] = pickle.dumps(devs)
+            else:
+                request.session["device_zkl_list"] = pickle.dumps(dev_list)
+
+            response_data = {"result":"OK"}
+
+
+
+
+
+        ### Установка ip адреса устройств для интерфейса ЗКЛ через определение и добавление id адресов устройств
+        if r.has_key("action") and r["action"] == "set_zkl_ip" and r.has_key("ip") and r["ip"] != "":
+            ip = request.GET["ip"]
+            dev_list = []
+            ### Поиск оборудования с управлением по этому ip
+            if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+                p = logical_interfaces_prop.objects.get(prop=prop, val=ip)
+                #### Определение серевого элемента
+                ne = p.logical_interface.netelem
+                dev_list = []
+                ### Поиск связанного устройства
+                for dev in ne.device.filter(status=dev_use):
+                    dev_list.append(dev.id)
+
+                if request.session.has_key("device_zkl_list"):
+                    devs = pickle.loads(request.session["device_zkl_list"])
+                    for i in dev_list:
+                        if i not in devs:
+                            devs.append(i)
+                    request.session["device_zkl_list"] = pickle.dumps(devs)
+                else:
+                    request.session["device_zkl_list"] = pickle.dumps(dev_list)
+
+            response_data = {"result":"OK"}
+
+
+
+
+        ### Список устройств для интерфейса ЗКЛ
+        if r.has_key("action") and r["action"] == "get_zkl_devices":
+            q_str = []
+            for q in pickle.loads(request.session["device_zkl_list"]):
+                q_str.append("Q(id=%s)" % q)
+
+            result = []
+            str_sql = "devices.objects.filter(%s).order_by('address__street__name','address__house')" % " | ".join(q_str)
+            for d in eval(str_sql):
+                ne = []
+                for n in d.get_netelems():
+                    ne.append(n["name"])
+                result.append({
+                    "device_address": d.getaddress(),
+                    "device_model": d.device_scheme.name,
+                    "device_serial": d.serial,
+                    "device_netelems": " ".join(ne),
+                    "device_ip": " ".join(d.get_manage_ip()),
+                    "device_ports": d.get_ports_count(),
+                    "device_use_ports": d.get_use_ports(),
+                    "device_tech_ports": d.get_tech_ports(),
+                    "device_reserv_ports": d.get_reserv_ports(),
+                    "device_use_combo": d.get_use_combo(),
+                    "device_tech_combo": d.get_tech_combo(),
+                    "device_reserv_combo": d.get_reserv_combo(),
+                    "device_combo": d.get_combo_count()
+
+                })
+
+
+
+            print result
+
+            response_data = result
+
+
+
+
+
+
+        #### Очистить список устройств интерфейса ЗКЛ
+        if r.has_key("action") and r["action"] == "clear_zkl_devices":
+            request.session["device_zkl_list"] = pickle.dumps([])
 
 
 
