@@ -45,7 +45,7 @@ krsk_tz = timezone(tz)
 
 
 ### Дата появления поля finished_date 30.01.2017
-fd = datetime.datetime.strptime("2017-01-30","%Y-%m-%d").replace(tzinfo=krsk_tz)
+#fd = datetime.datetime.strptime("2017-01-30","%Y-%m-%d").replace(tzinfo=krsk_tz)
 
 
 
@@ -85,7 +85,7 @@ class Command(BaseCommand):
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
+        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
         #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
         print cmd
 
@@ -258,8 +258,8 @@ class Command(BaseCommand):
                             Обновление открытых аварийных событий
                         """
                     else:
-                        events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, datetime_evt__gt=fd, source='zenoss_krsk').update(
-                            first_seen=firsttime,
+                        events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, source='zenoss_krsk').update(
+                                first_seen=firsttime,
                             update_time=update_time,
                             last_seen=lasttime,
                             severity_id=severity,

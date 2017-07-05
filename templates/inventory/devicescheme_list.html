@@ -57,6 +57,7 @@
         <thead class="small">
 
             <tr style="background-color:gainsboro;">
+                <th>Техн. id</th>
                 <th>Название</th>
                 <th>model_name</th>
                 <th>properties</th>
@@ -81,7 +82,7 @@
 
                     <tr class="small" marked="no" row_id="{{ row.id }}">
 
-
+                        <td><a>{{ row.id }}</a></td>
                         <td><a>{{ row.name }}</a></td>
                         <td><a>{{ row.scheme_device.model_name }}</a></td>
                         <td><a>{{ row.scheme_device.properties }}</a></td>

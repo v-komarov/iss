@@ -713,8 +713,6 @@ def get_json(request):
                         houses.append(dev.address.id)
 
 
-
-
                 ### Дополнение из адресов , введеннх операторов
                 for addrid in acc.acc_address["address_list"]:
                     if int(addrid["addressid"],10) not in houses:
@@ -731,12 +729,15 @@ def get_json(request):
                 strsql = "address_house.objects.filter(%s)" % (" | ".join(q))
                 data = eval(strsql)
 
+
                 cities = []
                 cityname = []
                 for i in data:
                     if i.city.id not in cities:
                         cities.append(i.city.id)
                         cityname.append(i.city.name)
+
+
 
                 addr = []
                 for i in data:
@@ -751,12 +752,13 @@ def get_json(request):
 
 
 
+
                 for city,street_house in itertools.groupby(addr,key=lambda x:x['city']):
                     address_list = address_list + "," + str(city) + ","
-                    for street,houses in itertools.groupby(list(street_house),key=lambda y:y['street']):
+                    for street,house in itertools.groupby(list(street_house),key=lambda y:y['street']):
                         hl = ""
 
-                        for h in list(houses):
+                        for h in list(house):
                             a = "%s" % h["house"]
                             hl = hl + a + ","
                         address_list = address_list + str(street) + ",%s" % hl.encode("utf-8") + ";"
@@ -765,8 +767,9 @@ def get_json(request):
 
                 ### Рсчет ЗКЛ на основе списка id адресов
                 zkl = 0
-                for addr in houses:
-                    a = address_house.objects.get(pk=addr)
+
+                for ad in houses:
+                    a = address_house.objects.get(pk=ad)
                     zkl = zkl + a.get_zkl()
 
 
@@ -1088,7 +1091,7 @@ def get_json(request):
 
 
 
-            print result
+            #print result
 
             response_data = result
 
