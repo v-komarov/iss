@@ -178,13 +178,13 @@ def get_apidata(request):
 
 
 
-
+        """
         ### Поиск кода города по названию на транслите
         if r.has_key("action") and rg("action") == 'search_city_id' and rg("city_name") != '':
             city_name = translit(request.GET["city_name"],"ru")
 
             response_data = {'city_name':city_name}
-
+        """
 
 
 

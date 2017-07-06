@@ -32,10 +32,10 @@ class Command(BaseCommand):
         ftp = FTP('10.6.0.88')
         ftp.login()
         ftp.cwd('pub')
-        ftp.retrbinary("RETR krsk.csv", open("/tmp/krsk.csv", 'wb').write)
+        ftp.retrbinary("RETR data.csv", open("/tmp/data.csv", 'wb').write)
         ftp.quit()
 
-        with open('/tmp/krsk.csv') as csvfile:
+        with open('/tmp/data.csv') as csvfile:
             spamreader = csv.reader(csvfile,delimiter=";")
             #next(spamreader, None)
             for row in spamreader:

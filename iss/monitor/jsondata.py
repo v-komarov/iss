@@ -69,8 +69,7 @@ head_order = [
 
 
 ### Формирование словаря адресов аварии
-def accident_dict(acc_id):
-    acc = accidents.objects.get(pk=acc_id)
+def accident_dict(acc):
     data = {}
     data["comment"] = acc.acc_address_comment
 
@@ -87,20 +86,13 @@ def accident_dict(acc_id):
     for item in acc.acc_address["address_list"]:
         addr = address_house.objects.get(pk=item["addressid"])
         ### Может город и улица в адресе отсутствовать . Про город - маловероятно
-        if addr.city:
-            city = addr.city.name
-        else:
-            city = ''
-        if addr.street:
-            street = addr.street.name
-        else:
-            street = ''
-        if addr.house:
-            house = addr.house
-        else:
-            house = ""
+        city = addr.city.name if addr.city else ""
+        street = addr.street.name if addr.street else ""
+        house = addr.house if addr.house else ""
+
         address_list.append(
             {
+                'address_id': addr.id,
                 'city' : city,
                 'street' : street,
                 'house' : house
@@ -108,60 +100,24 @@ def accident_dict(acc_id):
         )
 
 
-    ip = acc.acc_event.device_net_address
-    if devices.objects.filter(data__domen="zenoss_krsk",data__ipaddress=ip).count() == 1:
-        d = devices.objects.get(data__domen="zenoss_krsk", data__ipaddress=ip)
-        ### Может город и улица в адресе отсутствовать . Про город - маловероятно
-        if d.address.city:
-            city = d.address.city.name
-        else:
-            city = ''
-        if d.address.street:
-            street = d.address.street.name
-        else:
-            street = ''
-        if d.address.house:
-            house = d.address.house
-        else:
-            house = ""
-
-        ## Флаг showitem
-        if d.address.id in showitemno:
-            showitem = "no"
-        else:
-            showitem = "yes"
-
-        address_list.append(
-            {
-                'city' : city,
-                'street' : street,
-                'house' : d.address.house,
-                'system' : acc.acc_event.device_system,
-                'showitem' : showitem
-            }
-        )
 
 
     ### Для адресов, вычисляемых на основе событий - ip адресов
-    if acc.acc_event.data.has_key("containergroup") and acc.acc_event.agregator == True:
-        for item in acc.acc_event.data["containergroup"]:
-            e = events.objects.get(pk=item)
-            ip = e.device_net_address
-            if devices.objects.filter(data__domen="zenoss_krsk", data__ipaddress=ip).count() == 1:
-                d = devices.objects.get(data__domen="zenoss_krsk", data__ipaddress=ip)
+    for ip in acc.get_event_ip_list():
+
+        ### Поиск по ip адресу на интерфейсе manager
+        if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+            p = logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').first()
+            #### Определение серевого элемента
+            ne = p.logical_interface.netelem
+
+            ### Поиск связанных устройств
+            for d in ne.device.all():
+
                 ### Может город и улица в адресе отсутствовать . Про город - маловероятно
-                if d.address.city:
-                    city = d.address.city.name
-                else:
-                    city = ''
-                if d.address.street:
-                    street = d.address.street.name
-                else:
-                    street = ''
-                if d.address.house:
-                    house = d.address.house
-                else:
-                    house = ""
+                city = d.address.city.name if d.address.city else ""
+                street = d.address.street.name if d.address.street else ""
+                house = d.address.house if d.address.house else ""
 
                 ## Флаг showitem
                 if d.address.id in showitemno:
@@ -171,10 +127,10 @@ def accident_dict(acc_id):
 
                 address_list.append(
                     {
+                        'address_id': d.address.id,
                         'city': city,
                         'street': street,
                         'house': house,
-                        'system': e.device_system,
                         'showitem': showitem
                     }
                 )
@@ -1293,7 +1249,7 @@ def get_json(request):
             e.save()
 
             ### Формирование словаря адресов
-            a.acc_addr_dict = {'address_list' : accident_dict(a.id)}
+            a.acc_addr_dict = {'address_list' : accident_dict(a)}
             a.save()
 
             logger.info("{user}    создал аварию id:{acc_id} name:{name}".format(user=request.user.get_username(),acc_id=a.id,name=a.acc_name))
@@ -1363,7 +1319,7 @@ def get_json(request):
             acc.acc_address_devices = data2
             acc.acc_address_comment = accaddrcomment
 
-            acc.acc_addr_dict = {'address_list' : accident_dict(acc.id)}
+            acc.acc_addr_dict = {'address_list' : accident_dict(acc)}
 
             acc.acc_events_list = {'events_list':events_list}
 
@@ -1504,7 +1460,7 @@ def get_json(request):
             acc.acc_address_devices = data2
             acc.acc_address_comment = accaddrcomment
 
-            acc.acc_addr_dict = {'address_list' : accident_dict(acc_id)}
+            acc.acc_addr_dict = {'address_list' : accident_dict(acc)}
 
             acc.acc_events_list = {'events_list':events_list}
 

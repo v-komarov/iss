@@ -64,6 +64,8 @@ class events(models.Model):
 
 
 
+
+
 ### Исторические события
 class events_history(models.Model):
     events_id = models.CharField(max_length=255, default=uuid.uuid4, db_index=True)
@@ -125,6 +127,18 @@ class accidents(models.Model):
     author = models.CharField(max_length=100,default="")
 
 
+    ### Список ip адресов , связанных с этой аварией
+    def get_event_ip_list(self):
+        ip_list = [self.acc_event.device_net_address]
+        ### Определение наличие группировки событий
+        if self.acc_event.data.has_key("containergroup") and self.acc_event.agregator == True:
+            ### По каждому событию в группировке поиск ip адреса
+            for item in self.acc_event.data["containergroup"]:
+                e = events.objects.get(pk=item)
+                ip_list.append(e.device_net_address)
+
+
+        return ip_list
 
 
 

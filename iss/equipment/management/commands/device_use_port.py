@@ -44,7 +44,7 @@ class Command(BaseCommand):
         Отметка пользовательских портов
 
         """
-        with open('iss/equipment/csv/unt.csv') as csvfile:
+        with open('iss/equipment/csv/unt-irk.csv') as csvfile:
             spamreader = csv.reader(csvfile,delimiter=";")
             #next(spamreader, None)
             for row in spamreader:

@@ -132,14 +132,15 @@ class address_street(models.Model):
 
 class address_house(models.Model):
     iss_address_id = models.IntegerField(null=True,verbose_name='ИСС код')
-    city = models.ForeignKey(address_city, verbose_name='Город', on_delete=models.PROTECT)
-    street = models.ForeignKey(address_street, verbose_name='Улица', null=True, on_delete=models.PROTECT)
-    house = models.CharField(max_length=100, verbose_name='Дом', null=True)
+    city = models.ForeignKey(address_city, verbose_name='Город', on_delete=models.PROTECT,db_index=True)
+    street = models.ForeignKey(address_street, verbose_name='Улица', null=True, on_delete=models.PROTECT,db_index=True)
+    house = models.CharField(max_length=100, verbose_name='Дом', null=True,db_index=True)
+    geo = JSONField(default={"result": "empty"},db_index=True)  # для хранения и обработки ГЕО даных
 
 
     def __unicode__(self):
 
-        return self.name
+        return self.house
 
 
 
