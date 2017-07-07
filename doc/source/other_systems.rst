@@ -251,5 +251,4 @@ device_tech_port
 -------------------------
 
 
-Загрузка даных в таблицу модели **client_mac_address**
-:ref:`api-client-mac-log`:
+Загрузка даных в таблицу модели **client_mac_log** чере api :ref:`api-client-mac-log`
