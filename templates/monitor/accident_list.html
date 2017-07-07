@@ -68,6 +68,7 @@
         <thead class="small">
 
             <tr style="background-color:gainsboro;">
+                <th>id</th>
                 <th>ДРП</th>
                 <th><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></th>
                 <th>Начало аварии</th>
@@ -94,6 +95,7 @@
 
                     <tr class="small" marked="no" row_id="{{ row.id }}">
 
+                        <td>{{ row.id }}</td>
                         <td><a href="#" drp="yes" title="Показать список ДПР"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> &nbsp; {{ row.drp_list_set.count }}</a></td>
                         <td>{{ row.messages_set.count }}</td>
 

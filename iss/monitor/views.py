@@ -526,6 +526,7 @@ class Zkl(TemplateView):
 
         #if self.request.GET.has_key("dev"):
         #    self.session["dev"] = self.request.GET["dev"]
+        request.session["device_zkl_list"] = pickle.dumps([])
 
 
         return super(Zkl, self).dispatch(request, *args, **kwargs)
