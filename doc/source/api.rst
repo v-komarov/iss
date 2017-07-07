@@ -84,6 +84,7 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&ipaddress=55
 
 
 
+.. _api-client-mac-log:
 Загрузка mac адресов клиентов и ip адресов и портов коммутаторов
 ----------------------------------------------------------------
 http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&ipaddress=192.168.0.111&macaddress=ad00-2187-3400&port=21

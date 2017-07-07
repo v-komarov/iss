@@ -40,6 +40,26 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_lldpdata
 ports - список портов , mac адресов "соседей".
 
 
+Проверка и создание общих адресов (только город или только город + улица)
+-------------------------------------------------------------------------
+http://10.6.0.22:8000/equipment/devices/apidata/?action=address_check
+
+Запрос **GET**
+
+Параметры:
+
+#. action=address_check
+
+
+Формат вывода json
+
+Пример вывода
+
+ ::
+
+    [{"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": "\u041b\u0435\u043d\u0438\u043d\u0430", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": "\u041b\u0435\u043d\u0438\u043d\u0430", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}
+
+
 
 Проверка списка ЗКЛ
 -------------------
@@ -64,6 +84,7 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&ipaddress=55
 
 
 
+.. _api-client-mac-log:
 Загрузка mac адресов клиентов и ip адресов и портов коммутаторов
 ----------------------------------------------------------------
 http://10.6.0.22:8000/equipment/devices/apidata/?action=push_client_mac&ipaddress=192.168.0.111&macaddress=ad00-2187-3400&port=21

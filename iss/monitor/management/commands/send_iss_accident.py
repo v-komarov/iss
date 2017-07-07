@@ -5,9 +5,11 @@ import urllib,urllib2
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connections
 from django.db.models import Q
+from django import template
+
 
 from iss.monitor.models import events,accidents
-from iss.localdicts.models import address_house
+from iss.localdicts.models import address_house,address_templates
 from iss.equipment.models import devices_ip
 from iss.inventory.models import devices
 
@@ -43,106 +45,26 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         ### Выбор аварий без acc_iss_id
-        for ac in accidents.objects.filter(acc_iss_id=None):
-            ev = ac.acc_event
+        for ac in accidents.objects.filter(pk=115):
 
-            domen = ev.source
+        #        for ac in accidents.objects.filter(acc_iss_id=None):
+            ip_list = ac.get_event_ip_list()
 
+            addrjson = ac.acc_addr_dict["address_list"]
 
-            ipaddress = [ev.device_net_address]
-            if ev.data.has_key("containergroup"):
-                for item in ev.data["containergroup"]:
-                    a = events.objects.get(pk=item)
-                    ipaddress.append(a.device_net_address)
-
-            iddevices = []
-            ### Поиск соответствия ip адресу id для iss
-            for ip in ipaddress:
-                if devices_ip.objects.filter(ipaddress=ip,device_domen="zenoss_krsk").count() == 1:
-                    d = devices_ip.objects.get(ipaddress=ip,device_domen="zenoss_krsk")
-                    if d.data.has_key("iss_id_device"):
-                        iddevices.append("%s" % d.data["iss_id_device"])
-
-
-            houses = []
-            #### Сбор id адресов
-            #### Поиск устройств по ip адресам
-            for ip in ipaddress:
-                if devices.objects.filter(data__ipaddress=ip,data__domen=domen).count() == 1:
-                    ### Найден коммутатор в базе инвентори
-                    dev = devices.objects.get(data__ipaddress=ip,data__domen=domen)
-                    if dev.address.house not in houses:
-                        houses.append(dev.address.id)
-
-
-
-
-
-            ### Дополнение из адресов , введеннх операторов
-            for addrid in ac.acc_address["address_list"]:
-                if int(addrid["addressid"],10) not in houses:
-                    houses.append(int(addrid["addressid"],10))
-
-
-
-            address_list = ""
-            ### Формирование адресной строки
-            q = []
-            for addr in houses:
-                q.append("Q(id=%s)" % addr)
-
-            strsql = "address_house.objects.filter(%s)" % (" | ".join(q))
-            data = eval(strsql)
-
+            ### Формирование списка городов
             cities = []
-            cityname = []
-            for i in data:
-                if i.city.id not in cities:
-                    cities.append(i.city.id)
-                    cityname.append(i.city.name)
+            for item in addrjson["address_list"]:
+                if item["city"].encode("cp1251") not in cities:
+                    cities.append(item["city"].encode("cp1251"))
 
-            addr = []
-            for i in data:
-                addr.append(
-                    {
-                        'city':i.city,
-                        'street':i.street,
-                        'house':i.house
-                    }
+            templ = address_templates.objects.get(name="accidentname").template
+            t = template.Template(templ)
+            c = template.Context({'data': addrjson["address_list"]})
+            address_list = t.render(c)
 
-                )
-
-
-
-
-            for city,street_house in itertools.groupby(addr,key=lambda x:x['city']):
-                #address_list = address_list + "," + str(city) + ","
-                for street,houses in itertools.groupby(list(street_house),key=lambda y:y['street']):
-                    hl = ""
-                    for h in list(houses):
-                        a = "%s" % h["house"]
-                        hl = hl + a + ","
-                    address_list = address_list + str(city) +","+ str(street) + ",%s" % hl.encode("utf-8") + ";"
-
-
-            address_list = address_list.replace(",;",";").replace("None","").replace(",,;",";")[:-1]
-            # accname, acctype, acccat, acccomment, deviceidlist, addresslist, citynamelist
             #
             #
-            """
-            values = {
-                'type_query':'create_work',
-                'date':ac.acc_start.astimezone(krsk_tz).strftime('%d.%m.%Y %H:%M'),
-                'iss2_id':ac.id,
-                'day':day,
-                'accname':ac.acc_name,
-                'acctypecat' : "%s,%s" % (ac.acc_type.name_short,ac.acc_cat.cat),
-                'acccomment' : ac.acc_comment,
-                'deviceidlist' : ",".join(iddevices),
-                'citynamelist' : ",".join(cityname),
-                'addresslist' : address_list.decode("utf-8")
-            }
-            """
 
             value = ""
             value = value + "type_query(%s)create_work[%s]" % (day,day)
@@ -151,14 +73,13 @@ class Command(BaseCommand):
             value = value + "accname(%s)%s[%s]" % (day,ac.acc_name.encode("cp1251"),day)
             value = value + "acctypecat(%s)%s,%s[%s]" % (day,ac.acc_type.name_short.encode("cp1251"),ac.acc_cat.cat.encode("cp1251"),day)
             value = value + "acccomment(%s)%s[%s]" % (day,ac.acc_comment.encode("cp1251"),day)
-            value = value + "deviceidlist(%s)%s[%s]" % (day,",".join(iddevices),day)
-            value = value + "citynamelist(%s)%s[%s]" % (day,",".join(cityname).encode("cp1251"),day)
+            value = value + "iplist(%s)%s[%s]" % (day,",".join(map(lambda ip: ip.encode("cp1251"),ip_list)), day)
+            value = value + "citynamelist(%s)%s[%s]" % (day,",".join(cities),day)
             value = value + "addresslist(%s)%s[%s]" % (day,address_list.decode("utf-8").encode("cp1251"),day)
             value = value + "reason(%s)%s" % (day,ac.acc_reason.encode("cp1251"))
 
 
-
-            #data = json.dumps(values)
+            #print value
 
             req = urllib2.Request(url='http://10.6.3.77:8080/departs/rcu/works/create_work_mss_post.php',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
             f = urllib2.urlopen(req)
@@ -169,7 +90,6 @@ class Command(BaseCommand):
             id_iss = result[start + 1:end]
             ac.acc_iss_id = int(id_iss,10)
             ac.save()
-
 
             #print result
 

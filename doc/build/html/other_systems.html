@@ -53,57 +53,129 @@
   <div class="contents topic" id="id1">
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
-<li><a class="reference internal" href="#id2" id="id3">Взаимодействие с другими системами</a><ul>
-<li><a class="reference internal" href="#crontab" id="id4">crontab</a></li>
-<li><a class="reference internal" href="#mail-sibttk-ru" id="id5">mail_sibttk_ru</a></li>
-<li><a class="reference internal" href="#snmp-devices" id="id6">snmp_devices</a></li>
-<li><a class="reference internal" href="#get-issdata" id="id7">get_issdata</a></li>
-<li><a class="reference internal" href="#send-reports-accident" id="id8">send_reports_accident</a></li>
+<li><a class="reference internal" href="#id2" id="id4">Взаимодействие с другими системами</a><ul>
+<li><a class="reference internal" href="#crontab-l" id="id5">crontab -l</a></li>
+<li><a class="reference internal" href="#mail-sibttk-ru" id="id6">mail_sibttk_ru</a></li>
+<li><a class="reference internal" href="#send-reports-accident" id="id7">send_reports_accident</a></li>
+<li><a class="reference internal" href="#get-iss-drp" id="id8">get_iss_drp</a></li>
 <li><a class="reference internal" href="#send-iss-accident" id="id9">send_iss_accident</a></li>
-<li><a class="reference internal" href="#zenoss-krsk" id="id10">zenoss_krsk</a></li>
+<li><a class="reference internal" href="#send-email-message" id="id10">send_email_message</a></li>
+<li><a class="reference internal" href="#get-radiuslog" id="id11">get_radiuslog</a></li>
+<li><a class="reference internal" href="#get-dogcode-by-login" id="id12">get_dogcode_by_login</a></li>
+<li><a class="reference internal" href="#device-port-on" id="id13">device_port_on</a></li>
+<li><a class="reference internal" href="#geo-data" id="id14">geo_data</a></li>
+<li><a class="reference internal" href="#zenoss-krsk" id="id15">zenoss_krsk</a></li>
+<li><a class="reference internal" href="#zenoss-irk" id="id16">zenoss_irk</a></li>
+<li><a class="reference internal" href="#zenoss-chi" id="id17">zenoss_chi</a></li>
+<li><a class="reference internal" href="#id3" id="id18">Команды выполняемые вручную</a></li>
+<li><a class="reference internal" href="#api" id="id19">Загрузка данных через api</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="section" id="id2">
-<h1><a class="toc-backref" href="#id3">Взаимодействие с другими системами</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
-<div class="section" id="crontab">
-<h2><a class="toc-backref" href="#id4">crontab</a><a class="headerlink" href="#crontab" title="Ссылка на этот заголовок">¶</a></h2>
+<h1><a class="toc-backref" href="#id4">Взаимодействие с другими системами</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
+<div class="section" id="crontab-l">
+<h2><a class="toc-backref" href="#id5">crontab -l</a><a class="headerlink" href="#crontab-l" title="Ссылка на этот заголовок">¶</a></h2>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># m h  dom mon dow   command</span>
-<span class="o">*/</span><span class="mi">10</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">mail_sibttk_ru</span>
-<span class="mi">10</span> <span class="mi">14</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">zenoss_krsk</span> <span class="nb">all</span>
-<span class="mi">10</span> <span class="mi">9</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">snmp_devices</span> <span class="n">zenoss_krsk</span>
-<span class="mi">21</span> <span class="mi">20</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_issdata</span>
-<span class="o">*/</span><span class="mi">5</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_reports_accident</span>
-<span class="o">*/</span><span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_iss_accident</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*/</span><span class="mi">10</span> <span class="o">*</span>      <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">mail_sibttk_ru</span>
+<span class="o">*/</span><span class="mi">5</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_reports_accident</span>
+<span class="o">*/</span><span class="mi">1</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_iss_accident</span>
+<span class="o">*/</span><span class="mi">2</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_email_message</span>
+<span class="mi">0</span> <span class="mi">4</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">backup</span><span class="o">/</span><span class="n">backup</span><span class="o">-</span><span class="n">db</span>
+<span class="mi">5</span> <span class="mi">4</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="o">/</span><span class="n">tools</span><span class="o">/</span><span class="n">backup</span><span class="o">/</span><span class="n">backup</span><span class="o">-</span><span class="nb">dir</span>
+<span class="o">*/</span><span class="mi">2</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_iss_drp</span>
+<span class="mi">10</span> <span class="mi">21</span>   <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="o">/</span><span class="n">log</span><span class="p">;</span><span class="o">&gt;</span><span class="n">events</span><span class="o">.</span><span class="n">log</span>
+<span class="mi">30</span> <span class="mi">2</span>   <span class="o">*</span> <span class="o">*</span> <span class="mi">2</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_radiuslog</span>
+<span class="mi">8</span>  <span class="o">*</span>    <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_dogcode_by_login</span>
+<span class="mi">35</span> <span class="o">*</span>    <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">device_port_on</span>
+<span class="mi">50</span> <span class="o">*</span>    <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">geo_data</span>
 </pre></div>
 </div>
 </div></blockquote>
 </div>
 <div class="section" id="mail-sibttk-ru">
-<h2><a class="toc-backref" href="#id5">mail_sibttk_ru</a><a class="headerlink" href="#mail-sibttk-ru" title="Ссылка на этот заголовок">¶</a></h2>
-<p>Получение сообщения с почтового адреса.</p>
+<h2><a class="toc-backref" href="#id6">mail_sibttk_ru</a><a class="headerlink" href="#mail-sibttk-ru" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Получение сообщения с почтового адреса. Добавляется в &#8220;Оперативный журнал&#8221; как событие.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*/</span><span class="mi">10</span> <span class="o">*</span>      <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">mail_sibttk_ru</span>
+</pre></div>
 </div>
-<div class="section" id="snmp-devices">
-<h2><a class="toc-backref" href="#id6">snmp_devices</a><a class="headerlink" href="#snmp-devices" title="Ссылка на этот заголовок">¶</a></h2>
-<p>snmp сканирование сетевых устройств</p>
-</div>
-<div class="section" id="get-issdata">
-<h2><a class="toc-backref" href="#id7">get_issdata</a><a class="headerlink" href="#get-issdata" title="Ссылка на этот заголовок">¶</a></h2>
-<p>Получение данных из ИСС по используемым портам на оборудовании.</p>
+</div></blockquote>
 </div>
 <div class="section" id="send-reports-accident">
-<h2><a class="toc-backref" href="#id8">send_reports_accident</a><a class="headerlink" href="#send-reports-accident" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">send_reports_accident</a><a class="headerlink" href="#send-reports-accident" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Обмен данными с системой подготовки статистических отчетов через api.
-Реализован функционал создания в reports записи об аварии, обновления, удаления.</p>
+Реализован функционал создания в reports записи об аварии, обновления, удаления.
+Механизм изменения кодов справочника реализован только для красноярского региона и для других случаев работать не будет.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*/</span><span class="mi">5</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_reports_accident</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-iss-drp">
+<h2><a class="toc-backref" href="#id8">get_iss_drp</a><a class="headerlink" href="#get-iss-drp" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Опрос системы ИСС и наполенние аварии сообщениями ДРП.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*/</span><span class="mi">2</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_iss_drp</span>
+</pre></div>
+</div>
+</div></blockquote>
 </div>
 <div class="section" id="send-iss-accident">
 <h2><a class="toc-backref" href="#id9">send_iss_accident</a><a class="headerlink" href="#send-iss-accident" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Обмен данными с ИСС. Создание работ на стороне ИСС. Получение id работ, открытие интерфейса ИИС работ из интерфейса &#8220;Оперативный журнал&#8221;.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*/</span><span class="mi">1</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_iss_accident</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="send-email-message">
+<h2><a class="toc-backref" href="#id10">send_email_message</a><a class="headerlink" href="#send-email-message" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Отправка подготовленных сообщений email в МСС об начале и завершении аварии.</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*/</span><span class="mi">2</span> <span class="o">*</span>       <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">send_email_message</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-radiuslog">
+<h2><a class="toc-backref" href="#id11">get_radiuslog</a><a class="headerlink" href="#get-radiuslog" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Загрузка предварительно подготовленной информации логины, mac адреса, circuit-tag (если есть) в таблицу модели <strong>client_login_log</strong>
+Информация предварительно готовится на сервере 10.6.0.88 (на 07.07.2017 опрос только radius сервера красноярского региона 10.6.0.104)</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">30</span> <span class="mi">2</span>   <span class="o">*</span> <span class="o">*</span> <span class="mi">2</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_radiuslog</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="get-dogcode-by-login">
+<h2><a class="toc-backref" href="#id12">get_dogcode_by_login</a><a class="headerlink" href="#get-dogcode-by-login" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Для случайных 100 логинов поиск номера договора в Onyma и запись в таблицу модели <strong>client_login_log</strong>.
+Определение номера порта комутатора доступа по таблице модели <strong>client_mac_log</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">8</span>  <span class="o">*</span>    <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">get_dogcode_by_login</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="device-port-on">
+<h2><a class="toc-backref" href="#id13">device_port_on</a><a class="headerlink" href="#device-port-on" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Для 100 случайно выбранных портов привязка к договору Onyma по данным таблицы модели <strong>client_login_log</strong>.</p>
+</div>
+<div class="section" id="geo-data">
+<h2><a class="toc-backref" href="#id14">geo_data</a><a class="headerlink" href="#geo-data" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Для 100 случайер выбранных адресов домов определение гео координат и запись в json поле <strong>geo</strong> таблицы модели <strong>address_house</strong></p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">50</span> <span class="o">*</span>    <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="p">;</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">geo_data</span>
+</pre></div>
+</div>
+</div></blockquote>
 </div>
 <div class="section" id="zenoss-krsk">
-<h2><a class="toc-backref" href="#id10">zenoss_krsk</a><a class="headerlink" href="#zenoss-krsk" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">zenoss_krsk</a><a class="headerlink" href="#zenoss-krsk" title="Ссылка на этот заголовок">¶</a></h2>
 <p>Получение данных из zenoss Красноярска через api</p>
 <p>Реализовано через самозацикленный скрипт:</p>
 <blockquote>
@@ -130,6 +202,82 @@
 </div>
 </div></blockquote>
 </div>
+<div class="section" id="zenoss-irk">
+<h2><a class="toc-backref" href="#id16">zenoss_irk</a><a class="headerlink" href="#zenoss-irk" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Получение данных из zenoss Иркутска через api</p>
+<p>Реализовано через самозацикленный скрипт:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@iss</span><span class="p">:</span><span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="c1"># cat reget_zenoss_irk_data.sh</span>
+<span class="c1">#!/bin/sh</span>
+
+
+<span class="k">while</span> <span class="n">true</span>
+<span class="n">do</span>
+
+<span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">zenoss_irk</span>
+
+<span class="n">sleep</span> <span class="mi">1</span>
+
+<span class="n">done</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Запуск через rc.local</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">screen</span> <span class="o">-</span><span class="n">dmS</span> <span class="n">irk</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="o">/</span><span class="n">reget_zenoss_irk_data</span><span class="o">.</span><span class="n">sh</span> <span class="o">&amp;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="zenoss-chi">
+<h2><a class="toc-backref" href="#id17">zenoss_chi</a><a class="headerlink" href="#zenoss-chi" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Получение данных из zenoss Читы через api</p>
+<p>Реализовано через самозацикленный скрипт:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">root</span><span class="nd">@iss</span><span class="p">:</span><span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="c1"># cat reget_zenoss_chi_data.sh</span>
+<span class="c1">#!/bin/sh</span>
+
+
+<span class="k">while</span> <span class="n">true</span>
+<span class="n">do</span>
+
+<span class="n">cd</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">zenoss_chi</span>
+
+<span class="n">sleep</span> <span class="mi">1</span>
+
+<span class="n">done</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Запуск через rc.local</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">screen</span> <span class="o">-</span><span class="n">dmS</span> <span class="n">chi</span> <span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">iss</span><span class="o">/</span><span class="n">reget_zenoss_chi_data</span><span class="o">.</span><span class="n">sh</span> <span class="o">&amp;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition attention">
+<p class="first admonition-title">Внимание</p>
+<p class="last">В настоящее время данные с zenoss Читы в корректном виде не поступают.</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id18">Команды выполняемые вручную</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<div class="section" id="device-use-port">
+<h3>device_use_port<a class="headerlink" href="#device-use-port" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Установка статуса портов используется пользователями или нет на основании данных csv файла.</p>
+</div>
+<div class="section" id="device-tech-port">
+<h3>device_tech_port<a class="headerlink" href="#device-tech-port" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Установка технологических портов на основании данных csv файла.</p>
+</div>
+</div>
+<div class="section" id="api">
+<h2><a class="toc-backref" href="#id19">Загрузка данных через api</a><a class="headerlink" href="#api" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Загрузка даных в таблицу модели <strong>client_mac_address</strong>
+<span class="xref std std-ref">api-client-mac-log</span>:</p>
+</div>
 </div>
 
 
@@ -141,13 +289,25 @@
   <h3><a href="index.html">Оглавление</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Взаимодействие с другими системами</a><ul>
-<li><a class="reference internal" href="#crontab">crontab</a></li>
+<li><a class="reference internal" href="#crontab-l">crontab -l</a></li>
 <li><a class="reference internal" href="#mail-sibttk-ru">mail_sibttk_ru</a></li>
-<li><a class="reference internal" href="#snmp-devices">snmp_devices</a></li>
-<li><a class="reference internal" href="#get-issdata">get_issdata</a></li>
 <li><a class="reference internal" href="#send-reports-accident">send_reports_accident</a></li>
+<li><a class="reference internal" href="#get-iss-drp">get_iss_drp</a></li>
 <li><a class="reference internal" href="#send-iss-accident">send_iss_accident</a></li>
+<li><a class="reference internal" href="#send-email-message">send_email_message</a></li>
+<li><a class="reference internal" href="#get-radiuslog">get_radiuslog</a></li>
+<li><a class="reference internal" href="#get-dogcode-by-login">get_dogcode_by_login</a></li>
+<li><a class="reference internal" href="#device-port-on">device_port_on</a></li>
+<li><a class="reference internal" href="#geo-data">geo_data</a></li>
 <li><a class="reference internal" href="#zenoss-krsk">zenoss_krsk</a></li>
+<li><a class="reference internal" href="#zenoss-irk">zenoss_irk</a></li>
+<li><a class="reference internal" href="#zenoss-chi">zenoss_chi</a></li>
+<li><a class="reference internal" href="#id3">Команды выполняемые вручную</a><ul>
+<li><a class="reference internal" href="#device-use-port">device_use_port</a></li>
+<li><a class="reference internal" href="#device-tech-port">device_tech_port</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api">Загрузка данных через api</a></li>
 </ul>
 </li>
 </ul>
