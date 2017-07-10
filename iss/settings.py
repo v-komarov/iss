@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     'iss.working',
     'iss.inventory',
     'iss.onyma',
+    'iss.maps',
+
 ]
 
 MIDDLEWARE_CLASSES = [

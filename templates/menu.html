@@ -49,14 +49,11 @@
       </li>
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-          Контрольные сроки
+          Карты
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#">Текст подпункта</a></li>
-          <li><a href="#">Текст подпункта</a></li>
-          <li class="divider"></li>
-          <li><a href="#">Текст подпункта</a></li>
+          <li id="mapaccidents" {% if request.path|slice:'0:16' == "/maps/accidents/" %}class="active"{% endif %}><a href="/maps/accidents/">Аварии на карте</a></li>
         </ul>
       </li>
       <li class="dropdown">

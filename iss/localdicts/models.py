@@ -106,10 +106,22 @@ class address_city(models.Model):
     def __unicode__(self):
         return self.name
 
+    ### есть кокординаты по городу или нет
+    def geo_ok(self):
+        if address_house.objects.filter(street=None,house=None,city=self).exists():
+            h = address_house.objects.filter(street=None,house=None,city=self).first()
+            return h.geo_ok()
+        else:
+            return False
+
+
 
     class Meta:
         verbose_name = 'Город'
         verbose_name_plural = 'Города'
+
+
+
 
 
 
@@ -211,6 +223,17 @@ class address_house(models.Model):
 
 
         return result
+
+
+
+    ### Есть ли нет гео координаты
+    def geo_ok(self):
+        if self.geo["result"] == "ok":
+            return True
+        else:
+            return False
+
+
 
 
 

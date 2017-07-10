@@ -1,0 +1,36 @@
+#select-cities {
+    width: 200px;
+}
+
+#choise-city {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+#accident-map {
+    border: solid 1px;
+    width:1200px;
+    height:800px;
+    margin-left: 20px;
+}
+
+table[group=accidents] > tbody > tr > td {
+    padding:0;
+}
+
+
+/* Курсор */
+table[group=accidents] > tbody > tr > td > a {
+    cursor:pointer;
+}
+
+
+/* Для всех ссылок*/
+table[group=accidents] > tbody > tr > td > a {
+    text-decoration:none;
+}
+
+table[group=accidents] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
