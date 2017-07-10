@@ -1315,7 +1315,7 @@ function MessageMssBegin(e) {
                 closeOnEscape: false,
                 buttons:[{ text:"Отправить",click: function() {
 
-                    if ($('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid() && $("#acc-email-templates").val() == "1") {
+                    if ( $('#acc-datetime-begin').valid() && $('#acc-cat-type').valid() && $('#acc-reason').valid() && $('#acc-cities').valid() && $('#acc-address-list').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid() && ($("#acc-email-templates").val() == "1" || $("#acc-email-templates").val() == "3" || $("#acc-email-templates").val() == "5") ) {
 
 
                         var acc_datetime_begin = $("#acc-datetime-begin").val();
@@ -1458,7 +1458,7 @@ function MessageMssEnd(e) {
                 closeOnEscape: false,
                 buttons:[{ text:"Отправить",click: function() {
 
-                    if ($('#acc-datetime-begin-end').valid() && $('#acc-cat-type-end').valid() && $('#acc-reason-end').valid() && $('#acc-cities-end').valid() && $('#acc-address-list-end').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid() && $("#acc-email-templates-end").val() == "2") {
+                    if ( $('#acc-datetime-begin-end').valid() && $('#acc-cat-type-end').valid() && $('#acc-reason-end').valid() && $('#acc-cities-end').valid() && $('#acc-address-list-end').valid() && $('#acc-zkl').valid() && $('#acc-email-list').valid() && $('#acc-service-stoplist').valid() && ($("#acc-email-templates-end").val() == "2" || $("#acc-email-templates-end").val() == "4" || $("#acc-email-templates-end").val() == "6") ) {
 
 
                         var data = {};

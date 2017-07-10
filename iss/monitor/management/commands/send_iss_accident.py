@@ -45,10 +45,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         ### Выбор аварий без acc_iss_id
-        for ac in accidents.objects.filter(pk=115):
+        #for ac in accidents.objects.filter(pk=116):
 
-        #        for ac in accidents.objects.filter(acc_iss_id=None):
+        for ac in accidents.objects.filter(acc_iss_id=None):
             ip_list = ac.get_event_ip_list()
+            #ip_list = ['55.49.4.75','55.49.8.68','55.49.11.41','55.21.13.81','55.21.20.74']
 
             addrjson = ac.acc_addr_dict["address_list"]
 
@@ -76,10 +77,9 @@ class Command(BaseCommand):
             value = value + "iplist(%s)%s[%s]" % (day,",".join(map(lambda ip: ip.encode("cp1251"),ip_list)), day)
             value = value + "citynamelist(%s)%s[%s]" % (day,",".join(cities),day)
             value = value + "addresslist(%s)%s[%s]" % (day,address_list.decode("utf-8").encode("cp1251"),day)
-            value = value + "reason(%s)%s" % (day,ac.acc_reason.encode("cp1251"))
+            value = value + "reason(%s)%s" % (day, ac.acc_reason.encode("cp1251"))
 
-
-            #print value
+            #print value.decode("cp1251")
 
             req = urllib2.Request(url='http://10.6.3.77:8080/departs/rcu/works/create_work_mss_post.php',data=value,headers={'Content-Type': 'text/plain; charset=cp1251'})
             f = urllib2.urlopen(req)
