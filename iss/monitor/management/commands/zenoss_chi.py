@@ -1,35 +1,29 @@
 #coding:utf8
 
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
-from django.db.models import Q
 
 from django.core.cache import cache
 
 
-from iss.monitor.models import events,events_history
+from iss.monitor.models import events, events_history
 
 from pprint import pformat
 
-import pickle
+from requests import post
+
 import time
 import datetime
-import binascii
 import logging
-import hashlib
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
 import json
-import cStringIO
-import commands
-import tempfile
 
 import iss.dbconn
 import iss.settings
 
 
-zenoss = "https://10.4.0.165:10080"
-
+#zenoss = "https://10.4.0.165:10080"
+zenoss = 'https://zenoss5.zenoss.ttk-chita.lan/zport/dmd/evconsole_router'
 
 username = iss.dbconn.ZENOSS_API_CHI_USERNAME
 password = iss.dbconn.ZENOSS_API_CHI_PASSWORD
@@ -75,25 +69,21 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        tf = tempfile.NamedTemporaryFile(delete=True)
 
         startTime = time.mktime(  (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=10)).timetuple() )
         endTime = time.mktime(  (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=3)).timetuple() )
-        print startTime,endTime
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":2000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":10000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s %s" % (tf.name,username,password,zenoss)
-        print cmd
+        query = {'action': 'EventsRouter', 'data': [{
+            'limit': 2000,
+            'sort': 'lastTime',
+            'params': {'lastTime': "%s/%s" % (startTime, endTime)} }],
+            'method': 'query',
+            'tid': 1 }
+        rec = post(url=zenoss, json=query, verify=False, auth=(username, password))
+        print pformat(json.loads(rec.text))
+        data = json.loads(rec.text)
 
-        commands.getoutput(cmd)
-
-        data = json.loads(commands.getoutput("cat %s" % tf.name))
-
-        #for r in (data["result"]["events"])[::-1]:
         for r in (data["result"]["events"]):
-            event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
-            #loggerjson.debug("{ev}\n".format(ev=event_str))
-            print event_str
 
             id_row = r["id"]  # id
             evid = r["evid"].strip()
@@ -102,19 +92,20 @@ class Command(BaseCommand):
             ### Обработка записи только такая запись уже не обрабатывалась
             if r["device"].has_key("uuid"):
 
+                #if r["severity"] == 5:
+                #    print r["severity"],r["eventState"]
 
                 firsttime = chi_tz.localize(datetime.datetime.fromtimestamp(r["firstTime"]))
                 lasttime = chi_tz.localize(datetime.datetime.fromtimestamp(r["lastTime"]))
                 update_time = chi_tz.localize(datetime.datetime.fromtimestamp(r["stateChange"]))  # update_time
 
                 severity = Severity.objects.get(pk=r["severity"])
-                #print severity
                 summary = r["summary"]
                 ipaddress = ", ".join(r["ipAddress"])  # ip
 
                 uuid = r["device"]["uuid"]
                 status = Status.objects.get(name=r["eventState"]) # Статус
-                #print status
+
                 eventclass = r["eventClass"]["text"]
 
                 device = r["device"]["text"]
@@ -129,9 +120,7 @@ class Command(BaseCommand):
                     manager = ", ".join(r["details"]["manager"])
 
                 key = "%s%s%s" % (uuid,eventclass,location) # 20.02.2017
-                #hash_key = hashlib.md5(key).hexdigest() # 20.02.2017
                 hash_key = evid+"zenoss_chi"
-                #key = evid # 20.02.2017
 
 
                 last_action = cache.get(hash_key)
@@ -263,7 +252,6 @@ class Command(BaseCommand):
                         )
                         # Запись кэш об обновлении события для evid
                         cache.set(hash_key,"update", 360000)
-
 
 
         print "ok"

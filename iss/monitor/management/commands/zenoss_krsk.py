@@ -1,34 +1,26 @@
 #coding:utf8
 
+from requests import post
+
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
-from django.db.models import Q
 
 from django.core.cache import cache
 
 
 from iss.monitor.models import events,events_history
-
 from pprint import pformat
 
-import pickle
-import time
 import datetime
-import binascii
 import logging
-import hashlib
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
 import json
-import cStringIO
-import commands
-import tempfile
 
 import iss.dbconn
 import iss.settings
 
 
-zenoss = "http://10.6.0.129:8080"
+zenoss = "http://10.6.0.129:8080/zport/dmd/evconsole_router"
 
 
 username = iss.dbconn.ZENOSS_API_KRSK_USERNAME
@@ -42,10 +34,6 @@ loggerjson = logging.getLogger('events')
 tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
-
-
-### Дата появления поля finished_date 30.01.2017
-#fd = datetime.datetime.strptime("2017-01-30","%Y-%m-%d").replace(tzinfo=krsk_tz)
 
 
 
@@ -79,29 +67,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        tf = tempfile.NamedTemporaryFile(delete=True)
 
         startTime = (datetime.datetime.now(timezone(tz)) - datetime.timedelta(minutes=5)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
         endTime = (datetime.datetime.now(timezone(tz)) + datetime.timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M:%S').encode("utf-8")
 
+        query = {'action': 'EventsRouter', 'data': [{
+            'limit': 2000,
+            'sort': 'lastTime',
+            'params': {'lastTime': "%s/%s" % (startTime, endTime)} }],
+            'method': 'query',
+            'tid': 1 }
+        rec = post(url=zenoss, json=query, verify=False, auth=(username, password))
+        print pformat(json.loads(rec.text))
+        data = json.loads(rec.text)
 
-        cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"asc\",\"params\":{\"lastTime\":\"%s/%s\"}}' %s %s %s %s" % (startTime,endTime,tf.name,username,password,zenoss)
-        #cmd = "./json_api.sh evconsole_router EventsRouter query '{\"limit\":5000,\"sort\":\"lastTime\",\"dir\":\"desc\"}' %s %s %s" % (tf.name,username,password)
-        print cmd
 
-        commands.getoutput(cmd)
-
-        data = json.loads(commands.getoutput("cat %s" % tf.name))
-        loggerjson.debug("{d}\n".format(d=data)) ## Ловля ошибки попадания неправильных severity
-
-
-        #for r in (data["result"]["events"])[::-1]:
         for r in (data["result"]["events"]):
-            event_str = json.dumps(r, sort_keys=True,indent=4,separators=(',',':'))
-            #loggerjson.debug("{ev}\n".format(ev=event_str))
-            print event_str
 
-            id_row = r["id"]  # id
             evid = r["evid"].strip()
 
 
