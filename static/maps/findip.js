@@ -22,6 +22,10 @@ function FindDevicesIP(e) {
                 // очистка поля ввода
                 $("#ip-list").val("");
 
+
+                console.log(data);
+
+
                 // Центр карты по первому устройству
                 var lat = data["devices"][0]["lat"];
                 var lng = data["devices"][0]["lng"];
@@ -51,6 +55,11 @@ function FindDevicesIP(e) {
                                     + "ЗКЛ: " + value["zkl"]
                                     ;
 
+
+                                    // Определение стиля метки исходя из аварийности на ip адресе
+                                    if ( data["accidents_ip"].indexOf(value["ip"]) == -1 ) { var preset = 'islands#greenStretchyIcon'; }
+                                    else { var preset = 'islands#redStretchyIcon'; }
+
                                     // Создание метки
                                      point = new ymaps.Placemark([value["lat"], value["lng"]],
                                      {
@@ -60,7 +69,7 @@ function FindDevicesIP(e) {
                                      },
 
                                      {
-                                            preset: 'islands#blueStretchyIcon'
+                                            preset: preset
                                      });
 
                                     // Размещение на карте

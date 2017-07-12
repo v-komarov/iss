@@ -1,23 +1,14 @@
 #coding:utf-8
 
-import datetime
 import json
-import logging
-import operator
+import ipaddress
 
-from pytz import timezone
-from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
 from iss.localdicts.models import address_city, address_house, logical_interfaces_prop_list
 from iss.monitor.models import accidents
 from iss.inventory.models import logical_interfaces_prop, devices
-from django.shortcuts import redirect
-from django.core import serializers
-from django import template
-from django.db.models import F,Func,Value
-from django.db.models import Q
 
 
 
@@ -133,11 +124,27 @@ def get_json(request):
 
             if len(ip_list) > 0 and len(request.GET["ip_list"])>=7:
 
+                ip_checked = []
+                ### Проверка является ли адрес сетью
+                for i in ip_list:
+                    ### Адрес хоста
+                    if i.find("/") == -1:
+                        if i not in ip_checked:
+                            ip_checked.append(i)
+                    ### Адрес сети
+                    else:
+                        for ii in list(ipaddress.ip_network(i).hosts()):
+                            host = str(ii).encode("utf-8")
+                            if host not in ip_checked:
+                                ip_checked.append(host)
+
                 ### Список устройств
                 d = []
 
+                #print ip_checked
+
                 ### Поиск оборудования по ip адресу
-                for ip in ip_list:
+                for ip in ip_checked:
 
                     ### Поиск по ip адресу на интерфейсе manager
                     if logical_interfaces_prop.objects.filter(prop=prop, val=ip,
@@ -168,9 +175,19 @@ def get_json(request):
                 if len(d) > 0:
                     response_data["result"] = "ok"
                     response_data["devices"] = d
+
+                    ### Определение аварийных ip адресов
+                    accidents_ip = []
+                    for acc in accidents.objects.filter(acc_end=None):
+                        for ip in acc.get_event_ip_list():
+                            if ip not in accidents_ip:
+                                accidents_ip.append(ip)
+
+                    response_data["accidents_ip"] = accidents_ip
+
+
                 else:
                     response_data = {"result": "empty"}
-
 
             else:
                 response_data = {"result": "empty"}
