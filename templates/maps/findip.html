@@ -1,0 +1,48 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}maps/findip.js"></script>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<link href="{{ MY_STATIC_URL }}maps/findip.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+<div id="find-ip" class="row small">
+    <form class="form-inline col-sm-offset-1">
+        <label for="ip-list">Список ip</label>
+        <input type="text" id="ip-list" placeholder="">
+        <button id="find-ip-maps" title="Искать на карте" type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+    <div id="ip-map"></div>
+</div>
+
+
+
+
+{% endblock %}

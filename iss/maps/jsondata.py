@@ -10,8 +10,9 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.localdicts.models import address_city, address_house
+from iss.localdicts.models import address_city, address_house, logical_interfaces_prop_list
 from iss.monitor.models import accidents
+from iss.inventory.models import logical_interfaces_prop, devices
 from django.shortcuts import redirect
 from django.core import serializers
 from django import template
@@ -20,7 +21,7 @@ from django.db.models import Q
 
 
 
-
+prop = logical_interfaces_prop_list.objects.get(name='ipv4')
 
 
 
@@ -119,6 +120,61 @@ def get_json(request):
 
 
             response_data = data
+
+
+
+
+
+        ### Поиск устройств по ip адресам
+        if r.has_key("action") and rg("action") == 'find_devices_ip':
+            ip_list = request.GET["ip_list"].split(",")
+
+
+
+            if len(ip_list) > 0 and len(request.GET["ip_list"])>=7:
+
+                ### Список устройств
+                d = []
+
+                ### Поиск оборудования по ip адресу
+                for ip in ip_list:
+
+                    ### Поиск по ip адресу на интерфейсе manager
+                    if logical_interfaces_prop.objects.filter(prop=prop, val=ip,
+                                                              logical_interface__name='manage').exists():
+                        p = logical_interfaces_prop.objects.get(prop=prop, val=ip, logical_interface__name='manage')
+                        #### Определение логического интерфейса
+                        li = p.logical_interface
+
+                        ### Поиск связанных устройств
+                        for dev_id in li.get_dev_list():
+                            dev = devices.objects.get(pk=dev_id)
+                            ### Если определены координаты адреса
+                            if dev.address.geo["result"] == "ok":
+                                d.append({
+                                    'ip': ip,
+                                    'model': dev.device_scheme.name,
+                                    'address': dev.getaddress(),
+                                    'status': dev.getstatus(),
+                                    'netelems': dev.get_netelems(),
+                                    'zkl': dev.getzkl(),
+                                    'lat': dev.address.geo["lat"],
+                                    'lng': dev.address.geo["lng"]
+                                })
+
+
+
+                ### Подведение итогов по поиску
+                if len(d) > 0:
+                    response_data["result"] = "ok"
+                    response_data["devices"] = d
+                else:
+                    response_data = {"result": "empty"}
+
+
+            else:
+                response_data = {"result": "empty"}
+
 
 
 

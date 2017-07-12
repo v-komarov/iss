@@ -43,8 +43,9 @@ class Command(BaseCommand):
 
 
 
+
         """
-        ### Загрузка улиц
+        ### Загрузка улиц        
         for street in address_street.objects.all():
             data = {
                 'id': street.id,
@@ -53,8 +54,9 @@ class Command(BaseCommand):
 
             res = es.index(index="iss2", doc_type='street', id=street.id, body=data)
             es.indices.refresh(index="iss2")
-
         """
+
+
 
 
 
@@ -98,9 +100,6 @@ class Command(BaseCommand):
 
 
 
-
-
-
         """
         q = {"query": {"fuzzy": {"name": "Телевызорная"}}}
 
@@ -120,17 +119,18 @@ class Command(BaseCommand):
 
 
 
+
         """
         ### Поиск названия населенных пунктов
-        with open('iss/equipment/csv/irk_city_unique.csv', 'rb') as csvfile:
+        with open('iss/equipment/csv/cities_chi.csv', 'rb') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=';')
             next(spamreader, None)
             for row in spamreader:
-                city = row[1]
-                city = city.replace("ст. ","")
-                city = city.replace("п. ","")
+                city = row[0]
+                #city = city.replace("ст. ","")
+                #city = city.replace("п. ","")
 
-                q = {"query": {"match": {"name": {"query": city,"fuzziness":0}}}}
+                q = {"query": {"match": {"name": {"query": city,"fuzziness":1}}}}
                 #q = {"query": {"fuzzy": {"name": {"value": "краснорск", "boost":1.0, "fuzziness":0, "prefix_length":0, "max_expansions": 100 }}}}
                 #q = {"query": {"term": {"name": "г.Красноярск" }}}
 
@@ -140,17 +140,17 @@ class Command(BaseCommand):
                 #print res
                 result = []
                 for hit in res['hits']['hits']:
-                    r = "%s (%s)" % (hit["_source"]["name"],hit["_source"]["id"])
+                    r = "%s;%s;" % (hit["_source"]["name"],hit["_source"]["id"])
                     result.append(r)
-                print "Поиск %s :" % city," ".join(result)
+                print "%s;" % city," ".join(result)
 
                 ### Добавление в справочник
                 if len(result) == 0:
-                    print "Добавить %s" % city
+                    print "Добавить! %s" % city
+                    #if not address_city.objects.filter(name=city).exists():
+                    #    address_city.objects.create(name=city)
 
         """
-
-
 
 
 
@@ -161,15 +161,15 @@ class Command(BaseCommand):
 
 
         ### Поиск названия улиц
-        with open('iss/equipment/csv/irk_street_unique.csv', 'rb') as csvfile:
+        with open('iss/equipment/csv/street_chi.csv', 'rb') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=';')
             next(spamreader, None)
             for row in spamreader:
-                st = row[1]
+                st = row[0]
                 st = st.replace("пр. ","")
                 st = st.replace("пр","")
 
-                q = {"query": {"match": {"name": {"query": st,"fuzziness":0,"operator": "and"}}}}
+                q = {"query": {"match": {"name": {"query": st,"fuzziness":1,"operator": "and"}}}}
 
 
                 res = es.search(index="iss2", doc_type="street", body=q)
@@ -183,20 +183,22 @@ class Command(BaseCommand):
                         "street": hit["_source"]["name"]
                     })
                 if len(result) > 0:
+                    pass
+                    #print result
                     #print st
                     #print result[0]["street"]
                     #print result[0]["id"]
-                    print "{find};{street_id};".format(find=st,street_id=result[0]["id"])
+                    print "{find};{base};{street_id};".format(base=result[0]["street"].encode("utf-8"),find=st,street_id=result[0]["id"])
                 
-                #if len(result) == 0:
-                #    print row[1]
+                if len(result) == 0:
+                    print row[0]
+                    #address_street.objects.create(name=row[0])
                 #    if not address_street.objects.filter(name=row[1]).exists():
                 #       address_street.objects.create(name=row[1])
                 #elif len(result) == 1:
                 #    print u"%s;%s;\n" % (row[1],result[0])
                 #else:
                 #    print u"%s;%s;\n" % (row[1],u" ".join(result))
-
 
 
 

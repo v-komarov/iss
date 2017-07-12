@@ -77,3 +77,38 @@ class MapsAccidents(TemplateView):
 
 
 
+
+
+### Поиск оборудования по ip адресу
+class MapsFindIp(TemplateView):
+
+    template_name = 'maps/findip.html'
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='maps', redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+
+        return super(MapsFindIp, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(MapsFindIp, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+        return context
+
+
+

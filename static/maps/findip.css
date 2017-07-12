@@ -1,0 +1,15 @@
+#ip-map {
+    border: solid 1px;
+    width:1400px;
+    height:800px;
+    margin-left: 20px;
+}
+
+
+#ip-list {
+    width: 600px;
+}
+
+#find-ip {
+    margin: 30px;
+}

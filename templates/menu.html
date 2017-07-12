@@ -54,6 +54,7 @@
         </a>
         <ul class="dropdown-menu">
           <li id="mapaccidents" {% if request.path|slice:'0:16' == "/maps/accidents/" %}class="active"{% endif %}><a href="/maps/accidents/">Аварии на карте</a></li>
+          <li id="mapfindip" {% if request.path|slice:'0:13' == "/maps/findip/" %}class="active"{% endif %}><a href="/maps/findip/">Поиск по IP</a></li>
         </ul>
       </li>
       <li class="dropdown">
