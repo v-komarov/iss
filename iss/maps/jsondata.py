@@ -3,6 +3,8 @@
 import json
 import ipaddress
 
+import datetime
+from pytz import timezone
 
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -13,7 +15,10 @@ from iss.inventory.models import logical_interfaces_prop, devices
 
 
 prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+tz = 'Asia/Krasnoyarsk'
+krsk_tz = timezone(tz)
 
+start = datetime.datetime(2017, 7, 9, 12, 0, 0, 0, timezone(tz))
 
 
 def get_json(request):
@@ -178,7 +183,7 @@ def get_json(request):
 
                     ### Определение аварийных ip адресов
                     accidents_ip = []
-                    for acc in accidents.objects.filter(acc_end=None):
+                    for acc in accidents.objects.filter(acc_end=None, acc_start__gt=start):
                         for ip in acc.get_event_ip_list():
                             if ip not in accidents_ip:
                                 accidents_ip.append(ip)

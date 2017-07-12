@@ -11,6 +11,10 @@ $(document).ready(function() {
 // Поиск оборудования
 function FindDevicesIP(e) {
 
+    // Окно сообщения о загрузке
+    $("#loading").dialog({show: { effect: "blind", duration: 100 }});
+
+
         var ip_list = $("#ip-list").val();
 
         var jqxhr = $.getJSON("/maps/jsondata/?action=find_devices_ip&ip_list="+ip_list,
@@ -80,6 +84,8 @@ function FindDevicesIP(e) {
 
 
 
+                        // Окно сообщения о загрузке
+                        $("#loading").dialog('close');
 
 
 
@@ -92,5 +98,7 @@ function FindDevicesIP(e) {
             }
 
         });
+
+
 
 }

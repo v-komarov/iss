@@ -47,11 +47,18 @@ $(document).ready(function() {
 
 // Запрос списка устройств по адресу
 function GetDevices(e) {
+
+    // Окно сообщения о загрузке
+    $("#loading").dialog({show: { effect: "blind", duration: 100 }});
+
+
     var jqxhr = $.getJSON("/inventory/jsondata?action=get_devices_byaddress&address_id="+window.address_id+"&address_label="+window.address_label,
         function(data) {
             console.log(data);
+
             window.location=$("#menuauditports a").attr("href");
         })
+
 }
 
 

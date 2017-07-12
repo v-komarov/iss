@@ -34,6 +34,10 @@ $('table[group=accidents]').tableScroll({height:600});
 // Показать аварии на карте
 function ShowAccident(e) {
 
+    // Окно сообщения о загрузке
+    $("#loading").dialog({show: { effect: "blind", duration: 100 }});
+
+
     var partr = $(this).parent("tr");
     var acc_id = partr.children("td").eq(0).text();
     var status = partr.attr("chosen");
@@ -74,6 +78,11 @@ function ShowAccident(e) {
 
     }
 
+
+    // Окно сообщения о загрузке
+    $("#loading").dialog('close');
+
+
 }
 
 
@@ -84,6 +93,9 @@ function ShowAccident(e) {
 
 // Получение координат выбранного города или населенного пункта
 function GetGeoCity() {
+
+    // Окно сообщения о загрузке
+    $("#loading").dialog({show: { effect: "blind", duration: 100 }});
 
     var city_id = $("#select-cities").val();
 
@@ -113,6 +125,10 @@ function GetGeoCity() {
 
 
         })
+
+    // Окно сообщения о загрузке
+    $("#loading").dialog('close');
+
 
 }
 

@@ -92,6 +92,11 @@ function ClearZKL(e) {
 
 
 function GetZklDevices() {
+
+    // Окно сообщения о загрузке
+    $("#loading").dialog({show: { effect: "blind", duration: 100 }});
+
+
     var jqxhr = $.getJSON("/monitor/events/jsondata/?action=get_zkl_devices",
         function(data) {
 
@@ -164,6 +169,8 @@ function GetZklDevices() {
                 $("table[group=devices-zkl] tbody").append(t2);
 
 
+            // Окно сообщения о загрузке
+            $("#loading").dialog('close');
 
 
         })
