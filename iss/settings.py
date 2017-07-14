@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'iss.inventory',
     'iss.onyma',
     'iss.maps',
+    'iss.regions',
 
 ]
 

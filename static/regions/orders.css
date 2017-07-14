@@ -1,0 +1,49 @@
+table[group=orders-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=orders-list] > tbody > tr > td {
+    padding: 0;
+}
+
+
+
+/* Курсор */
+table[group=orders-list] > tbody > tr > td > a, #tocsv, #addrow {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=orders-list] > tbody > tr > td > a:hover, #tocsv, #addrow {
+    text-decoration:none;
+}
+
+
+/* Отступить от меню */
+#manager {
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+#addrow, #tocsv {
+    margin-left: 30px;
+}
+
+/* Поля ввода */
+table[group=tableform] > tbody > tr  td > input,
+table[group=tableform] > tbody > tr  td > select {
+    width: 400px;
+}
+
+
+

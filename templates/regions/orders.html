@@ -1,0 +1,93 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/orders.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/orders.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+    <div id="manager" class="row small">
+        <form class="form-inline col-sm-offset-1">
+            <label for="select-region">Регион</label>
+            <select id="select-region" class="form-control input-sm" data-width="auto">
+                    <option value="0"></option>
+                    {% for item in regions_list %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+            </select>
+            <a id="addrow" title="Создать новую позицию" hidden>Добавить</a>
+            <a id="tocsv" title="Выгрузить в CSV формат" hidden>csv</a>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="row">
+</div>
+
+
+
+<div class="row">
+
+
+
+
+
+
+    <table group="orders-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>№п/п</th>
+                <th>Артикул/марка</th>
+                <th>Наименование товара</th>
+                <th>Ед.изм.</th>
+                <th>Кол-во</th>
+                <th>Начальная (максимальная) цена за<br>единицу товара, в руб. без НДС<br>с учетом всех расходов</th>
+                <th>Начальная (максимальная) цена<br>договора, в руб. без НДС<br>с учетом всех расходов</th>
+                <th>Дата изменения</th>
+                <th>Автор изменений</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+        </tbody>
+
+
+
+
+
+    </table>
+
+
+
+
+
+</div>
+
+{% include "regions/orderdata.html" %}
+{% include "loading.html" %}
+
+
+{% endblock %}
+

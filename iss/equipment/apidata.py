@@ -172,19 +172,12 @@ def get_apidata(request):
 
         ### Проверка наличия общих адресов (city=None,street=None) и их создание
         if r.has_key("action") and rg("action") == 'address_check':
-            response_data = []
-            for addr in address_house.objects.exclude(city=None).exclude(street=None).order_by("city__name","street__name","house"):
-                response_data.extend(addr.common_address())
+            for addr in address_house.objects.exclude(street=None).exclude(city=None):
+                addr.common_address()
+
+            response_data = {"result": "ok"}
 
 
-
-        """
-        ### Поиск кода города по названию на транслите
-        if r.has_key("action") and rg("action") == 'search_city_id' and rg("city_name") != '':
-            city_name = translit(request.GET["city_name"],"ru")
-
-            response_data = {'city_name':city_name}
-        """
 
 
 

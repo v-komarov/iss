@@ -57,8 +57,7 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=address_check
 
  ::
 
-    [{"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": "\u041b\u0435\u043d\u0438\u043d\u0430", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u0437\u0430", "street": "\u041b\u0435\u043d\u0438\u043d\u0430", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": null, "house": null}, {"action": "checked", "city": "\u0433.\u0410\u0431\u0430\u043a\u0430\u043d", "street": "\u0410\u0432\u0438\u0430\u0442\u043e\u0440\u043e\u0432", "house": null}
-
+    {"result": "ok"}
 
 
 Проверка списка ЗКЛ

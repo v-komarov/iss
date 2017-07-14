@@ -71,6 +71,15 @@
       </li>
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Регионы
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="menuregionsorders" {% if request.path|slice:'0:16' == "/regions/orders/" %}class="active"{% endif %}><a href="/regions/orders/">Таблица заказов</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Инвентори
           <b class="caret"></b>
         </a>

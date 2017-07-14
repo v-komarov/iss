@@ -399,3 +399,18 @@ class logical_interfaces_prop_list(models.Model):
         verbose_name = 'Свойство логического интерфейса'
         verbose_name_plural = 'Свойства логических интерфейсов'
 
+
+
+
+### Справочник названия регионов
+class regions(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название региона', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Название региона'
+        verbose_name_plural = 'Названия регионов'
+
