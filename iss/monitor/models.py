@@ -23,6 +23,7 @@ class Profile(models.Model):
 class events(models.Model):
 
     id = models.CharField(max_length=255,primary_key=True, default=uuid.uuid4, editable=False)
+    evid = models.CharField(max_length=255, default="", db_index=True)
     source = models.CharField(max_length=255,db_index=True,default="")
     datetime_evt = models.DateTimeField(db_index=True,null=True,auto_now=True)
     uuid = models.CharField(max_length=255,db_index=True,null=True,default=uuid.uuid4,)

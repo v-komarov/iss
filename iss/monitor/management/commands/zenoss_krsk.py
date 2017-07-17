@@ -12,6 +12,7 @@ from pprint import pformat
 
 import datetime
 import logging
+import hashlib
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
 import json
@@ -86,7 +87,6 @@ class Command(BaseCommand):
 
             evid = r["evid"].strip()
 
-
             ### Обработка записи только такая запись уже не обрабатывалась
             if r["device"].has_key("uuid"):
 
@@ -114,13 +114,10 @@ class Command(BaseCommand):
                 if r["details"].has_key("manager"):
                     manager = ", ".join(r["details"]["manager"])
 
-                key = "%s%s%s" % (uuid,eventclass,location) # 20.02.2017
-                #hash_key = hashlib.md5(key).hexdigest() # 20.02.2017
-                hash_key = evid+"zenoss_krsk"
-                #key = evid # 20.02.2017
+                key = hashlib.md5("{evid}zenoss_krsk{severity}:{status}".format(evid=evid, severity=r["severity"], status=r["eventState"])).hexdigest()
 
 
-                last_action = cache.get(hash_key)
+                last_action = cache.get(key)
                 ### Если такого ключа нет, добавить запись
 
                 ### Определение что делать с записью по информации в кэше
@@ -142,7 +139,15 @@ class Command(BaseCommand):
                     )
 
 
-
+                ### Логирование для поиска ошибки неотображения всех событий
+                logger.debug(
+                    'evid:{evid} lasttime:{lasttime} firsttime:{firsttime} status:{status} severity:{severity} eventclass:{eventclass} location:{location} ipaddress:{ipaddress}'.format(
+                        evid=evid, severity= r["severity"], status= r["eventState"],
+                        firsttime= r["firstTime"],
+                        lasttime=r["lastTime"], location=location,
+                        eventclass = r["eventClass"]["text"], ipaddress= ipaddress
+                    )
+                )
 
                 ### Формирование нового события или запись в существующие
                 """
@@ -150,6 +155,7 @@ class Command(BaseCommand):
                 """
                 if action == "insert":
                     events.objects.create(
+                        evid=evid,
                         source='zenoss_krsk',
                         uuid=uuid,
                         first_seen=firsttime,
@@ -172,7 +178,7 @@ class Command(BaseCommand):
                     )
 
                     # Запись кэш об insert для evid
-                    cache.set(hash_key, "insert", 360000)
+                    cache.set(key, "insert", 360000)
 
 
                 elif action == "update":
@@ -223,7 +229,7 @@ class Command(BaseCommand):
                                 r0.delete()
 
                             else:
-                                events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, source='zenoss_krsk').update(
+                                events.objects.filter(evid=evid, source='zenoss_krsk').update(
                                     first_seen=firsttime,
                                     update_time=update_time,
                                     last_seen=lasttime,
@@ -233,15 +239,15 @@ class Command(BaseCommand):
                                     finished_date = lasttime
                                 )
                         # Запись кэш об завершении события для evid
-                        cache.delete(hash_key)
+                        cache.delete(key)
 
                         #### Если событие не завершено
                         """
                             Обновление открытых аварийных событий
                         """
                     else:
-                        events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, source='zenoss_krsk').update(
-                                first_seen=firsttime,
+                        events.objects.filter(evid=evid, source='zenoss_krsk').update(
+                            first_seen=firsttime,
                             update_time=update_time,
                             last_seen=lasttime,
                             severity_id=severity,
@@ -249,7 +255,7 @@ class Command(BaseCommand):
                             status_id=status
                         )
                         # Запись кэш об обновлении события для evid
-                        cache.set(hash_key,"update", 360000)
+                        cache.set(key, "update", 360000)
 
 
 

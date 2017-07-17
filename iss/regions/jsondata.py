@@ -83,12 +83,12 @@ def get_json(request):
 
             for i in orders.objects.filter(region=region).order_by('order'):
                 total += i.rowsum
-                t = template.Template("<tr id={{ id }}><td><a edit>{{ order }}</a></td><td><a edit>{{ model }}</a></td><td><a edit>{{ name }}</a></td><td><a edit>{{ ed }}</a></td><td><a edit>{{ count }}</a></td><td><a edit>{{ price }}</a></td><td><a edit>{{ rowsum }}</a></td><td><a edit>{{ comment }}</a></td><td>{% load tz %}{% timezone tz %}{{ edited|date:\"d.m.Y H:i e\" }}{% endtimezone %}</td><td>{{ author }}</td><td><a delete title=\"Удалить\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td><tr>")
-                c = template.Context({'tz': tz, 'id': i.id, 'order': i.order, 'model': i.model, 'name': i.name, 'ed': i.ed, 'price': i.price, 'count': i.count, 'rowsum': i.rowsum, 'comment': i.comment, 'edited': i.datetime_update, 'author': i.author })
+                t = template.Template("<tr id={{ id }}><td><a edit>{{ order }}</a></td><td><a edit>{{ model }}</a></td><td><a edit>{{ name }}</a></td><td><a edit>{{ ed }}</a></td><td><a edit>{{ count }}</a></td><td><a edit>{{ price }}</a></td><td><a edit>{{ rowsum }}</a></td><td><a edit>{{ b2b_b2o }}</a></td><td><a edit>{{ investment }}</a></td><td><a edit>{{ to }}</a></td><td><a edit>{{ comment }}</a></td><td>{% load tz %}{% timezone tz %}{{ edited|date:\"d.m.Y H:i e\" }}{% endtimezone %}</td><td>{{ author }}</td><td><a delete title=\"Удалить\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td><tr>")
+                c = template.Context({'tz': tz, 'id': i.id, 'order': i.order, 'model': i.model, 'name': i.name, 'ed': i.ed, 'price': i.price, 'count': i.count, 'rowsum': i.rowsum, 'comment': i.comment, 'edited': i.datetime_update, 'author': i.author, 'b2b_b2o': i.b2b_b2o, 'investment': i.investment, 'to': i.to })
                 row = t.render(c)
                 rows += row
 
-            t = template.Template("<tr><td></td><td></td><td></td><td></td><td></td><td>Всего</td><td>{{ total }}</td><td></td><td></td><td></td><td</td></tr>")
+            t = template.Template("<tr><td></td><td></td><td></td><td></td><td></td><td>Всего</td><td>{{ total }}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>")
             c = template.Context({'total': total})
             row = t.render(c)
             rows += row
@@ -122,9 +122,12 @@ def get_json(request):
             model = data["model"]
             name = data["name"]
             ed = data["ed"]
-            count = int(data["count"], 10)
+            b2b_b2o = int(data["b2b_b2o"], 10)
+            investment = int(data["investment"], 10)
+            to = int(data["to"], 10)
             price = decimal.Decimal(data["price"])
             comment = data["comment"]
+            count = b2b_b2o + investment + to
 
 
             ### Для конкретного региона
@@ -139,6 +142,9 @@ def get_json(request):
                     count = count,
                     price = price,
                     rowsum = count * price,
+                    b2b_b2o = b2b_b2o,
+                    investment = investment,
+                    to = to,
                     comment = comment,
                     author=request.user.get_username() + " (" + request.user.get_full_name() + ")"
                 )
@@ -154,6 +160,9 @@ def get_json(request):
                         count=count,
                         price=price,
                         rowsum=count * price,
+                        b2b_b2o=b2b_b2o,
+                        investment=investment,
+                        to=to,
                         comment=comment,
                         author=request.user.get_username() + " (" + request.user.get_full_name() + ")"
                     )
@@ -172,9 +181,12 @@ def get_json(request):
             model = data["model"]
             name = data["name"]
             ed = data["ed"]
-            count = int(data["count"], 10)
             price = decimal.Decimal(data["price"])
+            b2b_b2o = int(data["b2b_b2o"], 10)
+            investment = int(data["investment"], 10)
+            to = int(data["to"], 10)
             comment = data["comment"]
+            count = b2b_b2o + investment + to
 
             reg = regions.objects.get(pk=int(region, 10))
 
@@ -187,6 +199,9 @@ def get_json(request):
             d.count = count
             d.price = price
             d.rowsum = price*count
+            d.b2b_b2o = b2b_b2o
+            d.investment = investment
+            d.to = to
             d.comment = comment
             d.author = request.user.get_username() + " (" + request.user.get_full_name() + ")"
             d.save()

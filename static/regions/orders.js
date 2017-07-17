@@ -240,8 +240,10 @@ function RowData(action,access) {
                 data.model = $("#id_model").val();
                 data.name = $("#id_name").val();
                 data.ed = $("#id_ed").val();
-                data.count = $("#id_count").val();
                 data.price = $("#id_price").val();
+                data.b2b_b2o = $("#id_b2b_b2o").val();
+                data.investment = $("#id_investment").val();
+                data.to = $("#id_to").val();
                 data.comment = $("#id_comment").val();
 
                 if (action == "order-editing") { data.row_id = $("#orderdata").attr("row_id"); }
