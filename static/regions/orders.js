@@ -79,6 +79,8 @@ function DeleteRowOrder(e) {
 
             }
 
+            if (data["result"] == "notaccess") { alert("Нет доступа к этому действию!");}
+
         })
 
 
@@ -97,6 +99,9 @@ function ChoiceRegion() {
     $('#addrow').show();
     $('#tocsv').show();
     $("#select-region option[value='0']").remove();
+
+    // Формирование ссылки
+    $("#tocsv").attr("href","/regions/filedata/?action=getorders&region="+$("#select-region").val());
 
     // Отображение заказов
     ShowOrders();
@@ -146,14 +151,21 @@ function AddRow(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=new_roworder",
         function(data) {
 
+            if (data["access"] == "admin") {
+
             $("table[group=tableform]").empty();
             $("table[group=tableform]").append(data["form"]);
             $("select#id_region").val( region );
 
+            RowData(action="order-adding",access="admin");
+
+            }
+
+            else { alert("Нет доступа к этому действию!"); }
+
 
         })
 
-    RowData(action="order-adding");
 }
 
 
@@ -170,12 +182,25 @@ function EditRow(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=edit_roworder&row_id="+row_id,
         function(data) {
 
-            $("table[group=tableform]").empty();
-            $("table[group=tableform]").append(data["form"]);
-            $("#orderdata").attr("row_id",data["row_id"]);
+
+
+
+            // Доступ уровня администратора или пользователя
+            if (data["access"] == "admin" || data["access"] == "user") {
+
+                $("table[group=tableform]").empty();
+                $("table[group=tableform]").append(data["form"]);
+                $("#orderdata").attr("row_id",data["row_id"]);
+
+                RowData(action="order-editing", access=data["access"]);
+
+            }
+
+            // Для анонимного доступа
+            if (data["access"] == "anonymous") { alert("Нет доступа к этому действию!");}
+
         })
 
-    RowData(action="order-editing");
 }
 
 
@@ -189,7 +214,7 @@ function EditRow(e) {
 
 
 // Сохранение данных с формы ввода
-function RowData(action) {
+function RowData(action,access) {
 
 
     $("#orderdata").dialog({
@@ -205,13 +230,6 @@ function RowData(action) {
                     }
                 }
             });
-
-            // Отправка формы
-            //$("#form-row-order").submit();
-
-
-
-            //if ($('input#namescheme').val().length != 0 && $('textarea#jsonscheme').val().length != 0) {
 
 
 
@@ -244,15 +262,30 @@ function RowData(action) {
                 });
 
 
-            //}
-            //else { alert("Необходимо заполнить поля");}
-
         }},
 
 
             {text:"Закрыть",click: function() {
             $(this).dialog("close")}}
         ],
+        open: function() {
+            // Ограничение доступа редактирования к полям ввода
+            if (access == "user") {
+                $("form#form-row-order select#id_region").attr("disabled","disabled");
+                $("form#form-row-order input#id_order").attr("readonly","readonly");
+                $("form#form-row-order input#id_model").attr("readonly","readonly");
+                $("form#form-row-order input#id_name").attr("readonly","readonly");
+                $("form#form-row-order input#id_ed").attr("readonly","readonly");
+            }
+            // Снятие ограничений на доступ к полям ввода
+            if (access == "admin") {
+                $("form#form-row-order select#id_region").removeAttr("disabled");
+                $("form#form-row-order input#id_order").removeAttr("readonly");
+                $("form#form-row-order input#id_model").removeAttr("readonly");
+                $("form#form-row-order input#id_name").removeAttr("readonly");
+                $("form#form-row-order input#id_ed").removeAttr("readonly");
+            }
+        },
         modal:true,
         minWidth:400,
         width:600

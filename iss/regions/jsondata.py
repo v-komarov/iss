@@ -11,7 +11,35 @@ from iss.regions.models import orders
 from iss.localdicts.models import regions
 
 
+
+
+
+
+
+### Уровень доступа для таблицы заказов
+def get_access_order(request):
+    if request.user.is_authenticated():
+        ### Проверка на принадлежность группе
+        if request.user.groups.filter(name='orders-admin'):
+            return "admin"
+        if request.user.groups.filter(name='orders'):
+            return "user"
+
+    return "anonymous"
+
+
+
+
+
+
+
+
 def get_json(request):
+
+    ### Timezone
+    tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
+
+
     response_data = {}
 
     if request.method == "GET":
@@ -26,7 +54,7 @@ def get_json(request):
             t = template.Template("{{ form.as_table }}")
             c = template.Context({'form': form})
             f = t.render(c)
-            response_data = {"result": "ok", "form": f}
+            response_data = {"result": "ok", "form": f, "access": get_access_order(request)}
 
 
 
@@ -39,7 +67,7 @@ def get_json(request):
             t = template.Template("{{ form.as_table }}")
             c = template.Context({'form': form})
             f = t.render(c)
-            response_data = {"result": "ok", "row_id": row_id, "form": f}
+            response_data = {"result": "ok", "row_id": row_id, "form": f, "access": get_access_order(request)}
 
 
 
@@ -48,20 +76,19 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'get-rows-order':
             region = regions.objects.get(pk=(int(request.GET["region"], 10)))
 
-            tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
+
 
             rows = ""
             total = decimal.Decimal('0.00')
 
             for i in orders.objects.filter(region=region).order_by('order'):
                 total += i.rowsum
-                updatetime = ""
-                t = template.Template("<tr id={{ id }}><td><a edit>{{ order }}</a></td><td><a edit>{{ model }}</a></td><td><a edit>{{ name }}</a></td><td><a edit>{{ ed }}</a></td><td><a edit>{{ count }}</a></td><td><a edit>{{ price }}</a></td><td><a edit>{{ rowsum }}</a></td><td><a>{% load tz %}{% timezone tz %}{{ update|date:\"d.m.Y H:i e\" }}{% endtimezone %}</a></td><td><a>{{ author }}</a></td><td><a delete title=\"Удалить\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td><tr>")
-                c = template.Context({'tz': tz, 'id': i.id, 'order': i.order, 'model': i.model, 'name': i.name, 'ed': i.ed, 'price': i.price, 'count': i.count, 'rowsum': i.rowsum, 'edited': updatetime, 'author': i.author })
+                t = template.Template("<tr id={{ id }}><td><a edit>{{ order }}</a></td><td><a edit>{{ model }}</a></td><td><a edit>{{ name }}</a></td><td><a edit>{{ ed }}</a></td><td><a edit>{{ count }}</a></td><td><a edit>{{ price }}</a></td><td><a edit>{{ rowsum }}</a></td><td><a edit>{{ comment }}</a></td><td>{% load tz %}{% timezone tz %}{{ edited|date:\"d.m.Y H:i e\" }}{% endtimezone %}</td><td>{{ author }}</td><td><a delete title=\"Удалить\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td><tr>")
+                c = template.Context({'tz': tz, 'id': i.id, 'order': i.order, 'model': i.model, 'name': i.name, 'ed': i.ed, 'price': i.price, 'count': i.count, 'rowsum': i.rowsum, 'comment': i.comment, 'edited': i.datetime_update, 'author': i.author })
                 row = t.render(c)
                 rows += row
 
-            t = template.Template("<tr><td></td><td></td><td></td><td></td><td></td><td>Всего</td><td>{{ total }}</td><td></td><td></td><td</td></tr>")
+            t = template.Template("<tr><td></td><td></td><td></td><td></td><td></td><td>Всего</td><td>{{ total }}</td><td></td><td></td><td></td><td</td></tr>")
             c = template.Context({'total': total})
             row = t.render(c)
             rows += row
@@ -73,9 +100,12 @@ def get_json(request):
 
         ### Удаление позиции заказа
         if r.has_key("action") and rg("action") == 'delete-row-order':
-            orders.objects.get(pk=(int(request.GET["row_id"], 10))).delete()
 
-            response_data = {"result": "ok"}
+            if get_access_order(request) == "admin":
+                orders.objects.get(pk=(int(request.GET["row_id"], 10))).delete()
+                response_data = {"result": "ok"}
+            else:
+                response_data = {"result": "notaccess"}
 
 
 
@@ -109,7 +139,8 @@ def get_json(request):
                     count = count,
                     price = price,
                     rowsum = count * price,
-                    comment = comment
+                    comment = comment,
+                    author=request.user.get_username() + " (" + request.user.get_full_name() + ")"
                 )
             else:
                 ### Создание для каждого региона
@@ -123,7 +154,8 @@ def get_json(request):
                         count=count,
                         price=price,
                         rowsum=count * price,
-                        comment=comment
+                        comment=comment,
+                        author=request.user.get_username() + " (" + request.user.get_full_name() + ")"
                     )
 
 
@@ -156,6 +188,7 @@ def get_json(request):
             d.price = price
             d.rowsum = price*count
             d.comment = comment
+            d.author = request.user.get_username() + " (" + request.user.get_full_name() + ")"
             d.save()
 
 

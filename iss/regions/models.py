@@ -18,7 +18,7 @@ class orders(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Цена за единицу', default=0.00)
     rowsum = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Сумма по позиции', default=0.00 )
     author = models.CharField(max_length=100, default="")
-    datetime_update = models.DateTimeField(null=True)
+    datetime_update = models.DateTimeField(null=True, auto_now=True)
     comment = models.CharField(max_length=255, default="", verbose_name='Коментарий')
 
     def __unicode__(self):
