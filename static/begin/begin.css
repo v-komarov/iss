@@ -1,0 +1,21 @@
+/* Курсор */
+a#newuser, a#repair {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+a#newuser:hover, a#repair:hover {
+    text-decoration:none;
+}
+
+
+#divnewuser,#divrepair {
+    padding-top:20px;
+}
+
+
+/* Поля ввода */
+table[group=new-user-form] > tbody > tr > td > input {
+    width: 300px;
+}

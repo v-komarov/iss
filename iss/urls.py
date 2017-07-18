@@ -21,6 +21,7 @@ from iss.begin.views import Begin,MainMenu,LogOut
 
 urlpatterns = [
     url(r'^$', Begin),
+    url(r'^begin/', include('iss.begin.urls')),
     url(r'^mainmenu/$', MainMenu),
     url(r'^monitor/',include('iss.monitor.urls')),
     url(r'^working/',include('iss.working.urls')),
