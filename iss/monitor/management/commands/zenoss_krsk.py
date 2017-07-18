@@ -122,7 +122,7 @@ class Command(BaseCommand):
 
                 ### Определение что делать с записью по информации в кэше
                 if last_action == None and severity.id != 0 and severity.id != 1 and severity.id != 4:
-                    if events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).exists() == False:
+                    if events.objects.filter(evid=evid).exists() == False:
                         action = "insert"
                     else:
                         action = "update"
@@ -199,7 +199,7 @@ class Command(BaseCommand):
                     """
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
-                        r0 = events.objects.filter(uuid=uuid, finished_date=None, device_net_address=ipaddress, event_class=eventclass, source='zenoss_krsk')
+                        r0 = events.objects.filter(evid=evid, source='zenoss_krsk')
                         if r0.count() > 0:
                             e = r0[0]
                             if e.agregator == False and e.agregation == False and e.accident == False:

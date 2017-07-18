@@ -14,6 +14,7 @@ from requests import post
 import time
 import datetime
 import logging
+import hashlib
 from pytz import timezone
 from iss.localdicts.models import Status,Severity
 import json
@@ -119,16 +120,15 @@ class Command(BaseCommand):
                 if r["details"].has_key("manager"):
                     manager = ", ".join(r["details"]["manager"])
 
-                key = "%s%s%s" % (uuid,eventclass,location) # 20.02.2017
-                hash_key = evid+"zenoss_chi"
+                key = hashlib.md5("{evid}zenoss_chi{severity}:{status}".format(evid=evid, severity=r["severity"], status=r["eventState"])).hexdigest()
 
 
-                last_action = cache.get(hash_key)
+                last_action = cache.get(key)
                 ### Если такого ключа нет, добавить запись
 
                 ### Определение что делать с записью по информации в кэше
                 if last_action == None and severity.id != 0 and severity.id != 1 and severity.id != 4:
-                    if events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass).exists() == False:
+                    if events.objects.filter(evid=evid).exists() == False:
                         action = "insert"
                     else:
                         action = "update"
@@ -152,6 +152,7 @@ class Command(BaseCommand):
                 """
                 if action == "insert":
                     events.objects.create(
+                        evid=evid,
                         source='zenoss_chi',
                         uuid=uuid,
                         first_seen=firsttime,
@@ -174,7 +175,7 @@ class Command(BaseCommand):
                     )
 
                     # Запись кэш об insert для evid
-                    cache.set(hash_key, "insert", 360000)
+                    cache.set(key, "insert", 360000)
 
 
                 elif action == "update":
@@ -195,7 +196,7 @@ class Command(BaseCommand):
                     """
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
-                        r0 = events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_chi')
+                        r0 = events.objects.filter(evid=evid, source='zenoss_chi')
                         if r0.count() > 0:
                             e = r0[0]
                             if e.agregator == False and e.agregation == False and e.accident == False:
@@ -225,7 +226,7 @@ class Command(BaseCommand):
                                 r0.delete()
 
                             else:
-                                events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_chi').update(
+                                events.objects.filter(evid=evid, source='zenoss_chi').update(
                                     first_seen=firsttime,
                                     update_time=update_time,
                                     last_seen=lasttime,
@@ -235,14 +236,14 @@ class Command(BaseCommand):
                                     finished_date = lasttime
                                 )
                         # Запись кэш об завершении события для evid
-                        cache.delete(hash_key)
+                        cache.delete(key)
 
                         #### Если событие не завершено
                         """
                             Обновление открытых аварийных событий
                         """
                     else:
-                        events.objects.filter(uuid=uuid, finished_date=None, event_class=eventclass, source='zenoss_chi').update(
+                        events.objects.filter(evid=evid, source='zenoss_chi').update(
                             first_seen=firsttime,
                             update_time=update_time,
                             last_seen=lasttime,
@@ -251,7 +252,7 @@ class Command(BaseCommand):
                             status_id=status
                         )
                         # Запись кэш об обновлении события для evid
-                        cache.set(hash_key,"update", 360000)
+                        cache.set(key,"update", 360000)
 
 
         print "ok"
