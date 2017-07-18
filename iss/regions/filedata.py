@@ -28,7 +28,7 @@ def get_orders_region(request):
 
 
 
-    response = HttpResponse(content_type="text/csv")
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
     response['Content-Disposition'] = 'attachment; filename="orders.csv"'
-    response.write(response_data.encode("cp1251"))
+    response.write(response_data)
     return response

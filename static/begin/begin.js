@@ -4,6 +4,9 @@ $(document).ready(function() {
     $("a#newuser").bind("click",AddUser);
 
 
+    // Смена и отправка пароля по почте
+    $("a#repair").bind("click",ChangePasswd);
+
 
 });
 
@@ -36,6 +39,37 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
+
+// Изменение пароля и отправка по email
+function ChangePasswd(e) {
+
+    var login = prompt("Введите логин","");
+
+    if ( login != null ) {
+
+        var jqxhr = $.getJSON("/begin/jsondata/?action=new-passwd&login="+login,
+        function(data) {
+
+
+            if (data["result"] == "ok") { alert(data["comment"]); }
+
+            else { alert(data["comment"]); }
+
+        })
+
+
+
+    }
+}
+
+
+
 
 
 

@@ -1,12 +1,25 @@
 # coding:utf-8
 
 import json
+import random
+import string
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 from iss.begin.forms import NewUserForm
+
+
+
+
+### Генерация пароля
+def random_passwd():
+  rid = ''
+  for x in range(8): rid += random.choice(string.ascii_letters + string.digits)
+  return rid
+
 
 
 
@@ -28,8 +41,29 @@ def get_json(request):
             t = template.Template("{{ form.as_table }}")
             c = template.Context({'form': form})
             f = t.render(c)
-            print f
             response_data = {"result": "ok", "form": f}
+
+
+
+
+        ### Изменение пароля и отправка по email
+        if r.has_key("action") and rg("action") == 'new-passwd':
+            login = request.GET["login"]
+            if User.objects.filter(username=login).exists():
+                user = User.objects.get(username=login)
+                ### Проверка есть ли email адрес
+                if len(user.email) > 10 and user.email.find('@') != -1:
+                    passwd = random_passwd()
+                    user.set_password(passwd)
+                    user.save()
+                    send_mail('http://10.6.0.22:8000 was changed password', 'new password %s for login %s' % (passwd,login), 'GAMMA <gamma@sibttk.ru>', [user.email,])
+                    response_data = {"result": "ok", "comment": u"Пароль изменен и отправлен<br>по адресу %s" % user.email }
+                else:
+                    response_data = {"result": "error", "comment": "Нет email адреса!"}
+
+            else:
+                response_data = {"result": "error", "comment": "Нет такой учетной записи!"}
+
 
 
 
@@ -54,7 +88,7 @@ def get_json(request):
 
             #if form.is_valid():
             ### Валидация формы не работает - видимо форма без модели - в этом причина?
-            if len(login) > 5 and len(passwd) > 7 and len(email) > 10 and email.find('@') != -1 and len(firstname) > 2 and len(lastname) > 2:
+            if len(login) > 3 and len(passwd) > 7 and len(email) > 10 and email.find('@') != -1 and email.find('ttk') != -1 and len(firstname) > 2 and len(lastname) > 2:
 
                 ### Проверка - есть ли уже такой логин
                 if not User.objects.filter(username=login).exists():
