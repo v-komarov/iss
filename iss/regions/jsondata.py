@@ -89,7 +89,7 @@ def get_json(request):
                                       <td><a edit>{{ price }}</a></td><td><a edit>{{ rowsum }}</a></td>
                                       <td><a edit>{{ b2b_b2o }}</a></td><td><a edit>{{ investment }}</a></td>
                                       <td><a edit>{{ to }}</a></td><td><a edit>{{ comment }}</a></td>
-                                      <td><a id="tooltip" title="{{ techz }}">...</a></td>
+                                      <td><a edit id="tooltip" title="{{ techz }}">{{ techz|truncatechars:200 }}</a></td>
                                       <td>{% load tz %}{% timezone tz %}{{ edited|date:\"d.m.Y H:i e\" }}{% endtimezone %}</td>
                                       <td>{{ author }}</td><td><a delete title=\"Удалить\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>
                                       <tr>""")
