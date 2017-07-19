@@ -245,6 +245,7 @@ function RowData(action,access) {
                 data.investment = $("#id_investment").val();
                 data.to = $("#id_to").val();
                 data.comment = $("#id_comment").val();
+                data.tz = $("#id_tz").val();
 
                 if (action == "order-editing") { data.row_id = $("#orderdata").attr("row_id"); }
 

@@ -20,6 +20,7 @@ class orders(models.Model):
     b2b_b2o = models.IntegerField(default=0, verbose_name='Подключения B2B+B2O', null=True)
     investment = models.IntegerField(default=0, verbose_name='Инвестпроекты', null=True)
     to = models.IntegerField(default=0, verbose_name='ТО сетей связи', null=True)
+    tz = models.TextField(verbose_name='Тех.задание', default="")
     author = models.CharField(max_length=100, default="")
     datetime_update = models.DateTimeField(null=True, auto_now=True)
     comment = models.CharField(max_length=255, default="", verbose_name='Коментарий')

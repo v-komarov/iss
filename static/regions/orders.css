@@ -41,7 +41,8 @@ table[group=orders-list] > tbody > tr > td > a:hover, #tocsv, #addrow {
 
 /* Поля ввода */
 table[group=tableform] > tbody > tr  td > input,
-table[group=tableform] > tbody > tr  td > select {
+table[group=tableform] > tbody > tr  td > select,
+table[group=tableform] > tbody > tr  td > textarea {
     width: 400px;
 }
 

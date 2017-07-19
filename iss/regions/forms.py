@@ -7,4 +7,4 @@ from iss.regions.models import orders
 class OrderForm(ModelForm):
     class Meta:
         model = orders
-        fields = ['region', 'order', 'model', 'name', 'ed', 'price', 'b2b_b2o', 'investment', 'to','comment']
+        fields = ['region', 'order', 'model', 'name', 'ed', 'price', 'b2b_b2o', 'investment', 'to','comment', 'tz']
