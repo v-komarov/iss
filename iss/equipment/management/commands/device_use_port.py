@@ -25,13 +25,15 @@ krsk_tz = timezone(tz)
 
 
 class Command(BaseCommand):
-    args = '<User port>'
+    args = '<Имя файла>'
     help = 'user port'
 
 
 
-
     def handle(self, *args, **options):
+
+
+        filename = args[0]
 
         """
 
@@ -44,7 +46,7 @@ class Command(BaseCommand):
         Отметка пользовательских портов
 
         """
-        with open('iss/equipment/csv/unt-irk.csv') as csvfile:
+        with open('iss/equipment/csv/%s' % filename) as csvfile:
             spamreader = csv.reader(csvfile,delimiter=";")
             #next(spamreader, None)
             for row in spamreader:
