@@ -123,7 +123,10 @@ class NetElementsList(ListView):
 
     def get_queryset(self):
 
-        data = netelems.objects.order_by('name')
+        if self.session.has_key("search_netelem") and self.session["search_netelem"] != "":
+            data = netelems.objects.filter(name__icontains=self.session["search_netelem"])
+        else:
+            data = netelems.objects.order_by('name')
 
         return data
 
@@ -140,6 +143,11 @@ class NetElementsList(ListView):
             context['tz']= self.session['tz']
         else:
             context['tz']= 'UTC'
+
+        if self.session.has_key("search_netelem") and self.session["search_netelem"] != "":
+            context["netelemsearch"] = self.session["search_netelem"]
+        else:
+            context["netelemsearch"] = ""
 
 
         return context
@@ -162,9 +170,6 @@ class NetElement(TemplateView):
         self.request = request
         self.session = request.session
         self.user = request.user
-
-        if self.request.GET.has_key("elem"):
-            self.session["netelemid"] = self.request.GET["netelemid"]
 
 
         return super(NetElement, self).dispatch(request, *args, **kwargs)

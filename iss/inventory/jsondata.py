@@ -789,7 +789,8 @@ def get_json(request):
 
                 u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
                 ne = netelems.objects.create(name=name,author=u)
-                response_data = {"result": "ok", "neid":ne.id}
+                request.session["netelemid"] = ne.id
+                response_data = {"result": "ok"}
 
             else:
 

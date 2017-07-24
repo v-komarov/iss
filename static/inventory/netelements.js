@@ -14,10 +14,10 @@ $(document).ready(function() {
 
 
     // Поиск
-    $("#runsearch_netelem").bind("click",RunSearch);
+    $("button#runsearch").bind("click",RunSearch);
 
     // Сброс поиска
-    $("#clearsearch_netelem").bind("click",ClearSearch);
+    $("button#clearsearch").bind("click",ClearSearch);
 
 
 });
@@ -29,7 +29,7 @@ $(document).ready(function() {
 
 // Поиск
 function RunSearch(e) {
-    var search = $("#search_netelem").val();
+    var search = $("input#search_netelem").val();
     var jqxhr = $.getJSON("/inventory/jsondata?search2="+search,
         function(data) {
             window.location=$("#menunetelements a").attr("href");
@@ -40,8 +40,8 @@ function RunSearch(e) {
 
 // Отмена Search
 function ClearSearch(e) {
-    $("#search_netelem").val("");
-    $("#search_netelem").attr("placeholder","");
+    $("input#search_netelem").val("");
+    $("input#search_netelem").attr("placeholder","");
 
     var search = "";
     var jqxhr = $.getJSON("/inventory/jsondata?search2="+search,
@@ -164,7 +164,7 @@ function AddNetElement(e) {
                   data:$.toJSON(data),
                     success: function(result) {
                         if (result["result"] == "error") { alert("Возможно элемент\nс таким именем уже существует!"); }
-                        else {window.location.href = "/inventory/netelementdata/?elem="+result["neid"];}
+                        else {window.location.href = "/inventory/netelementdata/";}
                     }
 
                 });
