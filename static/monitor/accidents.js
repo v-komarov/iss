@@ -18,6 +18,9 @@ $(document).ready(function() {
     $("#write-address-data").bind("click",WriteAddressData);
 
 
+    // Добавление ДРП
+    $("button#adddrp").bind("click", AddDRP);
+
 
     //$('table[group=accidents]').tableScroll({height:800});
 
@@ -415,6 +418,9 @@ function ListDRP(e) {
 
     var row_id = $("tr[marked=yes]").attr("row_id");
 
+    // Очистка поля ввода новго ДРП
+    $("textarea#text-new-drp").val("");
+
     var jqxhr = $.getJSON("/monitor/events/jsondata?getdrplist="+row_id,
         function(data) {
 
@@ -477,6 +483,50 @@ function ListDRP(e) {
 
 
 }
+
+
+
+
+
+// Добавление ДРП
+function AddDRP(e) {
+
+    var row_id = $("tr[marked=yes]").attr("row_id");
+
+        var data = {};
+        data.accident = row_id;
+        data.drp_text = $("textarea#text-new-drp").val();
+        data.action = "adding-drp";
+
+
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+        $.ajax({
+          url: "/monitor/events/jsondata/",
+          type: "POST",
+          dataType: 'json',
+          data:$.toJSON(data),
+            success: function(result) {
+
+                ListDRP();
+
+            }
+
+        });
+
+
+}
+
+
 
 
 

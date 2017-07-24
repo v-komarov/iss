@@ -159,7 +159,7 @@ class messages(models.Model):
 
 ### Список ДРП
 class drp_list(models.Model):
-    datetime_drp = models.DateTimeField(db_index=True,null=True)
+    datetime_drp = models.DateTimeField(db_index=True, null=True, auto_now_add=True)
     data_files = JSONField(default={}) ### Хранение файлов
     message_drp = models.TextField(default="")
     accident = models.ForeignKey(accidents)

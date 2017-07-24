@@ -22,7 +22,7 @@ from django.db.models import Q
 from django import template
 
 
-from iss.monitor.models import events,accidents
+from iss.monitor.models import events, accidents, drp_list
 from iss.localdicts.models import Severity,Status,address_house,accident_cats,accident_list,address_templates,logical_interfaces_prop_list,device_status
 
 from iss.monitor.othersources import get_zkl
@@ -1550,6 +1550,29 @@ def get_json(request):
             response_data = {'result': "ok"}
 
             logger.info("{user}    удалил из группировки id={id} {cont} события".format(user=request.user.get_username(), id=e.id,cont=e.device_location))
+
+
+
+        ### Добавление нового ДРП
+        if data.has_key("action") and data["action"] == 'adding-drp':
+            data = eval(str(data))
+            acc = accidents.objects.get(pk=int(data["accident"], 10))
+            drp_text = data["drp_text"]
+
+            if drp_list.objects.filter(accident=acc).exists():
+                num_drp = drp_list.objects.filter(accident=acc).order_by('datetime_drp').last().num_drp + 1
+            else:
+                num_drp = 1
+
+            drp_list.objects.create(
+                message_drp= drp_text,
+                accident= acc,
+                num_drp = num_drp,
+                author = request.user.get_username()+ " ("+request.user.get_full_name()+")"
+            )
+
+            response_data = {'result': 'ok'}
+
 
 
 

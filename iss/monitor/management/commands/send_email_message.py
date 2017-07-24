@@ -79,7 +79,7 @@ class Command(BaseCommand):
 
 
             ### Выбор сообщений с оповещение об аварии на МСС
-            if m.data["acc_email_templates"] == "1":
+            if m.data["acc_email_templates"] in ['1', '3', '5']:
 
                 temp_id = int(m.data["acc_email_templates"],10)
                 temp = email_templates.objects.get(pk=temp_id)
@@ -102,7 +102,7 @@ class Command(BaseCommand):
                 Исп: %s<br>
                 Диспетчер отдела мониторинга и управления<br>
                 сетями доступа Макрорегион Сибирь<br>
-                Тел. (806) 3721. E-Mail: DS@sibir.ttk.ru<br>
+                Тел. (805) 1555. E-Mail: DS@sibir.ttk.ru<br>
                 --------------------------------------------------<br>
                 Данное сообщение сформировано автоматически<br>
                 ISS2 %s.
@@ -134,7 +134,7 @@ class Command(BaseCommand):
 
 
             ### Выбор сообщений с оповещение об устранении аварии на МСС
-            elif m.data["acc_email_templates"] == "2":
+            elif m.data["acc_email_templates"] in ['2', '4', '6']:
 
                 temp_id = int(m.data["acc_email_templates"], 10)
                 temp = email_templates.objects.get(pk=temp_id)
@@ -159,7 +159,7 @@ class Command(BaseCommand):
                 Исп: %s<br>
                 Диспетчер отдела мониторинга и управления<br>
                 сетями доступа Макрорегион Сибирь<br>
-                Тел. (806) 3721. E-Mail: DS@sibir.ttk.ru<br>
+                Тел. (805) 1555. E-Mail: DS@sibir.ttk.ru<br>
                 --------------------------------------------------<br>
                 Данное сообщение сформировано автоматически<br>
                 ISS2 %s.

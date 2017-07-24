@@ -27,3 +27,16 @@ table[group=accidents] > tbody > tr > td {
     margin-left:10px;
 }
 
+
+
+/* Форма отображения и ввода ДРП */
+#text-new-drp {
+    width: 400px;
+    height: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+table#drpadd > tbody > tr > td {
+    vertical-align: top;
+}
