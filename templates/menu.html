@@ -76,6 +76,8 @@
         </a>
         <ul class="dropdown-menu">
           <li id="menuregionsorders" {% if request.path|slice:'0:16' == "/regions/orders/" %}class="active"{% endif %}><a href="/regions/orders/">Таблица заказов</a></li>
+          <li id="menuregionsreestr" {% if request.path|slice:'0:16' == "/regions/reestr/" %}class="active"{% endif %}><a href="/regions/reestr/page/1/">Реестр</a></li>
+          <li id="menuregionsshippeddevices" {% if request.path|slice:'0:24' == "/regions/shippeddevices/" %}class="active"{% endif %}><a href="/regions/shippeddevices/">Отгруженное оборудование</a></li>
         </ul>
       </li>
       <li class="dropdown">

@@ -1,0 +1,178 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/reestr.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/reestr.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+    <div id="manager" class="row small">
+        <form class="form-inline col-sm-offset-1">
+            <label for="select-region">Регион</label>
+            <select id="select-region" class="form-control input-sm" data-width="auto">
+                    <option value="0" selected></option>
+                    {% for item in regions_list %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+            </select>
+            <label for="select-city">Населенный пункт</label>
+            <select id="select-city" class="form-control input-sm" data-width="auto">
+                    <option value="0" selected></option>
+                    {% for item in cities_list %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+            </select>
+            <a id="addrow" title="Создать новую позицию">Добавить</a>
+            <a id="toexcel" title="Выгрузить в Excel формат">Excel</a>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="row">
+</div>
+
+
+
+<div class="row">
+
+
+
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/regions/reestr/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/regions/reestr/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+
+
+
+    <table group="reestr-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Регион</th>
+                <th>Год<br>постановки<br>на баланс</th>
+                <th>Ссылка на<br>оригинал</th>
+                <th>Сеть</th>
+                <th>Населенный<br>пункт</th>
+                <th>Код<br>проекта</th>
+                <th>Инвентарный<br>номер</th>
+                <th>Дата ввода в<br>эксплуатацию</th>
+                <th>Кол-во<br>ед. ОС</th>
+                <th>Наименование<br>оборудования/<br>объекта ОС</th>
+                <th>Комкод</th>
+                <th>Серийные<br>номера и<br>пр.информация</th>
+                <th>Номенклатурный<br>номер</th>
+                <th>Единица<br>измерения</th>
+                <th>Количество</th>
+                <th>Цена<br>руб.коп.</th>
+                <th>Всего<br>руб.коп.</th>
+                <th>Номер<br>акта<br>ОС1</th>
+                <th>Номер<br>аморт.<br>группы</th>
+                <th>Срок<br>полезного<br>использования</th>
+                <th>Адрес<br>установки</th>
+                <th>Информационная<br>колонка<br>DWDM</th>
+                <th>Информационная<br>колонка<br>TDM</th>
+                <th>Информационная<br>колонка<br>SDH</th>
+                <th>Информационная<br>колонка<br>IP</th>
+                <th>Информационная<br>колонка<br>ATM</th>
+                <th>Информационная<br>колонка<br>ЕМЦС</th>
+                <th>Дата<br>изменения</th>
+                <th>Автор<br>изменений</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+            {% for row in object_list %}
+
+
+                    <tr class="small">
+
+                        <td><a id="tooltip" title="{{ row.region }}">{{ row.region|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.god_balans }}">{{ row.god_balans|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.original }}">{{ row.original|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.net }}">{{ row.net|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.city }}">{{ row.city|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.project_code }}">{{ row.project_code|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.invnum }}">{{ row.invnum|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.start_date }}">{{ row.start_date|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.ed_os }}">{{ row.ed_os|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.name }}">{{ row.name|truncatechars:15 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.comecode }}">{{ row.comecode|truncatechars:15 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.serial }}">{{ row.serial|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.nomen }}">{{ row.nomen|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.ed }}">{{ row.ed|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.count }}">{{ row.count|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.price }}">{{ row.price|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.rowsum }}">{{ row.rowsum|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.actos1 }}">{{ row.actos1|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.group }}">{{ row.group|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.age }}">{{ row.age|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.address }}">{{ row.address|truncatechars:15 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.dwdm }}">{{ row.dwdm|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.tdm }}">{{ row.tdm|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.sdh }}">{{ row.sdh|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.ip }}">{{ row.ip|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.atm }}">{{ row.atm|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.emcs }}">{{ row.emcs|truncatechars:10 }}</a></td>
+                        {% timezone tz %}
+                        <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
+                        {% endtimezone %}
+                        <td><a>{{ row.author }}</a></td>
+
+                    </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+
+
+
+
+    </table>
+
+
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/regions/reestr/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/regions/reestr/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+
+
+
+</div>
+
+{% include "regions/orderdata.html" %}
+{% include "loading.html" %}
+
+
+{% endblock %}
+
