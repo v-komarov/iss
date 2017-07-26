@@ -102,8 +102,22 @@ class Reestr(ListView):
 
     def get_queryset(self):
 
+        if self.session.has_key("filter-city-reestr") and self.session.has_key("filter-region-reestr"):
+            region = regions.objects.get(pk=int(self.session["filter-region-reestr"], 10))
+            city = address_city.objects.get(pk=int(self.session["filter-city-reestr"], 10))
+            return reestr.objects.filter(region=region,city=city).order_by('invnum', 'name')
 
-        return reestr.objects.order_by('region__name')
+        elif self.session.has_key("filter-city-reestr") == False and self.session.has_key("filter-region-reestr"):
+            region = regions.objects.get(pk=int(self.session["filter-region-reestr"], 10))
+            return reestr.objects.filter(region=region).order_by('city__name', 'invnum', 'name')
+
+        elif self.session.has_key("filter-city-reestr") and self.session.has_key("filter-region-reestr") == False :
+            city = address_city.objects.get(pk=int(self.session["filter-city-reestr"], 10))
+            return reestr.objects.filter(city=city).order_by('region__name', 'invnum', 'name')
+
+        else:
+
+            return reestr.objects.order_by('region__name', 'city__name', 'invnum', 'name')
 
 
 
@@ -118,6 +132,8 @@ class Reestr(ListView):
         context['regions_list'] = regions.objects.order_by('name')
         context['cities_list'] = address_city.objects.order_by('name')
 
+        context['region'] = self.session["filter-region-reestr"] if self.session.has_key("filter-region-reestr") else "0"
+        context['city'] = self.session["filter-city-reestr"] if self.session.has_key("filter-city-reestr") else "0"
 
 
         return context

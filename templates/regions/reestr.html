@@ -23,14 +23,14 @@
     <div id="manager" class="row small">
         <form class="form-inline col-sm-offset-1">
             <label for="select-region">Регион</label>
-            <select id="select-region" class="form-control input-sm" data-width="auto">
+            <select region="{{ region }}" id="select-region" class="form-control input-sm" data-width="auto">
                     <option value="0" selected></option>
                     {% for item in regions_list %}
                         <option value="{{ item.id }}">{{ item.name }}</option>
                     {% endfor %}
             </select>
             <label for="select-city">Населенный пункт</label>
-            <select id="select-city" class="form-control input-sm" data-width="auto">
+            <select city="{{ city }}" id="select-city" class="form-control input-sm" data-width="auto">
                     <option value="0" selected></option>
                     {% for item in cities_list %}
                         <option value="{{ item.id }}">{{ item.name }}</option>
@@ -98,6 +98,9 @@
                 <th>Информационная<br>колонка<br>IP</th>
                 <th>Информационная<br>колонка<br>ATM</th>
                 <th>Информационная<br>колонка<br>ЕМЦС</th>
+                <th>Результат<br>фактическое<br>количество</th>
+                <th>Результат<br>серийные<br>номера</th>
+                <th>Результат<br>инвентарный<br>номер</th>
                 <th>Дата<br>изменения</th>
                 <th>Автор<br>изменений</th>
                 <th></th>
@@ -138,6 +141,9 @@
                         <td><a id="tooltip" title="{{ row.ip }}">{{ row.ip|truncatechars:10 }}</a></td>
                         <td><a id="tooltip" title="{{ row.atm }}">{{ row.atm|truncatechars:10 }}</a></td>
                         <td><a id="tooltip" title="{{ row.emcs }}">{{ row.emcs|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.res_count }}">{{ row.res_count|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.res_serial }}">{{ row.res_serial|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.res_invnum }}">{{ row.res_invnum|truncatechars:10 }}</a></td>
                         {% timezone tz %}
                         <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}

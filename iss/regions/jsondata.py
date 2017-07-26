@@ -125,6 +125,33 @@ def get_json(request):
 
 
 
+        ### Фильтр по региону для интерфейса Реестр
+        if r.has_key("action") and rg("action") == 'filter-region-reestr':
+            region = request.GET["region_id"]
+            if region != "0":
+                request.session["filter-region-reestr"] = region
+            else:
+                del request.session["filter-region-reestr"]
+
+            response_data = {"result": "ok"}
+
+
+
+        ### Фильтр по населенному пункту для интерфейса Реестр
+        if r.has_key("action") and rg("action") == 'filter-city-reestr':
+            region = request.GET["city_id"]
+            if region != "0":
+                request.session["filter-city-reestr"] = region
+            else:
+                del request.session["filter-city-reestr"]
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
     if request.method == "POST":
 
 

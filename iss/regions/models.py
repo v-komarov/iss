@@ -60,9 +60,14 @@ class reestr(models.Model):
     atm = models.TextField(verbose_name='Информационная колонка ATM', default="")
     emcs = models.TextField(verbose_name='Информационная колонка ЕМЦС', default="")
 
+    res_count = models.DecimalField(max_digits=14, decimal_places=2, verbose_name='Результат фактическое количество', null=True, default=0.00)
+    res_serial = models.TextField(default="", verbose_name='Результат серийные номера')
+    res_invnum = models.CharField(max_length=100, db_index=True, default="", verbose_name='Результат инвентарный номер')
+
     author = models.CharField(max_length=100, default="")
     datetime_update = models.DateTimeField(null=True, auto_now=True)
-    comment = models.CharField(max_length=255, default="", verbose_name='Примечание')
+
+
 
     def __unicode__(self):
         return self.name
