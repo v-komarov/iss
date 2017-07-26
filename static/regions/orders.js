@@ -98,10 +98,12 @@ function DeleteRowOrder(e) {
 function ChoiceRegion() {
     $('#addrow').show();
     $('#tocsv').show();
+    $('#tocsvall').show();
     $("#select-region option[value='0']").remove();
 
     // Формирование ссылки
     $("#tocsv").attr("href","/regions/filedata/?action=getorders&region="+$("#select-region").val());
+    $("#tocsvall").attr("href","/regions/filedata/?action=getordersall");
 
     // Отображение заказов
     ShowOrders();

@@ -18,13 +18,13 @@ table[group=orders-list] > tbody > tr > td {
 
 
 /* Курсор */
-table[group=orders-list] > tbody > tr > td > a, #tocsv, #addrow {
+table[group=orders-list] > tbody > tr > td > a, #tocsv, #tocsvall, #addrow {
     cursor:pointer;
     text-decoration:none;
 }
 
 
-table[group=orders-list] > tbody > tr > td > a:hover, #tocsv, #addrow {
+table[group=orders-list] > tbody > tr > td > a:hover, #tocsv, #tocsvall, #addrow {
     text-decoration:none;
 }
 
@@ -35,7 +35,7 @@ table[group=orders-list] > tbody > tr > td > a:hover, #tocsv, #addrow {
     margin-bottom:30px;
 }
 
-#addrow, #tocsv {
+#addrow, #tocsv, #tocsvall {
     margin-left: 30px;
 }
 
