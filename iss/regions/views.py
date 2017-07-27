@@ -18,6 +18,7 @@ from django.shortcuts import render_to_response,get_object_or_404
 from django.db import connections
 from django.http import HttpResponse
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic.base import TemplateView,RedirectView
@@ -81,7 +82,7 @@ class Orders(ListView):
 ### Реестр
 class Reestr(ListView):
 
-    model = orders
+    model = reestr
     template_name = "regions/reestr.html"
 
     paginate_by = 100
@@ -138,6 +139,41 @@ class Reestr(ListView):
 
         return context
 
+
+
+
+### Редактировать строку реестра
+@method_decorator(login_required(login_url='/'), name='dispatch')
+@method_decorator(group_required(group='reestr', redirect_url='/regions/reestr/page/1/'), name='dispatch')
+class ReestrUpdate(UpdateView):
+    model = reestr
+    fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os', 'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address', 'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs']
+    success_url = '/regions/reestr/page/1/'
+    template_name = "regions/edit_reestr.html"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.get_username() + " (" + self.request.user.get_full_name() + ")"
+        form.instance.rowsum = form.instance.price * form.instance.count
+        return super(ReestrUpdate, self).form_valid(form)
+
+
+
+
+### Добавить позицию реестра
+@method_decorator(login_required(login_url='/'), name='dispatch')
+@method_decorator(group_required(group='reestr', redirect_url='/regions/reestr/page/1/'), name='dispatch')
+class ReestrCreate(CreateView):
+    model = reestr
+    fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os',
+              'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address',
+              'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs']
+    success_url = '/regions/reestr/page/1/'
+    template_name = "regions/edit_reestr.html"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.get_username() + " (" + self.request.user.get_full_name() + ")"
+        form.instance.rowsum = form.instance.price * form.instance.count
+        return super(ReestrCreate, self).form_valid(form)
 
 
 

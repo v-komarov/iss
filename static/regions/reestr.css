@@ -45,3 +45,24 @@ table[group=reestr-list] > tbody > tr > td > a:hover, #toexcel, #addrow {
 #select-region, #select-city {
     margin-right: 30px;
 }
+
+
+/* Форма редактирования реестра */
+form#edit-reestr > table > tbody > tr > th {
+    vertical-align: top;
+}
+
+form#edit-reestr {
+    padding-left: 40px;
+    padding-top: 40px;
+}
+
+form#edit-reestr > table > tbody > tr > td > input,
+form#edit-reestr > table > tbody > tr > td > textarea,
+form#edit-reestr > table > tbody > tr > td > select {
+    width: 500px;
+}
+
+form#edit-reestr > table > tbody > tr > td > textarea {
+    height: 40px;
+}

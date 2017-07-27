@@ -36,7 +36,7 @@
                         <option value="{{ item.id }}">{{ item.name }}</option>
                     {% endfor %}
             </select>
-            <a id="addrow" title="Создать новую позицию">Добавить</a>
+            <a id="addrow" href="/regions/reestr/edit/add/" title="Создать новую позицию">Добавить</a>
             <a id="toexcel" title="Выгрузить в Excel формат">Excel</a>
         </form>
     </div>
@@ -114,36 +114,36 @@
 
                     <tr class="small">
 
-                        <td><a id="tooltip" title="{{ row.region }}">{{ row.region|truncatechars:5 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.god_balans }}">{{ row.god_balans|truncatechars:5 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.original }}">{{ row.original|truncatechars:5 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.net }}">{{ row.net|truncatechars:5 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.city }}">{{ row.city|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.project_code }}">{{ row.project_code|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.invnum }}">{{ row.invnum|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.start_date }}">{{ row.start_date|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.ed_os }}">{{ row.ed_os|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.name }}">{{ row.name|truncatechars:15 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.comecode }}">{{ row.comecode|truncatechars:15 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.serial }}">{{ row.serial|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.nomen }}">{{ row.nomen|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.ed }}">{{ row.ed|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.count }}">{{ row.count|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.price }}">{{ row.price|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.rowsum }}">{{ row.rowsum|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.actos1 }}">{{ row.actos1|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.group }}">{{ row.group|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.age }}">{{ row.age|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.address }}">{{ row.address|truncatechars:15 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.dwdm }}">{{ row.dwdm|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.tdm }}">{{ row.tdm|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.sdh }}">{{ row.sdh|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.ip }}">{{ row.ip|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.atm }}">{{ row.atm|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.emcs }}">{{ row.emcs|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.res_count }}">{{ row.res_count|truncatechars:7 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.res_serial }}">{{ row.res_serial|truncatechars:10 }}</a></td>
-                        <td><a id="tooltip" title="{{ row.res_invnum }}">{{ row.res_invnum|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.region }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.region|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.god_balans }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.god_balans|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.original }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.original|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.net }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.net|truncatechars:5 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.city }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.city|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.project_code }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.project_code|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.invnum }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.invnum|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.start_date }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.start_date|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.ed_os }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.ed_os|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.name }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.name|truncatechars:15 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.comecode }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.comecode|truncatechars:15 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.serial }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.serial|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.nomen }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.nomen|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.ed }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.ed|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.count }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.count|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.price }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.price|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.rowsum }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.rowsum|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.actos1 }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.actos1|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.group }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.group|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.age }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.age|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.address }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.address|truncatechars:15 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.dwdm }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.dwdm|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.tdm }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.tdm|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.sdh }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.sdh|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.ip }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.ip|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.atm }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.atm|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.emcs }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.emcs|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.res_count }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.res_count|truncatechars:7 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.res_serial }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.res_serial|truncatechars:10 }}</a></td>
+                        <td><a id="tooltip" title="{{ row.res_invnum }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.res_invnum|truncatechars:10 }}</a></td>
                         {% timezone tz %}
                         <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
