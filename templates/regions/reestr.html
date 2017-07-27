@@ -145,9 +145,9 @@
                         <td><a id="tooltip" title="{{ row.res_serial }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.res_serial|truncatechars:10 }}</a></td>
                         <td><a id="tooltip" title="{{ row.res_invnum }}" href="/regions/reestr/edit/{{ row.id }}">{{ row.res_invnum|truncatechars:10 }}</a></td>
                         {% timezone tz %}
-                        <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
+                        <td><a href="/regions/reestr/edit/{{ row.id }}">{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td><a>{{ row.author }}</a></td>
+                        <td><a href="/regions/reestr/edit/{{ row.id }}">{{ row.author }}</a></td>
 
                     </tr>
 

@@ -147,7 +147,7 @@ class Reestr(ListView):
 @method_decorator(group_required(group='reestr', redirect_url='/regions/reestr/page/1/'), name='dispatch')
 class ReestrUpdate(UpdateView):
     model = reestr
-    fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os', 'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address', 'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs']
+    fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os', 'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address', 'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs', 'res_count', 'res_serial', 'res_invnum']
     success_url = '/regions/reestr/page/1/'
     template_name = "regions/edit_reestr.html"
 
@@ -166,7 +166,7 @@ class ReestrCreate(CreateView):
     model = reestr
     fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os',
               'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address',
-              'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs']
+              'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs', 'res_count', 'res_serial', 'res_invnum']
     success_url = '/regions/reestr/page/1/'
     template_name = "regions/edit_reestr.html"
 
