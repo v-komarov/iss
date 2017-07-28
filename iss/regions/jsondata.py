@@ -151,6 +151,64 @@ def get_json(request):
 
 
 
+        ### Фильтр входящие /исходящие интерфейса Документооборот
+        if r.has_key("action") and rg("action") == 'filter-docs-inout':
+            inout = request.GET["inout_id"]
+            if inout != "0":
+                request.session["inout_value"] = inout
+            else:
+                del request.session["inout_value"]
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Фильтр по виду сообщения интерфейса Документооборот
+        if r.has_key("action") and rg("action") == 'filter-docs-messagetype':
+            mess_type = request.GET["mess_type"]
+            if mess_type != "0":
+                request.session["message_type_value"] = mess_type
+            else:
+                del request.session["message_type_value"]
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Фильтр по статусу сообщения интерфейса Документооборот
+        if r.has_key("action") and rg("action") == 'filter-docs-messagestatus':
+            mess_status = request.GET["mess_status"]
+            if mess_status != "0":
+                request.session["message_status_value"] = mess_status
+            else:
+                del request.session["message_status_value"]
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Сохранение id сообщения интерфейса Документооборот
+        if r.has_key("action") and rg("action") == 'docs-save-id':
+            message_id = request.GET["message_id"]
+
+            request.session['message_id'] = message_id
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
 
     if request.method == "POST":
 

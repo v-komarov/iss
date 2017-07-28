@@ -414,3 +414,40 @@ class regions(models.Model):
         verbose_name = 'Название региона'
         verbose_name_plural = 'Названия регионов'
 
+
+
+### Справочник "Входящие-Исходящие" для документооборота
+class InOut(models.Model):
+    name = models.CharField(max_length=50, verbose_name='Входящие - Исходящие', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Входящие - Исходящие'
+        verbose_name_plural = 'Входящие - Исходящие'
+
+
+
+### Виды сообщений для документооборота
+class MessageType(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Вид сообщения', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Вид сообщения'
+        verbose_name_plural = 'Виды сообщений'
+
+
+### Статус сообщения для документооборота
+class MessageStatus(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Статус сообщения', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Статус сообщения'
+        verbose_name_plural = 'Статусы сообщений'
