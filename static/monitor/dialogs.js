@@ -1425,6 +1425,7 @@ function MessageMssEnd(e) {
     // Авария не создавалась - ничего не делать
     if (accident != "yes") { return;}
 
+    // Заполнение полей формы
     var jqxhr = $.getJSON("/monitor/events/jsondata?mailaccidentdataend="+row_id,
 
         function(data) {
@@ -1443,7 +1444,7 @@ function MessageMssEnd(e) {
 
         })
 
-
+    // Определение зарегистрирована авария в ИСС или нет
     var jqxhr = $.getJSON("/monitor/events/jsondata?issaccidentok="+row_id,
     function(data) {
 

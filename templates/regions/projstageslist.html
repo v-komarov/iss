@@ -1,0 +1,98 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/proj.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/projlist.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+<div class="row">
+
+
+
+
+
+    <table group="stages-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Номер</th>
+                <th>Название</th>
+                <th>Длительность<br>дней</th>
+                <th>Начало</th>
+                <th>Завершение</th>
+                <th>Зависит от</th>
+                <th>Исполнители</th>
+                <th>Выполнено</th>
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+            {% for row in object_list %}
+
+
+                    <tr class="small strong" row_id="{{ row.id }}">
+                        <td><a><strong>{{ row.order }}</strong></a></td>
+                        <td><a><strong>{{ row.name }}</strong></a></td>
+                        <td><a><strong>{{ row.days }}</strong></a></strong></td>
+                        <td><strong>{{ row.begin }}</strong></td>
+                        <td><strong>{{ row.end }}</strong></td>
+                        <td><a><strong>{{ row.depend_on.stages }}</strong></a></td>
+                        <td></td>
+                        <td><input type="checkbox" /></td>
+
+                    </tr>
+
+                        {% for step in row.steps %}
+
+                        <tr>
+
+                            <tr class="small" row_id="{{ row.id }}">
+                            <td><a>{{ step.order }}</a></td>
+                            <td><a>&nbsp;&nbsp;&nbsp;&nbsp;{{ step.name }}</a></td>
+                            <td><a>{{ step.days }}</a></td>
+                            <td>{{ step.begin }}</td>
+                            <td>{{ step.end }}</td>
+                            <td><a>{{ step.depend_on.steps }}</a></td>
+                            <td></td>
+                            <td><input type="checkbox" /></td>
+
+                        </tr>
+
+                        {% endfor %}
+
+            {% endfor %}
+
+        </tbody>
+
+
+
+
+    </table>
+
+
+
+
+</div>
+
+
+{% endblock %}
+

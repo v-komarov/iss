@@ -74,3 +74,12 @@ form#message-data {
 #pages {
     padding-top: 30px;
 }
+
+
+form#message-data > table > tbody > tr > td > button {
+    margin-top: 10px;
+}
+
+#link_back {
+    padding-left:30px;
+}

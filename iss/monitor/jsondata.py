@@ -780,10 +780,10 @@ def get_json(request):
 
             tzm = 'Europe/Moscow'
 
-            m = messages.objects.filter(accident=acc, data__acc_email_templates="2").order_by('-datetime_message')
+            m = messages.objects.filter(Q(accident=acc) & (Q(data__acc_email_templates="2") | Q(data__acc_email_templates="4") | Q(data__acc_email_templates="6"))).order_by('-datetime_message')
             # Сообщение о завершении еще не отправлялось - ,берем даннные из сообщения о начале
             if m.count() == 0:
-                me = messages.objects.filter(accident=acc, data__acc_email_templates="1").order_by('-datetime_message').first()
+                me = messages.objects.filter(Q(accident=acc) & (Q(data__acc_email_templates="1") | Q(data__acc_email_templates="3") | Q(data__acc_email_templates="5"))).order_by('-datetime_message').first()
 
                 accjson = {
                     'acc_start': me.data['acc_datetime_begin'],

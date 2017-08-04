@@ -16,14 +16,22 @@
 </div>
 
 
+<a id="link_back" href="/regions/docs/" class="small">К списку</a>
 
 <form class="small" id="message-data">
 
     <table>
         {{ form.as_table }}
+        {% if access == 'owner' %}
+        {% endif %}
+
+        <tr><td></td><td><button id="save-common-button" class="btn btn-default btn-sm" onclick="return false;">Сохранить</button></td></tr>
+
+
     </table>
 
 </form>
+
 
 
 

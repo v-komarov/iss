@@ -99,7 +99,7 @@
                         {% timezone tz %}
                         <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td><a>{{ row.author.get_username }} ({{ row.author.get_full_name }})</a></td>
+                        <td><a>{{ row.author_update.get_username }} ({{ row.author_update.get_full_name }})</a></td>
 
                     </tr>
 

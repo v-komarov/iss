@@ -1,7 +1,7 @@
 #coding: utf-8
 
 from django.forms import ModelForm
-from iss.regions.models import orders, messages
+from iss.regions.models import orders, messages, proj
 
 ### Форма ввода и отображения позиции заказа
 class OrderForm(ModelForm):
@@ -16,3 +16,12 @@ class MessageForm(ModelForm):
     class Meta:
         model = messages
         fields = ['head', 'message_type', 'message', 'status']
+
+
+
+### Форма создания нового проекта
+class ProjForm(ModelForm):
+    class Meta:
+        model = proj
+        fields = ['name', 'start', 'temp', ]
+

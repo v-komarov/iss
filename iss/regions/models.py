@@ -10,7 +10,9 @@ import uuid
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from iss.localdicts.models import regions, address_city, address_house, InOut, MessageType, MessageStatus
+from django.contrib.postgres.fields import JSONField
+
+from iss.localdicts.models import regions, address_city, address_house, InOut, MessageType, MessageStatus, proj_temp
 
 
 
@@ -111,7 +113,7 @@ class load_user_files(models.Model):
     filename = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     comment = models.CharField(max_length=100, default="")
-    datetime_load = models.DateTimeField(null=True)
+    datetime_load = models.DateTimeField(null=True, default=None)
     messages = models.ManyToManyField(messages)
 
 
@@ -132,3 +134,41 @@ class messages_status_history(models.Model):
     def __unicode__(self):
         return self.status.name
 
+
+
+### Список проектов
+class proj(models.Model):
+    name = models.CharField(max_length=100, default="", verbose_name='Название проекта')
+    start = models.DateField(null=True, default=None, verbose_name='Начало проекта')
+    temp = models.ForeignKey(proj_temp, on_delete=models.PROTECT, verbose_name='Шаблон проекта')
+    status = models.CharField(max_length=100, default="Новый", verbose_name='Статус проекта')
+    author = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
+
+
+
+### Этапы проекта
+class proj_stages(models.Model):
+    order = models.IntegerField()
+    name = models.CharField(max_length=100, default="", verbose_name='Название этапа')
+    days = models.IntegerField(null=True, default=None, verbose_name='Длительность этапа')
+    begin = models.DateField(null=True, default=None)
+    end = models.DateField(null=True, default=None)
+    depend_on = JSONField(default={'stages':[]})
+    proj = models.ForeignKey(proj, on_delete=models.PROTECT, verbose_name='Связь с проектом')
+    workers = models.ManyToManyField(User)
+    done = models.BooleanField(default=False)
+
+
+
+### Шаги этапов
+class proj_steps(models.Model):
+    order = models.IntegerField()
+    name = models.CharField(max_length=100, default="", verbose_name='Название шага')
+    days = models.IntegerField(null=True, default=None, verbose_name='Длительность шага')
+    begin = models.DateField(null=True, default=None)
+    end = models.DateField(null=True, default=None)
+    depend_on = JSONField(default={'steps':[]})
+    stage = models.ForeignKey(proj_stages, on_delete=models.PROTECT, verbose_name='Связь с этапом')
+    workers = models.ManyToManyField(User)
+    done = models.BooleanField(default=False)

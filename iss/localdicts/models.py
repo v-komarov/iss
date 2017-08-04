@@ -441,6 +441,7 @@ class MessageType(models.Model):
         verbose_name_plural = 'Виды сообщений'
 
 
+
 ### Статус сообщения для документооборота
 class MessageStatus(models.Model):
     name = models.CharField(max_length=100, verbose_name='Статус сообщения', unique=True)
@@ -451,3 +452,43 @@ class MessageStatus(models.Model):
     class Meta:
         verbose_name = 'Статус сообщения'
         verbose_name_plural = 'Статусы сообщений'
+
+
+
+
+### Типовые шаблоны проектов
+class proj_temp(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    template_project = models.TextField(default='', verbose_name='Шаблон проекта')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Шаблон проекта'
+        verbose_name_plural = 'Шаблоны проектов'
+
+
+
+
+### Производственный календарь (содержит праздничные дни)
+class cal(models.Model):
+    year = models.CharField(max_length=10, verbose_name='Год', unique=True)
+    cal = JSONField(default={})
+
+    def __unicode__(self):
+        return self.year
+
+
+
+    ### Проверка даты на праздничный день
+    #Если в json поле информация , что день праздничный - True
+    def check_day(self, month, day):
+
+        if self.cal.has_key(month):
+            if self.cal[month].has_key(day):
+                if self.cal[month][day]["isWorking"] == 2:
+                    return True
+
+        return False
+

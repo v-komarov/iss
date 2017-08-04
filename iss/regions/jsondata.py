@@ -2,13 +2,14 @@
 
 import json
 import decimal
+import datetime
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders
-from iss.localdicts.models import regions
+from iss.regions.models import orders, messages, proj, proj_stages, proj_steps
+from iss.localdicts.models import regions, MessageType, proj_temp
 
 
 
@@ -208,6 +209,20 @@ def get_json(request):
 
 
 
+        ### Сохранение id проекта
+        if r.has_key("action") and rg("action") == 'proj-save-id':
+            proj_id = request.GET["proj_id"]
+
+            request.session['proj_id'] = proj_id
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
 
 
     if request.method == "POST":
@@ -313,6 +328,73 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Сохранение общих данных сообщения интерфейса Документооборот
+        if data.has_key("action") and data["action"] == 'message-save-common-data':
+
+            m = messages.objects.get(pk=int(request.session['message_id'], 10))
+
+            head = data["head"].strip()
+            message = data["message"].strip()
+            message_type = data["message_type"]
+
+            m.message = message
+            m.head = head
+            m.message_type = MessageType.objects.get(pk=int(message_type, 10))
+            m.author_update = request.user
+            m.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Создание проекта
+        if data.has_key("action") and data["action"] == 'create-proj':
+
+            ### Шаблон проекта
+            t = proj_temp.objects.get(pk=int(data['temp'], 10))
+
+            stages = eval(t.template_project)["stages"]
+
+            ### название проекта
+            name = data["name"].strip()
+            ### начало проекта
+            start = datetime.datetime.strptime(data["start"].strip(), "%d.%m.%Y")
+
+            p = proj.objects.create(
+                name=name, start=start, temp=t, author=request.user
+            )
+
+            for stage in stages:
+                ### Создать этапы
+                sg = proj_stages.objects.create(
+                    order= stage["order"],
+                    name= stage["name"],
+                    proj= p,
+                    days= stage["days"] if stage.has_key("days") else None,
+                    depend_on = {'stages': stage["depend_on"]} if stage.has_key("depend_on") else {'stages':[]}
+                )
+                if stage.has_key("steps"):
+                    for step in stage["steps"]:
+                        proj_steps.objects.create(
+                            order= step["order"],
+                            name=step["name"],
+                            stage= sg,
+                            days= step["days"] if step.has_key("days") else None,
+                            depend_on={'steps': step["depend_on"]} if step.has_key("depend_on") else {'steps': []}
+                        )
+
+
+            response_data = {"result": "ok"}
+
+
+
+
 
 
 
