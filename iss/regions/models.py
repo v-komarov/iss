@@ -149,12 +149,12 @@ class proj(models.Model):
 
 ### Этапы проекта
 class proj_stages(models.Model):
-    order = models.IntegerField()
+    order = models.IntegerField(verbose_name='Порядковый номер')
     name = models.CharField(max_length=100, default="", verbose_name='Название этапа')
     days = models.IntegerField(null=True, default=None, verbose_name='Длительность этапа')
     begin = models.DateField(null=True, default=None)
     end = models.DateField(null=True, default=None)
-    depend_on = JSONField(default={'stages':[]})
+    depend_on = JSONField(default={'stages':[]}, verbose_name='Зависит от')
     proj = models.ForeignKey(proj, on_delete=models.PROTECT, verbose_name='Связь с проектом')
     workers = models.ManyToManyField(User)
     done = models.BooleanField(default=False)

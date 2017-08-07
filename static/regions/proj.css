@@ -23,14 +23,16 @@ table[group=stages-list] > tbody > tr > td {
 
 /* Курсор */
 table[group=proj-list] > tbody > tr > td > a, #toexcel, #addproj,
-table[group=stages-list] > tbody > tr > td > a {
+table[group=stages-list] > tbody > tr > td > a,
+table[group=stages-list] tbody tr.small td div a {
     cursor:pointer;
     text-decoration:none;
 }
 
 
 table[group=proj-list] > tbody > tr > td > a:hover, #toexcel, #addproj,
-table[group=stages-list] > tbody > tr > td > a:hover {
+table[group=stages-list] > tbody > tr > td > a:hover,
+table[group=stages-list] tbody tr.small td div a:hover {
     text-decoration:none;
 }
 
@@ -62,3 +64,34 @@ table[group=stages-list] > tbody > tr > td > input[type="checkbox"] {
     margin:0;
     madding:0;
 }
+
+
+/* Форма редактирования названия и времени начала проекта */
+form#projedit table tbody tr td input#id_name {
+    width: 400px;
+}
+
+form#projedit {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 5px;
+}
+
+
+/* Форма редактирования этапа */
+form#edit-stage table.small tbody tr td input {
+    width: 200px;
+}
+
+
+/* Форма редактирования шага */
+form#edit-step table.small tbody tr td input {
+    width: 200px;
+}
+
+
+/* Выбор пользователя для добавления */
+select[user] {
+    width: 200px;
+}
+

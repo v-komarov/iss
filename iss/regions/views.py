@@ -22,12 +22,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic.base import TemplateView,RedirectView
-
+from django.contrib.auth.models import User
 
 
 from iss.localdicts.models import regions, address_city, InOut, MessageType, MessageStatus
 from iss.regions.models import orders, reestr, messages, proj, proj_stages
-from iss.regions.forms import MessageForm, ProjForm
+from iss.regions.forms import MessageForm, ProjForm, ProjForm2, StageForm, StepForm
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -409,8 +409,10 @@ class ProjStagesList(ListView):
         context = super(ProjStagesList, self).get_context_data(**kwargs)
 
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
-        context['form']= ProjForm()
-
+        context['form']= ProjForm2(instance=self.proj)
+        context['user_list']= User.objects.order_by('username')
+        context['stageform']= StageForm()
+        context['stepform']= StepForm()
 
         return context
 

@@ -8,7 +8,7 @@
 
 
 <link href="{{ MY_STATIC_URL }}regions/proj.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/projlist.js"></script>
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/projstages.js"></script>
 
 
 
@@ -19,11 +19,25 @@
 </div>
 
 
+<div class="row small">
+    <form id="projedit">
+        <table>
+            {{ form.as_table }}
+            <tr><td></td><td><button type="submit" class="btn btn-default btn-xs" onclick="return false;">Сохранить</button></td></tr>
+        </table>
+    </form>
+</div>
+
+
 
 <div class="row">
+    <button id="back-proj-button" class="btn btn-default btn-xs" onclick="return false;">К списку проектов</button>
+    <button id="calculate-date-button" class="btn btn-default btn-xs" onclick="return false;">Вычислить даты</button>
+</div>
 
 
 
+<div class="row">
 
 
     <table group="stages-list" class="table table-bordered table-striped draggable" width="100%">
@@ -49,15 +63,36 @@
             {% for row in object_list %}
 
 
-                    <tr class="small strong" row_id="{{ row.id }}">
-                        <td><a><strong>{{ row.order }}</strong></a></td>
-                        <td><a><strong>{{ row.name }}</strong></a></td>
-                        <td><a><strong>{{ row.days }}</strong></a></strong></td>
+                    <tr row_type="stage" class="small strong" row_id="{{ row.id }}">
+                        <td><a edit><strong>{{ row.order }}</strong></a></td>
+                        <td><a edit><strong>{{ row.name }}</strong></a></td>
+                        <td><a edit><strong>{{ row.days }}</strong></a></strong></td>
                         <td><strong>{{ row.begin }}</strong></td>
                         <td><strong>{{ row.end }}</strong></td>
-                        <td><a><strong>{{ row.depend_on.stages }}</strong></a></td>
-                        <td></td>
-                        <td><input type="checkbox" /></td>
+                        <td><a edit><strong>{{ row.depend_on.stages }}</strong></a></td>
+                        <td>
+                            <a user><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                                {% if row.workers %}
+                                    {% for u in row.workers.all %}
+                                        <div user_id="{{ u.id }}">{{ u.username }} ({{ u.get_full_name }}) <a minus><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a></div>
+                                    {% endfor %}
+                                {% endif %}
+                            <div group="user-list" hidden>
+                                <br><select user class="input-sm form-control">
+                                    <option value="" selected>---</option>
+                                    {% for u in user_list %}
+                                        <option value="{{ u.id }}">{{ u.username }} ({{ u.get_full_name }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                                {% if row.done %}
+                                    <input type="checkbox" checked />
+                                {% else %}
+                                    <input type="checkbox" />
+                                {% endif %}
+                        </td>
 
                     </tr>
 
@@ -65,15 +100,37 @@
 
                         <tr>
 
-                            <tr class="small" row_id="{{ row.id }}">
-                            <td><a>{{ step.order }}</a></td>
-                            <td><a>&nbsp;&nbsp;&nbsp;&nbsp;{{ step.name }}</a></td>
-                            <td><a>{{ step.days }}</a></td>
+                            <tr row_type="step" class="small" row_id="{{ step.id }}">
+                            <td><a edit>{{ step.order }}</a></td>
+                            <td><a edit>&nbsp;&nbsp;&nbsp;&nbsp;{{ step.name }}</a></td>
+                            <td><a edit>{{ step.days }}</a></td>
                             <td>{{ step.begin }}</td>
                             <td>{{ step.end }}</td>
-                            <td><a>{{ step.depend_on.steps }}</a></td>
-                            <td></td>
-                            <td><input type="checkbox" /></td>
+                            <td><a edit>{{ step.depend_on.steps }}</a></td>
+                            <td>
+                                <a user><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                                {% if step.workers %}
+                                    {% for u in step.workers.all %}
+                                        <div user_id="{{ u.id }}">{{ u.username }} ({{ u.get_full_name }}) <a minus><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a></div>
+                                    {% endfor %}
+                                {% endif %}
+                                <div group="user-list" hidden>
+                                    <br><select user class="input-sm form-control">
+                                        <option value="" selected>---</option>
+                                        {% for u in user_list %}
+                                            <option value="{{ u.id }}">{{ u.username }} ({{ u.get_full_name }})</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </td>
+                            <td>
+                                {% if step.done %}
+                                    <input type="checkbox" checked />
+                                {% else %}
+                                    <input type="checkbox" />
+                                {% endif %}
+                            </td>
 
                         </tr>
 
@@ -92,6 +149,11 @@
 
 
 </div>
+
+
+
+{% include "regions/editstage.html" %}
+{% include "regions/editstep.html" %}
 
 
 {% endblock %}

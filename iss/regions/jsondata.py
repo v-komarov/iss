@@ -6,6 +6,7 @@ import datetime
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
+from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
 from iss.regions.models import orders, messages, proj, proj_stages, proj_steps
@@ -218,6 +219,100 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+        ### Наполнение данными формы редактирования этапа
+        if r.has_key("action") and rg("action") == 'stage-get-data':
+            stage_id = int(request.GET["stage_id"], 10)
+            stage = proj_stages.objects.get(pk=stage_id)
+
+            response_data = {
+                "result": "ok",
+                "order": stage.order,
+                "name": stage.name,
+                "days": stage.days,
+                "depend_on": stage.depend_on["stages"]
+
+            }
+
+
+
+        ### Наполнение данными формы редактирования шага
+        if r.has_key("action") and rg("action") == 'step-get-data':
+            step_id = int(request.GET["step_id"], 10)
+            step = proj_steps.objects.get(pk=step_id)
+
+            response_data = {
+                "result": "ok",
+                "order": step.order,
+                "name": step.name,
+                "days": step.days,
+                "depend_on": step.depend_on["steps"]
+
+            }
+
+
+
+        ### Добавление пользователя в этап или шаг
+        if r.has_key("action") and rg("action") == 'stage-step-add-user':
+            row_id = int(request.GET["row_id"], 10)
+            row_type = request.GET["row_type"]
+            user_id = int(request.GET["user_id"], 10)
+            u = User.objects.get(pk=user_id)
+
+            if row_type == "stage":
+                stage = proj_stages.objects.get(pk=row_id)
+                stage.workers.add(u)
+
+            if row_type == "step":
+                step = proj_steps.objects.get(pk=row_id)
+                step.workers.add(u)
+
+
+            response_data = { "result": "ok" }
+
+
+
+
+        ### Удаление пользователя из этапа или шага
+        if r.has_key("action") and rg("action") == 'stage-step-remove-user':
+            row_id = int(request.GET["row_id"], 10)
+            row_type = request.GET["row_type"]
+            user_id = int(request.GET["user_id"], 10)
+            u = User.objects.get(pk=user_id)
+
+            if row_type == "stage":
+                stage = proj_stages.objects.get(pk=row_id)
+                stage.workers.remove(u)
+
+            if row_type == "step":
+                step = proj_steps.objects.get(pk=row_id)
+                step.workers.remove(u)
+
+
+            response_data = { "result": "ok" }
+
+
+
+
+        ### Установка статуса этапа или шага
+        if r.has_key("action") and rg("action") == 'stage-step-status':
+            row_id = int(request.GET["row_id"], 10)
+            row_type = request.GET["row_type"]
+            status = request.GET["status"]
+
+            if row_type == "stage":
+                stage = proj_stages.objects.get(pk=row_id)
+                stage.done = True if status == "yes" else False
+                stage.save()
+
+            if row_type == "step":
+                step = proj_steps.objects.get(pk=row_id)
+                step.done = True if status == "yes" else False
+                step.save()
+
+
+            response_data = { "result": "ok" }
 
 
 
