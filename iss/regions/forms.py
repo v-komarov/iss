@@ -39,7 +39,7 @@ class ProjForm2(ModelForm):
 class StageForm(ModelForm):
     depend_on = forms.CharField(label='Зависит от')
     class Meta:
-        model = proj_steps
+        model = proj_stages
         fields = ['order', 'name', 'days', 'depend_on']
 
 
@@ -47,5 +47,5 @@ class StageForm(ModelForm):
 class StepForm(ModelForm):
     depend_on = forms.CharField(label='Зависит от')
     class Meta:
-        model = proj_stages
+        model = proj_steps
         fields = ['order', 'name', 'days', 'depend_on']

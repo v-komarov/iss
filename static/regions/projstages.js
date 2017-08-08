@@ -3,6 +3,9 @@ $(document).ready(function() {
     // К списку проектов
     $("button#back-proj-button").bind("click",BackProjList);
 
+    // рассчет дат проекта
+    $("button#calculate-date-button").bind("click",CalculateDate);
+
 
     // Виджет для даты
     $("form#projedit #id_start").datepicker($.datepicker.regional['ru']);
@@ -29,6 +32,10 @@ $(document).ready(function() {
 
     // Отметка "выполнено"
     $("table[group=stages-list] tr td input[type=checkbox]").bind("click", MarkDone);
+
+
+    // Редактирование основных данных проекта
+    $("form#projedit button").bind("click",EditProjData);
 
 
 });
@@ -70,6 +77,88 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+// Рассчитать даты проекта
+function CalculateDate(e) {
+
+
+    // пересчитать даты проекта
+    var jqxhr = $.getJSON("/regions/jsondata/?action=project-calculate",
+    function(data) {
+
+
+        if (data["result"] == "ok") {
+
+            location.reload();
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Редактирование основных данных проекта
+function EditProjData(e) {
+
+
+    $("form#projedit #id_name").css("background-color","yellow");
+    $("form#projedit #id_start").css("background-color","yellow");
+
+    var nameproj = $("form#projedit #id_name").val();
+    var startproj = $("form#projedit #id_start").val();
+
+
+    var data = {};
+    data.name = nameproj;
+    data.start = startproj;
+
+    data.action = "save-proj-main-data";
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+
+    $.ajax({
+      url: "/regions/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
+            if (result["result"] == "ok") {
+
+                $("form#projedit #id_name").css("background-color","");
+                $("form#projedit #id_start").css("background-color","");
+
+            }
+        }
+
+    });
+
+
+
+}
+
+
+
 
 
 
@@ -121,17 +210,17 @@ function EditStage(e) {
             });
 
 
-
                 // Проверка значений
-                if ( $("#id_name").val() != "" && $("#id_temp").val() != "" && $("#id_start").val() != "" ) {
+                if ( $("form#edit-stage #id_name").val() != "" && $("form#edit-stage #id_order").val() != "" ) {
 
                     var data = {};
-                    data.name = $("form#add-proj #id_name").val();
-                    data.start = $("form#add-proj #id_start").val();
-                    data.temp = $("form#add-proj #id_temp").val();
+                    data.row_id = row_id;
+                    data.name = $("form#edit-stage #id_name").val();
+                    data.order = $("form#edit-stage #id_order").val();
+                    data.days = $("form#edit-stage #id_days").val();
+                    data.depend_on = $("form#edit-stage #id_depend_on").val();
 
-                    data.action = "create-proj";
-
+                    data.action = "save-stage-data";
 
                     $.ajax({
                       url: "/regions/jsondata/",
@@ -212,14 +301,17 @@ function EditStep(e) {
 
 
                 // Проверка значений
-                if ( $("#id_name").val() != "" && $("#id_temp").val() != "" && $("#id_start").val() != "" ) {
+                if ( $("form#edit-step #id_name").val() != "" && $("form#edit-step #id_order").val() != "" ) {
 
                     var data = {};
-                    data.name = $("form#add-proj #id_name").val();
-                    data.start = $("form#add-proj #id_start").val();
-                    data.temp = $("form#add-proj #id_temp").val();
+                    data.row_id = row_id;
+                    data.name = $("form#edit-step #id_name").val();
+                    data.order = $("form#edit-step #id_order").val();
+                    data.days = $("form#edit-step #id_days").val();
+                    data.depend_on = $("form#edit-step #id_depend_on").val();
 
-                    data.action = "create-proj";
+                    data.action = "save-step-data";
+
 
 
                     $.ajax({

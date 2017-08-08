@@ -163,7 +163,7 @@ class proj_stages(models.Model):
 
 ### Шаги этапов
 class proj_steps(models.Model):
-    order = models.IntegerField()
+    order = models.IntegerField(verbose_name='Порядковый номер')
     name = models.CharField(max_length=100, default="", verbose_name='Название шага')
     days = models.IntegerField(null=True, default=None, verbose_name='Длительность шага')
     begin = models.DateField(null=True, default=None)

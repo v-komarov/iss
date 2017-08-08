@@ -3,6 +3,8 @@
 import json
 import decimal
 import datetime
+import networkx as nx
+import matplotlib.pyplot as plt
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
@@ -30,6 +32,20 @@ def get_access_order(request):
     return "anonymous"
 
 
+
+
+
+### рассчет дат с учетом выходных дней
+def date_plus(date,delta):
+
+    ## Добавляем по одному дню и проверяем на субботу или воскресенье
+    while delta != 0:
+        date = date + datetime.timedelta(days=1)
+        if date.weekday() < 5:
+            delta = delta - 1
+            print date, delta
+
+    return date
 
 
 
@@ -317,6 +333,64 @@ def get_json(request):
 
 
 
+        ### Рассчет дат проекта
+        if r.has_key("action") and rg("action") == 'project-calculate':
+
+            p = proj.objects.get(pk=request.session['proj_id'])
+
+            ### Создание и наполнение графа
+            DG = nx.DiGraph()
+            DG.add_node(0, type='project')
+
+            ### Создание узлов и дочерних связей шагов на этапы
+            for stage in p.proj_stages_set.all():
+                DG.add_node(stage.order, type='stage', id=stage.id)
+                if stage.depend_on["stages"] == []:
+                   ### Связи от начала проекта
+                   DG.add_edge(0, stage.order, days=0)
+                for step in stage.proj_steps_set.all():
+                    DG.add_node(step.order, type='step', id=step.id)
+                    ### Связи шагов на родительский этап если другой зависимости нет
+                    if step.depend_on["steps"] == []:
+                        DG.add_edge(step.order, stage.order, days=step.days)
+
+            ### Создание зависимых связей
+            for stage in p.proj_stages_set.all():
+                if stage.depend_on["stages"] != []:
+                    for link in stage.depend_on["stages"]:
+                        ### Добавление связи
+                        t = nx.get_node_attributes(DG, 'type')
+                        i = nx.get_node_attributes(DG, 'id')
+                        if t[link] == "stage":
+                            DG.add_edge(link, stage.order, days=proj_stages.objects.get(pk=i[link]).days if proj_stages.objects.get(pk=i[link]).days else 0)
+                        if t[link] == "step":
+                            DG.add_edge(link, stage.order, days=proj_steps.objects.get(pk=i[link]).days)
+
+                        ### Для шагов
+                        for step in stage.proj_steps_set.all():
+                            if step.depend_on["steps"] != []:
+                                for link in step.depend_on["steps"]:
+                                    ### Добавление связи
+                                    t = nx.get_node_attributes(DG, 'type')
+                                    i = nx.get_node_attributes(DG, 'id')
+                                    if t[link] == "stage":
+                                        DG.add_edge(link, stage.order, days=proj_stages.objects.get(pk=i[link]).days if proj_stages.objects.get(pk=i[link]).days else 0)
+                                    if t[link] == "step":
+                                        DG.add_edge(link, stage.order, days=proj_steps.objects.get(pk=i[link]).days)
+
+            for n in DG.nodes():
+                print DG.degree([0, n])
+
+            nx.draw(DG)
+            plt.savefig("~/123.png")
+
+            print DG.edges()
+            print "vvvvvvvvvvvvvvvvvvvvvvvvvvv"
+
+            response_data = { "result": "ok" }
+
+
+
 
 
 
@@ -489,6 +563,61 @@ def get_json(request):
 
 
 
+        ### Сохранение данных этапа интерфейса управления проектами
+        if data.has_key("action") and data["action"] == 'save-stage-data':
+
+            s = proj_stages.objects.get(pk=int(data['row_id'], 10))
+
+            name = data["name"].strip()
+            order = int(data["order"].strip(), 10)
+            days = int(data["days"], 10) if data["days"] != "" else None
+            depend_on = [int(x, 10) for x in data["depend_on"].split(",")] if data["depend_on"] != "" else []
+
+            s.name = name
+            s.order = order
+            s.days = days
+            s.depend_on = {"stages": depend_on}
+            s.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Сохранение данных шага интерфейса управления проектами
+        if data.has_key("action") and data["action"] == 'save-step-data':
+
+            s = proj_steps.objects.get(pk=int(data['row_id'], 10))
+
+            name = data["name"].strip()
+            order = int(data["order"].strip(), 10)
+            days = int(data["days"], 10) if data["days"] != "" else None
+            depend_on = [int(x, 10) for x in data["depend_on"].split(",")] if data["depend_on"] != "" else []
+
+            s.name = name
+            s.order = order
+            s.days = days
+            s.depend_on = {"steps": depend_on}
+            s.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Сохранение основных данных проекта
+        if data.has_key("action") and data["action"] == 'save-proj-main-data':
+
+            p = proj.objects.get(pk=request.session['proj_id'])
+
+            name = data["name"].strip()
+            start = datetime.datetime.strptime(data["start"].strip(), "%d.%m.%Y")
+
+            p.name = name
+            p.start = start
+            p.save()
+
+            response_data = {"result": "ok"}
 
 
 

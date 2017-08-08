@@ -395,7 +395,6 @@ class ProjStagesList(ListView):
             for row in item.proj_steps_set.all().order_by('order'):
                 item.steps.append(row)
 
-        print data
 
         return data
 

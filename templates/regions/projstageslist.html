@@ -31,8 +31,8 @@
 
 
 <div class="row">
-    <button id="back-proj-button" class="btn btn-default btn-xs" onclick="return false;">К списку проектов</button>
-    <button id="calculate-date-button" class="btn btn-default btn-xs" onclick="return false;">Вычислить даты</button>
+    <button id="back-proj-button" class="btn btn-default btn-xs">К списку проектов</button>
+    <button id="calculate-date-button" class="btn btn-default btn-xs">Вычислить даты</button>
 </div>
 
 
@@ -67,8 +67,16 @@
                         <td><a edit><strong>{{ row.order }}</strong></a></td>
                         <td><a edit><strong>{{ row.name }}</strong></a></td>
                         <td><a edit><strong>{{ row.days }}</strong></a></strong></td>
-                        <td><strong>{{ row.begin }}</strong></td>
-                        <td><strong>{{ row.end }}</strong></td>
+                        <td>
+                            {% if row.begin %}
+                                <strong>{{ row.begin|date:"d.m.Y" }}</strong>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.end %}
+                                <strong>{{ row.end|date:"d.m.Y" }}</strong>
+                            {% endif %}
+                        </td>
                         <td><a edit><strong>{{ row.depend_on.stages }}</strong></a></td>
                         <td>
                             <a user><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
@@ -104,8 +112,17 @@
                             <td><a edit>{{ step.order }}</a></td>
                             <td><a edit>&nbsp;&nbsp;&nbsp;&nbsp;{{ step.name }}</a></td>
                             <td><a edit>{{ step.days }}</a></td>
-                            <td>{{ step.begin }}</td>
-                            <td>{{ step.end }}</td>
+                            <td>
+                                {% if step.begin %}
+                                    {{ step.begin|date:"d.m.Y" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if step.end %}
+                                    {{ step.end|date:"d.m.Y" }}
+                                {% endif %}
+
+                            </td>
                             <td><a edit>{{ step.depend_on.steps }}</a></td>
                             <td>
                                 <a user><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
