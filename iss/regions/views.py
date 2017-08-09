@@ -326,7 +326,7 @@ class ProjList(ListView):
 
 
     @method_decorator(login_required(login_url='/'))
-    #@method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
+    @method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         self.session = request.session
@@ -375,7 +375,7 @@ class ProjStagesList(ListView):
 
 
     @method_decorator(login_required(login_url='/'))
-    #@method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
+    @method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         self.session = request.session

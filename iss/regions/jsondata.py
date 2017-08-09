@@ -3,6 +3,7 @@
 import json
 import decimal
 import datetime
+import random
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -43,10 +44,22 @@ def date_plus(date,delta):
         date = date + datetime.timedelta(days=1)
         if date.weekday() < 5:
             delta = delta - 1
-            print date, delta
 
     return date
 
+
+
+
+### вычисление количества дней между датами
+def working_days(date1,date2):
+
+    days = 0
+    ## Добавляем по одному дню и проверяем на субботу или воскресенье
+    while date1 < date2:
+        date1 = date1 + datetime.timedelta(days=1)
+        if date1.weekday() < 5:
+            days += 1
+    return days
 
 
 
@@ -336,56 +349,102 @@ def get_json(request):
         ### Рассчет дат проекта
         if r.has_key("action") and rg("action") == 'project-calculate':
 
-            p = proj.objects.get(pk=request.session['proj_id'])
+            pr = proj.objects.get(pk=request.session['proj_id'])
 
-            ### Создание и наполнение графа
-            DG = nx.DiGraph()
-            DG.add_node(0, type='project')
+            ### Формирование id записей этапов
+            stage_id = [s.id for s in pr.proj_stages_set.all()]
 
-            ### Создание узлов и дочерних связей шагов на этапы
-            for stage in p.proj_stages_set.all():
-                DG.add_node(stage.order, type='stage', id=stage.id)
+
+            while len(stage_id) > 0:
+
+                ### Расчет дат по-этапно
+                ### Первоначально для этапов и шагов с зависимостью от начала проекта
+                stage = proj_stages.objects.get(pk=random.choice(stage_id))
+
+
                 if stage.depend_on["stages"] == []:
-                   ### Связи от начала проекта
-                   DG.add_edge(0, stage.order, days=0)
-                for step in stage.proj_steps_set.all():
-                    DG.add_node(step.order, type='step', id=step.id)
-                    ### Связи шагов на родительский этап если другой зависимости нет
-                    if step.depend_on["steps"] == []:
-                        DG.add_edge(step.order, stage.order, days=step.days)
+                    ### Для этапов с пустым полем зависимости начало этапа - начало проекта
+                    stage.begin = pr.start
+                    stage.save()
+                    ### Этап обработан - убираем id из списка
+                    stage_id.remove(stage.id)
+                    ### Обрабатывать вложенные шаги
+                    steps_run = "ok"
 
-            ### Создание зависимых связей
-            for stage in p.proj_stages_set.all():
-                if stage.depend_on["stages"] != []:
-                    for link in stage.depend_on["stages"]:
-                        ### Добавление связи
-                        t = nx.get_node_attributes(DG, 'type')
-                        i = nx.get_node_attributes(DG, 'id')
-                        if t[link] == "stage":
-                            DG.add_edge(link, stage.order, days=proj_stages.objects.get(pk=i[link]).days if proj_stages.objects.get(pk=i[link]).days else 0)
-                        if t[link] == "step":
-                            DG.add_edge(link, stage.order, days=proj_steps.objects.get(pk=i[link]).days)
 
-                        ### Для шагов
-                        for step in stage.proj_steps_set.all():
-                            if step.depend_on["steps"] != []:
-                                for link in step.depend_on["steps"]:
-                                    ### Добавление связи
-                                    t = nx.get_node_attributes(DG, 'type')
-                                    i = nx.get_node_attributes(DG, 'id')
-                                    if t[link] == "stage":
-                                        DG.add_edge(link, stage.order, days=proj_stages.objects.get(pk=i[link]).days if proj_stages.objects.get(pk=i[link]).days else 0)
-                                    if t[link] == "step":
-                                        DG.add_edge(link, stage.order, days=proj_steps.objects.get(pk=i[link]).days)
 
-            for n in DG.nodes():
-                print DG.degree([0, n])
+                ### Для этапов с зависимостью от других
+                else:
 
-            nx.draw(DG)
-            plt.savefig("~/123.png")
+                    stage_id2 = []  # id этапов, от которых есть зависимость
+                    stage_enddate = []
+                    ### Нужно проставить начало этапа в зависимости от предыдущих
+                    for st in stage.depend_on["stages"]:
+                        print st
+                        stg = pr.proj_stages_set.all().filter(order=st)[0]
+                        stage_id2.append(stg.id)
+                        stage_enddate.append(stg.end)
+                    ### Если этапы, от которых зависимость уже обработаны
+                    print set(stage_id2), set(stage_id)
+                    if list(set(stage_id2).intersection(set(stage_id))) == []:
+                        print stage_enddate
+                        ### Выбрать дату начала от самой поздней даты предшествующих пунктов
+                        stage.begin = date_plus(sorted(stage_enddate)[-1], 1)
+                        stage.save()
+                        ### Этап обработан - убираем id из списка
+                        stage_id.remove(stage.id)
+                        ### Обрабатывать вложенные шаги
+                        steps_run = "ok"
+                    else:
+                        ### Обрабатывать вложенные шаги
+                        steps_run = "no"
 
-            print DG.edges()
-            print "vvvvvvvvvvvvvvvvvvvvvvvvvvv"
+                #### Обрабатывать шаги или нет
+                if steps_run == "ok":
+
+                    ### Формирование id записей шагов
+                    step_id = [s.id for s in stage.proj_steps_set.all()]
+
+
+                    while len(step_id) > 0:
+                        step = proj_steps.objects.get(pk=random.choice(step_id))
+                        ### Обрабатываем только если есть в списке необработанных id
+                        if step.id in step_id:
+                            ### Обрабатываем шаг, если зависимости нет или зависимые строки шаги обработаны
+                            if step.depend_on["steps"] == []:
+                                step.begin = stage.begin
+                                step.end = date_plus(stage.begin, step.days)
+                                step.save()
+                                ### Шаг обработан - убираем id из списка
+                                step_id.remove(step.id)
+                            else:
+                                ### Проверка обработаны ли шаги от которых есть зависимость
+                                step_id2 = [] # id шагов, от которых есть зависимость
+                                step_enddate = [] # Список дат, завершения шага
+                                for p in step.depend_on["steps"]:
+                                    stp = stage.proj_steps_set.all().get(order=p)
+                                    step_id2.append(stp.id)
+                                    step_enddate.append(stp.end)
+                                if list(set(step_id2).intersection(set(step_id))) == []:
+                                    ### Выбрать дату начала от самой поздней даты предшествующих пунктов
+                                    step.begin = date_plus(sorted(step_enddate)[-1], 1)
+                                    step.end = date_plus(step.begin, step.days)
+                                    step.save()
+                                    ### Шаг обработан - убираем id из списка
+                                    step_id.remove(step.id)
+
+                    ### расчет даты окончания этапа и длительность в днях
+                    step_enddate = []  # Список дат, завершения шага
+                    for step in stage.proj_steps_set.all():
+                        step_enddate.append(step.end)
+
+                    ### Самая поздняя дата
+                    print step_enddate.append(step.end)
+                    stage.end = sorted(step_enddate)[-1]
+                    ### Вычисление длительности этапа
+                    stage.days = working_days(stage.begin, stage.end)
+                    stage.save()
+
 
             response_data = { "result": "ok" }
 
