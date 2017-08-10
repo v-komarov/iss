@@ -1,11 +1,14 @@
 #coding:utf-8
 
 
-from	django.http	import	HttpResponse
+from	django.http	import	HttpResponse, HttpResponseRedirect
+
 
 import xlwt
+import tempfile
+import os
 
-from iss.regions.models import orders
+from iss.regions.models import orders, load_proj_files, proj_stages, proj_steps
 from iss.localdicts.models import regions
 
 
@@ -114,3 +117,54 @@ def get_orders_region(request):
     response['Content-Disposition'] = 'attachment; filename="orders.xls"'
     book.save(response)
     return response
+
+
+
+
+### Загрузка файлов
+def upload(request):
+
+    stage_id = request.POST["stage_id"]
+    step_id = request.POST["step_id"]
+
+    if stage_id != "no":
+        stage = proj_stages.objects.get(pk=int(stage_id, 10))
+    else:
+        stage = None
+
+    if step_id != "no":
+        step = proj_steps.objects.get(pk=int(step_id, 10))
+    else:
+        step = None
+
+
+    filename = request.FILES['fileupload'].name
+    filedata = request.FILES['fileupload'].read()
+
+    rec = load_proj_files.objects.create(
+        stage = stage,
+        step = step,
+        filename = filename.strip(),
+        user = request.user
+    )
+
+    ### Запись во временный файл
+    tf = tempfile.NamedTemporaryFile(delete=False)
+    f = open(tf.name, 'w')
+    f.write(filedata)
+    f.close()
+
+
+    run = 'curl -i -X PUT -T %s -L "http://10.6.0.135:50070/webhdfs/v1/projects/%s?user.name=root&op=CREATE&overwrite=true&replication=4"' % (tf.name, rec.id)
+    os.system(run)
+
+
+    ### Удаление временного файла
+    os.remove(tf.name)
+    print rec.id
+    print filename
+
+
+
+    return HttpResponseRedirect('/regions/proj/edit/')
+

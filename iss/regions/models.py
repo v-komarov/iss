@@ -172,3 +172,18 @@ class proj_steps(models.Model):
     stage = models.ForeignKey(proj_stages, on_delete=models.PROTECT, verbose_name='Связь с этапом')
     workers = models.ManyToManyField(User)
     done = models.BooleanField(default=False)
+
+
+
+### Файлы проекта
+class load_proj_files(models.Model):
+    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
+    stage = models.ForeignKey(proj_stages, null=True, on_delete=models.PROTECT, verbose_name='Связь с этапом')
+    step = models.ForeignKey(proj_steps, null=True, on_delete=models.PROTECT, verbose_name='Связь с шагом')
+    filename = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_load = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.filename
+

@@ -19,6 +19,9 @@ $(document).ready(function() {
     // Показать список выбора пользователей
     $("table[group=stages-list] a[user]").bind("click", ShowUserSelect);
 
+    // Показать выбор загружаемого файла
+    $("table[group=stages-list] a[file]").bind("click", ShowUploadFile);
+
 
     // Выбор пользователя и добавление пользователя
     $( "table[group=stages-list] select[user]" ).change(function() {
@@ -36,6 +39,13 @@ $(document).ready(function() {
 
     // Редактирование основных данных проекта
     $("form#projedit button").bind("click",EditProjData);
+
+
+    $('table[group=stages-list] tbody tr td input.fileinput').change(function(){
+        //UploadFile();
+    });
+
+
 
 
 });
@@ -106,6 +116,58 @@ function CalculateDate(e) {
 
 
 
+// Загрузка файла
+/*
+function UploadFile(e) {
+
+    var selfile = $("table[group=stages-list] div[group=file] input.fileinput:visible");
+
+    var fd = new FormData();
+    fd.append("filedata", selfile[0].files[0]);
+    fd.append("action", "proj-load-file");
+
+
+
+    //var data = {};
+    //data.filedata = selfile[0].files[0];
+    //data.action = "proj-load-file";
+
+    //console.log(data);
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+    $.ajax({
+        url: "/regions/proj/upload/",
+        type: "POST",
+        data: fd,
+        enctype: 'multipart/form-data',
+        processData: false,
+        //contentType: false,
+        //headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        success: function(result) {
+            if (result["result"] == "ok") { alert("Файл загружен!"); }
+        },
+        error: function(ts) { alert(ts.responseText) }
+
+    });
+
+
+
+}
+*/
+
+
+
+
 // Редактирование основных данных проекта
 function EditProjData(e) {
 
@@ -169,6 +231,17 @@ function ShowUserSelect(e) {
     $(this).parents("td").children("div[group=user-list]").show();
 
 }
+
+
+
+// Интерфейс загрузки файла
+function ShowUploadFile(e) {
+
+    $("table[group=stages-list] div[group=file]").hide();
+    $(this).parents("td").children("div[group=file]").show();
+
+}
+
 
 
 

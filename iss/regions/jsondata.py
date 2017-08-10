@@ -4,8 +4,7 @@ import json
 import decimal
 import datetime
 import random
-import networkx as nx
-import matplotlib.pyplot as plt
+
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
@@ -380,14 +379,11 @@ def get_json(request):
                     stage_enddate = []
                     ### Нужно проставить начало этапа в зависимости от предыдущих
                     for st in stage.depend_on["stages"]:
-                        print st
                         stg = pr.proj_stages_set.all().filter(order=st)[0]
                         stage_id2.append(stg.id)
                         stage_enddate.append(stg.end)
                     ### Если этапы, от которых зависимость уже обработаны
-                    print set(stage_id2), set(stage_id)
                     if list(set(stage_id2).intersection(set(stage_id))) == []:
-                        print stage_enddate
                         ### Выбрать дату начала от самой поздней даты предшествующих пунктов
                         stage.begin = date_plus(sorted(stage_enddate)[-1], 1)
                         stage.save()
@@ -439,7 +435,6 @@ def get_json(request):
                         step_enddate.append(step.end)
 
                     ### Самая поздняя дата
-                    print step_enddate.append(step.end)
                     stage.end = sorted(step_enddate)[-1]
                     ### Вычисление длительности этапа
                     stage.days = working_days(stage.begin, stage.end)
@@ -677,6 +672,17 @@ def get_json(request):
             p.save()
 
             response_data = {"result": "ok"}
+
+
+
+
+        ### Загрузка файла в проект
+        if data.has_key("action") and data["action"] == 'proj-load-file':
+
+            print data
+
+            response_data = {"result": "ok"}
+
 
 
 

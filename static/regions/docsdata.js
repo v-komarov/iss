@@ -10,22 +10,15 @@ $(document).ready(function() {
 
 
     $('.fileinput').change(function(){
-        var send_url = "http://10.6.0.135:50070/webhdfs/v1/test/events9.log?user.name=root&op=CREATE&overwrite=true&replication=4";
+        var send_url = "http://10.6.0.135:50070/webhdfs/v1/test/events9.log/?op=CREATE&user.name=root&overwrite=true&replication=4";
+
         var fd = new FormData();
-
-        console.log(this);
-        console.log(this.files);
-
-        fd.append("userpic", this.files[0]);
-        fd.append("username", "Groucho");
-
-        console.log(fd);
-
+        fd.append("filedata", this.files[0]);
 
         $.ajax({
             url: send_url,
             type: "POST",
-            data: {'file':this.files[0]},
+            data: {},
             processData: false,
             contentType: false,
             success: function(result) {

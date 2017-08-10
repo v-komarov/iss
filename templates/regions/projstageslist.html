@@ -53,6 +53,8 @@
                 <th>Завершение</th>
                 <th>Зависит от</th>
                 <th>Исполнители</th>
+                <th>Файлы</th>
+                <th>Коментарий</th>
                 <th>Выполнено</th>
             </tr>
 
@@ -93,6 +95,26 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                        </td>
+                        <td>
+                            {# Список приложенных файлов #}
+                            <a file><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                            {% for f in row.load_proj_files_set.all %}
+                                {# Ссылки на файлы #}
+                                <br><a readfile file_id="{{ f.id }}">{{ f.filename }}</a>
+                            {% endfor %}
+                            {# Форма загрузки файлов #}
+                            <div group="file" hidden>
+                                <form enctype="multipart/form-data" action="/regions/proj/upload/" method="post">{% csrf_token %}
+                                    <input id="stage_id" name="stage_id" value="{{ row.id }}" type="hidden" />
+                                    <input id="step_id" name="step_id" value="no" type="hidden" />
+                                    <input name="fileupload" id="fileupload" class="fileinput small" type="file" />
+                                    <button class="btn btn-default btn-xs" type="submit">Загрузить</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td>
+                            <a book><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
                         </td>
                         <td>
                                 {% if row.done %}
@@ -140,6 +162,26 @@
                                     </select>
                                 </div>
 
+                            </td>
+                            <td>
+                                {# Список приложенных файлов #}
+                                <a file><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                                {% for f in step.load_proj_files_set.all %}
+                                    {# Ссылки на файлы #}
+                                    <br><a readfile file_id="{{ f.id }}">{{ f.filename }}</a>
+                                {% endfor %}
+                                {# Форма загрузки файлов #}
+                                <div group="file" hidden>
+                                    <form enctype="multipart/form-data" action="/regions/proj/upload/" method="post">{% csrf_token %}
+                                        <input id="stage_id" name="stage_id" value="no" type="hidden" />
+                                        <input id="step_id" name="step_id" value="{{ step.id }}" type="hidden" />
+                                        <input name="fileupload" id="fileupload" class="fileinput small" type="file" />
+                                        <button class="btn btn-default btn-xs" type="submit">Загрузить</button>
+                                    </form>
+                                </div>
+                            </td>
+                            <td>
+                                <a book><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
                             </td>
                             <td>
                                 {% if step.done %}
