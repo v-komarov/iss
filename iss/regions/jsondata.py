@@ -11,8 +11,8 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, messages, proj, proj_stages, proj_steps
-from iss.localdicts.models import regions, MessageType, proj_temp
+from iss.regions.models import orders, proj, proj_stages, proj_steps
+from iss.localdicts.models import regions, proj_temp
 
 
 
@@ -210,7 +210,7 @@ def get_json(request):
 
 
 
-
+        """
         ### Фильтр по статусу сообщения интерфейса Документооборот
         if r.has_key("action") and rg("action") == 'filter-docs-messagestatus':
             mess_status = request.GET["mess_status"]
@@ -221,11 +221,11 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+        """
 
 
 
-
-
+        """
         ### Сохранение id сообщения интерфейса Документооборот
         if r.has_key("action") and rg("action") == 'docs-save-id':
             message_id = request.GET["message_id"]
@@ -234,7 +234,7 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
-
+        """
 
 
 

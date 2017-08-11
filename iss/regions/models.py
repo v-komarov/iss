@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, address_house, InOut, MessageType, MessageStatus, proj_temp
+from iss.localdicts.models import regions, address_city, proj_temp
 
 
 
@@ -90,49 +90,49 @@ class reestr(models.Model):
 
 
 ### Документо оборот сообщения
-class messages(models.Model):
-    status = models.ForeignKey(MessageStatus, on_delete=models.PROTECT, verbose_name='Статус сообщения')
-    message_type = models.ForeignKey(MessageType, on_delete=models.PROTECT, verbose_name='Вид сообщения')
-    message = models.TextField(verbose_name='Сообщение', default="", blank=True)
-    head = models.CharField(max_length=100, verbose_name='Заголовок', default="")
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
-    author_update = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='userupdate')
-    datetime_update = models.DateTimeField(null=True, auto_now=True)
-    access_message = models.ManyToManyField(User, related_name='access')
+#class messages(models.Model):
+#    status = models.ForeignKey(MessageStatus, on_delete=models.PROTECT, verbose_name='Статус сообщения')
+#    message_type = models.ForeignKey(MessageType, on_delete=models.PROTECT, verbose_name='Вид сообщения')
+#    message = models.TextField(verbose_name='Сообщение', default="", blank=True)
+#    head = models.CharField(max_length=100, verbose_name='Заголовок', default="")
+#    user = models.ForeignKey(User, on_delete=models.PROTECT)
+#    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
+#    author_update = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='userupdate')
+#    datetime_update = models.DateTimeField(null=True, auto_now=True)
+#    access_message = models.ManyToManyField(User, related_name='access')
 
 
-    def __unicode__(self):
-        return self.message
+#    def __unicode__(self):
+#        return self.message
 
 
 
 ### Загруженные пользователем документы
-class load_user_files(models.Model):
-    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
-    filename = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
-    comment = models.CharField(max_length=100, default="")
-    datetime_load = models.DateTimeField(null=True, default=None)
-    messages = models.ManyToManyField(messages)
+#class load_user_files(models.Model):
+#    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
+#    filename = models.CharField(max_length=100)
+#    user = models.ForeignKey(User, on_delete=models.PROTECT)
+#    comment = models.CharField(max_length=100, default="")
+#    datetime_load = models.DateTimeField(null=True, default=None)
+#    messages = models.ManyToManyField(messages)
 
 
-    def __unicode__(self):
-        return self.filename
+#    def __unicode__(self):
+#        return self.filename
 
 
 
 
 ### История статусов
-class messages_status_history(models.Model):
-    comment = models.TextField(verbose_name='Коментарий', default="", blank=True)
-    author = models.ForeignKey(User, on_delete=models.PROTECT)
-    status = models.ForeignKey(MessageStatus, on_delete=models.PROTECT)
-    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
-    message = models.ForeignKey(messages, on_delete=models.PROTECT)
+#class messages_status_history(models.Model):
+#    comment = models.TextField(verbose_name='Коментарий', default="", blank=True)
+#    author = models.ForeignKey(User, on_delete=models.PROTECT)
+#    status = models.ForeignKey(MessageStatus, on_delete=models.PROTECT)
+#    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
+#    message = models.ForeignKey(messages, on_delete=models.PROTECT)
 
-    def __unicode__(self):
-        return self.status.name
+#    def __unicode__(self):
+#        return self.status.name
 
 
 

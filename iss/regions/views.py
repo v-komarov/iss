@@ -25,16 +25,16 @@ from django.views.generic.base import TemplateView,RedirectView
 from django.contrib.auth.models import User
 
 
-from iss.localdicts.models import regions, address_city, InOut, MessageType, MessageStatus
-from iss.regions.models import orders, reestr, messages, proj, proj_stages
-from iss.regions.forms import MessageForm, ProjForm, ProjForm2, StageForm, StepForm
+from iss.localdicts.models import regions, address_city
+from iss.regions.models import orders, reestr, proj, proj_stages
+from iss.regions.forms import ProjForm, ProjForm2, StageForm, StepForm
 
 from iss.mydecorators import group_required,anonymous_required
 
 
 
-message_type_first = MessageType.objects.get(pk=1)
-message_status_first = MessageStatus.objects.get(pk=1)
+#message_type_first = MessageType.objects.get(pk=1)
+#message_status_first = MessageStatus.objects.get(pk=1)
 
 
 
@@ -193,6 +193,7 @@ class ReestrCreate(CreateView):
 
 
 ### Документооборот
+"""
 class DocsList(ListView):
 
     model = orders
@@ -251,12 +252,13 @@ class DocsList(ListView):
 
 
         return context
-
+"""
 
 
 
 
 ### Редактирование и наполнение данными сообщения
+"""
 class DocsUpdate(TemplateView):
 
     template_name = 'regions/docs_data.html'
@@ -301,7 +303,7 @@ class DocsUpdate(TemplateView):
 
 
         return context
-
+"""
 
 
 

@@ -108,7 +108,8 @@ class address_city(models.Model):
 
     ### есть кокординаты по городу или нет
     def geo_ok(self):
-        if address_house.objects.filter(street=None,house=None,city=self).exists():
+        if address_house.\
+                objects.filter(street=None,house=None,city=self).exists():
             h = address_house.objects.filter(street=None,house=None,city=self).first()
             return h.geo_ok()
         else:
@@ -417,41 +418,41 @@ class regions(models.Model):
 
 
 ### Справочник "Входящие-Исходящие" для документооборота
-class InOut(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Входящие - Исходящие', unique=True)
+#class InOut(models.Model):
+#    name = models.CharField(max_length=50, verbose_name='Входящие - Исходящие', unique=True)
 
-    def __unicode__(self):
-        return self.name
+#    def __unicode__(self):
+#        return self.name
 
-    class Meta:
-        verbose_name = 'Входящие - Исходящие'
-        verbose_name_plural = 'Входящие - Исходящие'
+#    class Meta:
+#        verbose_name = 'Входящие - Исходящие'
+#        verbose_name_plural = 'Входящие - Исходящие'
 
 
 
 ### Виды сообщений для документооборота
-class MessageType(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Вид сообщения', unique=True)
+#class MessageType(models.Model):
+#    name = models.CharField(max_length=100, verbose_name='Вид сообщения', unique=True)
 
-    def __unicode__(self):
-        return self.name
+#    def __unicode__(self):
+#        return self.name
 
-    class Meta:
-        verbose_name = 'Вид сообщения'
-        verbose_name_plural = 'Виды сообщений'
+#    class Meta:
+#        verbose_name = 'Вид сообщения'
+#        verbose_name_plural = 'Виды сообщений'
 
 
 
 ### Статус сообщения для документооборота
-class MessageStatus(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Статус сообщения', unique=True)
+#class MessageStatus(models.Model):
+#    name = models.CharField(max_length=100, verbose_name='Статус сообщения', unique=True)
 
-    def __unicode__(self):
-        return self.name
+#    def __unicode__(self):
+#        return self.name
 
-    class Meta:
-        verbose_name = 'Статус сообщения'
-        verbose_name_plural = 'Статусы сообщений'
+#    class Meta:
+#        verbose_name = 'Статус сообщения'
+#        verbose_name_plural = 'Статусы сообщений'
 
 
 
