@@ -8,7 +8,7 @@ $(document).ready(function() {
 
 
     // Переход на редактирование
-    $("table[group=proj-list] tbody td a").bind("click",LinkEditProj);
+    $("table[group=proj-list] tbody td a[stage]").bind("click",LinkEditProj);
 
 
 });

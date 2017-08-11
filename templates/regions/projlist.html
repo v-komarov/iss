@@ -74,10 +74,10 @@
 
 
                     <tr class="small" row_id="{{ row.id }}">
-                        <td><a>{{ row.name }}</a></td>
-                        <td><a>{{ row.temp }}</a></td>
+                        <td><a stage>{{ row.name }}</a></td>
+                        <td><a stage>{{ row.temp }}</a></td>
                         {% timezone tz %}
-                        <td><a>{{ row.start|date:"d.m.Y" }}</a></td>
+                        <td><a stage>{{ row.start|date:"d.m.Y" }}</a></td>
                         {% endtimezone %}
                         <td>
                             {# Список выполненых пунктов#}
@@ -89,29 +89,29 @@
                             {% endfor %}
                             </ul>
                         </td>
-                        <td><a>{{ row.status }}</a></td>
+                        <td><a stage>{{ row.status }}</a></td>
                         <td>
                             {# Список приложенных файлов #}
                             {% for stage in row.proj_stages_set.all %}
                                 <ul>
                                 {# Файлы этапов #}
                                 {% for file in stage.load_proj_files_set.all %}
-                                    <li><a href="/regions/proj/readfile/?file_id={{ file.id }}&file_name={{ file.filename }}">{{ file.filename }}</a></li>
+                                    <li><a file href="/regions/proj/readfile/?file_id={{ file.id }}&file_name={{ file.filename }}">{{ file.filename }}</a></li>
 
                                 {% endfor %}
                                 {# Файлы шагов #}
                                 {% for step in stage.proj_steps_set.all %}
                                     {% for file in step.load_proj_files_set.all %}
-                                        <li><a href="/regions/proj/readfile/?file_id={{ file.id }}&file_name={{ file.filename }}">{{ file.filename }}</a></li>
+                                        <li><a file href="/regions/proj/readfile/?file_id={{ file.id }}&file_name={{ file.filename }}">{{ file.filename }}</a></li>
                                     {% endfor %}
                                 {% endfor %}
                                 </ul>
                             {% endfor %}
                         </td>
                         {% timezone tz %}
-                        <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
+                        <td><a stage>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td><a>{{ row.author.get_username }} ({{ row.author.get_full_name }})</a></td>
+                        <td><a stage>{{ row.author.get_username }} ({{ row.author.get_full_name }})</a></td>
 
                     </tr>
 

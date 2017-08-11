@@ -369,6 +369,11 @@ def get_json(request):
                 proj = step.stage.proj
                 rowname = step.name
                 status = step.done
+                ### Отметка статуса проекта (информационно)
+                if step.done :
+                    print "working"
+                    proj.status = step.name
+                    proj.save()
 
 
             ### Запись в лог файл
