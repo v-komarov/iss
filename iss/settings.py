@@ -201,6 +201,12 @@ LOGGING = {
             'filename': BASE_DIR + '/log/loaddata.log',
             'formatter': 'verbose',
         },
+        'projects': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/log/projects.log',
+            'formatter': 'simple',
+        },
     },
     'loggers': {
         'monitor': {
@@ -228,6 +234,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'projects': {
+            'handlers': ['projects'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+
     },
 }
 

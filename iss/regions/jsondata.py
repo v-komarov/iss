@@ -4,7 +4,7 @@ import json
 import decimal
 import datetime
 import random
-
+import logging
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
@@ -17,6 +17,7 @@ from iss.localdicts.models import regions, proj_temp
 
 
 
+logger_proj = logging.getLogger('projects')
 
 
 
@@ -291,11 +292,23 @@ def get_json(request):
             if row_type == "stage":
                 stage = proj_stages.objects.get(pk=row_id)
                 stage.workers.add(u)
+                proj = stage.proj
+                rowname = stage.name
 
             if row_type == "step":
                 step = proj_steps.objects.get(pk=row_id)
                 step.workers.add(u)
+                proj = step.stage.proj
+                rowname = step.name
 
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {rowname} {user} добавил исполнителя {worker}".format(
+                proj=proj.name,
+                rowname=rowname,
+                worker=u.get_username(),
+                user=request.user.get_username())
+            )
 
             response_data = { "result": "ok" }
 
@@ -312,10 +325,22 @@ def get_json(request):
             if row_type == "stage":
                 stage = proj_stages.objects.get(pk=row_id)
                 stage.workers.remove(u)
+                proj = stage.proj
+                rowname = stage.name
 
             if row_type == "step":
                 step = proj_steps.objects.get(pk=row_id)
                 step.workers.remove(u)
+                proj = step.stage.proj
+                rowname = step.name
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {rowname} {user} удалил исполнителя {worker}".format(
+                proj=proj.name,
+                rowname=rowname,
+                worker=u.get_username(),
+                user=request.user.get_username())
+            )
 
 
             response_data = { "result": "ok" }
@@ -333,11 +358,27 @@ def get_json(request):
                 stage = proj_stages.objects.get(pk=row_id)
                 stage.done = True if status == "yes" else False
                 stage.save()
+                proj = stage.proj
+                rowname = stage.name
+                status = stage.done
 
             if row_type == "step":
                 step = proj_steps.objects.get(pk=row_id)
                 step.done = True if status == "yes" else False
                 step.save()
+                proj = step.stage.proj
+                rowname = step.name
+                status = step.done
+
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {rowname} {user} отметил как {done}".format(
+                proj=proj.name,
+                rowname=rowname,
+                done = status,
+                user=request.user.get_username())
+            )
+
 
 
             response_data = { "result": "ok" }
@@ -439,6 +480,14 @@ def get_json(request):
                     ### Вычисление длительности этапа
                     stage.days = working_days(stage.begin, stage.end)
                     stage.save()
+
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} {user} Запустил расчет дат".format(
+                proj=pr.name,
+                user=request.user.get_username())
+            )
+
 
 
             response_data = { "result": "ok" }
@@ -633,6 +682,14 @@ def get_json(request):
             s.depend_on = {"stages": depend_on}
             s.save()
 
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {stage} {user} сохранил данные этапа".format(
+                proj=proj_stages.proj.name,
+                stage=s.name,
+                user=request.user.get_username())
+            )
+
+
             response_data = {"result": "ok"}
 
 
@@ -654,6 +711,13 @@ def get_json(request):
             s.depend_on = {"steps": depend_on}
             s.save()
 
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {step} {user} сохранил данные этапа".format(
+                proj=s.stage.proj.name,
+                step=s.name,
+                user=request.user.get_username())
+            )
+
             response_data = {"result": "ok"}
 
 
@@ -670,6 +734,13 @@ def get_json(request):
             p.name = name
             p.start = start
             p.save()
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} {user} сохранил основные данные".format(
+                proj=p.name,
+                user=request.user.get_username())
+            )
+
 
             response_data = {"result": "ok"}
 

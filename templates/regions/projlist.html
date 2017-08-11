@@ -79,9 +79,35 @@
                         {% timezone tz %}
                         <td><a>{{ row.start|date:"d.m.Y" }}</a></td>
                         {% endtimezone %}
-                        <td></td>
+                        <td>
+                            {# Список выполненых пунктов#}
+                            <ul>
+                            {% for stage in row.proj_stages_set.all %}
+                                {% if stage.done %}
+                                <li>{{ stage.name }}</li>
+                                {% endif %}
+                            {% endfor %}
+                            </ul>
+                        </td>
                         <td><a>{{ row.status }}</a></td>
-                        <td></td>
+                        <td>
+                            {# Список приложенных файлов #}
+                            {% for stage in row.proj_stages_set.all %}
+                                <ul>
+                                {# Файлы этапов #}
+                                {% for file in stage.load_proj_files_set.all %}
+                                    <li><a href="/regions/proj/readfile/?file_id={{ file.id }}&file_name={{ file.filename }}">{{ file.filename }}</a></li>
+
+                                {% endfor %}
+                                {# Файлы шагов #}
+                                {% for step in stage.proj_steps_set.all %}
+                                    {% for file in step.load_proj_files_set.all %}
+                                        <li><a href="/regions/proj/readfile/?file_id={{ file.id }}&file_name={{ file.filename }}">{{ file.filename }}</a></li>
+                                    {% endfor %}
+                                {% endfor %}
+                                </ul>
+                            {% endfor %}
+                        </td>
                         {% timezone tz %}
                         <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
