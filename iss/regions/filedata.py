@@ -7,9 +7,13 @@ from	django.http	import	HttpResponse, HttpResponseRedirect
 import xlwt
 import tempfile
 import os
+import StringIO
+
+from snakebite.client import Client
 
 from iss.regions.models import orders, load_proj_files, proj_stages, proj_steps
 from iss.localdicts.models import regions
+
 
 
 
@@ -161,10 +165,40 @@ def upload(request):
 
     ### Удаление временного файла
     os.remove(tf.name)
-    print rec.id
-    print filename
 
 
 
     return HttpResponseRedirect('/regions/proj/edit/')
+
+
+
+
+
+### Получение файла
+def getfile(request):
+
+    if request.method == "GET":
+        file_id = request.GET["file_id"]
+        file_name = request.GET["file_name"]
+
+
+        ### временный файл
+        tfile = "/tmp/{file_id}".format(file_id=file_id)
+
+
+        client = Client('10.6.0.135', 9000)
+        for x in client.copyToLocal(['/projects/%s' % file_id], tfile):
+            print x
+
+        f = open(tfile, 'r')
+        data = f.read()
+        f.close()
+
+        ### Удаление временного файла
+        os.remove(tfile)
+
+
+        response = HttpResponse(data, content_type="application/octet-stream")
+        response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
+        return response
 

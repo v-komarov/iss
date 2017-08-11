@@ -101,7 +101,7 @@
                             <a file><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
                             {% for f in row.load_proj_files_set.all %}
                                 {# Ссылки на файлы #}
-                                <br><a readfile file_id="{{ f.id }}">{{ f.filename }}</a>
+                                <br><a readfile href="/regions/proj/readfile/?file_id={{ f.id }}&file_name={{ f.filename }}">{{ f.filename }}</a>
                             {% endfor %}
                             {# Форма загрузки файлов #}
                             <div group="file" hidden>
@@ -168,7 +168,7 @@
                                 <a file><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
                                 {% for f in step.load_proj_files_set.all %}
                                     {# Ссылки на файлы #}
-                                    <br><a readfile file_id="{{ f.id }}">{{ f.filename }}</a>
+                                    <br><a readfile href="/regions/proj/readfile/?file_id={{ f.id }}&file_name={{ f.filename }}">{{ f.filename }}</a>
                                 {% endfor %}
                                 {# Форма загрузки файлов #}
                                 <div group="file" hidden>
