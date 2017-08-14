@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from iss.regions.forms import OrderForm
 from iss.regions.models import orders, proj, proj_stages, proj_steps, proj_notes
 from iss.localdicts.models import regions, proj_temp
-
+from iss.regions.sendmail import send_proj_worker, send_proj_worker2
 
 
 
@@ -303,6 +303,8 @@ def get_json(request):
                 proj = step.stage.proj
                 rowname = step.name
 
+            ### Отправка email сообщение если требуется
+            send_proj_worker2(row_type, row_id, u)
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {rowname} {user} добавил исполнителя {worker}".format(
@@ -373,10 +375,12 @@ def get_json(request):
                 status = step.done
                 ### Отметка статуса проекта (информационно)
                 if step.done :
-                    print "working"
                     proj.status = step.name
                     proj.save()
 
+
+            ### Отправка email сообщение если требуется
+            send_proj_worker(row_type, row_id, request.user)
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {rowname} {user} отметил как {done}".format(
@@ -393,8 +397,15 @@ def get_json(request):
 
 
 
+
+
+
+
+
         ### Рассчет дат проекта
         if r.has_key("action") and rg("action") == 'project-calculate':
+
+            from iss.regions.models import proj
 
             pr = proj.objects.get(pk=request.session['proj_id'])
 
@@ -736,8 +747,8 @@ def get_json(request):
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {stage} {user} сохранил данные этапа".format(
-                proj=proj_stages.proj.name,
-                stage=s.name,
+                proj=s.proj.name,
+                stage=s.name.decode("utf-8"),
                 user=request.user.get_username())
             )
 
@@ -763,10 +774,11 @@ def get_json(request):
             s.depend_on = {"steps": depend_on}
             s.save()
 
+
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {step} {user} сохранил данные этапа".format(
                 proj=s.stage.proj.name,
-                step=s.name,
+                step=s.name.decode("utf-8"),
                 user=request.user.get_username())
             )
 
@@ -778,7 +790,9 @@ def get_json(request):
         ### Сохранение основных данных проекта
         if data.has_key("action") and data["action"] == 'save-proj-main-data':
 
-            p = proj.objects.get(pk=request.session['proj_id'])
+            from iss.regions.models import proj
+
+            p = proj.objects.get(pk=int(request.session['proj_id'], 10))
 
             name = data["name"].strip()
             start = datetime.datetime.strptime(data["start"].strip(), "%d.%m.%Y")
@@ -789,7 +803,7 @@ def get_json(request):
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} {user} сохранил основные данные".format(
-                proj=p.name,
+                proj=p.name.decode("utf-8"),
                 user=request.user.get_username())
             )
 

@@ -230,6 +230,7 @@ function EditProjData(e) {
 // Добавление пользователя в проект : выбор из списка
 function ShowUserSelect(e) {
 
+    $("table[group=stages-list] div[group=user-list] select[user]").val("");
     $("table[group=stages-list] div[group=user-list]").hide();
     $(this).parents("td").children("div[group=user-list]").show();
 
