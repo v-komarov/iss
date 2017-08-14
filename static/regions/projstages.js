@@ -15,6 +15,8 @@ $(document).ready(function() {
     $("table[group=stages-list] tr[row_type=stage] a[edit]").bind("click", EditStage);
     // Редактирование шага
     $("table[group=stages-list] tr[row_type=step] a[edit]").bind("click", EditStep);
+    // Список комментариев
+    $("table[group=stages-list] tr td a[book]").bind("click", PreNote);
 
     // Показать список выбора пользователей
     $("table[group=stages-list] a[user]").bind("click", ShowUserSelect);
@@ -45,7 +47,8 @@ $(document).ready(function() {
         //UploadFile();
     });
 
-
+    // Добавление коментария к этапу или шагу
+    $("div#noteslist table#noteadd tbody tr td button#addnote").bind("click",AddNote);
 
 
 });
@@ -498,6 +501,126 @@ function MarkDone(e) {
         }
 
     })
+
+
+}
+
+
+
+
+
+// Предварительное сохранение row_id row_type
+function PreNote(e) {
+
+    // Сохранение в объектах окна типа и id записи
+    $("div#noteslist").attr("row_id",$(this).parents("tr").attr("row_id"));
+    $("div#noteslist").attr("row_type",$(this).parents("tr").attr("row_type"));
+    Notes();
+}
+
+
+
+
+
+
+
+// Списка заметок по шагу или этапу
+function Notes(e) {
+
+    var row_id = $("div#noteslist").attr("row_id");
+    var row_type = $("div#noteslist").attr("row_type");
+
+
+    // Очистка поля ввода новго ДРП
+    $("textarea#text-new-note").val("");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-proj-notes&row_type="+row_type+"&row_id="+row_id,
+        function(data) {
+
+            // Предварительная очистка списка
+            $("#proj-notes-list").empty();
+
+            $.each(data['notes_list'], function(index,value){
+
+                var v = value;
+
+                t = "<dt>"+v["author"]+"<br> ("+v["datetime"]+")<br></dt>"
+                +"<dd>"
+                + v["note"] +"<br>"
+                + "</dd>"
+
+                $("#proj-notes-list").prepend(t);
+
+            });
+
+
+
+
+            $("#noteslist").dialog({
+                open:function() {
+                },
+                  title:"Коментарии: " + data["name"],
+                closeOnEscape: false,
+                  show: {
+                    effect: "blind",
+                    duration: 100
+                  },
+                  hide: {
+                    effect: "blind",
+                    duration: 100
+                  },
+                  buttons: [{text:"Закрыть", click: function() { $(this).dialog("close");  }}],
+                  modal:true,
+                  minWidth:400,
+                  width:600,
+                  height:400
+
+            });
+    })
+
+
+}
+
+
+
+
+
+
+// Добавление коментария
+function AddNote(e) {
+
+
+        var data = {};
+        data.row_id = $("div#noteslist").attr("row_id");
+        data.row_type = $("div#noteslist").attr("row_type");
+        data.note = $("textarea#text-new-note").val();
+        data.action = "proj-adding-note";
+
+
+
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+        $.ajax({
+          url: "/regions/jsondata/",
+          type: "POST",
+          dataType: 'json',
+          data:$.toJSON(data),
+            success: function(result) {
+
+                Notes();
+
+            }
+
+        });
 
 
 }

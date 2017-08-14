@@ -114,7 +114,7 @@
                             </div>
                         </td>
                         <td>
-                            <a book><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+                            <a book title="Коментарии"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {{ row.proj_notes_set.count }}</a>
                         </td>
                         <td>
                                 {% if row.done %}
@@ -181,7 +181,7 @@
                                 </div>
                             </td>
                             <td>
-                                <a book><span class="glyphicon glyphicon-book" aria-hidden="true"></span></a>
+                                <a book title="Коментарии"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> {{ step.proj_notes_set.count }}</a>
                             </td>
                             <td>
                                 {% if step.done %}
@@ -213,6 +213,7 @@
 
 {% include "regions/editstage.html" %}
 {% include "regions/editstep.html" %}
+{% include "regions/projnotes.html" %}
 
 
 {% endblock %}

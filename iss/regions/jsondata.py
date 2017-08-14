@@ -6,12 +6,14 @@ import datetime
 import random
 import logging
 
+from pytz import timezone
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, proj, proj_stages, proj_steps
+from iss.regions.models import orders, proj, proj_stages, proj_steps, proj_notes
 from iss.localdicts.models import regions, proj_temp
 
 
@@ -502,6 +504,51 @@ def get_json(request):
 
 
 
+        ### Отображение данных коментариев по шагам или этапам
+        if r.has_key("action") and rg("action") == 'get-proj-notes':
+            tz = request.session['tz']
+            row_id = int(request.GET["row_id"], 10)
+            row_type = request.GET["row_type"]
+
+            if row_type == "stage":
+                stage = proj_stages.objects.get(pk=row_id)
+                rowname = stage.name
+                notes = []
+                for note in  stage.proj_notes_set.order_by('-datetime'):
+                    notes.append({
+                        'datetime': note.datetime.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
+                        'author':note.author.get_username() + " (" + note.author.get_full_name() + ")",
+                        'note': note.note
+                    })
+
+
+            if row_type == "step":
+                step = proj_steps.objects.get(pk=row_id)
+                rowname = step.name
+                notes = []
+                for note in  step.proj_notes_set.order_by('-datetime'):
+                    notes.append({
+                        'datetime': note.datetime.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
+                        'author':note.author.get_username() + " (" + note.author.get_full_name() + ")",
+                        'note': note.note
+                    })
+
+
+
+
+            response_data = {
+                "result": "ok",
+                "name": rowname,
+                "notes_list": notes
+            }
+
+
+
+
+
+
+
+
     if request.method == "POST":
 
 
@@ -752,10 +799,29 @@ def get_json(request):
 
 
 
-        ### Загрузка файла в проект
-        if data.has_key("action") and data["action"] == 'proj-load-file':
+        ### Добавление коментария к этапу или шагу
+        if data.has_key("action") and data["action"] == 'proj-adding-note':
+            row_id = int(data["row_id"], 10)
+            row_type = data["row_type"]
+            note = data["note"]
 
-            print data
+            if row_type == "stage":
+                stage = proj_stages.objects.get(pk=row_id)
+                proj_notes.objects.create(
+                    author=request.user,
+                    note=note,
+                    stage=stage
+                )
+
+            if row_type == "step":
+                step = proj_steps.objects.get(pk=row_id)
+                proj_notes.objects.create(
+                    author=request.user,
+                    note=note,
+                    step=step
+                )
+
+
 
             response_data = {"result": "ok"}
 

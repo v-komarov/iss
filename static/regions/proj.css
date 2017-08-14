@@ -103,3 +103,16 @@ table tbody tr td div select {
     margin: 0;
 }
 
+
+
+/* Форма отображения и ввода коментариев */
+#text-new-note {
+    width: 400px;
+    height: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+table#noteadd > tbody > tr > td {
+    vertical-align: top;
+}

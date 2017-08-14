@@ -187,3 +187,15 @@ class load_proj_files(models.Model):
     def __unicode__(self):
         return self.filename
 
+
+
+### Заметки по проекту с привязкой к этапу или шагу
+class proj_notes(models.Model):
+    datetime = models.DateTimeField(db_index=True, null=True, auto_now_add=True)
+    note = models.TextField(default="")
+    stage = models.ForeignKey(proj_stages, null=True, on_delete=models.PROTECT, verbose_name='Связь с этапом')
+    step = models.ForeignKey(proj_steps, null=True, on_delete=models.PROTECT, verbose_name='Связь с шагом')
+    author = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    def __unicode__(self):
+        return self.note
