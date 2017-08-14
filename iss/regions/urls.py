@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'jsondata/$', get_json),
     url(r'filedata/$', get_orders_region),
     url(r'proj/page/(?P<page>\d+)/$', ProjList.as_view()),
-    url(r'proj/edit/$', ProjStagesList.as_view()),
+    url(r'proj/edit/(?P<project>\d+)/$', ProjStagesList.as_view()),
     url(r'proj/upload/$', upload),
     url(r'proj/readfile/$', getfile),
 ]

@@ -40,8 +40,9 @@ def send_proj_worker(row_type,row_id, worker):
 
                                     ### Отправка сообщений по каждому этапу, каждому пользователю
                                     email = EmailMessage(
-                                        subject="Управление проектами http://10.6.0.22:8000",
+                                        subject="Управление проектами",
                                         body=u"""
+                                        <a href='http://10.6.0.22:8000/regions/proj/edit/{proj_id}/'>http://10.6.0.22:8000/</a>
                                         <p>
                                         Прошу приступить к реализации пункта проекта<br>
                                         Проект: <b>{proj}</b><br>
@@ -49,7 +50,7 @@ def send_proj_worker(row_type,row_id, worker):
                                         Срок выполнения: <b>{begin} - {end}</b>                
                                         </p>
                                         """.format(proj=p.name, name=step.name, begin=step.begin.strftime('%d.%m.%Y'),
-                                                   end=step.end.strftime('%d.%m.%Y')),
+                                                   end=step.end.strftime('%d.%m.%Y'), proj_id=p.id),
                                         from_email='GAMMA <gamma@sibttk.ru>',
                                         to=[w.email, ]
                                     )
@@ -85,6 +86,7 @@ def send_proj_worker(row_type,row_id, worker):
                             email = EmailMessage(
                                 subject="Управление проектами http://10.6.0.22:8000",
                                 body=u"""
+                                <a href='http://10.6.0.22:8000/regions/proj/edit/{proj_id}/'>http://10.6.0.22:8000/</a>
                                 <p>
                                 Прошу приступить к реализации пункта проекта<br>
                                 Проект: <b>{proj}</b><br>
@@ -92,7 +94,7 @@ def send_proj_worker(row_type,row_id, worker):
                                 Срок выполнения: <b>{begin} - {end}</b>                
                                 </p>
                                 """.format(proj=p.name, name=step.name, begin=step.begin.strftime('%d.%m.%Y'),
-                                           end=step.end.strftime('%d.%m.%Y')),
+                                           end=step.end.strftime('%d.%m.%Y'), proj_id=p.id),
                                 from_email='GAMMA <gamma@sibttk.ru>',
                                 to=[w.email, ]
                             )
@@ -132,15 +134,16 @@ def send_proj_worker2(row_type,row_id,worker):
 
         ### Если этап иди шаг без зависимости - отправляем сообщение
         email = EmailMessage(
-            subject="Управление проектами http://10.6.0.22:8000",
+            subject="Управление проектами",
             body=u"""
+            <a href='http://10.6.0.22:8000/regions/proj/edit/{proj_id}/'>http://10.6.0.22:8000/</a>
             <p>
             Вы определены как исполнитель пункта проекта<br>
             Проект: <b>{proj}</b><br>
             Пункт исполнения: <b>{name}</b><br>
             Срок выполнения: <b>{begin} - {end}</b>                
             </p>
-            """.format(proj=proj.name, name=name, begin=row.begin.strftime('%d.%m.%Y'), end=row.end.strftime('%d.%m.%Y')),
+            """.format(proj=proj.name, name=name, begin=row.begin.strftime('%d.%m.%Y'), end=row.end.strftime('%d.%m.%Y'), proj_id=proj.id),
             from_email='GAMMA <gamma@sibttk.ru>',
             to=[worker.email,]
         )

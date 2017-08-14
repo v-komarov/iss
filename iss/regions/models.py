@@ -161,6 +161,7 @@ class proj_stages(models.Model):
 
 
 
+
 ### Шаги этапов
 class proj_steps(models.Model):
     order = models.IntegerField(verbose_name='Порядковый номер')

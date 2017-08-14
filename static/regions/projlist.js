@@ -122,6 +122,10 @@ function AddProj(e) {
 // Сохранить id проекта и перейти
 function LinkEditProj(e) {
 
+    var proj_id = $(this).parents("tr").attr("row_id");
+    window.location.href = "/regions/proj/edit/"+proj_id+"/";
+
+        /*
         // id сообщешия
         var proj_id = $(this).parents("tr").attr("row_id");
 
@@ -135,6 +139,7 @@ function LinkEditProj(e) {
             }
 
         })
+        */
 
 
 }

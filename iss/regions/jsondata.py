@@ -242,13 +242,13 @@ def get_json(request):
 
 
         ### Сохранение id проекта
-        if r.has_key("action") and rg("action") == 'proj-save-id':
-            proj_id = request.GET["proj_id"]
+        #if r.has_key("action") and rg("action") == 'proj-save-id':
+        #    proj_id = request.GET["proj_id"]
 
-            request.session['proj_id'] = proj_id
+         #   request.session['proj_id'] = proj_id
 
 
-            response_data = {"result": "ok"}
+#            response_data = {"result": "ok"}
 
 
 
