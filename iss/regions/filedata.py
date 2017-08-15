@@ -11,7 +11,7 @@ import StringIO
 
 from snakebite.client import Client
 
-from iss.regions.models import orders, load_proj_files, proj_stages, proj_steps
+from iss.regions.models import orders, load_proj_files, proj_stages, proj_steps, proj
 from iss.localdicts.models import regions
 
 
@@ -201,3 +201,73 @@ def getfile(request):
         response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
         return response
 
+
+
+
+
+### Вывод excel файла
+def projexcel(request, project):
+
+    ### id проекта
+    proj_id = project
+    pj = proj.objects.get(pk=int(proj_id, 10))
+
+    style_bold = xlwt.easyxf('font: bold 1;')
+
+    book = xlwt.Workbook()
+
+    sh = book.add_sheet(pj.name)
+    sh.col(1).width = 15000
+    sh.col(6).width = 15000
+
+    ### Заголовок
+    sh.write(0, 0, u"№п/п", style=style_bold)
+    sh.write(0, 1, u"Название", style=style_bold)
+    sh.write(0, 2, u"Длительность дней", style=style_bold)
+    sh.write(0, 3, u"Начало", style=style_bold)
+    sh.write(0, 4, u"Завершение", style=style_bold)
+    sh.write(0, 5, u"Зависит от", style=style_bold)
+    sh.write(0, 6, u"Исполнители", style=style_bold)
+    sh.write(0, 7, u"Выполнено", style=style_bold)
+
+    n = 1 ## Строка в листе
+    ### Этапы проекта
+    for stage in pj.proj_stages_set.all().order_by('order'):
+        sh.write(n, 0, stage.order, style=style_bold)
+        sh.write(n, 1, stage.name, style=style_bold)
+        sh.write(n, 2, stage.days if stage.days else "", style=style_bold)
+        sh.write(n, 3, stage.begin.strftime('%d.%m.%Y') if stage.begin else "", style=style_bold)
+        sh.write(n, 4, stage.end.strftime('%d.%m.%Y') if stage.end else "", style=style_bold)
+        sh.write(n, 5, ",".join(["%s" % x for x in stage.depend_on["stages"]]), style=style_bold)
+        sh.write(n, 6, ",".join([w.get_full_name() for w in stage.workers.all()]), style=style_bold)
+        sh.write(n, 7, u"Выполнено" if stage.done else "", style=style_bold)
+
+        n += 1
+
+        ### Шаги проекта
+        for step in stage.proj_steps_set.all().order_by('order'):
+
+            sh.write(n, 0, step.order)
+            sh.write(n, 1, step.name)
+            sh.write(n, 2, step.days if step.days else "")
+            sh.write(n, 3, step.begin.strftime('%d.%m.%Y') if step.begin else "")
+            sh.write(n, 4, step.end.strftime('%d.%m.%Y') if step.end else "")
+            sh.write(n, 5, ",".join(["%s" % x for x in step.depend_on["steps"]]))
+            sh.write(n, 6, ",".join([w.get_full_name() for w in step.workers.all()]))
+            sh.write(n, 7, u"Выполнено" if step.done else "")
+
+            n += 1
+
+    response = HttpResponse(content_type="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="%s.xls"' % pj.name.encode("utf-8")
+    book.save(response)
+    return response
+
+
+
+
+
+
+### Диаграмма Ганта
+def projgant(request, project):
+    pass

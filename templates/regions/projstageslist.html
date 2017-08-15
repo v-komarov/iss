@@ -20,12 +20,20 @@
 
 
 <div class="row small">
-    <form id="projedit">
-        <table>
-            {{ form.as_table }}
-            <tr><td></td><td><button type="submit" class="btn btn-default btn-xs" onclick="return false;">Сохранить</button></td></tr>
-        </table>
-    </form>
+    <div class="row col-md-4">
+        <form id="projedit">
+            <table>
+                {{ form.as_table }}
+                <tr><td></td><td><button type="submit" class="btn btn-default btn-xs" onclick="return false;">Сохранить</button></td></tr>
+            </table>
+        </form>
+    </div>
+    <div class="row col-md-1">
+        <a href="/regions/proj/excel/{{ project }}/">Выгрузить в Excel</a>
+    </div>
+    <div class="row col-md-1">
+        <a href="/regions/proj/gant/{{ project }}/">Диаграмма Ганта</a>
+    </div>
 </div>
 
 

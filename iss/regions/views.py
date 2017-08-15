@@ -415,6 +415,7 @@ class ProjStagesList(ListView):
         context['user_list']= User.objects.order_by('username')
         context['stageform']= StageForm()
         context['stepform']= StepForm()
+        context['project']= self.session["proj_id"]
 
         return context
 

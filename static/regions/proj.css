@@ -116,3 +116,10 @@ table tbody tr td div select {
 table#noteadd > tbody > tr > td {
     vertical-align: top;
 }
+
+
+
+/* Ссылки Выгрузить в excel, Диаграмма Ганта */
+div.row.small div.row.col-md-1 {
+    padding-top: 70px;
+}
