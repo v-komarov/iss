@@ -205,7 +205,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/log/projects.log',
-            'formatter': 'simple',
+            'formatter': 'users',
         },
     },
     'loggers': {

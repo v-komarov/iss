@@ -24,6 +24,9 @@ $(document).ready(function() {
     // Показать выбор загружаемого файла
     $("table[group=stages-list] a[file]").bind("click", ShowUploadFile);
 
+    // Удаление вложенного файла
+    $("table[group=stages-list] a[file-delete]").bind("click", DeleteFile);
+
 
     // Выбор пользователя и добавление пользователя
     $( "table[group=stages-list] select[user]" ).change(function() {
@@ -116,6 +119,38 @@ function CalculateDate(e) {
 }
 
 
+
+
+
+// Удаление вложенного файла
+function DeleteFile(e) {
+
+    var row_id = $(this).parents("tr").attr("row_id");
+    var row_type = $(this).parents("tr").attr("row_type");
+    var file_id = $(this).attr("file_id");
+    var file_name = $(this).attr("file_name");
+    var deletefile = confirm("Удаляем файл "+file_name+" ?");
+
+
+    if (deletefile) {
+
+        // Удаление файла
+        var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-delete-file&row_id="+row_id+"&row_type="+row_type+"&file_id="+file_id,
+        function(data) {
+
+
+            if (data["result"] == "ok") {
+
+                location.reload();
+
+            }
+
+        })
+
+
+    }
+
+}
 
 
 

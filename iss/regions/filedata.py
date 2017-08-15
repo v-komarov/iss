@@ -167,8 +167,7 @@ def upload(request):
     os.remove(tf.name)
 
 
-
-    return HttpResponseRedirect('/regions/proj/edit/')
+    return HttpResponseRedirect('/regions/proj/edit/%s/' % request.session["proj_id"])
 
 
 

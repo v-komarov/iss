@@ -8,6 +8,8 @@ import logging
 
 from pytz import timezone
 
+from snakebite.client import Client
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
@@ -394,6 +396,47 @@ def get_json(request):
 
             response_data = { "result": "ok" }
 
+
+
+
+
+        ### Удаление вложеного файла
+        if r.has_key("action") and rg("action") == 'stage-step-delete-file':
+            row_id = int(request.GET["row_id"], 10)
+            row_type = request.GET["row_type"]
+            file_id = request.GET["file_id"]
+
+            from iss.regions.models import load_proj_files
+
+            f = load_proj_files.objects.get(pk=file_id)
+            filename = f.filename
+            f.delete()
+
+            if row_type == "stage":
+                stage = proj_stages.objects.get(pk=row_id)
+                proj = stage.proj
+                rowname = stage.name
+
+            if row_type == "step":
+                step = proj_steps.objects.get(pk=row_id)
+                proj = step.stage.proj
+                rowname = step.name
+
+            client = Client('10.6.0.135', 9000)
+            for x in client.delete(['/projects/%s' % file_id,], recurse=True):
+                print x
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {rowname} {user} удалил файл {fname}".format(
+                proj=proj.name,
+                rowname=rowname,
+                fname = filename,
+                user=request.user.get_username())
+            )
+
+
+
+            response_data = { "result": "ok" }
 
 
 
