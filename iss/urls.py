@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'^maps/',include('iss.maps.urls')),
     url(r'^logout/$', LogOut),
     url(r'^onyma/', include('iss.onyma.urls')),
+    url(r'^exams/', include('iss.exams.urls')),
     url(r'^admin/', admin.site.urls),
 ]

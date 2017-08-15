@@ -82,6 +82,18 @@
       </li>
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Тестирование
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="menuexamsquestions" {% if request.path|slice:'0:17' == "/exams/questions/" %}class="active"{% endif %}><a href="/exams/questions/">Вопросы</a></li>
+          <li id="menuexamstestdata" {% if request.path|slice:'0:16' == "/exams/testdata/" %}class="active"{% endif %}><a href="/exams/testdata/">Состав тестов</a></li>
+          <li id="menuexamstesting" {% if request.path|slice:'0:15' == "/exams/testing/" %}class="active"{% endif %}><a href="/exams/testing/">Прохождение тестов</a></li>
+          <li id="menuexamsresults" {% if request.path|slice:'0:15' == "/exams/results/" %}class="active"{% endif %}><a href="/exams/results/">Результаты тестирования</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Инвентори
           <b class="caret"></b>
         </a>
