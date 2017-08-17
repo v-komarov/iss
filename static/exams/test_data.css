@@ -7,7 +7,7 @@ table[group=tests-list] > thead > tr > th {
 
 
 table[group=tests-list] > tbody > tr > td {
-    padding: 0;
+    padding: 2px;
 }
 
 

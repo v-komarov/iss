@@ -12,7 +12,7 @@ table[group=answers-list] > thead > tr > th {
 */
 
 table[group=answers-list] > tbody > tr > td {
-    padding: 0;
+    padding: 2px;
 }
 
 

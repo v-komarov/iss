@@ -46,7 +46,7 @@ class answers(models.Model):
 ### Тесты
 class tests(models.Model):
     name = models.CharField(max_length=200, verbose_name='Название теста')
-    section = models.ForeignKey(sections, null=True, on_delete=models.PROTECT, verbose_name='Связь с разделом')
+    section = models.ForeignKey(sections, null=True, on_delete=models.PROTECT, verbose_name='Раздел')
     questions = models.ManyToManyField(questions)
     testtime = models.IntegerField(default=0, verbose_name='Продолжительность теста в минутах')
     mistakes = models.IntegerField(default=0, verbose_name='Максимальное количество ошибок для сдачи')

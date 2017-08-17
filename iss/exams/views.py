@@ -284,3 +284,62 @@ class TestUpdate(TemplateView):
 
         return context
 
+
+
+
+
+
+
+### Список тестов для обученния
+class LearnList(ListView):
+
+    model = tests
+    template_name = "exams/learn_list.html"
+
+    paginate_by = 50
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        request.session['learn_page'] = kwargs.get('page')
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+        if self.session.has_key('exams-section'):
+            section = sections.objects.get(pk=int(self.session["exams-section"], 10))
+            data = tests.objects.filter(section=section, learning=True).order_by('name')
+        else:
+            data = []
+
+        n = 1
+        ### Порядковый номер
+        for item in data:
+            item.order = n
+            n += 1
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(LearnList, self).get_context_data(**kwargs)
+
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        context['sections'] = sections.objects.order_by('name')
+        context['section'] = self.session['exams-section'] if self.session.has_key('exams-section') else "0"
+
+        return context
+
