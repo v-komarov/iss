@@ -1,0 +1,74 @@
+table[group=answers-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+/*
+.row {
+    margin: 0;
+}
+*/
+
+table[group=answers-list] > tbody > tr > td {
+    padding: 0;
+}
+
+
+
+
+/* Курсор */
+table[group=answers-list] > tbody > tr > td > a, #addq {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=answers-list] > tbody > tr > td > a:hover, #addq {
+    text-decoration:none;
+}
+
+
+/* Таблица по центру */
+table[group=answers-list] {
+    margin: 0 auth;
+    width: 50%;
+}
+
+
+form#question {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+
+/* Форма редактирования вопроса */
+form#question > table > tbody > tr > td > textarea#id_name,
+form#question > table > tbody > tr > td > select#id_section {
+    width: 400px;
+}
+
+form#question > table > tbody > tr > th {
+    vertical-align: top;
+}
+
+form#question > table > tbody > tr > td > textarea#id_name {
+    height: 100px;
+}
+
+
+
+
+/* Форма редактирования ответа */
+form#answerdata > table > tbody > tr > td > textarea#id_name {
+    width: 400px;
+}
+
+form#answerdata > table > tbody > tr > th {
+    vertical-align: top;
+}
+
+form#answerdata > table > tbody > tr > td > textarea#id_name {
+    height: 100px;
+}

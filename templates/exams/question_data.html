@@ -1,0 +1,84 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}exams/question_data.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}exams/question_data.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row small">
+    <div class="row col-md-4 col-md-offset-3">
+        <h3>Редактирование вопроса</h3>
+        <form id="question" question_id="{{ question_id }}">
+            <table>
+                {{ form.as_table }}
+                <tr><td></td><td><button type="submit" class="btn btn-default btn-xs" onclick="return false;">Сохранить</button></td></tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="row col-md-2 col-md-offset-3">
+        <a href="/exams/questions/">Вернуться к списку</a>
+    </div>
+    <div class="row col-md-2 col-md-offset-2">
+        <a href="/exams/questions/add/">Создать следующий вопрос</a>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+
+
+    <center>
+        <h4>Варианты ответов <button id="addanswer" title="Добавить ответ" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></h4>
+        <table group="answers-list" class="table table-bordered table-striped draggable">
+
+            <thead class="small">
+
+                <tr style="background-color:gainsboro;">
+                    <th width="10%">№пп</th>
+                    <th width="10%">Правильный</th>
+                    <th width="70%">Вариант ответа</th>
+                    <th width="10%">Удалить</th>
+                </tr>
+
+            </thead>
+
+            <tbody class="small">
+            </tbody>
+
+
+
+
+
+        </table>
+    </center>
+
+
+
+</div>
+
+
+
+{% include "exams/answer_data.html" %}
+
+{% endblock %}
+

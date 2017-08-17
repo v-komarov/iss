@@ -1,0 +1,104 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}exams/test_data.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}exams/test_data.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row small">
+    <div class="row col-md-4 col-md-offset-3">
+        <h3>Редактирование теста</h3>
+        <form id="test" test_id="{{ test_id }}">
+            <table>
+                {{ form.as_table }}
+                <tr><td></td><td><button type="submit" class="btn btn-default btn-xs" onclick="return false;">Сохранить</button></td></tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="row col-md-2 col-md-offset-3">
+        <a href="/exams/tests/{{ tests_page }}/">Вернуться к списку</a>
+    </div>
+    <div class="row col-md-2 col-md-offset-2">
+        <a href="/exams/tests/add/">Создать следующий тест</a>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+
+
+    <center>
+        <h4>Вопросы теста</h4>
+        <table group="tests-list" class="table table-bordered table-striped draggable">
+
+            <thead class="small">
+
+                <tr style="background-color:gainsboro;">
+                    <th width="5%">№пп</th>
+                    <th width="20%">Раздел</th>
+                    <th width="65%">Вопрос</th>
+                    <th width="5%">Ответов</th>
+                    <th width="5%">Включить</th>
+                </tr>
+
+            </thead>
+
+            <tbody class="small">
+
+            {% for row in questions_data %}
+
+
+                    <tr class="small" row_id="{{ row.id }}">
+                        <td>{{ row.order }}</td>
+                        <td>{{ row.section }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.answers_set.count }}</td>
+                        <td>
+                            {% if row.question_ok %}
+                                <input type="checkbox" checked />
+                            {% else %}
+                                <input type="checkbox" />
+                            {% endif %}
+                        </td>
+                    </tr>
+
+            {% endfor %}
+
+
+            </tbody>
+
+
+
+
+
+        </table>
+    </center>
+
+
+
+</div>
+
+
+
+{% endblock %}
+

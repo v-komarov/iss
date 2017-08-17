@@ -1,0 +1,50 @@
+table[group=tests-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=tests-list] > tbody > tr > td {
+    padding: 0;
+}
+
+
+
+
+/* Курсор */
+table[group=tests-list] > tbody > tr > td > a, #addt {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=tests-list] > tbody > tr > td > a:hover, #addt {
+    text-decoration:none;
+}
+
+
+/* Таблица по центру */
+table[group=tests-list] {
+    margin: 0 auth;
+    width: 70%;
+}
+
+
+/* Отступить */
+#manager {
+    margin-top:20px;
+    margin-bottom:20px;
+    padding-left: 300px;
+}
+
+
+#addt {
+    padding-left:20px;
+}

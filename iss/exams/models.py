@@ -24,8 +24,8 @@ class sections(models.Model):
 
 ### Вопросы тестирования
 class questions(models.Model):
-    name = models.CharField(max_length=200, verbose_name='Ответ')
-    section = models.ForeignKey(sections, null=True, on_delete=models.PROTECT, verbose_name='Связь с разделом')
+    name = models.TextField(verbose_name='Вопрос')
+    section = models.ForeignKey(sections, null=True, on_delete=models.PROTECT, verbose_name='Раздел')
 
     def __unicode__(self):
         return self.name
@@ -34,8 +34,8 @@ class questions(models.Model):
 
 ### Ответы тестирования
 class answers(models.Model):
-    name = models.CharField(max_length=200, verbose_name='Ответ')
-    question = models.ForeignKey(sections, null=True, on_delete=models.PROTECT, verbose_name='Связь с вопросом')
+    name = models.TextField(verbose_name='Ответ')
+    question = models.ForeignKey(questions, null=True, on_delete=models.CASCADE, verbose_name='Связь с вопросом')
     truth = models.BooleanField(default=False, verbose_name='Правильный ответ')
 
     def __unicode__(self):

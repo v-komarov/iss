@@ -1,0 +1,94 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}exams/questions_list.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}exams/questions_list.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+    <div id="manager" class="row small col-md-5" section="{{ section }}">
+        <form class="form-inline col-sm-offset-1">
+            <label for="select-section">Раздел</label>
+            <select id="select-section" class="form-control input-sm" data-width="auto">
+                    <option value="0"></option>
+                    {% for item in sections %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+            </select>
+            <a id="addq" href="/exams/questions/add/" title="Создать новый вопрос" hidden>Создать</a>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+
+
+    <center>
+        <h3>Список вопросов раздела</h3>
+        <table group="questions-list" class="table table-bordered table-striped draggable">
+
+
+            <thead class="small">
+
+                <tr style="background-color:gainsboro;">
+                    <th width="5%">№пп</th>
+                    <th width="10%">Раздел</th>
+                    <th width="70%">Вопрос</th>
+                    <th width="5%">Ответов</th>
+                    <th width="5%">Правильных</th>
+                    <th width="5%">Удаление</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+            {% for row in object_list %}
+
+
+                    <tr class="small" row_id="{{ row.id }}">
+                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.order }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.section }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.name }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.answers_set.count }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.truth }}</a></td>
+                        <td><a remove title="Удалить вопрос" question="{{ row.name }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+
+                    </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+
+
+
+
+        </table>
+    </center>
+
+
+
+</div>
+
+
+{% endblock %}
+
