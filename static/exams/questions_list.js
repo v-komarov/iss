@@ -70,7 +70,7 @@ function ChoiceSections() {
             if (data["result"] == "ok") {
 
                 // Отображение вопросов выбранного раздела
-                location.reload();
+                window.location=$("#menuexamsquestions a").attr("href");
 
             }
 

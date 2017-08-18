@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}exams/learning.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}exams/learning.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+<information test_id="{{ test_data.id }}">
+</information>
+
+
+<div class="row text-center">
+
+    <h2>Обучение</h2>
+    <h3>Раздел: <b>{{ test_data.section.name }}</b></h3>
+    <h3>Название теста: <b>{{ test_data.name }}</b></h3>
+    <h4>Количество вопросов: <b>{{ test_data.questions.count }}</b></h4>
+    <h4>Допустимое количество ошибок: <b>{{ test_data.mistakes }}</b></h4>
+
+    <div id="question" hidden>
+        <h5 id="question-name"></h5>
+        <h5>Варианты ответов:</h5>
+        <table group="answers">
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div id="button-begin">
+        <button id="begin" class="button">Начать обучение</button>
+    </div>
+
+    <div id="button-next">
+        <button id="next" class="button" hidden>Следующий вопрос</button>
+    </div>
+
+    <div id="link-back">
+        <a id="back" href="/exams/learnlist/{{ page }}/">Вернуться к списку тестов</a>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+

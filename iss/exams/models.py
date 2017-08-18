@@ -31,6 +31,36 @@ class questions(models.Model):
         return self.name
 
 
+    ### Возвращает список id правильных ответов
+    def get_truth_id_list(self):
+
+        result = []
+        for i in self.answers_set.all().filter(truth=True):
+            result.append(i.id)
+
+        return result
+
+    ### Возвращает список пунктов правильных ответов
+    def get_truth_html(self):
+
+        result = "<ul>"
+        for i in self.answers_set.all().filter(truth=True):
+            result += "<li>{name}</li>".format(name=i.name)
+
+        return result + "</ul>"
+
+    ### Возвращает список вопросов
+    def get_answers_html(self):
+
+        result = ""
+        for i in self.answers_set.all().order_by("?"):
+            result += "<tr answer_id={id}><td><input answer type=\"checkbox\"></td><td>{name}</td></tr>".format(name=i.name, id=i.id)
+
+        return result
+
+
+
+
 
 ### Ответы тестирования
 class answers(models.Model):
@@ -40,6 +70,8 @@ class answers(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
 
 
 
@@ -54,3 +86,22 @@ class tests(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+
+
+
+### Результаты обучения и прохождения теста
+class tests_results(models.Model):
+    test = models.ForeignKey(tests, null=True, on_delete=models.PROTECT, verbose_name='Тест', db_index=True)
+    begin = models.DateTimeField(null=True, verbose_name='Начало теста')
+    end = models.DateTimeField(null=True, verbose_name='Окончание теста')
+    passed = models.BooleanField(default=False, db_index=True, verbose_name='Тест пройден')
+    job = models.CharField(max_length=100, default="", verbose_name='Должность')
+    worker = models.CharField(max_length=100, default="", verbose_name='ФИО')
+    data = JSONField(default={'questions': [], 'mistakes': []}, verbose_name='Очередь id вопросов')
+    learning = models.BooleanField(default=True, db_index=True, verbose_name='Обучение или экзамен')
+    mistakes = models.IntegerField(default=0, verbose_name='Количество ошибок')
+
+    def __unicode__(self):
+        return self.test

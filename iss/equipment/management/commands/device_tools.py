@@ -149,7 +149,6 @@ class Command(BaseCommand):
 
         """
         Переадресация и изменение sysname согласно предоставленных данных Ириной Кокшаровой
-        """
         import csv
         from iss.inventory.models import logical_interfaces_prop,netelems,devices
         from iss.localdicts.models import logical_interfaces_prop_list
@@ -188,4 +187,40 @@ class Command(BaseCommand):
 
                     logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=ip_old))
 
+        """
+
+        """
+            Вывод данных ipaddress, port, номер договора
+        """
+
+        from iss.inventory.models import logical_interfaces_prop,netelems,devices
+        from iss.localdicts.models import logical_interfaces_prop_list
+
+        f = open('gamma_onyma.csv','w')
+
+        ipv4 = logical_interfaces_prop_list.objects.get(name='ipv4')
+        onyma = logical_interfaces_prop_list.objects.get(name='onyma')
+
+        ### Выбор всех свойств с onyma
+        for p in logical_interfaces_prop.objects.filter(prop=onyma):
+
+            ### Номер договора
+            dog = p.val
+
+            ### логический интерфейс
+            li = p.logical_interface
+
+            ### Номер порта
+            port = li.name
+
+            ### Сетевой элемент
+            ne = li.netelem
+
+            ### ip адрес
+            if ne.logical_interfaces_set.all().filter(name='manage').exists():
+                liip = ne.logical_interfaces_set.all().filter(name='manage').first()
+                if liip.logical_interfaces_prop_set.filter(prop=ipv4).exists():
+                    ip = liip.logical_interfaces_prop_set.filter(prop=ipv4).first().val
+
+                    f.write("{ip};{port};{dog};\n".format(ip=ip,port=port,dog=dog))
 

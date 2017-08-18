@@ -41,6 +41,18 @@
 
 <div class="row">
 
+    <div class="row col-md-3">
+        {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/exams/questions/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/exams/questions/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+        {% endif %}
+    </div>
+
 
     <center>
         <h3>Список вопросов раздела</h3>
@@ -65,11 +77,11 @@
 
 
                     <tr class="small" row_id="{{ row.id }}">
-                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.order }}</a></td>
-                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.section }}</a></td>
-                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.name }}</a></td>
-                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.answers_set.count }}</a></td>
-                        <td><a href="/exams/questions/update/{{ row.id }}/">{{ row.truth }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.order }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.section }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.name }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.answers_set.count }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.truth }}</a></td>
                         <td><a remove title="Удалить вопрос" question="{{ row.name }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
 
                     </tr>
@@ -85,6 +97,17 @@
         </table>
     </center>
 
+    <div class="row col-md-3">
+        {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/exams/questions/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/exams/questions/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+        {% endif %}
+    </div>
 
 
 </div>

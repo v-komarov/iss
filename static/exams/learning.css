@@ -1,0 +1,22 @@
+
+/* Курсор */
+a#back {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+a#back:hover {
+    text-decoration:none;
+}
+
+
+/* Кнопка начать */
+div#button-begin {
+    padding-top: 30px;
+}
+
+/* Ссылка */
+div#link-back {
+    padding-top: 30px;
+}

@@ -44,7 +44,7 @@ def CreateQestion(request):
     q = questions.objects.create(name='Новый вопрос', section=sec)
     #request.session['question_id'] = q.id
 
-    return redirect('/exams/questions/update/%s/' % q.id)
+    return redirect('/exams/questions/update/%s/1/' % q.id)
 
 
 
@@ -58,7 +58,7 @@ def CreateTest(request):
     sec = sections.objects.get(pk=int(request.session['exams-section'], 10))
     t = tests.objects.create(name='Новый тест', section=sec)
 
-    return redirect('/exams/tests/update/%s/' % t.id)
+    return redirect('/exams/tests/update/%s/1/' % t.id)
 
 
 
@@ -71,13 +71,14 @@ class QuestionsList(ListView):
     model = questions
     template_name = "exams/questions_list.html"
 
-    paginate_by = 0
+    paginate_by = 2
 
 
 
     @method_decorator(login_required(login_url='/'))
     @method_decorator(group_required(group='exams',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
+        request.session['page'] = kwargs.get('page')
         self.request = request
         self.session = request.session
         self.user = request.user
@@ -117,6 +118,7 @@ class QuestionsList(ListView):
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['sections'] = sections.objects.order_by('name')
         context['section'] = self.session['exams-section'] if self.session.has_key('exams-section') else "0"
+        context['page'] = self.session['page']
 
         return context
 
@@ -137,6 +139,7 @@ class QuestionUpdate(TemplateView):
     @method_decorator(group_required(group='exams', redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         request.session['question_id'] = kwargs.get('question')
+        request.session['page'] = kwargs.get('page')
         self.request = request
         self.session = request.session
         self.user = request.user
@@ -159,6 +162,7 @@ class QuestionUpdate(TemplateView):
         form.fields['section'].widget.attrs['disabled'] = True
         context['form'] = form
 
+        context['page'] = self.session['page']
 
         return context
 
@@ -340,6 +344,42 @@ class LearnList(ListView):
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['sections'] = sections.objects.order_by('name')
         context['section'] = self.session['exams-section'] if self.session.has_key('exams-section') else "0"
+        context['learn_page'] = self.session['learn_page']
+
+        return context
+
+
+
+
+
+### Обучение
+class TestLearning(TemplateView):
+
+    template_name = 'exams/learning.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        request.session['test_id'] = kwargs.get('test')
+        request.session['page'] = kwargs.get('page')
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+        return super(TestLearning, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(TestLearning, self).get_context_data(**kwargs)
+
+        t = tests.objects.get(pk=self.session['test_id'])
+
+        context['page'] = self.session['page']
+
+        context['test_data'] = tests.objects.get(pk=self.session['test_id'])
 
         return context
 

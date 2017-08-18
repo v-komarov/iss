@@ -86,7 +86,7 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li id="menuexamsquestions" {% if request.path|slice:'0:17' == "/exams/questions/" %}class="active"{% endif %}><a href="/exams/questions/">Вопросы</a></li>
+          <li id="menuexamsquestions" {% if request.path|slice:'0:17' == "/exams/questions/" %}class="active"{% endif %}><a href="/exams/questions/1/">Вопросы</a></li>
           <li id="menuexamstestdata" {% if request.path|slice:'0:13' == "/exams/tests/" %}class="active"{% endif %}><a href="/exams/tests/1/">Состав тестов</a></li>
           <li id="menuexamslearning" {% if request.path|slice:'0:17' == "/exams/learnlist/" %}class="active"{% endif %}><a href="/exams/learnlist/1/">Обучение</a></li>
           <li id="menuexamstesting" {% if request.path|slice:'0:15' == "/exams/testing/" %}class="active"{% endif %}><a href="/exams/testing/">Прохождение тестов</a></li>

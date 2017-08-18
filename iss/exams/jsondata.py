@@ -14,7 +14,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
 
-from iss.exams.models import questions, answers, tests
+from iss.exams.models import questions, answers, tests, tests_results
 from iss.exams.forms import AnswerForm
 
 
@@ -128,6 +128,49 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+
+        ### Начало обучения
+        if r.has_key("action") and rg("action") == 'learn-begin':
+            test_id = request.GET["test_id"]
+            t = tests.objects.get(pk=int(test_id, 10))
+
+            ### Формирование и сохранение списка номеров вопросов
+            questions_lists = [x.id for x in t.questions.order_by("?")]
+
+            ### Создание записи обучения
+            res = tests_results.objects.create(
+                test = t,
+                begin = datetime.datetime.now(),
+                data = {
+                    'questions': questions_lists,
+                    'mistakes': []
+                }
+
+            )
+
+            ### Вопрос и список ответов
+            data = res.data
+            quests_list = data["questions"]
+
+            q = quests_list.pop()
+            data["questions"] = quests_list
+            res.data = data
+            res.save()
+
+            qu = questions.objects.get(pk=q)
+
+
+            response_data = {"result": "next", "tests_result_id": res.id, "question-name": qu.name, "answers": qu.get_answers_html()}
+
+
+
+        ### Следующий вопрос обучения
+        if r.has_key("action") and rg("action") == 'learn-next':
+            test_id = request.GET["test_id"]
+
+            response_data = {"result": "next"}
 
 
 
