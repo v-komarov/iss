@@ -234,7 +234,7 @@ class TestUpdate(ListView):
     model = questions
     template_name = 'exams/test_data.html'
 
-    paginate_by = 20
+    paginate_by = 15
 
 
     @method_decorator(login_required(login_url='/'))
