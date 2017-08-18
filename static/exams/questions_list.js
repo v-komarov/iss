@@ -99,7 +99,7 @@ function DeleteQuestion(e) {
             if (data["result"] == "ok") {
 
                 // Отображение вопросов
-                location.reload();
+                window.location=$("#menuexamsquestions a").attr("href");
 
             }
 

@@ -42,20 +42,25 @@
 <div class="row">
 
 
+    <div class="row text-center"><h3>Список тестов раздела</h3></div>
+
+
+    <div class="row" group="paginator">
         {% if paginator.num_pages > 1 %}
             {% if page_obj.has_previous %}
-                <a href="/exams/tests/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+                <a href="/exams/tests/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
             {% endif %}
             <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a href="/exams/tests/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+                <a href="/exams/tests/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
             {% endif %}
         {% endif %}
+    </div>
+    <br>
 
 
 
     <center>
-        <h3>Список тестов раздела</h3>
         <table group="tests-list" class="table table-bordered table-striped draggable">
 
 
@@ -79,12 +84,12 @@
 
 
                     <tr class="small" row_id="{{ row.id }}">
-                        <td><a href="/exams/tests/update/{{ row.id }}/">{{ row.order }}</a></td>
-                        <td><a href="/exams/tests/update/{{ row.id }}/">{{ row.section }}</a></td>
-                        <td><a href="/exams/tests/update/{{ row.id }}/">{{ row.name }}</a></td>
-                        <td><a href="/exams/tests/update/{{ row.id }}/">{{ row.questions.count }}</a></td>
-                        <td><a href="/exams/tests/update/{{ row.id }}/">{{ row.testtime }}</a></td>
-                        <td><a href="/exams/tests/update/{{ row.id }}/">{{ row.mistakes }}</a></td>
+                        <td><a href="/exams/tests/update/{{ row.id }}/1/">{{ row.order }}</a></td>
+                        <td><a href="/exams/tests/update/{{ row.id }}/1/">{{ row.section }}</a></td>
+                        <td><a href="/exams/tests/update/{{ row.id }}/1/">{{ row.name }}</a></td>
+                        <td><a href="/exams/tests/update/{{ row.id }}/1/">{{ row.questions.count }}</a></td>
+                        <td><a href="/exams/tests/update/{{ row.id }}/1/">{{ row.testtime }}</a></td>
+                        <td><a href="/exams/tests/update/{{ row.id }}/1/">{{ row.mistakes }}</a></td>
                         <td>
                             {% if row.learning %}
                                 <input type="checkbox" disabled checked />
@@ -107,15 +112,17 @@
         </table>
     </center>
 
+    <div class="row" group="paginator">
         {% if paginator.num_pages > 1 %}
             {% if page_obj.has_previous %}
-                <a href="/exams/tests/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+                <a href="/exams/tests/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
             {% endif %}
             <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a href="/exams/tests/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+                <a href="/exams/tests/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
             {% endif %}
         {% endif %}
+    </div>
 
 
 </div>

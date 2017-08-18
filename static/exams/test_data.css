@@ -53,3 +53,9 @@ form#test > table > tbody > tr > th {
 table[group=tests-list] > tbody > tr > td > input[type=checkbox] {
     margin:0;
 }
+
+
+div[group=paginator] {
+    margin-left:0;
+    padding-left: 300px;
+}

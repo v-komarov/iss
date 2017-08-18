@@ -153,7 +153,6 @@ class QuestionUpdate(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(QuestionUpdate, self).get_context_data(**kwargs)
 
-        #print type(self.session['question_id']), self.session['question_id']
         q = questions.objects.get(pk=self.session['question_id'])
 
         context['question_id'] = q.id
@@ -176,7 +175,7 @@ class TestsList(ListView):
     model = tests
     template_name = "exams/tests_list.html"
 
-    paginate_by = 50
+    paginate_by = 2
 
 
 
@@ -230,9 +229,13 @@ class TestsList(ListView):
 ### Редактировать тест
 @method_decorator(login_required(login_url='/'), name='dispatch')
 @method_decorator(group_required(group='exams', redirect_url='/exams/questions/'), name='dispatch')
-class TestUpdate(TemplateView):
+class TestUpdate(ListView):
 
+    model = questions
     template_name = 'exams/test_data.html'
+
+    paginate_by = 3
+
 
     @method_decorator(login_required(login_url='/'))
     @method_decorator(group_required(group='exams', redirect_url='/mainmenu/'))
@@ -247,21 +250,9 @@ class TestUpdate(TemplateView):
 
 
 
-
-
-
-    def get_context_data(self, **kwargs):
-        context = super(TestUpdate, self).get_context_data(**kwargs)
+    def get_queryset(self):
 
         t = tests.objects.get(pk=self.session['test_id'])
-
-        context['test_id'] = t.id
-
-        form = TestForm(instance=t)
-        form.fields['section'].widget.attrs['disabled'] = True
-        context['form'] = form
-
-        context['tests_page'] = self.session['tests_page']
 
 
         if self.session.has_key('exams-section'):
@@ -283,7 +274,24 @@ class TestUpdate(TemplateView):
             item.order = n
             n += 1
 
-        context['questions_data'] = data
+        return data
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(TestUpdate, self).get_context_data(**kwargs)
+
+        t = tests.objects.get(pk=self.session['test_id'])
+
+        context['test_id'] = t.id
+
+        form = TestForm(instance=t)
+        form.fields['section'].widget.attrs['disabled'] = True
+        context['form'] = form
+
+        context['tests_page'] = self.session['tests_page']
 
 
         return context

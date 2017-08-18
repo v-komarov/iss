@@ -70,8 +70,7 @@ function ChoiceSections() {
             if (data["result"] == "ok") {
 
                 // Отображение вопросов выбранного раздела
-                location.reload();
-
+                window.location=$("#menuexamstestdata a").attr("href");
             }
 
         })
@@ -99,7 +98,7 @@ function DeleteTest(e) {
             if (data["result"] == "ok") {
 
                 // Отображение тестов
-                location.reload();
+                window.location=$("#menuexamstestdata a").attr("href");
 
             }
 

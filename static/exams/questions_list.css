@@ -48,3 +48,9 @@ table[group=questions-list] {
 #addq {
     padding-left:20px;
 }
+
+
+div[group=paginator] {
+    margin-left:0;
+    padding-left: 200px;
+}

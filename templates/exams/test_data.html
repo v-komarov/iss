@@ -46,9 +46,26 @@
 
 <div class="row">
 
-
-    <center>
+    <div class="row text-center">
         <h4>Вопросы теста</h4>
+    </div>
+
+
+    <div class="row" group="paginator">
+        {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/exams/tests/update/{{ test_id }}/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/exams/tests/update/{{ test_id }}/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+        {% endif %}
+    </div>
+    <br>
+
+    <div class="row">
+    <center>
         <table group="tests-list" class="table table-bordered table-striped draggable">
 
             <thead class="small">
@@ -65,7 +82,7 @@
 
             <tbody class="small">
 
-            {% for row in questions_data %}
+            {% for row in object_list %}
 
 
                     <tr class="small" row_id="{{ row.id }}">
@@ -93,7 +110,20 @@
 
         </table>
     </center>
+    </div>
 
+
+    <div class="row" group="paginator">
+        {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/exams/tests/update/{{ test_id }}/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/exams/tests/update/{{ test_id }}/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+        {% endif %}
+    </div>
 
 
 </div>
