@@ -71,7 +71,7 @@ class QuestionsList(ListView):
     model = questions
     template_name = "exams/questions_list.html"
 
-    paginate_by = 2
+    paginate_by = 30
 
 
 
@@ -175,7 +175,7 @@ class TestsList(ListView):
     model = tests
     template_name = "exams/tests_list.html"
 
-    paginate_by = 2
+    paginate_by = 30
 
 
 
@@ -234,7 +234,7 @@ class TestUpdate(ListView):
     model = questions
     template_name = 'exams/test_data.html'
 
-    paginate_by = 3
+    paginate_by = 20
 
 
     @method_decorator(login_required(login_url='/'))
