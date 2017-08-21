@@ -26,6 +26,7 @@ class sections(models.Model):
 class questions(models.Model):
     name = models.TextField(verbose_name='Вопрос')
     section = models.ForeignKey(sections, null=True, on_delete=models.PROTECT, verbose_name='Раздел')
+    literature = models.CharField(max_length=250, default="", verbose_name='Литература')
 
     def __unicode__(self):
         return self.name
@@ -39,6 +40,7 @@ class questions(models.Model):
             result.append(i.id)
 
         return result
+
 
     ### Возвращает список пунктов правильных ответов
     def get_truth_html(self):
@@ -54,9 +56,10 @@ class questions(models.Model):
 
         result = ""
         for i in self.answers_set.all().order_by("?"):
-            result += "<tr answer_id={id}><td><input answer type=\"checkbox\"></td><td>{name}</td></tr>".format(name=i.name, id=i.id)
+            result += "<tr answer_id={id}><td width=\"10%\"><input answer type=\"checkbox\"></td><td>{name}</td></tr>".format(name=i.name, id=i.id)
 
         return result
+
 
 
 
@@ -105,3 +108,41 @@ class tests_results(models.Model):
 
     def __unicode__(self):
         return self.test
+
+
+    ### Возвращает один id вопроса и удаляет из списка
+    def get_question_id(self):
+
+        data = self.data
+
+        if len(data["questions"]) == 0:
+            return None
+        else:
+            q = data["questions"].pop()
+            self.data = data
+            self.save()
+
+            return q
+
+
+
+    ### Регистрация id вопросов с ошибкой
+    def set_errors(self, q):
+
+        data = self.data
+
+        if q not in data["mistakes"]:
+            data["mistakes"].append(q)
+
+        self.data = data
+        self.save()
+
+        return "ok"
+
+
+
+    ### Возвращает список ip вопросов
+    def get_question_list(self):
+
+        return self.data["questions"]
+

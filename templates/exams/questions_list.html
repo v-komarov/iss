@@ -41,7 +41,7 @@
 
 <div class="row">
 
-    <div class="row col-md-3" group="paginator">
+    <div class="row" group="paginator">
         {% if paginator.num_pages > 1 %}
         {% if page_obj.has_previous %}
             <a href="/exams/questions/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
@@ -64,9 +64,10 @@
                 <tr style="background-color:gainsboro;">
                     <th width="5%">№пп</th>
                     <th width="10%">Раздел</th>
-                    <th width="70%">Вопрос</th>
+                    <th width="65%">Вопрос</th>
                     <th width="5%">Ответов</th>
                     <th width="5%">Правильных</th>
+                    <th width="5">Литература</th>
                     <th width="5%">Удаление</th>
                 </tr>
 
@@ -82,6 +83,7 @@
                         <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.name }}</a></td>
                         <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.answers_set.count }}</a></td>
                         <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/">{{ row.truth }}</a></td>
+                        <td><a href="/exams/questions/update/{{ row.id }}/{{ page }}/" id="tooltip" title="{{ row.literature }}">{{ row.literature|truncatechars:12 }}</a></td>
                         <td><a remove title="Удалить вопрос" question="{{ row.name }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
 
                     </tr>
@@ -97,7 +99,7 @@
         </table>
     </center>
 
-    <div class="row col-md-3" group="paginator">
+    <div class="row" group="paginator">
         {% if paginator.num_pages > 1 %}
         {% if page_obj.has_previous %}
             <a href="/exams/questions/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>

@@ -25,17 +25,35 @@
 <div class="row text-center">
 
     <h2>Обучение</h2>
-    <h3>Раздел: <b>{{ test_data.section.name }}</b></h3>
-    <h3>Название теста: <b>{{ test_data.name }}</b></h3>
-    <h4>Количество вопросов: <b>{{ test_data.questions.count }}</b></h4>
-    <h4>Допустимое количество ошибок: <b>{{ test_data.mistakes }}</b></h4>
+    <div group="test-data">
+        <h3>Раздел: <b>{{ test_data.section.name }}</b></h3>
+        <h3>Название теста: <b>{{ test_data.name }}</b></h3>
+    </div>
+    <div group="test-data2">
+        <h4>Количество вопросов: <b>{{ test_data.questions.count }}</b></h4>
+        <h4>Допустимое количество ошибок: <b>{{ test_data.mistakes }}</b></h4>
+    </div>
 
-    <div id="question" hidden>
+    <div id="question">
         <h5 id="question-name"></h5>
         <h5>Варианты ответов:</h5>
-        <table group="answers">
-            <tbody></tbody>
-        </table>
+        <center>
+            <table class="table-bordered" group="answers">
+                <tbody></tbody>
+            </table>
+        </center>
+    </div>
+    {# Сообщение об ошибке, правильный ответ #}
+    <div id="error">
+        <h5><b>Ошибка!</b></h5>
+        <h5>Правильный ответ:</h5>
+        <error></error>
+    </div>
+    {# Результат тестирования-обучения #}
+    <div id="result">
+        <h4 id="result-name"></h4>
+        <h5 id="result-mistakes"></h5>
+        <error></error>
     </div>
 
     <div id="button-begin">

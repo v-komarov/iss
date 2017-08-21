@@ -20,3 +20,78 @@ div#button-begin {
 div#link-back {
     padding-top: 30px;
 }
+
+
+table[group=answers] > tbody > tr > td {
+    vertical-align: top;
+    align: left;
+}
+
+
+
+/* Таблица по центру */
+table[group=answers] {
+    margin: 0 auth;
+    width: 100%;
+    padding-bottom:20px;
+    padding-left:300px;
+    padding-right:300px;
+}
+
+
+#question {
+    border: 1px solid green;
+    border-radius: 10px;
+    display: block;
+    margin-left: 400px;
+    margin-right: 400px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#question-name {
+    color: green;
+    font-weight: bold;
+}
+
+
+div[group=test-data], div[group=test-data2] {
+    border: 1px solid black;
+    border-radius: 10px;
+    display: block;
+    margin-left: 400px;
+    margin-right: 400px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 3px;
+}
+
+
+div#error {
+    border: 1px solid red;
+    border-radius: 10px;
+    display: block;
+    margin-left: 400px;
+    margin-right: 400px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 3px;
+    color: red;
+}
+
+
+div#result {
+    border: 1px solid brown;
+    border-radius: 10px;
+    display: block;
+    margin-left: 400px;
+    margin-right: 400px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 3px;
+    color: red;
+}

@@ -45,7 +45,8 @@ form#question {
 
 /* Форма редактирования вопроса */
 form#question > table > tbody > tr > td > textarea#id_name,
-form#question > table > tbody > tr > td > select#id_section {
+form#question > table > tbody > tr > td > select#id_section,
+form#question > table > tbody > tr > td > input#id_literature {
     width: 400px;
 }
 

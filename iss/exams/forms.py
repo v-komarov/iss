@@ -8,7 +8,7 @@ from iss.exams.models import questions, answers, tests
 class QuestionForm(ModelForm):
     class Meta:
         model = questions
-        fields = ['name', 'section',]
+        fields = ['name', 'section', 'literature',]
 
 
 

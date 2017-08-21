@@ -137,7 +137,11 @@ def get_json(request):
             t = tests.objects.get(pk=int(test_id, 10))
 
             ### Формирование и сохранение списка номеров вопросов
-            questions_lists = [x.id for x in t.questions.order_by("?")]
+            questions_lists = []
+            for x in t.questions.all().order_by("?"):
+                questions_lists.append(x.id)
+
+
 
             ### Создание записи обучения
             res = tests_results.objects.create(
@@ -151,26 +155,61 @@ def get_json(request):
             )
 
             ### Вопрос и список ответов
-            data = res.data
-            quests_list = data["questions"]
+            question_id = res.get_question_id()
+            if question_id:
 
-            q = quests_list.pop()
-            data["questions"] = quests_list
-            res.data = data
-            res.save()
+                qu = questions.objects.get(pk=question_id)
+                response_data = {"result": "next", "result_id": res.id, "question-name": qu.name, "answers": qu.get_answers_html(), "question_id": question_id, "question_list": res.get_question_list()}
+            ### Пустой тест - без вопросов
+            else:
+                response_data = {"result": "end"}
 
-            qu = questions.objects.get(pk=q)
 
 
-            response_data = {"result": "next", "tests_result_id": res.id, "question-name": qu.name, "answers": qu.get_answers_html()}
 
 
 
         ### Следующий вопрос обучения
         if r.has_key("action") and rg("action") == 'learn-next':
-            test_id = request.GET["test_id"]
+            result_id = request.GET["result_id"]
+            res = tests_results.objects.get(pk=int(result_id, 10))
+            t = res.test
 
-            response_data = {"result": "next"}
+            qu = questions.objects.get(pk=int(request.GET["question_id"], 10))
+
+            ### Список id ответов
+            answer_list = [int(x ,10) for x in request.GET["answer_list"].split(",")]
+
+            ### Сравнение - на правильность ответа
+            if set(sorted(answer_list)) == (set(sorted(qu.get_truth_id_list()))):
+
+                ### Подготовка данных следующего вопроса , если этот не последний
+                question_id = res.get_question_id()
+                if question_id:
+                    quest = questions.objects.get(pk=question_id)
+                    response_data = {"result": "next", "result_id": res.id, "question-name": quest.name,
+                                     "answers": quest.get_answers_html(), "question_id": question_id}
+                ### Тестирование завершено
+                else:
+                    res.end = datetime.datetime.now()
+                    res.mistakes = len(res.data["mistakes"])
+
+                    ### Проверка пройден тест или нет
+                    if t.mistakes >= len(res.data["mistakes"]):
+                        res.passed = True
+                        response_data = {"result": "end", "mistakes": len(res.data["mistakes"]), "passed": "yes"}
+                    else:
+                        response_data = {"result": "end", "mistakes": len(res.data["mistakes"]), "passed": "no"}
+
+                    res.save()
+
+
+            ### Если ответ ошибочный
+            else:
+                res.set_errors(qu.id)
+                response_data = {"result": "error", "truth": qu.get_truth_html()}
+
+
 
 
 
@@ -220,6 +259,7 @@ def get_json(request):
             q = questions.objects.get(pk=int(request.session['question_id'], 10))
 
             q.name = data["question"].strip()
+            q.literature = data["literature"].strip()
             q.save()
 
             response_data = {"result": "ok"}

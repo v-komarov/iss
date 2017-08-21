@@ -88,13 +88,16 @@ function EditQuestionData(e) {
 
 
     $("form#question #id_name").css("background-color","yellow");
+    $("form#question #id_literature").css("background-color","yellow");
 
     var question = $("form#question #id_name").val();
+    var literature = $("form#question #id_literature").val();
     var question_id = $("form#question").attr("question_id");
 
 
     var data = {};
     data.question = question;
+    data.literature = literature;
     data.question_id = question_id;
     data.action = "question-save-common-data";
 
@@ -120,6 +123,7 @@ function EditQuestionData(e) {
             if (result["result"] == "ok") {
 
                 $("form#question #id_name").css("background-color","");
+                $("form#question #id_literature").css("background-color","");
 
             }
         }
