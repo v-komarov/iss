@@ -1,7 +1,7 @@
 #coding:utf-8
 from django.conf.urls import url
 
-from iss.exams.views import QuestionsList, QuestionUpdate, CreateQestion, TestsList, CreateTest, TestUpdate, LearnList, TestLearning
+from iss.exams.views import QuestionsList, QuestionUpdate, CreateQestion, TestsList, CreateTest, TestUpdate, LearnList, TestLearning, ExamList, TestExamining
 from iss.exams.jsondata import get_json
 
 
@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'tests/update/(?P<test>\d+)/(?P<page>\d+)/$', TestUpdate.as_view()),
     url(r'learnlist/(?P<page>\d+)/$', LearnList.as_view()),
     url(r'learning/(?P<test>\d+)/(?P<page>\d+)/$', TestLearning.as_view()),
+    url(r'examlist/(?P<page>\d+)/$', ExamList.as_view()),
+    url(r'examining/(?P<test>\d+)/(?P<page>\d+)/$', TestExamining.as_view()),
 
 ]
 

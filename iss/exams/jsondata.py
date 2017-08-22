@@ -207,7 +207,7 @@ def get_json(request):
             ### Если ответ ошибочный
             else:
                 res.set_errors(qu.id)
-                response_data = {"result": "error", "truth": qu.get_truth_html()}
+                response_data = {"result": "error", "truth": qu.get_truth_html(), "literature": qu.literature}
 
 
 

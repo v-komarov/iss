@@ -1,13 +1,12 @@
 $(document).ready(function() {
 
-    // начать обучение
-    $("button#begin").bind("click", LearnBegin);
+    // начать тестирование
+    $("button#begin").bind("click", TestBegin);
 
     // следующий вопрос
-    $("button#next").bind("click", LearnNext);
+    $("button#next").bind("click", TestNext);
 
     $("div#question").hide();
-    $("div#error").hide();
     $("div#result").hide();
 
 
@@ -15,12 +14,12 @@ $(document).ready(function() {
 
 
 
-// Начать обучение
-function LearnBegin(e) {
+// Начать тестирование
+function TestBegin(e) {
 
         var test_id = $("information").attr("test_id");
 
-        var jqxhr = $.getJSON("/exams/jsondata/?action=learn-begin&test_id="+test_id,
+        var jqxhr = $.getJSON("/exams/jsondata/?action=test-begin&test_id="+test_id,
         function(data) {
 
             if (data["result"] == "next") {
@@ -52,7 +51,7 @@ function LearnBegin(e) {
 
 
 // Следующий вопрос
-function LearnNext(e) {
+function TestNext(e) {
 
         var test_id = $("information").attr("test_id");
         var question_id = $("information").attr("question_id");
@@ -63,7 +62,7 @@ function LearnNext(e) {
             answer_list = answer_list + $(this).parents("tr").attr("answer_id") + ",";
         });
 
-        var jqxhr = $.getJSON("/exams/jsondata/?action=learn-next&result_id="+result_id+"&question_id="+question_id+"&answer_list="+answer_list.substring(0, answer_list.length - 1),
+        var jqxhr = $.getJSON("/exams/jsondata/?action=test-next&result_id="+result_id+"&question_id="+question_id+"&answer_list="+answer_list.substring(0, answer_list.length - 1),
         function(data) {
 
             // Ответ без ошибок, отображение следующего вопроса
@@ -79,15 +78,6 @@ function LearnNext(e) {
                 $("div#error").hide();
             }
 
-            // Наличие ошибки в ответе
-            if (data["result"] == "error") {
-
-                $("error").empty();
-                $("error").append(data["truth"]);
-                $("literature").text(data["literature"]).css("color","blue");
-                $("div#error").show();
-
-            }
 
             // Вопросов не осталось, подведение итогов
             if (data["result"] == "end") {

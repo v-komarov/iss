@@ -48,7 +48,6 @@ table[group=answers] {
     padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    background-color: #daf8da;
 }
 
 #question-name {
@@ -57,7 +56,7 @@ table[group=answers] {
 }
 
 
-div[group=test-data], div[group=test-data2] {
+div[group=test-data], div[group=test-data2], div[group=test-data3] {
     border: 1px solid black;
     border-radius: 10px;
     display: block;
@@ -67,12 +66,26 @@ div[group=test-data], div[group=test-data2] {
     padding-left: 10px;
     padding-right: 10px;
     margin-bottom: 3px;
+}
+
+div[group=test-data] {
     background-color: #ccccfb;
 }
 
 
-div#error {
-    border: 1px solid red;
+div[group=test-data2] {
+    background-color: bisque;
+}
+
+
+div[group=test-data3] {
+    background-color: #fcfcd2;
+}
+
+
+
+div#fio-job {
+    border: 1px solid brown;
     border-radius: 10px;
     display: block;
     margin-left: 400px;
@@ -81,8 +94,8 @@ div#error {
     padding-left: 10px;
     padding-right: 10px;
     margin-top: 3px;
-    color: red;
-    background-color: #facdcd;
+    padding-top:5px;
+    background-color: #fbebeb;
 }
 
 
@@ -97,5 +110,10 @@ div#result {
     padding-right: 10px;
     margin-top: 3px;
     color: red;
-    background-color: #f1c2c24d;
+}
+
+/* Ширина полей ввода */
+div#fio-job center table tbody tr td input#id_worker,
+div#fio-job center table tbody tr td input#id_job {
+    width: 400px;
 }

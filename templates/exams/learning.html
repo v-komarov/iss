@@ -24,10 +24,10 @@
 
 <div class="row text-center">
 
-    <h2>Обучение</h2>
+    <h3>Обучение</h3>
     <div group="test-data">
-        <h3>Раздел: <b>{{ test_data.section.name }}</b></h3>
-        <h3>Название теста: <b>{{ test_data.name }}</b></h3>
+        <h4>Раздел: <b>{{ test_data.section.name }}</b></h4>
+        <h4>Название теста: <b>{{ test_data.name }}</b></h4>
     </div>
     <div group="test-data2">
         <h4>Количество вопросов: <b>{{ test_data.questions.count }}</b></h4>
@@ -47,7 +47,8 @@
     <div id="error">
         <h5><b>Ошибка!</b></h5>
         <h5>Правильный ответ:</h5>
-        <error></error>
+        <error></error><br>
+        <literature></literature>
     </div>
     {# Результат тестирования-обучения #}
     <div id="result">

@@ -1,0 +1,85 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}exams/examining.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}exams/examining.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+<information test_id="{{ test_data.id }}">
+</information>
+
+
+<div class="row text-center">
+
+    <h3>Тестирование</h3>
+    <div group="test-data">
+        <h4>Раздел: <b>{{ test_data.section.name }}</b>,
+        Название теста: <b>{{ test_data.name }}</b></h4>
+    </div>
+    <div group="test-data2">
+        <h4>Количество вопросов: <b>{{ test_data.questions.count }}</b>,
+        Допустимое количество ошибок: <b>{{ test_data.mistakes }}</b></h4>
+    </div>
+    <div group="test-data3">
+        <h4>Лимит времени в минутах: {% if test_data.testtime == 0 %}Без лимита{% else %}{{ test_data.testtime }}{% endif %}, Прошло времени: <minut>0</minut> мин.</h4>
+    </div>
+    <div id="fio-job">
+        <center>
+            <table group="fio-job">
+                <tbody>{{ form }}</tbody>
+            </table>
+        </center>
+    </div>
+
+
+    <div id="question">
+        <h5 id="question-name"></h5>
+        <h5>Варианты ответов:</h5>
+        <center>
+            <table class="table-bordered" group="answers">
+                <tbody></tbody>
+            </table>
+        </center>
+    </div>
+    {# Результат тестирования #}
+    <div id="result">
+        <h4 id="result-name"></h4>
+        <h5 id="result-mistakes"></h5>
+        <error></error>
+    </div>
+
+    <div id="button-begin">
+        <button id="begin" class="button">Начать тестирование</button>
+    </div>
+
+    <div id="button-next">
+        <button id="next" class="button" hidden>Следующий вопрос</button>
+    </div>
+
+    <div id="link-back">
+        <a id="back" href="/exams/examlist/{{ page }}/">Вернуться к списку тестов</a>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
