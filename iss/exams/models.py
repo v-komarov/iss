@@ -107,7 +107,7 @@ class tests_results(models.Model):
     mistakes = models.IntegerField(default=0, verbose_name='Количество ошибок')
 
     def __unicode__(self):
-        return self.test
+        return self.test.name
 
 
     ### Возвращает один id вопроса и удаляет из списка

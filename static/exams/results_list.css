@@ -1,0 +1,65 @@
+table[group=results-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=results-list] > tbody > tr > td {
+    padding: 2px;
+}
+
+
+
+
+/* Курсор */
+table[group=results-list] > tbody > tr > td > a, #to_excel {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=results-list] > tbody > tr > td > a:hover, #to_excel {
+    text-decoration:none;
+}
+
+
+/* Таблица по центру */
+table[group=results-list] {
+    margin: 0 auth;
+    width: 70%;
+}
+
+
+/* Отступить */
+#manager {
+    margin-top:20px;
+    margin-bottom:20px;
+    padding-left: 300px;
+}
+
+
+
+table[group=results-list] > tbody > tr > td > input[type=checkbox] {
+    margin:0;
+}
+
+
+/* Отступ для указателя страниц */
+div[group=paginator] {
+    margin-left:0;
+    padding-left: 200px;
+}
+
+/* Отступ для ссылки */
+#to_excel {
+    margin-left:0;
+    padding-left: 400px;
+}
+

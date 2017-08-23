@@ -5,6 +5,7 @@ import decimal
 import datetime
 import random
 import logging
+import pickle
 
 from pytz import timezone
 
@@ -344,6 +345,47 @@ def get_json(request):
 
 
             response_data = {"result": "ok", "rows": rows}
+
+
+
+
+
+        ### Добавить или удалить элемент в список отчета
+        if r.has_key("action") and rg("action") == 'report':
+
+            row_id = int(request.GET["row_id"],10)
+            status = request.GET["status"]
+
+            if request.session.has_key("reportlist") and status == "yes":
+                a = request.session["reportlist"]
+                if row_id not in a:
+                    a.append(row_id)
+                    request.session["reportlist"] = a
+
+            elif request.session.has_key("reportlist") and status == "no":
+                a = request.session["reportlist"]
+                if row_id in a:
+                    a.remove(row_id)
+                    request.session["reportlist"] = a
+            elif request.session.has_key("reportlist") == False and status == "yes":
+                request.session["reportlist"] = [row_id]
+
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Удаление списка для вывода в отчет
+        if r.has_key("action") and rg("action") == 'report-clear':
+
+            if request.session.has_key("reportlist"):
+                del request.session["reportlist"]
+
+
+            response_data = {"result": "ok"}
 
 
 

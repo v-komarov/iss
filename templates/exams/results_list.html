@@ -1,0 +1,128 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}exams/results_list.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}exams/results_list.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+    <div id="manager" class="row small col-md-8" section="{{ section }}">
+        <form class="form-inline col-sm-offset-1">
+            <label for="select-section">Раздел</label>
+            <select id="select-section" class="form-control input-sm" data-width="auto">
+                    <option value="0"></option>
+                    {% for item in sections %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+
+    <a href="#" id="to_excel" title="Выгрузить данные">В Excel</a>
+
+    <h3 class="text-center">Результаты проверки знания</h3>
+
+
+    <div group="paginator">
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/exams/results/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/exams/results/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <br>
+
+
+    <center>
+        <table group="results-list" class="table table-bordered table-striped draggable">
+
+
+            <thead class="small">
+
+                <tr style="background-color:gainsboro;">
+                    <th width="5%">В протокол</th>
+                    <th width="15%">Раздел</th>
+                    <th width="25%">Название теста</th>
+                    <th width="20%">ФИО</th>
+                    <th width="25%">Должность</th>
+                    <th width="10%">Дата</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+            {% for row in object_list %}
+
+
+                    <tr class="small" row_id="{{ row.id }}">
+                        <td>
+                            {% if row.id in reportlist %}
+                                <input type="checkbox" checked /></td>
+                            {% else %}
+                                <input type="checkbox" /></td>
+                            {% endif %}
+                        <td>{{ row.test.section }}</td>
+                        <td>{{ row.test.name }}</td>
+                        <td>{{ row.worker }}</td>
+                        <td>{{ row.job }}</td>
+                        <td>{{ row.end|date:"d.m.Y"}}</td>
+                    </tr>
+
+            {% endfor %}
+            </tbody>
+
+
+
+
+
+        </table>
+    </center>
+
+    <div group="paginator">
+        {% if paginator.num_pages > 1 %}
+            {% if page_obj.has_previous %}
+                <a href="/exams/results/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            {% endif %}
+            <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="/exams/results/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
