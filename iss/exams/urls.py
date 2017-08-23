@@ -3,6 +3,7 @@ from django.conf.urls import url
 
 from iss.exams.views import QuestionsList, QuestionUpdate, CreateQestion, TestsList, CreateTest, TestUpdate, LearnList, TestLearning, ExamList, TestExamining, ResultsList
 from iss.exams.jsondata import get_json
+from iss.exams.filedata import report
 
 
 urlpatterns = [
@@ -18,6 +19,7 @@ urlpatterns = [
     url(r'examlist/(?P<page>\d+)/$', ExamList.as_view()),
     url(r'examining/(?P<test>\d+)/(?P<page>\d+)/$', TestExamining.as_view()),
     url(r'results/(?P<page>\d+)/$', ResultsList.as_view()),
+    url(r'report/$', report),
 
 ]
 
