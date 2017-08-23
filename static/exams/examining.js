@@ -9,8 +9,32 @@ $(document).ready(function() {
     $("div#question").hide();
     $("div#result").hide();
 
+    // Очистка полей ФИО и Должность
+    $("input#id_worker").val("");
+    $("input#id_job").val("");
+
+
 
 });
+
+
+
+
+
+
+// Таймер
+function MinuTimer() {
+
+    var m = parseInt($("minut").text(),10);
+    m += 1;
+    $("minut").text(m);
+
+
+}
+
+
+
+
 
 
 
@@ -19,30 +43,49 @@ function TestBegin(e) {
 
         var test_id = $("information").attr("test_id");
 
-        var jqxhr = $.getJSON("/exams/jsondata/?action=test-begin&test_id="+test_id,
-        function(data) {
+        var fio = $("input#id_worker").val();
+        var job = $("input#id_job").val();
 
-            if (data["result"] == "next") {
+        // Проверка заполненности полей ФИО и должность
+        if ( fio != "" && job != "" ) {
+
+            var jqxhr = $.getJSON("/exams/jsondata/?action=test-begin&test_id="+test_id+"&fio="+fio+"&job="+job,
+            function(data) {
+
+                if (data["result"] == "next") {
+
+                    // Блокировка полей ФИО и Должность
+                    $("input#id_worker").prop("readonly",true);
+                    $("input#id_job").prop("readonly",true);
+
+                    // Сохранение id вопроса
+                    $("information").attr("question_id",data["question_id"]);
+                    $("information").attr("result_id",data["result_id"]);
+
+                    $("button#begin").hide();
+                    $("a#back").hide();
+                    $("#result").hide();
+                    $("button#next").show();
+
+                    // Отображение вопроса
+                    $("#question-name").text("Вопрос: "+data["question-name"]);
+                    $("div#question table[group=answers] tbody").empty();
+                    $("div#question table[group=answers] tbody").append(data["answers"]);
+                    $("div#question").show();
+
+                    // Запуск таймера
+                    window.timerId = setInterval(function() {MinuTimer();}, 60000);
 
 
-                // Сохранение id вопроса
-                $("information").attr("question_id",data["question_id"]);
-                $("information").attr("result_id",data["result_id"]);
 
-                $("button#begin").hide();
-                $("a#back").hide();
-                $("#result").hide();
-                $("button#next").show();
+                }
 
-                // Отображение вопроса
-                $("#question-name").text("Вопрос: "+data["question-name"]);
-                $("div#question table[group=answers] tbody").empty();
-                $("div#question table[group=answers] tbody").append(data["answers"]);
-                $("div#question").show();
+            })
 
-            }
 
-        })
+        }
+        else { alert("Заполните поля ФИО и должность");}
+
 
 }
 
@@ -65,7 +108,8 @@ function TestNext(e) {
         var jqxhr = $.getJSON("/exams/jsondata/?action=test-next&result_id="+result_id+"&question_id="+question_id+"&answer_list="+answer_list.substring(0, answer_list.length - 1),
         function(data) {
 
-            // Ответ без ошибок, отображение следующего вопроса
+
+            // Отображение следующего вопроса
             if (data["result"] == "next") {
 
                 // Сохранение id вопроса
@@ -75,15 +119,12 @@ function TestNext(e) {
                 $("div#question table[group=answers] tbody").empty();
                 $("div#question table[group=answers] tbody").append(data["answers"]);
                 $("div#question").show();
-                $("div#error").hide();
             }
 
 
             // Вопросов не осталось, подведение итогов
             if (data["result"] == "end") {
-                $("div#error").hide();
                 $("div#question").hide();
-                $("error").text("");
 
                 // результат
                 $("#result").show();
@@ -93,11 +134,18 @@ function TestNext(e) {
                 else { $("#result-name").text("Тест не сдан!"); $("#result-name").css("color","red"); }
                 $("#result-mistakes").text("Количество сделанных ошибок "+data["mistakes"]);
                 $("#result-mistakes").css("color","brown");
+                // По лимиту времени
+
+                if (data["overtime"] == "yes") { $("#result-timelimit").text("Превышен лимит времени!"); }
+
 
                 // Кнопки , ссылка
-                $("button#begin").show();
                 $("a#back").show();
                 $("button#next").hide();
+
+                // Сброс таймера
+                clearInterval(window.timerId);
+
             }
 
 

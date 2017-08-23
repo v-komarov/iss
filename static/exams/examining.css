@@ -16,10 +16,13 @@ div#button-begin {
     padding-top: 30px;
 }
 
+
+
 /* Ссылка */
 div#link-back {
     padding-top: 30px;
 }
+
 
 
 table[group=answers] > tbody > tr > td {
@@ -39,16 +42,21 @@ table[group=answers] {
 }
 
 
+
 #question {
     border: 1px solid green;
     border-radius: 10px;
     display: block;
     margin-left: 400px;
     margin-right: 400px;
+    margin-top: 3px;
     padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
+    background-color: #d3f4d3;
 }
+
+
 
 #question-name {
     color: green;
@@ -62,11 +70,12 @@ div[group=test-data], div[group=test-data2], div[group=test-data3] {
     display: block;
     margin-left: 400px;
     margin-right: 400px;
-    padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
     margin-bottom: 3px;
 }
+
+
 
 div[group=test-data] {
     background-color: #ccccfb;
@@ -76,6 +85,7 @@ div[group=test-data] {
 div[group=test-data2] {
     background-color: bisque;
 }
+
 
 
 div[group=test-data3] {
@@ -90,13 +100,14 @@ div#fio-job {
     display: block;
     margin-left: 400px;
     margin-right: 400px;
-    padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 3px;
     margin-top: 3px;
     padding-top:5px;
     background-color: #fbebeb;
 }
+
 
 
 div#result {
@@ -105,12 +116,14 @@ div#result {
     display: block;
     margin-left: 400px;
     margin-right: 400px;
-    padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
     margin-top: 3px;
     color: red;
+    background-color: #f1c2c24d;
 }
+
+
 
 /* Ширина полей ввода */
 div#fio-job center table tbody tr td input#id_worker,

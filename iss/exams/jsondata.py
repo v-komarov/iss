@@ -33,7 +33,6 @@ def get_json(request):
         r = request.GET
         rg = request.GET.get
 
-
         ### Фильтр по разделу
         if r.has_key("action") and rg("action") == 'choice-section':
             section = request.GET["section"]
@@ -169,6 +168,7 @@ def get_json(request):
 
 
 
+
         ### Следующий вопрос обучения
         if r.has_key("action") and rg("action") == 'learn-next':
             result_id = request.GET["result_id"]
@@ -209,6 +209,108 @@ def get_json(request):
                 res.set_errors(qu.id)
                 response_data = {"result": "error", "truth": qu.get_truth_html(), "literature": qu.literature}
 
+
+
+
+
+        ### Начало тестирования
+        if r.has_key("action") and rg("action") == 'test-begin':
+
+            test_id = request.GET["test_id"]
+            t = tests.objects.get(pk=int(test_id, 10))
+            fio = request.GET["fio"]
+            job = request.GET["job"]
+
+
+            ### Формирование и сохранение списка номеров вопросов
+            questions_lists = []
+            for x in t.questions.all().order_by("?"):
+                questions_lists.append(x.id)
+
+            ### Создание записи тестирования
+            res = tests_results.objects.create(
+                test=t,
+                worker=fio.strip(),
+                job=job.strip(),
+                learning=False,
+                begin=datetime.datetime.now(),
+                data={
+                    'questions': questions_lists,
+                    'mistakes': []
+                }
+            )
+
+
+            ### Вопрос и список ответов
+            question_id = res.get_question_id()
+            if question_id:
+
+                qu = questions.objects.get(pk=question_id)
+                response_data = {"result": "next", "result_id": res.id, "question-name": qu.name,
+                                 "answers": qu.get_answers_html(), "question_id": question_id,
+                                 "question_list": res.get_question_list()}
+            ### Пустой тест - без вопросов
+            else:
+                response_data = {"result": "end"}
+
+
+
+        ### Следующий вопрос тестирования
+        if r.has_key("action") and rg("action") == 'test-next':
+            result_id = request.GET["result_id"]
+            res = tests_results.objects.get(pk=int(result_id, 10))
+            t = res.test
+
+            qu = questions.objects.get(pk=int(request.GET["question_id"], 10))
+
+            ### Список id ответов
+            answer_list = [int(x, 10) for x in request.GET["answer_list"].split(",")]
+
+            ### Сравнение - на правильность ответа
+            if set(sorted(answer_list)) != (set(sorted(qu.get_truth_id_list()))):
+                ### Если ответ ошибочный
+                res.set_errors(qu.id)
+
+
+            ### Подготовка данных следующего вопроса , если этот не последний
+            question_id = res.get_question_id()
+            if question_id:
+                quest = questions.objects.get(pk=question_id)
+                response_data = {"result": "next", "result_id": res.id, "question-name": quest.name,
+                                 "answers": quest.get_answers_html(), "question_id": question_id}
+            ### Тестирование завершено
+            else:
+                res.end = datetime.datetime.now()
+                res.mistakes = len(res.data["mistakes"])
+
+
+                ### Проверка пройден тест или нет по количеству ошибок
+                if t.mistakes >= len(res.data["mistakes"]):
+                    res.passed = True
+                    response_data = {"result": "end", "mistakes": len(res.data["mistakes"]), "passed": "yes"}
+                else:
+                    response_data = {"result": "end", "mistakes": len(res.data["mistakes"]), "passed": "no"}
+                res.save()
+
+
+                ### перечитать данные записи
+                res = tests_results.objects.get(pk=int(result_id, 10))
+                ### Проверка превышения времени
+                if t.testtime == 0:
+                    ## Без лимита времени
+                    response_data["overtime"] = "no"
+                else:
+                    ### Определение превышин ли лимит
+                    if int((res.end - res.begin).total_seconds() // 60) > t.testtime:
+                        ### При превышении лимита времени
+                        res.passed = False
+                        res.save()
+                        ### Лимит времени превышен
+                        response_data["overtime"] = "yes"
+                        response_data["passed"] = "no"
+                    else:
+                        ### Превышения лимита не было
+                        response_data["overtime"] = "no"
 
 
 
