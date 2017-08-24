@@ -7,11 +7,31 @@ from	django.http	import	HttpResponse, HttpResponseRedirect
 import xlwt
 import tempfile
 import os
-import StringIO
+from cStringIO import StringIO
 
 from django.db.models import Q
 
 from iss.exams.models import tests_results
+from iss.exams.printform import QuestionsList
+
+
+
+
+
+
+### Вывод печатной формы списка вопросов тестирования
+def QuestionsExam(request, result):
+
+    res = tests_results.objects.get(pk=result)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="protocol.pdf"'
+    buff = StringIO()
+    result = QuestionsList(buff,res)
+    response.write(result.getvalue())
+    buff.close()
+
+    return response
 
 
 

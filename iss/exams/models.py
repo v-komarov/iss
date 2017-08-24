@@ -90,7 +90,19 @@ class tests(models.Model):
     def __unicode__(self):
         return self.name
 
+    ### Возвращает словарь вопросов
+    def questions_dict(self):
 
+        questions_dict = []
+
+        for item in self.questions.all():
+
+            questions_dict.append({
+                item.id: item.name
+            })
+
+
+        return questions_dict
 
 
 
@@ -102,6 +114,7 @@ class tests_results(models.Model):
     passed = models.BooleanField(default=False, db_index=True, verbose_name='Тест пройден')
     job = models.CharField(max_length=100, default="", verbose_name='Должность')
     worker = models.CharField(max_length=100, default="", verbose_name='ФИО')
+    department = models.CharField(max_length=100, default="", verbose_name='Место работы')
     data = JSONField(default={'questions': [], 'mistakes': []}, verbose_name='Очередь id вопросов')
     learning = models.BooleanField(default=True, db_index=True, verbose_name='Обучение или экзамен')
     mistakes = models.IntegerField(default=0, verbose_name='Количество ошибок')

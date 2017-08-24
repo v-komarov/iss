@@ -12,6 +12,7 @@ $(document).ready(function() {
     // Очистка полей ФИО и Должность
     $("input#id_worker").val("");
     $("input#id_job").val("");
+    $("input#id_department").val("");
 
 
 
@@ -45,11 +46,12 @@ function TestBegin(e) {
 
         var fio = $("input#id_worker").val();
         var job = $("input#id_job").val();
+        var department = $("input#id_department").val();
 
         // Проверка заполненности полей ФИО и должность
         if ( fio != "" && job != "" ) {
 
-            var jqxhr = $.getJSON("/exams/jsondata/?action=test-begin&test_id="+test_id+"&fio="+fio+"&job="+job,
+            var jqxhr = $.getJSON("/exams/jsondata/?action=test-begin&test_id="+test_id+"&fio="+fio+"&job="+job+"&department="+department,
             function(data) {
 
                 if (data["result"] == "next") {
@@ -57,6 +59,7 @@ function TestBegin(e) {
                     // Блокировка полей ФИО и Должность
                     $("input#id_worker").prop("readonly",true);
                     $("input#id_job").prop("readonly",true);
+                    $("input#id_department").prop("readonly",true);
 
                     // Сохранение id вопроса
                     $("information").attr("question_id",data["question_id"]);

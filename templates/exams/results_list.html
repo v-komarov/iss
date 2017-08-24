@@ -42,7 +42,7 @@
 
     <a href="/exams/report/" id="to_excel" title="Выгрузить данные">В Excel</a>
 
-    <h3 class="text-center">Положительные результаты проверки знаний</h3>
+    <h3 class="text-center">Результаты проверки знаний</h3>
 
 
     <div group="paginator">
@@ -66,12 +66,15 @@
             <thead class="small">
 
                 <tr style="background-color:gainsboro;">
-                    <th width="5%">В протокол</th>
-                    <th width="15%">Раздел</th>
-                    <th width="25%">Название теста</th>
+                    <th width="5%">В excel</th>
+                    <th width="10%">Раздел</th>
+                    <th width="20%">Название теста</th>
                     <th width="20%">ФИО</th>
-                    <th width="25%">Должность</th>
+                    <th width="20%">Должность</th>
                     <th width="10%">Дата</th>
+                    <th width="5%">Ошибок</th>
+                    <th width="5%">PDF</th>
+                    <th width="5%">Результат</th>
                 </tr>
 
             </thead>
@@ -85,13 +88,29 @@
                             {% if row.id in reportlist %}
                                 <input type="checkbox" checked /></td>
                             {% else %}
-                                <input type="checkbox" /></td>
+                                {% if row.passed %}
+                                    <input type="checkbox" /></td>
+                                {% else %}
+                                    <input type="checkbox" disabled /></td>
+                                {% endif %}
                             {% endif %}
                         <td>{{ row.test.section }}</td>
                         <td>{{ row.test.name }}</td>
                         <td>{{ row.worker }}</td>
                         <td>{{ row.job }}</td>
-                        <td>{{ row.end|date:"d.m.Y"}}</td>
+                        <td>{{ row.end|date:"d.m.Y" }}</td>
+                        <td>{{ row.mistakes }}</td>
+                        <td>
+                            <a href="/exams/protocol/{{ row.id }}" title="Форма 1"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                            <a href="/exams/protocol/{{ row.id }}" title="Форма 2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                            <a href="/exams/protocol/{{ row.id }}" title="Форма 3"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                            <a href="/exams/protocol/{{ row.id }}" title="Форма 4"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                        </td>
+                        <td>
+                            {% if row.passed %}
+                                Сдал
+                            {% endif %}
+                        </td>
                     </tr>
 
             {% endfor %}

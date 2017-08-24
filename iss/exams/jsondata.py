@@ -221,6 +221,7 @@ def get_json(request):
             t = tests.objects.get(pk=int(test_id, 10))
             fio = request.GET["fio"]
             job = request.GET["job"]
+            department = request.GET["department"]
 
 
             ### Формирование и сохранение списка номеров вопросов
@@ -233,11 +234,13 @@ def get_json(request):
                 test=t,
                 worker=fio.strip(),
                 job=job.strip(),
+                department=department.strip(),
                 learning=False,
                 begin=datetime.datetime.now(),
                 data={
                     'questions': questions_lists,
-                    'mistakes': []
+                    'mistakes': [],
+                    'questions_dict': t.questions_dict()
                 }
             )
 

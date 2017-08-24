@@ -1,9 +1,9 @@
 #coding:utf-8
 from django.conf.urls import url
 
-from iss.exams.views import QuestionsList, QuestionUpdate, CreateQestion, TestsList, CreateTest, TestUpdate, LearnList, TestLearning, ExamList, TestExamining, ResultsList
+from iss.exams.views import QuestionsList, QuestionUpdate, CreateQestion, TestsList, CreateTest, TestUpdate, TestLearning, ExamList, TestExamining, ResultsList
 from iss.exams.jsondata import get_json
-from iss.exams.filedata import report
+from iss.exams.filedata import report, QuestionsExam
 
 
 urlpatterns = [
@@ -14,12 +14,12 @@ urlpatterns = [
     url(r'tests/(?P<page>\d+)/$', TestsList.as_view()),
     url(r'tests/add/$', CreateTest),
     url(r'tests/update/(?P<test>\d+)/(?P<page>\d+)/$', TestUpdate.as_view()),
-    url(r'learnlist/(?P<page>\d+)/$', LearnList.as_view()),
     url(r'learning/(?P<test>\d+)/(?P<page>\d+)/$', TestLearning.as_view()),
     url(r'examlist/(?P<page>\d+)/$', ExamList.as_view()),
     url(r'examining/(?P<test>\d+)/(?P<page>\d+)/$', TestExamining.as_view()),
     url(r'results/(?P<page>\d+)/$', ResultsList.as_view()),
     url(r'report/$', report),
+    url(r'protocol/(?P<result>\d+)/$', QuestionsExam),
 
 ]
 

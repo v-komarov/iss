@@ -127,6 +127,7 @@ div#result {
 
 /* Ширина полей ввода */
 div#fio-job center table tbody tr td input#id_worker,
-div#fio-job center table tbody tr td input#id_job {
+div#fio-job center table tbody tr td input#id_job,
+div#fio-job center table tbody tr td input#id_department {
     width: 400px;
 }

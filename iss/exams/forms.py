@@ -27,8 +27,9 @@ class TestForm(ModelForm):
         fields = ['name', 'section', 'testtime', 'mistakes', 'learning']
 
 
+
 ### Форма ввода ФИО и должности при начале тестирования
 class ExamForm(ModelForm):
     class Meta:
         model = tests_results
-        fields = ['worker', 'job',]
+        fields = ['worker', 'job', 'department', ]

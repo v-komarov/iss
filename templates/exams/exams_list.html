@@ -63,10 +63,11 @@
                 <tr style="background-color:gainsboro;">
                     <th width="5%">№пп</th>
                     <th width="10%">Раздел</th>
-                    <th width="50%">Название теста</th>
+                    <th width="45%">Название теста</th>
                     <th width="10%">Количество<br>вопросов</th>
                     <th width="10%">Максимальное<br>количество<br>ошибок для сдачи</th>
                     <th width="10%">Лимит времени<br>в минутах</th>
+                    <th width="5%">Обучение</th>
                     <th width="5%">Тестирование</th>
                 </tr>
 
@@ -87,6 +88,11 @@
                                 Нет
                             {% else %}
                                 {{ row.testtime }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.learning %}
+                                <a begin href="/exams/learning/{{ row.id }}/{{ exam_page }}/" title="Начать обучение">Начать обучение</a>
                             {% endif %}
                         </td>
                         <td><a begin href="/exams/examining/{{ row.id }}/{{ exam_page }}/" title="Начать тестирование">Начать тестирование</a></td>
