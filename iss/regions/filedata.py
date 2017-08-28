@@ -11,7 +11,7 @@ import StringIO
 
 from snakebite.client import Client
 
-from iss.regions.models import orders, load_proj_files, proj_stages, proj_steps, proj
+from iss.regions.models import orders, load_proj_files, proj_stages, proj
 from iss.localdicts.models import regions
 
 

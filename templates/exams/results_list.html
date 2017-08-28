@@ -41,6 +41,7 @@
 <div class="row">
 
     <a href="/exams/report/" id="to_excel" title="Выгрузить данные">В Excel</a>
+    <a href="/exams/report2/" id="to_pdf" title="Выгрузить данные">В PDF</a>
 
     <h3 class="text-center">Результаты проверки знаний</h3>
 
@@ -66,14 +67,15 @@
             <thead class="small">
 
                 <tr style="background-color:gainsboro;">
-                    <th width="5%">В excel</th>
+                    <th width="3%"></th>
                     <th width="10%">Раздел</th>
-                    <th width="20%">Название теста</th>
+                    <th width="10%">Название теста</th>
                     <th width="20%">ФИО</th>
                     <th width="20%">Должность</th>
-                    <th width="10%">Дата</th>
+                    <th width="20">Место работы</th>
+                    <th width="5%">Дата</th>
                     <th width="5%">Ошибок</th>
-                    <th width="5%">PDF</th>
+                    <th width="2%">PDF</th>
                     <th width="5%">Результат</th>
                 </tr>
 
@@ -91,20 +93,31 @@
                                 {% if row.passed %}
                                     <input type="checkbox" /></td>
                                 {% else %}
-                                    <input type="checkbox" disabled /></td>
+                                    <input type="checkbox" /></td>
                                 {% endif %}
                             {% endif %}
                         <td>{{ row.test.section }}</td>
                         <td>{{ row.test.name }}</td>
                         <td>{{ row.worker }}</td>
                         <td>{{ row.job }}</td>
+                        <td>{{ row.department }}</td>
                         <td>{{ row.end|date:"d.m.Y" }}</td>
                         <td>{{ row.mistakes }}</td>
                         <td>
-                            <a href="/exams/protocol/{{ row.id }}" title="Форма 1"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                            <a href="/exams/protocol/{{ row.id }}" title="Форма 2"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                            <a href="/exams/protocol/{{ row.id }}" title="Форма 3"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
-                            <a href="/exams/protocol/{{ row.id }}" title="Форма 4"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+
+                                {# Выпадающее меню #}
+                                <div class="dropdown">
+                                  <a data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="/exams/protocol/{{ row.id }}" title="Форма 1"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Форма 1 (Красноярск)</a></li>
+                                    <li><a href="/exams/questionsexam/{{ row.id }}" title="Список вопросов"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Список вопросов</a></li>
+                                  </ul>
+                                </div>
+
+
+
                         </td>
                         <td>
                             {% if row.passed %}

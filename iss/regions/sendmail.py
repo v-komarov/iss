@@ -2,12 +2,12 @@
 
 from django.core.mail import EmailMessage
 
-from iss.regions.models import proj_stages, proj_steps
+from iss.regions.models import proj_stages
 
 
 
 ### Отправка сообщения очередному исполнителю этапа или шага проекта
-def send_proj_worker(row_type,row_id, worker):
+def send_proj_worker(row_id, worker):
 
     ### Отправляется информация при отметке об выполнении
 
@@ -61,46 +61,6 @@ def send_proj_worker(row_type,row_id, worker):
 
 
 
-    if row_type == "step":
-        row = proj_steps.objects.get(pk=row_id)
-        stage = row.stage
-        p = stage.proj
-
-        ### Обход шагов
-        for step in stage.proj_steps_set.all():
-            if step != row and row.order in step.depend_on["steps"]:
-                ### Определение выполенны ли пункты
-                ### Изначально все пункты выполнены
-                done = True
-                for item in step.depend_on["steps"]:
-                    for a in stage.proj_steps_set.filter(order=item):
-                        if a.done == False:
-                            done = False
-
-                ### Если пункт можно выполнять
-                if done == True:
-                    for w in step.workers.all():
-                        if worker != w and w.email != "":
-
-                            ### Отправка сообщений по каждому шагу, каждому пользователю
-                            email = EmailMessage(
-                                subject="Управление проектами http://10.6.0.22:8000",
-                                body=u"""
-                                <a href='http://10.6.0.22:8000/regions/proj/edit/{proj_id}/'>http://10.6.0.22:8000/</a>
-                                <p>
-                                Прошу приступить к реализации пункта проекта<br>
-                                Проект: <b>{proj}</b><br>
-                                Пункт исполнения: <b>{name}</b><br>
-                                Срок выполнения: <b>{begin} - {end}</b>                
-                                </p>
-                                """.format(proj=p.name, name=step.name, begin=step.begin.strftime('%d.%m.%Y'),
-                                           end=step.end.strftime('%d.%m.%Y'), proj_id=p.id),
-                                from_email='GAMMA <gamma@sibttk.ru>',
-                                to=[w.email, ]
-                            )
-
-                            email.content_subtype = "html"
-                            email.send()
 
 
 
@@ -113,20 +73,14 @@ def send_proj_worker(row_type,row_id, worker):
 
 
 ### Отправка сообщения первым исполнителям при начале проекта (при выборе и определении ответственного исполнителя)
-def send_proj_worker2(row_type,row_id,worker):
+def send_proj_worker2(row_id,worker):
 
 
-    if row_type == "stage":
-        row = proj_stages.objects.get(pk=row_id)
-        depend_on = row.depend_on["stages"]
-        proj = row.proj
-        name = row.name
+    row = proj_stages.objects.get(pk=row_id)
+    depend_on = row.depend_on["stages"]
+    proj = row.proj
+    name = row.name
 
-    if row_type == "step":
-        row = proj_steps.objects.get(pk=row_id)
-        depend_on = row.depend_on["steps"]
-        proj = row.stage.proj
-        name = row.name
 
 
     ### Отправка для независимых пунктов

@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 
 from iss.localdicts.models import regions, address_city
 from iss.regions.models import orders, reestr, proj, proj_stages
-from iss.regions.forms import ProjForm, ProjForm2, StageForm, StepForm
+from iss.regions.forms import ProjForm, ProjForm2, StageForm
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -414,7 +414,6 @@ class ProjStagesList(ListView):
         context['form']= ProjForm2(instance=self.proj)
         context['user_list']= User.objects.order_by('username')
         context['stageform']= StageForm()
-        context['stepform']= StepForm()
         context['project']= self.session["proj_id"]
 
         return context

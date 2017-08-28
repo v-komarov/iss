@@ -7,7 +7,6 @@ from iss.regions.jsondata import get_json
 from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant
 
 
-
 urlpatterns = [
     url(r'orders/$', Orders.as_view()),
     url(r'reestr/page/(?P<page>\d+)/$', Reestr.as_view()),

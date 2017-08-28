@@ -15,7 +15,7 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, proj, proj_stages, proj_steps, proj_notes
+from iss.regions.models import orders, proj, proj_stages, proj_notes
 from iss.localdicts.models import regions, proj_temp
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2
 
@@ -270,43 +270,22 @@ def get_json(request):
 
 
 
-        ### Наполнение данными формы редактирования шага
-        if r.has_key("action") and rg("action") == 'step-get-data':
-            step_id = int(request.GET["step_id"], 10)
-            step = proj_steps.objects.get(pk=step_id)
-
-            response_data = {
-                "result": "ok",
-                "order": step.order,
-                "name": step.name,
-                "days": step.days,
-                "depend_on": step.depend_on["steps"]
-
-            }
-
 
 
         ### Добавление пользователя в этап или шаг
         if r.has_key("action") and rg("action") == 'stage-step-add-user':
             row_id = int(request.GET["row_id"], 10)
-            row_type = request.GET["row_type"]
             user_id = int(request.GET["user_id"], 10)
             u = User.objects.get(pk=user_id)
 
-            if row_type == "stage":
-                stage = proj_stages.objects.get(pk=row_id)
-                stage.workers.add(u)
-                proj = stage.proj
-                rowname = stage.name
+            stage = proj_stages.objects.get(pk=row_id)
+            stage.workers.add(u)
+            proj = stage.proj
+            rowname = stage.name
 
-            if row_type == "step":
-                step = proj_steps.objects.get(pk=row_id)
-                step.workers.add(u)
-                proj = step.stage.proj
-                rowname = step.name
 
             ### Отправка email сообщение если требуется
-            send_proj_worker2(row_type, row_id, u)
+            send_proj_worker2(row_id, u)
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {rowname} {user} добавил исполнителя {worker}".format(

@@ -2,7 +2,7 @@
 
 from django.forms import ModelForm
 from django import forms
-from iss.regions.models import orders, proj, proj_stages, proj_steps
+from iss.regions.models import orders, proj, proj_stages
 
 ### Форма ввода и отображения позиции заказа
 class OrderForm(ModelForm):
@@ -38,15 +38,9 @@ class ProjForm2(ModelForm):
 
 ### Форма редактирования этапа проекта
 class StageForm(ModelForm):
-    depend_on = forms.CharField(label='Зависит от')
+    #depend_on = forms.CharField(label='Зависит от')
     class Meta:
         model = proj_stages
         fields = ['order', 'name', 'days', 'depend_on']
 
 
-### Форма редактирования шага проекта
-class StepForm(ModelForm):
-    depend_on = forms.CharField(label='Зависит от')
-    class Meta:
-        model = proj_steps
-        fields = ['order', 'name', 'days', 'depend_on']

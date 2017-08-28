@@ -147,10 +147,13 @@ class proj(models.Model):
 
 
 
+
+
+
 ### Этапы проекта
 class proj_stages(models.Model):
-    order = models.IntegerField(verbose_name='Порядковый номер')
     name = models.CharField(max_length=100, default="", verbose_name='Название этапа')
+    order = models.IntegerField(verbose_name='Порядковый номер')
     days = models.IntegerField(null=True, default=None, verbose_name='Длительность этапа')
     begin = models.DateField(null=True, default=None)
     end = models.DateField(null=True, default=None)
@@ -162,25 +165,11 @@ class proj_stages(models.Model):
 
 
 
-### Шаги этапов
-class proj_steps(models.Model):
-    order = models.IntegerField(verbose_name='Порядковый номер')
-    name = models.CharField(max_length=100, default="", verbose_name='Название шага')
-    days = models.IntegerField(null=True, default=None, verbose_name='Длительность шага')
-    begin = models.DateField(null=True, default=None)
-    end = models.DateField(null=True, default=None)
-    depend_on = JSONField(default={'steps':[]})
-    stage = models.ForeignKey(proj_stages, on_delete=models.PROTECT, verbose_name='Связь с этапом')
-    workers = models.ManyToManyField(User)
-    done = models.BooleanField(default=False)
-
-
 
 ### Файлы проекта
 class load_proj_files(models.Model):
     id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
     stage = models.ForeignKey(proj_stages, null=True, on_delete=models.PROTECT, verbose_name='Связь с этапом')
-    step = models.ForeignKey(proj_steps, null=True, on_delete=models.PROTECT, verbose_name='Связь с шагом')
     filename = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_load = models.DateTimeField(auto_now_add=True)
@@ -190,12 +179,14 @@ class load_proj_files(models.Model):
 
 
 
-### Заметки по проекту с привязкой к этапу или шагу
+
+
+### Заметки по проекту с привязкой к этапу
 class proj_notes(models.Model):
+
     datetime = models.DateTimeField(db_index=True, null=True, auto_now_add=True)
     note = models.TextField(default="")
     stage = models.ForeignKey(proj_stages, null=True, on_delete=models.PROTECT, verbose_name='Связь с этапом')
-    step = models.ForeignKey(proj_steps, null=True, on_delete=models.PROTECT, verbose_name='Связь с шагом')
     author = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __unicode__(self):
