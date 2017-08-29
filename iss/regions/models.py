@@ -89,50 +89,8 @@ class reestr(models.Model):
 
 
 
-### Документо оборот сообщения
-#class messages(models.Model):
-#    status = models.ForeignKey(MessageStatus, on_delete=models.PROTECT, verbose_name='Статус сообщения')
-#    message_type = models.ForeignKey(MessageType, on_delete=models.PROTECT, verbose_name='Вид сообщения')
-#    message = models.TextField(verbose_name='Сообщение', default="", blank=True)
-#    head = models.CharField(max_length=100, verbose_name='Заголовок', default="")
-#    user = models.ForeignKey(User, on_delete=models.PROTECT)
-#    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
-#    author_update = models.ForeignKey(User, on_delete=models.PROTECT, null=True, related_name='userupdate')
-#    datetime_update = models.DateTimeField(null=True, auto_now=True)
-#    access_message = models.ManyToManyField(User, related_name='access')
 
 
-#    def __unicode__(self):
-#        return self.message
-
-
-
-### Загруженные пользователем документы
-#class load_user_files(models.Model):
-#    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
-#    filename = models.CharField(max_length=100)
-#    user = models.ForeignKey(User, on_delete=models.PROTECT)
-#    comment = models.CharField(max_length=100, default="")
-#    datetime_load = models.DateTimeField(null=True, default=None)
-#    messages = models.ManyToManyField(messages)
-
-
-#    def __unicode__(self):
-#        return self.filename
-
-
-
-
-### История статусов
-#class messages_status_history(models.Model):
-#    comment = models.TextField(verbose_name='Коментарий', default="", blank=True)
-#    author = models.ForeignKey(User, on_delete=models.PROTECT)
-#    status = models.ForeignKey(MessageStatus, on_delete=models.PROTECT)
-#    datetime_create = models.DateTimeField(null=True, auto_now_add=True)
-#    message = models.ForeignKey(messages, on_delete=models.PROTECT)
-
-#    def __unicode__(self):
-#        return self.status.name
 
 
 
@@ -145,6 +103,38 @@ class proj(models.Model):
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_create = models.DateTimeField(null=True, auto_now_add=True)
 
+    def __unicode__(self):
+        return self.filename
+
+    ### расчет дат и длительности этапов проекта
+    def calculate_dates(self):
+
+        ### Загрузка данных из базы в словарь
+        rows = []
+        for item in self.proj_stages_set.all():
+            rows.append({
+                'id': item.id,
+                'order_stage': item.order_stage,
+                'days': item.days if item.days else 0,
+                'deferment': item.deferment if item.deferment else 0,
+                'depend_on': item.depend_on["stages"],
+                'begin': '',
+                'end': ''
+            })
+
+        run_rows = [j["id"] for j in rows]
+        ### определение исполняемых пунктов
+        for a in rows:
+            for x in rows:
+                ## Проверка, есть ли дочерние элементы
+                if x["order_stage"][0:len(a["order_stage"])] == a["order_stage"] and x!=a:
+                    ### Дочерние элементы есть - удаление id строки
+                    if a["id"] in run_rows:
+                        run_rows.remove(a["id"])
+
+
+        return run_rows
+
 
 
 
@@ -153,8 +143,9 @@ class proj(models.Model):
 ### Этапы проекта
 class proj_stages(models.Model):
     name = models.CharField(max_length=100, default="", verbose_name='Название этапа')
-    order = models.IntegerField(verbose_name='Порядковый номер')
-    days = models.IntegerField(null=True, default=None, verbose_name='Длительность этапа')
+    stage_order = JSONField(default={}, verbose_name='Порядковый номер')
+    days = models.IntegerField(null=True, default=1, verbose_name='Длительность этапа')
+    deferment = models.IntegerField(null=True, default=0, verbose_name='Отложенность')
     begin = models.DateField(null=True, default=None)
     end = models.DateField(null=True, default=None)
     depend_on = JSONField(default={'stages':[]}, verbose_name='Зависит от')
@@ -162,6 +153,8 @@ class proj_stages(models.Model):
     workers = models.ManyToManyField(User)
     done = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return self.filename
 
 
 

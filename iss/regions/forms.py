@@ -8,17 +8,9 @@ from iss.regions.models import orders, proj, proj_stages
 class OrderForm(ModelForm):
     class Meta:
         model = orders
-        fields = ['region', 'order', 'model', 'name', 'ed', 'price', 'b2b_b2o', 'investment', 'to','comment', 'tz']
+        fields = ['region', 'order', 'model', 'name', 'ed', 'price', 'b2b_b2o', 'investment', 'to', 'comment', 'tz']
 
 
-
-### Форма отображения и корректировки данных сообщения
-"""
-class MessageForm(ModelForm):
-    class Meta:
-        model = messages
-        fields = ['head', 'message_type', 'message', 'status']
-"""
 
 
 ### Форма создания нового проекта
@@ -36,11 +28,13 @@ class ProjForm2(ModelForm):
         fields = ['name', 'start', ]
 
 
+
 ### Форма редактирования этапа проекта
 class StageForm(ModelForm):
-    #depend_on = forms.CharField(label='Зависит от')
+    depend_on = forms.CharField(label='Зависит от')
+    stage_order = forms.CharField(label='Порядковый номер')
     class Meta:
         model = proj_stages
-        fields = ['order', 'name', 'days', 'depend_on']
+        fields = ['stage_order', 'name', 'days', 'deferment', 'depend_on']
 
 

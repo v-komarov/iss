@@ -10,11 +10,10 @@ $(document).ready(function() {
     // Виджет для даты
     $("form#projedit #id_start").datepicker($.datepicker.regional['ru']);
 
-
+    // Добавление нового этапа
+    $("button#stage-adding").bind("click", AddStage);
     // Редактирование этапа
-    $("table[group=stages-list] tr[row_type=stage] a[edit]").bind("click", EditStage);
-    // Редактирование шага
-    $("table[group=stages-list] tr[row_type=step] a[edit]").bind("click", EditStep);
+    $("table[group=stages-list] tr a[edit]").bind("click", EditStage);
     // Список комментариев
     $("table[group=stages-list] tr td a[book]").bind("click", PreNote);
 
@@ -52,6 +51,10 @@ $(document).ready(function() {
 
     // Добавление коментария к этапу или шагу
     $("div#noteslist table#noteadd tbody tr td button#addnote").bind("click",AddNote);
+
+
+    // Удаление пункта
+    $("table[group=stages-list] tr td a[delete]").bind("click", DeleteStage);
 
 
 });
@@ -98,6 +101,40 @@ function getCookie(name) {
 
 
 
+
+// Удаление этапа
+function DeleteStage(e) {
+
+    var row_id = $(this).parents("tr").attr("row_id");
+    var stage_name = $(this).parents("tr").children("td").eq(1).text().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    var deletestage = confirm("Удаляем "+stage_name+" ?");
+
+
+    if (deletestage) {
+
+        // Удаление этапа
+        var jqxhr = $.getJSON("/regions/jsondata/?action=stage-delete&row_id="+row_id,
+        function(data) {
+
+
+            if (data["result"] == "ok") {
+
+                location.reload();
+
+            }
+
+        })
+
+
+    }
+
+}
+
+
+
+
+
+
 // Рассчитать даты проекта
 function CalculateDate(e) {
 
@@ -126,7 +163,6 @@ function CalculateDate(e) {
 function DeleteFile(e) {
 
     var row_id = $(this).parents("tr").attr("row_id");
-    var row_type = $(this).parents("tr").attr("row_type");
     var file_id = $(this).attr("file_id");
     var file_name = $(this).attr("file_name");
     var deletefile = confirm("Удаляем файл "+file_name+" ?");
@@ -135,7 +171,7 @@ function DeleteFile(e) {
     if (deletefile) {
 
         // Удаление файла
-        var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-delete-file&row_id="+row_id+"&row_type="+row_type+"&file_id="+file_id,
+        var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-delete-file&row_id="+row_id+"&file_id="+file_id,
         function(data) {
 
 
@@ -298,8 +334,9 @@ function EditStage(e) {
         if (data["result"] == "ok") {
 
             $("form#edit-stage #id_name").val(data["name"]);
-            $("form#edit-stage #id_order").val(data["order"]);
+            $("form#edit-stage #id_stage_order").val(data["order"]);
             $("form#edit-stage #id_days").val(data["days"]);
+            $("form#edit-stage #id_deferment").val(data["deferment"]);
             $("form#edit-stage #id_depend_on").val(data["depend_on"]);
 
         }
@@ -328,8 +365,9 @@ function EditStage(e) {
                     var data = {};
                     data.row_id = row_id;
                     data.name = $("form#edit-stage #id_name").val();
-                    data.order = $("form#edit-stage #id_order").val();
+                    data.order = $("form#edit-stage #id_stage_order").val();
                     data.days = $("form#edit-stage #id_days").val();
+                    data.deferment = $("form#edit-stage #id_deferment").val();
                     data.depend_on = $("form#edit-stage #id_depend_on").val();
 
                     data.action = "save-stage-data";
@@ -371,33 +409,25 @@ function EditStage(e) {
 
 
 
-// Редактирование шага
-function EditStep(e) {
-
-
-    var row_id = $(this).parents("tr").attr("row_id");
-
-
-    // Предварительная наполнение полей
-    var jqxhr = $.getJSON("/regions/jsondata/?action=step-get-data&step_id="+row_id,
-    function(data) {
 
 
 
-        if (data["result"] == "ok") {
 
-            $("form#edit-step #id_name").val(data["name"]);
-            $("form#edit-step #id_order").val(data["order"]);
-            $("form#edit-step #id_days").val(data["days"]);
-            $("form#edit-step #id_depend_on").val(data["depend_on"]);
-
-        }
-
-    })
+// Создание нового этапа
+function AddStage(e) {
 
 
-    $("#editstep").dialog({
-        title:"Шаг",
+    // Очистка полей формы
+    $("form#edit-stage #id_name").val("");
+    $("form#edit-stage #id_stage_order").val("");
+    $("form#edit-stage #id_days").val("");
+    $("form#edit-stage #id_deferment").val("");
+    $("form#edit-stage #id_depend_on").val("");
+
+
+
+    $("#editstage").dialog({
+        title:"Этап",
         buttons:[{ text:"Сохранить",click: function() {
 
             var csrftoken = getCookie('csrftoken');
@@ -411,20 +441,17 @@ function EditStep(e) {
             });
 
 
-
                 // Проверка значений
-                if ( $("form#edit-step #id_name").val() != "" && $("form#edit-step #id_order").val() != "" ) {
+                if ( $("form#edit-stage #id_name").val() != "" && $("form#edit-stage #id_order").val() != "" ) {
 
                     var data = {};
-                    data.row_id = row_id;
-                    data.name = $("form#edit-step #id_name").val();
-                    data.order = $("form#edit-step #id_order").val();
-                    data.days = $("form#edit-step #id_days").val();
-                    data.depend_on = $("form#edit-step #id_depend_on").val();
+                    data.name = $("form#edit-stage #id_name").val();
+                    data.order = $("form#edit-stage #id_stage_order").val();
+                    data.days = $("form#edit-stage #id_days").val();
+                    data.deferment = $("form#edit-stage #id_deferment").val();
+                    data.depend_on = $("form#edit-stage #id_depend_on").val();
 
-                    data.action = "save-step-data";
-
-
+                    data.action = "create-stage-data";
 
                     $.ajax({
                       url: "/regions/jsondata/",
@@ -458,8 +485,13 @@ function EditStep(e) {
 
 
 
-
 }
+
+
+
+
+
+
 
 
 // Добавление пользователя в исполнители
@@ -490,15 +522,17 @@ function AddUser(e) {
 
 
 
+
+
+
 // Удаление пользователя (исполнителя) из этапа или шага
 function RemoveUser(e) {
 
     var row_id = $(this).parents("tr").attr("row_id");
-    var row_type = $(this).parents("tr").attr("row_type");
     var user_id = $(this).parents("div[user_id]").attr("user_id");
 
     // Удаление пользователя из этапа или шага
-    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-remove-user&row_type="+row_type+"&row_id="+row_id+"&user_id="+user_id,
+    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-remove-user&row_id="+row_id+"&user_id="+user_id,
     function(data) {
 
 
@@ -519,7 +553,6 @@ function RemoveUser(e) {
 function MarkDone(e) {
 
     var row_id = $(this).parents("tr").attr("row_id");
-    var row_type = $(this).parents("tr").attr("row_type");
 
     if ($(this).is(":checked")) {
         var status = "yes";
@@ -527,7 +560,7 @@ function MarkDone(e) {
     else { var status = "no"; }
 
     // Отметка выполнено / не выполнено
-    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-status&row_type="+row_type+"&row_id="+row_id+"&status="+status,
+    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-status&row_id="+row_id+"&status="+status,
     function(data) {
 
 
@@ -545,12 +578,11 @@ function MarkDone(e) {
 
 
 
-// Предварительное сохранение row_id row_type
+// Предварительное сохранение row_id
 function PreNote(e) {
 
     // Сохранение в объектах окна типа и id записи
     $("div#noteslist").attr("row_id",$(this).parents("tr").attr("row_id"));
-    $("div#noteslist").attr("row_type",$(this).parents("tr").attr("row_type"));
     Notes();
 }
 

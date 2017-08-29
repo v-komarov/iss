@@ -25,6 +25,11 @@ logger_proj = logging.getLogger('projects')
 
 
 
+
+
+
+
+
 ### Уровень доступа для таблицы заказов
 def get_access_order(request):
     if request.user.is_authenticated():
@@ -186,71 +191,6 @@ def get_json(request):
 
 
 
-        ### Фильтр входящие /исходящие интерфейса Документооборот
-        if r.has_key("action") and rg("action") == 'filter-docs-inout':
-            inout = request.GET["inout_id"]
-            if inout != "0":
-                request.session["inout_value"] = inout
-            else:
-                del request.session["inout_value"]
-
-
-            response_data = {"result": "ok"}
-
-
-
-
-
-        ### Фильтр по виду сообщения интерфейса Документооборот
-        if r.has_key("action") and rg("action") == 'filter-docs-messagetype':
-            mess_type = request.GET["mess_type"]
-            if mess_type != "0":
-                request.session["message_type_value"] = mess_type
-            else:
-                del request.session["message_type_value"]
-
-
-            response_data = {"result": "ok"}
-
-
-
-
-        """
-        ### Фильтр по статусу сообщения интерфейса Документооборот
-        if r.has_key("action") and rg("action") == 'filter-docs-messagestatus':
-            mess_status = request.GET["mess_status"]
-            if mess_status != "0":
-                request.session["message_status_value"] = mess_status
-            else:
-                del request.session["message_status_value"]
-
-
-            response_data = {"result": "ok"}
-        """
-
-
-
-        """
-        ### Сохранение id сообщения интерфейса Документооборот
-        if r.has_key("action") and rg("action") == 'docs-save-id':
-            message_id = request.GET["message_id"]
-
-            request.session['message_id'] = message_id
-
-
-            response_data = {"result": "ok"}
-        """
-
-
-
-        ### Сохранение id проекта
-        #if r.has_key("action") and rg("action") == 'proj-save-id':
-        #    proj_id = request.GET["proj_id"]
-
-         #   request.session['proj_id'] = proj_id
-
-
-#            response_data = {"result": "ok"}
 
 
 
@@ -261,10 +201,11 @@ def get_json(request):
 
             response_data = {
                 "result": "ok",
-                "order": stage.order,
+                "order": ".".join(["%s" % x for x in stage.stage_order]),
                 "name": stage.name,
                 "days": stage.days,
-                "depend_on": stage.depend_on["stages"]
+                "deferment": stage.deferment,
+                "depend_on": ".".join(["%s" % x for x in stage.depend_on["stages"]])
 
             }
 
@@ -272,7 +213,7 @@ def get_json(request):
 
 
 
-        ### Добавление пользователя в этап или шаг
+        ### Добавление пользователя в этап
         if r.has_key("action") and rg("action") == 'stage-step-add-user':
             row_id = int(request.GET["row_id"], 10)
             user_id = int(request.GET["user_id"], 10)
@@ -300,24 +241,17 @@ def get_json(request):
 
 
 
-        ### Удаление пользователя из этапа или шага
+        ### Удаление пользователя из этапа
         if r.has_key("action") and rg("action") == 'stage-step-remove-user':
             row_id = int(request.GET["row_id"], 10)
-            row_type = request.GET["row_type"]
             user_id = int(request.GET["user_id"], 10)
             u = User.objects.get(pk=user_id)
 
-            if row_type == "stage":
-                stage = proj_stages.objects.get(pk=row_id)
-                stage.workers.remove(u)
-                proj = stage.proj
-                rowname = stage.name
+            stage = proj_stages.objects.get(pk=row_id)
+            stage.workers.remove(u)
+            proj = stage.proj
+            rowname = stage.name
 
-            if row_type == "step":
-                step = proj_steps.objects.get(pk=row_id)
-                step.workers.remove(u)
-                proj = step.stage.proj
-                rowname = step.name
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {rowname} {user} удалил исполнителя {worker}".format(
@@ -333,31 +267,45 @@ def get_json(request):
 
 
 
-        ### Установка статуса этапа или шага
+
+        ### Удаление этапа
+        if r.has_key("action") and rg("action") == 'stage-delete':
+            row_id = int(request.GET["row_id"], 10)
+
+            stage = proj_stages.objects.get(pk=row_id)
+            proj = stage.proj
+            rowname = stage.name
+            stage.delete()
+
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {rowname} {user} удалил строку этапа".format(
+                proj=proj.name,
+                rowname=rowname,
+                user=request.user.get_username())
+            )
+
+
+            response_data = { "result": "ok" }
+
+
+
+
+
+        ### Установка статуса этапа
         if r.has_key("action") and rg("action") == 'stage-step-status':
             row_id = int(request.GET["row_id"], 10)
             row_type = request.GET["row_type"]
             status = request.GET["status"]
 
-            if row_type == "stage":
-                stage = proj_stages.objects.get(pk=row_id)
-                stage.done = True if status == "yes" else False
-                stage.save()
-                proj = stage.proj
-                rowname = stage.name
-                status = stage.done
 
-            if row_type == "step":
-                step = proj_steps.objects.get(pk=row_id)
-                step.done = True if status == "yes" else False
-                step.save()
-                proj = step.stage.proj
-                rowname = step.name
-                status = step.done
-                ### Отметка статуса проекта (информационно)
-                if step.done :
-                    proj.status = step.name
-                    proj.save()
+            stage = proj_stages.objects.get(pk=row_id)
+            stage.done = True if status == "yes" else False
+            stage.save()
+            proj = stage.proj
+            rowname = stage.name
+            status = stage.done
+
 
 
             ### Отправка email сообщение если требуется
@@ -382,7 +330,6 @@ def get_json(request):
         ### Удаление вложеного файла
         if r.has_key("action") and rg("action") == 'stage-step-delete-file':
             row_id = int(request.GET["row_id"], 10)
-            row_type = request.GET["row_type"]
             file_id = request.GET["file_id"]
 
             from iss.regions.models import load_proj_files
@@ -391,15 +338,10 @@ def get_json(request):
             filename = f.filename
             f.delete()
 
-            if row_type == "stage":
-                stage = proj_stages.objects.get(pk=row_id)
-                proj = stage.proj
-                rowname = stage.name
+            stage = proj_stages.objects.get(pk=row_id)
+            proj = stage.proj
+            rowname = stage.name
 
-            if row_type == "step":
-                step = proj_steps.objects.get(pk=row_id)
-                proj = step.stage.proj
-                rowname = step.name
 
             client = Client('10.6.0.135', 9000)
             for x in client.delete(['/projects/%s' % file_id,], recurse=True):
@@ -537,34 +479,21 @@ def get_json(request):
 
 
 
-        ### Отображение данных коментариев по шагам или этапам
+        ### Отображение данных коментариев по этапам
         if r.has_key("action") and rg("action") == 'get-proj-notes':
             tz = request.session['tz']
             row_id = int(request.GET["row_id"], 10)
-            row_type = request.GET["row_type"]
 
-            if row_type == "stage":
-                stage = proj_stages.objects.get(pk=row_id)
-                rowname = stage.name
-                notes = []
-                for note in  stage.proj_notes_set.order_by('-datetime'):
-                    notes.append({
-                        'datetime': note.datetime.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
-                        'author':note.author.get_username() + " (" + note.author.get_full_name() + ")",
-                        'note': note.note
-                    })
+            stage = proj_stages.objects.get(pk=row_id)
+            rowname = stage.name
+            notes = []
+            for note in  stage.proj_notes_set.order_by('-datetime'):
+                notes.append({
+                    'datetime': note.datetime.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
+                    'author':note.author.get_username() + " (" + note.author.get_full_name() + ")",
+                    'note': note.note
+                })
 
-
-            if row_type == "step":
-                step = proj_steps.objects.get(pk=row_id)
-                rowname = step.name
-                notes = []
-                for note in  step.proj_notes_set.order_by('-datetime'):
-                    notes.append({
-                        'datetime': note.datetime.astimezone(timezone(tz)).strftime("%d.%m.%Y"),
-                        'author':note.author.get_username() + " (" + note.author.get_full_name() + ")",
-                        'note': note.note
-                    })
 
 
 
@@ -690,24 +619,6 @@ def get_json(request):
 
 
 
-        ### Сохранение общих данных сообщения интерфейса Документооборот
-        if data.has_key("action") and data["action"] == 'message-save-common-data':
-
-            m = messages.objects.get(pk=int(request.session['message_id'], 10))
-
-            head = data["head"].strip()
-            message = data["message"].strip()
-            message_type = data["message_type"]
-
-            m.message = message
-            m.head = head
-            m.message_type = MessageType.objects.get(pk=int(message_type, 10))
-            m.author_update = request.user
-            m.save()
-
-            response_data = {"result": "ok"}
-
-
 
 
         ### Создание проекта
@@ -723,6 +634,7 @@ def get_json(request):
             ### начало проекта
             start = datetime.datetime.strptime(data["start"].strip(), "%d.%m.%Y")
 
+            from iss.regions.models import proj
             p = proj.objects.create(
                 name=name, start=start, temp=t, author=request.user
             )
@@ -730,24 +642,19 @@ def get_json(request):
             for stage in stages:
                 ### Создать этапы
                 sg = proj_stages.objects.create(
-                    order= stage["order"],
+                    order= 0,
+                    stage_order=stage['order'],
                     name= stage["name"],
                     proj= p,
                     days= stage["days"] if stage.has_key("days") else None,
                     depend_on = {'stages': stage["depend_on"]} if stage.has_key("depend_on") else {'stages':[]}
                 )
-                if stage.has_key("steps"):
-                    for step in stage["steps"]:
-                        proj_steps.objects.create(
-                            order= step["order"],
-                            name=step["name"],
-                            stage= sg,
-                            days= step["days"] if step.has_key("days") else None,
-                            depend_on={'steps': step["depend_on"]} if step.has_key("depend_on") else {'steps': []}
-                        )
 
 
             response_data = {"result": "ok"}
+
+
+
 
 
 
@@ -757,13 +664,15 @@ def get_json(request):
             s = proj_stages.objects.get(pk=int(data['row_id'], 10))
 
             name = data["name"].strip()
-            order = int(data["order"].strip(), 10)
+            order = [int(x, 10) for x in data["order"].strip().split(".")]
             days = int(data["days"], 10) if data["days"] != "" else None
-            depend_on = [int(x, 10) for x in data["depend_on"].split(",")] if data["depend_on"] != "" else []
+            deferment = int(data["deferment"], 10) if data["deferment"] != "" else 0
+            depend_on = [int(x, 10) for x in data["depend_on"].split(".")] if data["depend_on"] != "" else []
 
             s.name = name
-            s.order = order
+            s.stage_order = order
             s.days = days
+            s.deferment = deferment
             s.depend_on = {"stages": depend_on}
             s.save()
 
@@ -780,31 +689,39 @@ def get_json(request):
 
 
 
-        ### Сохранение данных шага интерфейса управления проектами
-        if data.has_key("action") and data["action"] == 'save-step-data':
+        ### Создание нового этапа интерфейса управления проектами
+        if data.has_key("action") and data["action"] == 'create-stage-data':
 
-            s = proj_steps.objects.get(pk=int(data['row_id'], 10))
+            from iss.regions.models import proj
+
+            p = proj.objects.get(pk=int(request.session['proj_id'], 10))
 
             name = data["name"].strip()
-            order = int(data["order"].strip(), 10)
+            order = [int(x, 10) for x in data["order"].strip().split(".")]
             days = int(data["days"], 10) if data["days"] != "" else None
-            depend_on = [int(x, 10) for x in data["depend_on"].split(",")] if data["depend_on"] != "" else []
+            deferment = int(data["deferment"], 10) if data["deferment"] != "" else 0
+            depend_on = [int(x, 10) for x in data["depend_on"].split(".")] if data["depend_on"] != "" else []
 
-            s.name = name
-            s.order = order
-            s.days = days
-            s.depend_on = {"steps": depend_on}
-            s.save()
+            proj_stages.objects.create(
+                name=name,
+                stage_order=order,
+                days=days,
+                deferment=deferment,
+                depend_on={"stages": depend_on},
+                proj=p
+            )
 
 
             ### Запись в лог файл
-            logger_proj.info(u"Проект: {proj} - {step} {user} сохранил данные этапа".format(
-                proj=s.stage.proj.name,
-                step=s.name.decode("utf-8"),
+            logger_proj.info(u"Проект: {proj} - {stage} {user} создал новый этап".format(
+                proj=p.name,
+                stage=name.decode("utf-8"),
                 user=request.user.get_username())
             )
 
+
             response_data = {"result": "ok"}
+
 
 
 

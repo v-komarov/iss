@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import pickle
+import operator
 
 from importlib import import_module
 from django.conf import settings
@@ -192,118 +193,6 @@ class ReestrCreate(CreateView):
 
 
 
-### Документооборот
-"""
-class DocsList(ListView):
-
-    model = orders
-    template_name = "regions/docs_list.html"
-
-    paginate_by = 0
-
-
-
-    @method_decorator(login_required(login_url='/'))
-    #@method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
-    def dispatch(self, request, *args, **kwargs):
-        self.request = request
-        self.session = request.session
-        self.user = request.user
-        return super(ListView, self).dispatch(request, *args, **kwargs)
-
-
-
-
-
-    def get_queryset(self):
-
-
-        data = messages.objects.filter(user=self.user).order_by('-datetime_update')
-
-        for x in data:
-            if x.user == self.user:
-                x.inout = u'Исходящее'
-                x.inout_id = 1
-            else:
-                x.inout = u'Входящее'
-                x.inout_id = 2
-
-
-
-        return data
-
-
-
-
-
-
-
-    def get_context_data(self, **kwargs):
-        context = super(DocsList, self).get_context_data(**kwargs)
-
-        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
-        context['inout'] = InOut.objects.order_by('name')
-        context['message_type'] = MessageType.objects.order_by('name')
-        context['message_status'] = MessageStatus.objects.order_by('name')
-
-        context['inout_value'] = self.session['inout_value'] if self.session.has_key('inout_value') else "0"
-        context['message_type_value'] = self.session['message_type_value'] if self.session.has_key('message_type_value') else "0"
-        context['message_status_value'] = self.session['message_status_value'] if self.session.has_key('message_status_value') else "0"
-
-
-        return context
-"""
-
-
-
-
-### Редактирование и наполнение данными сообщения
-"""
-class DocsUpdate(TemplateView):
-
-    template_name = 'regions/docs_data.html'
-    action = 'update'
-
-    @method_decorator(login_required(login_url='/'))
-    #@method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
-    def dispatch(self, request, *args, **kwargs):
-        self.request = request
-        self.session = request.session
-        self.user = request.user
-
-
-        return super(DocsUpdate, self).dispatch(request, *args, **kwargs)
-
-
-
-
-    def get_context_data(self, **kwargs):
-        context = super(DocsUpdate, self).get_context_data(**kwargs)
-
-        if self.session.has_key('tz'):
-            context['tz']= self.session['tz']
-        else:
-            context['tz']= 'UTC'
-
-        if self.action == 'create':
-            m = messages.objects.create(user=self.user, message_type=message_type_first, status=message_status_first)
-            context['message_id'] = m.id
-        else:
-            m = messages.objects.get(pk=int(self.session['message_id'], 10))
-            context['message_id'] = self.session['message_id']
-
-        if m.user == self.user:
-            context['access'] = 'owner'
-        else:
-            context['access'] = 'public'
-
-        form = MessageForm(instance=m)
-        form.fields['status'].widget.attrs['disabled'] = True
-        context['form'] = form
-
-
-        return context
-"""
 
 
 
@@ -392,11 +281,12 @@ class ProjStagesList(ListView):
 
     def get_queryset(self):
 
-        data = proj_stages.objects.filter(proj=self.proj).order_by('order')
+        data = proj_stages.objects.filter(proj=self.proj)
+
         for item in data:
-            item.steps = []
-            for row in item.proj_steps_set.all().order_by('order'):
-                item.steps.append(row)
+            item.order = ".".join(["%s" % x for x in item.stage_order])
+            item.main = True if len(item.stage_order) == 1 else False
+            item.depend = ".".join(["%s" % x for x in item.depend_on["stages"]])
 
 
         return data
@@ -412,7 +302,7 @@ class ProjStagesList(ListView):
 
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['form']= ProjForm2(instance=self.proj)
-        context['user_list']= User.objects.order_by('username')
+        context['user_list']= User.objects.order_by('first_name')
         context['stageform']= StageForm()
         context['project']= self.session["proj_id"]
 
