@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 
 
 import uuid
+import networkx as nx
+
 
 from django.db import models
 from django.core.urlresolvers import reverse
@@ -13,6 +15,46 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
 from iss.localdicts.models import regions, address_city, proj_temp
+
+
+
+
+### Определение id элемента в словаре по stage_order
+def order2id(order,rows):
+
+    for item in rows:
+        if order == item["stage_order"]:
+            return item["id"]
+
+    return None
+
+
+
+### Поиск по id элемента в списке словарей
+def id2res(id,rows):
+
+    for item in rows:
+        if id == item["id"]:
+            return item
+
+    return None
+
+
+
+### вычисление вышестоящего id по иерархическому номеру (1.2.3...)
+def order2parent(order, rows):
+
+    orderlen = len(order)
+
+    if orderlen < 2:
+        return 0
+
+    for item in rows:
+        if order != item["stage_order"] and order[0:orderlen-1] == item["stage_order"]:
+            return item["id"]
+
+    return None
+
 
 
 
@@ -109,12 +151,12 @@ class proj(models.Model):
     ### расчет дат и длительности этапов проекта
     def calculate_dates(self):
 
-        ### Загрузка данных из базы в словарь
+        ### Загрузка данных из базы в словарь (чтобы не дергать каждое вычисление базу)
         rows = []
         for item in self.proj_stages_set.all():
             rows.append({
                 'id': item.id,
-                'order_stage': item.order_stage,
+                'stage_order': item.stage_order,
                 'days': item.days if item.days else 0,
                 'deferment': item.deferment if item.deferment else 0,
                 'depend_on': item.depend_on["stages"],
@@ -122,18 +164,44 @@ class proj(models.Model):
                 'end': ''
             })
 
-        run_rows = [j["id"] for j in rows]
-        ### определение исполняемых пунктов
-        for a in rows:
-            for x in rows:
-                ## Проверка, есть ли дочерние элементы
-                if x["order_stage"][0:len(a["order_stage"])] == a["order_stage"] and x!=a:
-                    ### Дочерние элементы есть - удаление id строки
-                    if a["id"] in run_rows:
-                        run_rows.remove(a["id"])
+
+        ### Формирование графа
+        G = nx.Graph()
+        G.add_node(0, {'days': 0})
+        for item in rows:
+            ### Добавление узлов
+            G.add_node(item["id"], {'days': 0})
+
+        ### Добавление связей согласно структуры нумерации
+        for item in rows:
+            G.add_edges_from([(item['id'], order2parent(item['stage_order'], rows))])
 
 
-        return run_rows
+        ### Установка дней для исполняемых пунктов
+        ### Соседи
+        for node in G.nodes():
+            ### Вывод всех путей
+            if node != 0:
+                for path in nx.all_simple_paths(G, node, 0):
+                    print path
+            neighbous = G.neighbors(node)
+            ### Если только один сосед - установка атрибута в днях
+            if len(neighbous) == 1 and node != 0:
+                G.node[node]['days'] = id2res(node, rows)['days']
+
+
+        ### Добавление связей согласно зависимостей (depend_on)
+        for item in rows:
+            if item['depend_on'] != []:
+                G.add_edges_from([ (order2id(item['depend_on'], rows), item['id']) ])
+
+
+
+        node_days = nx.get_node_attributes(G, 'days')
+        for n in G.nodes():
+            print node_days[n]
+
+        return G
 
 
 

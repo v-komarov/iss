@@ -373,6 +373,7 @@ def get_json(request):
 
             pr = proj.objects.get(pk=request.session['proj_id'])
 
+            """
             ### Формирование id записей этапов
             stage_id = [s.id for s in pr.proj_stages_set.all()]
 
@@ -470,6 +471,10 @@ def get_json(request):
                 user=request.user.get_username())
             )
 
+            """
+            G = pr.calculate_dates()
+            #print pr.calculate_dates().nodes()
+            print G.edges()
 
 
             response_data = { "result": "ok" }
