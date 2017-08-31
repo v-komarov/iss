@@ -9,6 +9,8 @@ import tempfile
 import os
 import StringIO
 
+from operator import itemgetter
+
 from snakebite.client import Client
 
 from iss.regions.models import orders, load_proj_files, proj_stages, proj
@@ -129,17 +131,9 @@ def get_orders_region(request):
 def upload(request):
 
     stage_id = request.POST["stage_id"]
-    step_id = request.POST["step_id"]
 
-    if stage_id != "no":
-        stage = proj_stages.objects.get(pk=int(stage_id, 10))
-    else:
-        stage = None
+    stage = proj_stages.objects.get(pk=int(stage_id, 10))
 
-    if step_id != "no":
-        step = proj_steps.objects.get(pk=int(step_id, 10))
-    else:
-        step = None
 
 
     filename = request.FILES['fileupload'].name
@@ -147,7 +141,6 @@ def upload(request):
 
     rec = load_proj_files.objects.create(
         stage = stage,
-        step = step,
         filename = filename.strip(),
         user = request.user
     )
@@ -212,7 +205,14 @@ def projexcel(request, project):
     proj_id = project
     pj = proj.objects.get(pk=int(proj_id, 10))
 
+    ### Вычисление пунктов исполнения
+    rows = pj.make_dict()
+    G = pj.make_graph(rows)
+    G = pj.graph_edge_order(G, rows)
+    actions = pj.actions(G)
+
     style_bold = xlwt.easyxf('font: bold 1;')
+    style_normal = xlwt.easyxf('')
 
     book = xlwt.Workbook()
 
@@ -232,35 +232,68 @@ def projexcel(request, project):
 
     n = 1 ## Строка в листе
     ### Этапы проекта
-    for stage in pj.proj_stages_set.all().order_by('order'):
-        sh.write(n, 0, stage.order, style=style_bold)
-        sh.write(n, 1, stage.name, style=style_bold)
-        sh.write(n, 2, stage.days if stage.days else "", style=style_bold)
-        sh.write(n, 3, stage.begin.strftime('%d.%m.%Y') if stage.begin else "", style=style_bold)
-        sh.write(n, 4, stage.end.strftime('%d.%m.%Y') if stage.end else "", style=style_bold)
-        sh.write(n, 5, ",".join(["%s" % x for x in stage.depend_on["stages"]]), style=style_bold)
-        sh.write(n, 6, ",".join([w.get_full_name() for w in stage.workers.all()]), style=style_bold)
-        sh.write(n, 7, u"Выполнено" if stage.done else "", style=style_bold)
+    stages = [item for item in pj.proj_stages_set.all().values()]
 
-        n += 1
+    ### Сортировка
+    sort_keys = [item['stage_order'] for item in stages]
+    sort_keys.sort()
+    while len(sort_keys) > 0:
+        key = sort_keys[0]
+        for item in stages:
+            row_id = item['id']
+            if item['stage_order'] == key:
 
-        ### Шаги проекта
-        for step in stage.proj_steps_set.all().order_by('order'):
+                action_style = style_normal if row_id in actions else style_bold
 
-            sh.write(n, 0, step.order)
-            sh.write(n, 1, step.name)
-            sh.write(n, 2, step.days if step.days else "")
-            sh.write(n, 3, step.begin.strftime('%d.%m.%Y') if step.begin else "")
-            sh.write(n, 4, step.end.strftime('%d.%m.%Y') if step.end else "")
-            sh.write(n, 5, ",".join(["%s" % x for x in step.depend_on["steps"]]))
-            sh.write(n, 6, ",".join([w.get_full_name() for w in step.workers.all()]))
-            sh.write(n, 7, u"Выполнено" if step.done else "")
+                workers = [w for w in proj_stages.objects.get(pk=row_id).workers.all()]
 
-            n += 1
+                sh.write(n, 0, ".".join(["%s" % x for x in item['stage_order']]) , style=action_style)
+                sh.write(n, 1, item['name'], style=action_style)
+                sh.write(n, 2, item['days'] if item['days'] else "", style=action_style)
+                sh.write(n, 3, item['begin'].strftime('%d.%m.%Y') if item['begin'] else "", style=action_style)
+                sh.write(n, 4, item['end'].strftime('%d.%m.%Y') if item['end'] else "", style=action_style)
+                sh.write(n, 5, ",".join(["%s" % x for x in item['depend_on']["stages"]]), style=action_style)
+                sh.write(n, 6, ",".join([w.get_full_name() for w in workers]), style=action_style)
+                sh.write(n, 7, u"Выполнено" if item['done'] else "", style=action_style)
+
+                sort_keys.remove(key)
+                n += 1
+
 
     response = HttpResponse(content_type="application/ms-excel")
     response['Content-Disposition'] = 'attachment; filename="%s.xls"' % pj.name.encode("utf-8")
     book.save(response)
+    return response
+
+
+
+
+
+
+### Выгрузка шаблона проекта
+def projtemp(request, project):
+
+    pj = proj.objects.get(pk=int(project, 10))
+    name =pj.name
+
+    response_data = u"{{'name':'{name}', 'stages':[\n".format(name=name)
+
+    stages = [item for item in pj.proj_stages_set.all().values()]
+    ### Сортировка
+    sort_keys = [item['stage_order'] for item in stages]
+    sort_keys.sort()
+    while len(sort_keys) > 0:
+        key = sort_keys[0]
+        for item in stages:
+            if item['stage_order'] == key:
+                response_data += u"{{ 'order':{order}, 'name': '{name}', 'days':{days}, 'depend_on':{depend_on} }},\n".format(order=item['stage_order'], name=item['name'], days=item['days'], depend_on=item['depend_on']['stages'])
+                sort_keys.remove(key)
+
+
+    response = HttpResponse(content_type="text/plan")
+    response['Content-Disposition'] = 'attachment; filename="temp.txt"'
+    response.write(response_data + u"]}")
+
     return response
 
 

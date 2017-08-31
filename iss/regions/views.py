@@ -273,6 +273,7 @@ class ProjStagesList(ListView):
         self.session = request.session
         self.user = request.user
         self.proj = proj.objects.get(pk=int(self.session["proj_id"], 10))
+        self.actions = []
         return super(ListView, self).dispatch(request, *args, **kwargs)
 
 
@@ -283,10 +284,16 @@ class ProjStagesList(ListView):
 
         data = proj_stages.objects.filter(proj=self.proj)
 
+        ### Вычисление пунктов исполнения
+        rows = self.proj.make_dict()
+        G = self.proj.make_graph(rows)
+        G = self.proj.graph_edge_order(G, rows)
+        self.actions = self.proj.actions(G)
+
         for item in data:
             item.order = ".".join(["%s" % x for x in item.stage_order])
-            item.main = True if len(item.stage_order) == 1 else False
             item.depend = ".".join(["%s" % x for x in item.depend_on["stages"]])
+            item.action = True if item.id in self.actions else False
 
 
         return data
@@ -305,6 +312,11 @@ class ProjStagesList(ListView):
         context['user_list']= User.objects.order_by('first_name')
         context['stageform']= StageForm()
         context['project']= self.session["proj_id"]
+
+        ### Вычисление пунктов исполнения
+        context['actions'] = self.actions
+
+
 
         return context
 

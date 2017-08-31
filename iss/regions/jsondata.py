@@ -45,31 +45,6 @@ def get_access_order(request):
 
 
 
-### рассчет дат с учетом выходных дней
-def date_plus(date,delta):
-
-    ## Добавляем по одному дню и проверяем на субботу или воскресенье
-    while delta != 0:
-        date = date + datetime.timedelta(days=1)
-        if date.weekday() < 5:
-            delta = delta - 1
-
-    return date
-
-
-
-
-### вычисление количества дней между датами
-def working_days(date1,date2):
-
-    days = 0
-    ## Добавляем по одному дню и проверяем на субботу или воскресенье
-    while date1 < date2:
-        date1 = date1 + datetime.timedelta(days=1)
-        if date1.weekday() < 5:
-            days += 1
-    return days
-
 
 
 
@@ -373,108 +348,9 @@ def get_json(request):
 
             pr = proj.objects.get(pk=request.session['proj_id'])
 
-            """
-            ### Формирование id записей этапов
-            stage_id = [s.id for s in pr.proj_stages_set.all()]
-
-
-            while len(stage_id) > 0:
-
-                ### Расчет дат по-этапно
-                ### Первоначально для этапов и шагов с зависимостью от начала проекта
-                stage = proj_stages.objects.get(pk=random.choice(stage_id))
-
-
-                if stage.depend_on["stages"] == []:
-                    ### Для этапов с пустым полем зависимости начало этапа - начало проекта
-                    stage.begin = pr.start
-                    stage.save()
-                    ### Этап обработан - убираем id из списка
-                    stage_id.remove(stage.id)
-                    ### Обрабатывать вложенные шаги
-                    steps_run = "ok"
-
-
-
-                ### Для этапов с зависимостью от других
-                else:
-
-                    stage_id2 = []  # id этапов, от которых есть зависимость
-                    stage_enddate = []
-                    ### Нужно проставить начало этапа в зависимости от предыдущих
-                    for st in stage.depend_on["stages"]:
-                        stg = pr.proj_stages_set.all().filter(order=st)[0]
-                        stage_id2.append(stg.id)
-                        stage_enddate.append(stg.end)
-                    ### Если этапы, от которых зависимость уже обработаны
-                    if list(set(stage_id2).intersection(set(stage_id))) == []:
-                        ### Выбрать дату начала от самой поздней даты предшествующих пунктов
-                        stage.begin = date_plus(sorted(stage_enddate)[-1], 1)
-                        stage.save()
-                        ### Этап обработан - убираем id из списка
-                        stage_id.remove(stage.id)
-                        ### Обрабатывать вложенные шаги
-                        steps_run = "ok"
-                    else:
-                        ### Обрабатывать вложенные шаги
-                        steps_run = "no"
-
-                #### Обрабатывать шаги или нет
-                if steps_run == "ok":
-
-                    ### Формирование id записей шагов
-                    step_id = [s.id for s in stage.proj_steps_set.all()]
-
-
-                    while len(step_id) > 0:
-                        step = proj_steps.objects.get(pk=random.choice(step_id))
-                        ### Обрабатываем только если есть в списке необработанных id
-                        if step.id in step_id:
-                            ### Обрабатываем шаг, если зависимости нет или зависимые строки шаги обработаны
-                            if step.depend_on["steps"] == []:
-                                step.begin = stage.begin
-                                step.end = date_plus(stage.begin, step.days)
-                                step.save()
-                                ### Шаг обработан - убираем id из списка
-                                step_id.remove(step.id)
-                            else:
-                                ### Проверка обработаны ли шаги от которых есть зависимость
-                                step_id2 = [] # id шагов, от которых есть зависимость
-                                step_enddate = [] # Список дат, завершения шага
-                                for p in step.depend_on["steps"]:
-                                    stp = stage.proj_steps_set.all().get(order=p)
-                                    step_id2.append(stp.id)
-                                    step_enddate.append(stp.end)
-                                if list(set(step_id2).intersection(set(step_id))) == []:
-                                    ### Выбрать дату начала от самой поздней даты предшествующих пунктов
-                                    step.begin = date_plus(sorted(step_enddate)[-1], 1)
-                                    step.end = date_plus(step.begin, step.days)
-                                    step.save()
-                                    ### Шаг обработан - убираем id из списка
-                                    step_id.remove(step.id)
-
-                    ### расчет даты окончания этапа и длительность в днях
-                    step_enddate = []  # Список дат, завершения шага
-                    for step in stage.proj_steps_set.all():
-                        step_enddate.append(step.end)
-
-                    ### Самая поздняя дата
-                    stage.end = sorted(step_enddate)[-1]
-                    ### Вычисление длительности этапа
-                    stage.days = working_days(stage.begin, stage.end)
-                    stage.save()
-
-
-            ### Запись в лог файл
-            logger_proj.info(u"Проект: {proj} {user} Запустил расчет дат".format(
-                proj=pr.name,
-                user=request.user.get_username())
-            )
-
-            """
-            G = pr.calculate_dates()
+            pr.calculate_dates()
             #print pr.calculate_dates().nodes()
-            print G.edges()
+            #print G.edges()
 
 
             response_data = { "result": "ok" }
@@ -631,7 +507,6 @@ def get_json(request):
 
             ### Шаблон проекта
             t = proj_temp.objects.get(pk=int(data['temp'], 10))
-
             stages = eval(t.template_project)["stages"]
 
             ### название проекта
@@ -647,12 +522,11 @@ def get_json(request):
             for stage in stages:
                 ### Создать этапы
                 sg = proj_stages.objects.create(
-                    order= 0,
                     stage_order=stage['order'],
                     name= stage["name"],
                     proj= p,
                     days= stage["days"] if stage.has_key("days") else None,
-                    depend_on = {'stages': stage["depend_on"]} if stage.has_key("depend_on") else {'stages':[]}
+                    depend_on = {'stages': stage["depend_on"]}
                 )
 
 
@@ -681,6 +555,17 @@ def get_json(request):
             s.depend_on = {"stages": depend_on}
             s.save()
 
+            ### Вычисление пунктов исполнения
+            rows = s.proj.make_dict()
+            G = s.proj.make_graph(rows)
+            G = s.proj.graph_edge_order(G, rows)
+            actions = s.proj.actions(G)
+
+            if s.depend_on != {'stages':[]} and s.id not in actions:
+                s.depend_on = {'stages':[]}
+                s.save()
+
+
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {stage} {user} сохранил данные этапа".format(
                 proj=s.proj.name,
@@ -707,7 +592,7 @@ def get_json(request):
             deferment = int(data["deferment"], 10) if data["deferment"] != "" else 0
             depend_on = [int(x, 10) for x in data["depend_on"].split(".")] if data["depend_on"] != "" else []
 
-            proj_stages.objects.create(
+            stage = proj_stages.objects.create(
                 name=name,
                 stage_order=order,
                 days=days,
@@ -715,6 +600,16 @@ def get_json(request):
                 depend_on={"stages": depend_on},
                 proj=p
             )
+
+            ### Вычисление пунктов исполнения
+            rows = p.make_dict()
+            G = p.make_graph(rows)
+            G = p.graph_edge_order(G, rows)
+            actions = p.actions(G)
+
+            if stage.depend_on != {'stages':[]} and stage.id not in actions:
+                stage.depend_on = {'stages':[]}
+                stage.save()
 
 
             ### Запись в лог файл

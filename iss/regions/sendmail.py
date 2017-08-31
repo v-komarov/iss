@@ -84,7 +84,7 @@ def send_proj_worker2(row_id,worker):
 
 
     ### Отправка для независимых пунктов
-    if ((row_type == "stage" and depend_on == []) or (row_type == "step" and depend_on == [] and row.stage.depend_on["stages"] == [])) and worker.email != "":
+    if depend_on == [] and worker.email != "":
 
         ### Если этап иди шаг без зависимости - отправляем сообщение
         email = EmailMessage(

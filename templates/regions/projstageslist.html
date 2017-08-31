@@ -18,7 +18,6 @@
 
 </div>
 
-
 <div class="row small">
     <div class="row col-md-4">
         <form id="projedit">
@@ -27,6 +26,9 @@
                 <tr><td></td><td><button type="submit" class="btn btn-default btn-xs" onclick="return false;">Сохранить</button></td></tr>
             </table>
         </form>
+    </div>
+    <div class="row col-md-1">
+        <a href="/regions/proj/temp/{{ project }}/">Выгрузить в Шаблон</a>
     </div>
     <div class="row col-md-1">
         <a href="/regions/proj/excel/{{ project }}/">Выгрузить в Excel</a>
@@ -83,7 +85,8 @@
                             {% for i in row.stage_order %}
                                 &nbsp;&nbsp;&nbsp;
                             {% endfor %}
-                            {% if row.main %}<strong>{% endif %}<a edit>{{ row.name }}</a>{% if row.main %}</strong>{% endif %}
+                            {# {% if row.main %}<strong>{% endif %}<a edit>{{ row.name }}</a>{% if row.main %}</strong>{% endif %} #}
+                            {% if row.action == False %}<strong>{% endif %}<a edit>{{ row.name }}</a>{% if row.action %}</strong>{% endif %}
                         </td>
                         <td><a edit>{{ row.days }}</a></td>
                         <td><a edit>{{ row.deferment }}</a></td>
@@ -99,20 +102,23 @@
                         </td>
                         <td><a edit>{{ row.depend }}</a></td>
                         <td>
-                            <a user><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-                                {% if row.workers %}
-                                    {% for u in row.workers.all %}
-                                        <div user_id="{{ u.id }}">{{ u.get_full_name }} <a minus><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a></div>
-                                    {% endfor %}
-                                {% endif %}
-                            <div group="user-list" hidden>
-                                <br><select user class="input-sm form-control">
-                                    <option value="" selected>---</option>
-                                    {% for u in user_list %}
-                                        <option value="{{ u.id }}">{{ u.get_full_name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                            {# Исполнители #}
+                            {% if row.id in actions %}
+                                <a user><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                                    {% if row.workers %}
+                                        {% for u in row.workers.all %}
+                                            <div user_id="{{ u.id }}">{{ u.get_full_name }} <a minus><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a></div>
+                                        {% endfor %}
+                                    {% endif %}
+                                <div group="user-list" hidden>
+                                    <br><select user class="input-sm form-control">
+                                        <option value="" selected>---</option>
+                                        {% for u in user_list %}
+                                            <option value="{{ u.id }}">{{ u.get_full_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
                         </td>
                         <td>
                             {# Список приложенных файлов #}
@@ -125,7 +131,6 @@
                             <div group="file" hidden>
                                 <form enctype="multipart/form-data" action="/regions/proj/upload/" method="post">{% csrf_token %}
                                     <input id="stage_id" name="stage_id" value="{{ row.id }}" type="hidden" />
-                                    <input id="step_id" name="step_id" value="no" type="hidden" />
                                     <input name="fileupload" id="fileupload" class="fileinput small" type="file" />
                                     <button class="btn btn-default btn-xs" type="submit">Загрузить</button>
                                 </form>

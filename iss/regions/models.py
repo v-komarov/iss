@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 
 
 import uuid
+import datetime
+import random
 import networkx as nx
 
 
@@ -54,6 +56,114 @@ def order2parent(order, rows):
             return item["id"]
 
     return None
+
+
+
+
+### рассчет дат с учетом выходных дней
+def date_plus(date,delta):
+
+    ## Добавляем по одному дню и проверяем на субботу или воскресенье
+    while delta != 0:
+        date = date + datetime.timedelta(days=1)
+        if date.weekday() < 5:
+            delta = delta - 1
+
+    return date
+
+
+
+
+### вычисление количества дней между датами
+def working_days(date1,date2):
+
+    days = 0
+    ## Добавляем по одному дню и проверяем на субботу или воскресенье
+    while date1 < date2:
+        date1 = date1 + datetime.timedelta(days=1)
+        if date1.weekday() < 5:
+            days += 1
+    return days
+
+
+
+
+### Проверка даты, попадает ли на выходной день
+def check_day(date):
+
+    while date.weekday() >= 5:
+        date = date + datetime.timedelta(days=1)
+
+    return date
+
+
+
+
+
+### Запись в базу
+def write_rows(rows, heads):
+
+    for item in rows:
+        stage = proj_stages.objects.get(pk=item['id'])
+        if item['begin'] != "" and item['end'] != "":
+            stage.begin = datetime.datetime.strptime(item['begin'], '%d.%m.%Y')
+            stage.end = datetime.datetime.strptime(item['end'], '%d.%m.%Y')
+        else:
+            stage.begin = None
+            stage.end = None
+
+        ### Расчет продолжительности заголовочных пунктов
+        if stage.begin and stage.end and item['id'] in heads:
+            stage.days = working_days(stage.begin, stage.end)
+
+        stage.save()
+
+    return "ok"
+
+
+
+
+### Выборка элементов ветви, проверка все ли начальные элементы с определенными begin, end, вычисление наследуемых дат
+def branch2head(path, paths, rows):
+
+    ### выбор элементов ветви по условию у всех элементов должно быть совпадение без начального элемента
+    branch = []
+    for i in paths:
+        if i[1:] == path[1:]:
+            branch.append(i)
+
+    ### проверка начальных элементов ветви - есть ли определенность для begin и end
+    for j in branch:
+        item = id2res(j[0], rows)
+        if (item['begin'] == "" or item['end'] == "") and item['depend_on'] == []:
+            return None
+        if (item['begin'] == "" or item['end'] == "") and item['depend_on'] != []:
+            ### вычисление зависимости
+            item_depend = id2res(order2id(item['depend_on'], rows) , rows)
+            if item_depend['begin'] == "" or item_depend['end'] == "":
+                return None
+            else:
+                return {'result': 'depend', 'id': item['id'], 'depend_id': item_depend['id']}
+
+
+    ### Если для всех начальных элементов begin и end определены - вычисляем наследуемые даты (даты наследуются в заголовочных пунктах)
+    begin = datetime.datetime.strptime(id2res(branch[0][0], rows)['begin'], '%d.%m.%Y') # первоначально
+    end = datetime.datetime.strptime(id2res(branch[0][0], rows)['end'], '%d.%m.%Y') # первоначально
+
+
+    for item in branch:
+        item = id2res(j[0], rows)
+        b = datetime.datetime.strptime(item['begin'], '%d.%m.%Y')
+        e = datetime.datetime.strptime(item['end'], '%d.%m.%Y')
+        if b < begin:
+            begin = b
+        if e > end:
+            end = e
+
+    return {'result':'ok','branch': branch, 'begin': begin, 'end': end}
+
+
+
 
 
 
@@ -148,9 +258,9 @@ class proj(models.Model):
     def __unicode__(self):
         return self.filename
 
-    ### расчет дат и длительности этапов проекта
-    def calculate_dates(self):
 
+    ### Создание словаря из этапов проекта
+    def make_dict(self):
         ### Загрузка данных из базы в словарь (чтобы не дергать каждое вычисление базу)
         rows = []
         for item in self.proj_stages_set.all():
@@ -164,6 +274,12 @@ class proj(models.Model):
                 'end': ''
             })
 
+        return rows
+
+
+
+    ### Формирование графа из словоря этапов проекта
+    def make_graph(self,rows):
 
         ### Формирование графа
         G = nx.Graph()
@@ -172,34 +288,158 @@ class proj(models.Model):
             ### Добавление узлов
             G.add_node(item["id"], {'days': 0})
 
-        ### Добавление связей согласно структуры нумерации
+        return G
+
+
+
+    ### Добавление связей согласно структуры нумерации
+    def graph_edge_order(self, G, rows):
         for item in rows:
             G.add_edges_from([(item['id'], order2parent(item['stage_order'], rows))])
 
+        return G
 
-        ### Установка дней для исполняемых пунктов
+
+    ### Формирование списка исполняемых узлов (пунктов)
+    def actions(self, G):
+
+        actions = [] ### id исполняемых пунктов
         ### Соседи
+        for node in G.nodes():
+            neighbous = G.neighbors(node)
+            ### Если только один сосед
+            if len(neighbous) == 1 and node != 0:
+                actions.append(node) ### Сохранение списка исполняемых узлов
+
+        return actions
+
+
+    ### Формирование списка узлов заголовков (пунктов)
+    def heads(self, G):
+
+        heads = []  ### id пунктов заголовков
+        ### Соседи
+        for node in G.nodes():
+            neighbous = G.neighbors(node)
+            ### Если соседей больше одного
+            if len(neighbous) > 1 and node != 0:
+                heads.append(node)  ### Сохранение списка
+
+        return heads
+
+
+
+    ### Формирование списка всех путей от каждого узла к 0 узлу
+    def paths_stages(self, G):
+        paths = [] ### все пути - из каждого пункта к корню проекта (0)
         for node in G.nodes():
             ### Вывод всех путей
             if node != 0:
                 for path in nx.all_simple_paths(G, node, 0):
-                    print path
-            neighbous = G.neighbors(node)
-            ### Если только один сосед - установка атрибута в днях
-            if len(neighbous) == 1 and node != 0:
+                    ### Берем пути только с длинной более 2
+                    if len(path) > 2:
+                        paths.append(path)
+
+        return paths
+
+
+
+    #### Добавление связий на основании зависимостей
+    #def graph_edge_depend(self, G, rows):
+    #    for item in rows:
+    #        if item['depend_on'] != []:
+    #            G.add_edges_from([ (order2id(item['depend_on'], rows), item['id']) ])
+
+    #    return G
+
+
+
+
+    ### расчет дат и длительности этапов проекта
+    def calculate_dates(self):
+
+        ### Словарь из этапов проекта
+        rows = self.make_dict()
+
+        ### Формирование графа
+        G = self.make_graph(rows)
+
+        ### Добавление связей согласно структуры нумерации
+        G = self.graph_edge_order(G, rows)
+
+        ### Установка дней для исполняемых пунктов, вычисление путей
+        actions = self.actions(G)
+
+        for node in G.nodes():
+            if node in actions:
+                ### Установка атрибута days для исполняемых пунктов
                 G.node[node]['days'] = id2res(node, rows)['days']
 
 
         ### Добавление связей согласно зависимостей (depend_on)
-        for item in rows:
-            if item['depend_on'] != []:
-                G.add_edges_from([ (order2id(item['depend_on'], rows), item['id']) ])
+        #G = self.graph_edge_depend(G, rows)
 
-
-
+        ### Атрибуты узлов days
         node_days = nx.get_node_attributes(G, 'days')
-        for n in G.nodes():
-            print node_days[n]
+
+        ### Список путей
+        paths = self.paths_stages(G)
+
+        #### Первоначальное заполнение независимых полей исполняемых узлов
+        for path in paths:
+            if path[0] in actions:
+                item = id2res(path[0], rows)
+                begin = check_day(self.start + datetime.timedelta(days=item['deferment']))
+                end = date_plus(begin, item['days'])
+                for x in rows:
+                    if x['id'] == path[0] and id2res(path[0], rows)['depend_on'] == []:
+                        ### Запись
+                        x['begin'] = begin.strftime('%d.%m.%Y')
+                        x['end'] = end.strftime('%d.%m.%Y')
+
+
+        ### Обработка пунктов выше от начальных в каждом пути через случайный выбор
+        while len(paths) > 0:
+            ### Выбор случайного пути
+            path = random.choice(paths)
+            ### Выбор ветки, определение все ли начальные элементы этой ветки с определенными begin и end
+            res = branch2head(path, paths, rows)
+            print path, res
+            if res != None:
+                if res['result'] =='ok':
+                    print path, res['begin'], res['end']
+                    ### Запись наследуемых дат
+                    for y in rows:
+                        if y['id'] == path[1]:
+                            y['begin'] = check_day((res['begin'] + datetime.timedelta(days=y['deferment']))).strftime('%d.%m.%Y')
+                            y['end'] = check_day((res['end'] + datetime.timedelta(days=y['deferment']))).strftime('%d.%m.%Y')
+
+                    ### Удаление отработанной ветки из списка путей
+                    for t in res['branch']:
+                        paths.remove(t)
+                ### Обработка зависимого пункта
+                if res['result'] == 'depend':
+                    ### окончание одного является началом другого + 1 день
+                    item = id2res(res['id'], rows)
+                    depend_item = id2res(res['depend_id'], rows)
+                    begin = check_day(datetime.datetime.strptime(depend_item['end'], '%d.%m.%Y') + datetime.timedelta(days=item['deferment']+1))
+                    end = date_plus(begin, item['days'])
+                    for z in rows:
+                        if z['id'] == item['id']:
+                            z['begin'] = begin.strftime('%d.%m.%Y')
+                            z['end'] = end.strftime('%d.%m.%Y')
+
+
+        #for n in G.nodes():
+        #    print node_days[n]
+
+
+
+        ### Запись словаря этапов в базу
+        heads = self.heads(G)
+        write_rows(rows, heads)
+
+
 
         return G
 
