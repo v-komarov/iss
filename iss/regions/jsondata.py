@@ -267,30 +267,27 @@ def get_json(request):
 
 
 
-        ### Установка статуса этапа
-        if r.has_key("action") and rg("action") == 'stage-step-status':
+        ### Установка степени выполнения этапа в процентах
+        if r.has_key("action") and rg("action") == 'stage-percent':
             row_id = int(request.GET["row_id"], 10)
-            row_type = request.GET["row_type"]
-            status = request.GET["status"]
+            percent = int(request.GET["percent"], 10)
 
 
             stage = proj_stages.objects.get(pk=row_id)
-            stage.done = True if status == "yes" else False
+            stage.percent = percent
             stage.save()
             proj = stage.proj
-            rowname = stage.name
-            status = stage.done
 
 
 
             ### Отправка email сообщение если требуется
-            send_proj_worker(row_type, row_id, request.user)
+            #send_proj_worker(row_type, row_id, request.user)
 
             ### Запись в лог файл
-            logger_proj.info(u"Проект: {proj} - {rowname} {user} отметил как {done}".format(
+            logger_proj.info(u"Проект: {proj} - {rowname} {user} отметил {percent} процент выполнения".format(
                 proj=proj.name,
-                rowname=rowname,
-                done = status,
+                rowname=stage.name,
+                percent = percent,
                 user=request.user.get_username())
             )
 
@@ -300,6 +297,19 @@ def get_json(request):
 
 
 
+
+
+        ### список статусов по этапам проекта в процентах
+        if r.has_key("action") and rg("action") == 'stage-percent-status':
+            from iss.regions.models import proj
+
+            pr = proj.objects.get(pk=request.session['proj_id'])
+            status = {}
+            for item in pr.proj_stages_set.all():
+                row_id = "row%s" % item.id
+                status[row_id] = item.percent
+
+            response_data = {"result": "ok", "status": status}
 
 
         ### Удаление вложеного файла

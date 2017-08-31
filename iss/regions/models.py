@@ -459,7 +459,8 @@ class proj_stages(models.Model):
     depend_on = JSONField(default={'stages':[]}, verbose_name='Зависит от')
     proj = models.ForeignKey(proj, on_delete=models.PROTECT, verbose_name='Связь с проектом')
     workers = models.ManyToManyField(User)
-    done = models.BooleanField(default=False)
+    percent = models.IntegerField(default=0, verbose_name='Процент выполнения')
+
 
     def __unicode__(self):
         return self.filename

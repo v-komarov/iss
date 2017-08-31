@@ -120,3 +120,18 @@ table#noteadd > tbody > tr > td {
 div.row.small div.row.col-md-1 {
     padding-top: 70px;
 }
+
+
+
+/* Проценты выполнения */
+.ui-slider-range {
+   background:green;
+}
+.percent {
+  color:green;
+  font-weight:bold;
+  text-align:center;
+  width:100%;
+  border:none;
+}
+

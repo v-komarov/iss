@@ -37,10 +37,6 @@ $(document).ready(function() {
     $( "table[group=stages-list] a[minus]" ).bind("click", RemoveUser);
 
 
-    // Отметка "выполнено"
-    $("table[group=stages-list] tr td input[type=checkbox]").bind("click", MarkDone);
-
-
     // Редактирование основных данных проекта
     $("form#projedit button").bind("click",EditProjData);
 
@@ -57,7 +53,138 @@ $(document).ready(function() {
     $("table[group=stages-list] tr td a[delete]").bind("click", DeleteStage);
 
 
+
+    Percents();
+
+
+    // Изменение значения процента выполения
+    $(this).find('.bar').change(function() {
+        console.log('slide');
+    });
+
+
 });
+
+
+
+
+
+
+
+
+
+// Отрисовка слайдера
+function Percents() {
+
+
+      // Чтение процентов выполнеия
+      var jqxhr = $.getJSON("/regions/jsondata/?action=stage-percent-status",
+            function(data) {
+
+
+              $('.project').each(function() {
+
+                var $projectBar = $(this).find('.bar');
+                var $projectPercent = $(this).find('.percent');
+                var $projectRange = $(this).find('.ui-slider-range');
+                var row_id = $(this).parents("tr").attr("row_id");
+
+                // Предварительная прорисовка значений
+                var $projectRange = $(this).find('.ui-slider-range');
+                var percent = data['status']["row"+row_id];
+                $projectPercent.val(percent + "%");
+                    if (percent < 30) {
+                      $projectPercent.css({
+                        'color': 'red'
+                      });
+                      $projectRange.css({
+                        'background': '#f20000'
+                      });
+                    } else if (percent > 31 && percent < 70) {
+                      $projectPercent.css({
+                        'color': 'gold'
+                      });
+                      $projectRange.css({
+                        'background': 'gold'
+                      });
+                    } else if (percent > 70) {
+                      $projectPercent.css({
+                        'color': 'green'
+                      });
+                      $projectRange.css({
+                        'background': 'green'
+                      });
+                    }
+
+
+
+
+
+
+
+                $projectBar.slider({
+                  range: "min",
+                  animate: true,
+                  value: data['status']["row"+row_id],
+                  min: 0,
+                  max: 100,
+                  step: 1,
+                  slide: function(event, ui) {
+                    $projectPercent.val(ui.value + "%");
+                  },
+                  change: function(event, ui) {
+                    var $projectRange = $(this).find('.ui-slider-range');
+                    var percent = ui.value;
+
+                    // Запись значения в базу
+                    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-percent&row_id="+row_id+"&percent="+percent,
+                        function(data) {
+
+                        })
+
+
+                    if (percent < 30) {
+                      $projectPercent.css({
+                        'color': 'red'
+                      });
+                      $projectRange.css({
+                        'background': '#f20000'
+                      });
+                    } else if (percent > 31 && percent < 70) {
+                      $projectPercent.css({
+                        'color': 'gold'
+                      });
+                      $projectRange.css({
+                        'background': 'gold'
+                      });
+                    } else if (percent > 70) {
+                      $projectPercent.css({
+                        'color': 'green'
+                      });
+                      $projectRange.css({
+                        'background': 'green'
+                      });
+                    }
+                  }
+                });
+              })
+
+
+
+
+
+
+
+      })
+
+
+
+
+}
+
+
+
+
 
 
 
@@ -539,33 +666,6 @@ function RemoveUser(e) {
         if (data["result"] == "ok") {
 
             location.reload();
-
-        }
-
-    })
-
-
-}
-
-
-
-// Отметка о выполнении
-function MarkDone(e) {
-
-    var row_id = $(this).parents("tr").attr("row_id");
-
-    if ($(this).is(":checked")) {
-        var status = "yes";
-    }
-    else { var status = "no"; }
-
-    // Отметка выполнено / не выполнено
-    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-step-status&row_id="+row_id+"&status="+status,
-    function(data) {
-
-
-        if (data["result"] == "ok") {
-
 
         }
 

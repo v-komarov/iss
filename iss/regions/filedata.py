@@ -228,7 +228,7 @@ def projexcel(request, project):
     sh.write(0, 4, u"Завершение", style=style_bold)
     sh.write(0, 5, u"Зависит от", style=style_bold)
     sh.write(0, 6, u"Исполнители", style=style_bold)
-    sh.write(0, 7, u"Выполнено", style=style_bold)
+    sh.write(0, 7, u"Выполнено %", style=style_bold)
 
     n = 1 ## Строка в листе
     ### Этапы проекта
@@ -254,7 +254,7 @@ def projexcel(request, project):
                 sh.write(n, 4, item['end'].strftime('%d.%m.%Y') if item['end'] else "", style=action_style)
                 sh.write(n, 5, ",".join(["%s" % x for x in item['depend_on']["stages"]]), style=action_style)
                 sh.write(n, 6, ",".join([w.get_full_name() for w in workers]), style=action_style)
-                sh.write(n, 7, u"Выполнено" if item['done'] else "", style=action_style)
+                sh.write(n, 7, item['percent'] if row_id in actions else "", style=action_style)
 
                 sort_keys.remove(key)
                 n += 1
