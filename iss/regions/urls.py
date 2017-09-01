@@ -2,7 +2,7 @@
 
 
 from django.conf.urls import url
-from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList
+from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList
 from iss.regions.jsondata import get_json
 from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp
 
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'proj/temp/(?P<project>\d+)/$', projtemp),
     url(r'proj/excel/(?P<project>\d+)/$', projexcel),
     url(r'proj/gant/(?P<project>\d+)/$', projgant),
+    url(r'workertask/(?P<page>\d+)/$', TaskList.as_view()),
 ]

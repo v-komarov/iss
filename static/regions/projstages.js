@@ -57,12 +57,6 @@ $(document).ready(function() {
     Percents();
 
 
-    // Изменение значения процента выполения
-    $(this).find('.bar').change(function() {
-        console.log('slide');
-    });
-
-
 });
 
 
@@ -90,16 +84,13 @@ function Percents() {
                 var row_id = $(this).parents("tr").attr("row_id");
 
                 // Предварительная прорисовка значений
-                var $projectRange = $(this).find('.ui-slider-range');
                 var percent = data['status']["row"+row_id];
+
                 $projectPercent.val(percent + "%");
+
                     if (percent < 30) {
-                      $projectPercent.css({
-                        'color': 'red'
-                      });
-                      $projectRange.css({
-                        'background': '#f20000'
-                      });
+                      $projectPercent.css({'color': 'red'});
+                      $projectRange.css({'background': '#f20000'});
                     } else if (percent > 31 && percent < 70) {
                       $projectPercent.css({
                         'color': 'gold'

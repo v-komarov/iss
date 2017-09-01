@@ -1,0 +1,143 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/workertask.css" type="text/css" rel="stylesheet" xmlns:end-date>
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/workertask.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+<div class="row">
+    <form id="date-form" class="form-inline small">
+        <div class="form-group">
+            <label for="begin-date">С даты</label>
+            <input type="text" style="height:28px;padding-left:2px;" id="begin-date" placeholder="" value={{ begin_date|date:"d.m.Y" }}>
+        </div>
+        <div class="form-group">
+            <label for="end-date">по дату</label>
+            <input type="text" style="height:28px;padding-left:2px;" id="end-date" placeholder="" value={{ end_date|date:"d.m.Y" }}>
+        </div>
+        <div class="form-group">
+            <label for="worker">исполнитель</label>
+            <select id="worker" class="form-control input-sm" data-width="auto">
+                {% if user_id == "" %}
+                    <option value="" selected> --- </option>
+                {% else %}
+                    <option value=""> --- </option>
+                {% endif %}
+                {{ user_id }}
+                {% for u in user_list %}
+                    {% if u.id == user_id %}
+                        <option value="{{ u.id }}" selected>{{ u.get_full_name }}</option>
+                    {% else %}
+                        <option value="{{ u.id }}">{{ u.get_full_name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+            <button id="get-report-data" type="button" title="Запрос данных" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+    </form>
+</div>
+
+
+
+
+
+<div class="row">
+
+    <h4 class="text-center">Задачи исполнителей</h4>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/proj/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/proj/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+    <table group="task-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Проект</th>
+                <th>Дата создания</th>
+                <th>Проект создал</th>
+                <th>Начало проекта</th>
+                <th>Этап выполнения</th>
+                <th>Начало</th>
+                <th>Завершение</th>
+                <th>Выполено %</th>
+                <th>Исполнители</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+            {% for row in object_list %}
+            {% if row.workers.count > 0 %}
+
+            <tr>
+                <td>{{ row.proj.name }}</td>
+                <td>{{ row.proj.datetime_create|date:"d.m.Y" }}</td>
+                <td>{{ row.proj.author.get_full_name }}</td>
+                <td>{{ row.proj.start|date:"d.m.Y" }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.begin|date:"d.m.Y" }}</td>
+                <td>{{ row.end|date:"d.m.Y" }}</td>
+                <td>{{ row.percent }}</td>
+                <td>
+                    {% for u in row.workers.all %}
+                        {{ u.get_full_name }}
+                    {% endfor %}
+                </td>
+            </tr>
+
+            {% endif %}
+            {% endfor %}
+
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/proj/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/proj/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+

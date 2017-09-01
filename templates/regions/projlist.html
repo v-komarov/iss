@@ -23,7 +23,7 @@
     <div id="manager" class="row small">
         <form>
             <a id="addproj" href="#" title="Создать новый проект">Создать</a>
-            <a id="toexcel" title="Выгрузить в Excel формат">Excel (в разработке)</a>
+            <a id="workertask" href="/regions/workertask/1/" title="Задачи исполнителей" target="_blank">Задачи исполнителей</a>
         </form>
     </div>
 </div>
@@ -40,11 +40,11 @@
 
     {% if paginator.num_pages > 1 %}
         {% if page_obj.has_previous %}
-            <a href="/regions/proj/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            <a href="/regions/workertask/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
         {% endif %}
         <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
         {% if page_obj.has_next %}
-            <a href="/regions/proj/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            <a href="/regions/workertask/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
         {% endif %}
     {% endif %}
 
@@ -127,11 +127,11 @@
 
     {% if paginator.num_pages > 1 %}
         {% if page_obj.has_previous %}
-            <a href="/regions/proj/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+            <a href="/regions/workertask/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
         {% endif %}
         <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
         {% if page_obj.has_next %}
-            <a href="/regions/proj/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+            <a href="/regions/workertask/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
         {% endif %}
     {% endif %}
 

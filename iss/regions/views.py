@@ -190,22 +190,6 @@ class ReestrCreate(CreateView):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Проекты (список)
 class ProjList(ListView):
 
@@ -319,4 +303,66 @@ class ProjStagesList(ListView):
 
 
         return context
+
+
+
+
+
+### Задачи исполнителей
+class TaskList(ListView):
+
+    model = proj_stages
+    template_name = "regions/workertask.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+        begin = self.session['begin_date'] if self.session.has_key('begin_date') else datetime.datetime.today() - datetime.timedelta(days=30)
+        end = self.session['end_date'] if self.session.has_key('end_date') else datetime.datetime.today() + datetime.timedelta(days=30)
+
+        data = proj_stages.objects.filter( (Q(begin__lte=end) & Q(begin__gte=begin)) ).order_by('-begin')
+
+        data2 = []
+        if self.session.has_key('user_id'):
+            u = User.objects.get(pk=self.session['user_id'])
+            for i in data:
+                if u in i.workers.all():
+                    data2.append(i)
+            return data2
+        else:
+
+            return data
+
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskList, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        context['begin_date'] = self.session['begin_date'] if self.session.has_key('begin_date') else datetime.datetime.today() - datetime.timedelta(days=30)
+        context['end_date'] = self.session['end_date'] if self.session.has_key('end_date') else datetime.datetime.today() + datetime.timedelta(days=30)
+        context['user_id'] = self.session['user_id'] if self.session.has_key('user_id') else ""
+        context['user_list'] = User.objects.order_by('first_name')
+
+        return context
+
+
 

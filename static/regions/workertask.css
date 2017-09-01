@@ -1,0 +1,40 @@
+table[group=task-list] > thead > tr > th,
+table[group=task-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=task-list] > tbody > tr > td,
+table[group=task-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+
+
+/* Курсор */
+table[group=task-list] tbody tr td div a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=task-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+/* Форма выбора диапазона дат */
+form#date-form {
+    padding-left: 100px;
+    margin-top: 30px;
+}

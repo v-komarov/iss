@@ -281,7 +281,10 @@ def get_json(request):
 
 
             ### Отправка email сообщение если требуется
-            #send_proj_worker(row_type, row_id, request.user)
+            if percent == 100:
+                ### Выбор зависимых пунктов
+                stages = proj.proj_stages_set.all().filter(depend_on__stages=stage.stage_order)
+                send_proj_worker(stages, request.user)
 
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {rowname} {user} отметил {percent} процент выполнения".format(
@@ -397,6 +400,36 @@ def get_json(request):
 
 
 
+
+        ### Сохранение даты начала периода списка задач исполнителей
+        if r.has_key("action") and rg("action") == 'workertask-begin':
+            begin = request.GET["date"]
+
+            request.session['begin_date'] = datetime.datetime.strptime(begin, "%d.%m.%Y")
+
+            response_data = {"result": "ok"}
+
+
+        ### Сохранение даты конца периода списка задач исполнителей
+        if r.has_key("action") and rg("action") == 'workertask-end':
+            end = request.GET["date"]
+
+            request.session['end_date'] = datetime.datetime.strptime(end, "%d.%m.%Y")
+
+            response_data = {"result": "ok"}
+
+
+        ### Сохранение id исполнителя списка задач исполнителей
+        if r.has_key("action") and rg("action") == 'workertask-worker':
+            worker_id = request.GET["worker"]
+
+            if worker_id != "":
+                request.session['user_id'] = int(worker_id, 10)
+            elif worker_id == "" and request.session.has_key('user_id'):
+                del request.session['user_id']
+
+
+            response_data = {"result": "ok"}
 
 
 
@@ -571,9 +604,16 @@ def get_json(request):
             G = s.proj.graph_edge_order(G, rows)
             actions = s.proj.actions(G)
 
+
+            ### Если этот этап - заголовок или ссылается на заголовок - зависимость затираем
             if s.depend_on != {'stages':[]} and s.id not in actions:
                 s.depend_on = {'stages':[]}
                 s.save()
+            if s.depend_on != {'stages':[]}:
+                for dep in proj_stages.objects.filter(proj=s.proj, stage_order=s.depend_on['stages']):
+                    if dep.id not in actions:
+                        s.depend_on = {'stages': []}
+                        s.save()
 
 
             ### Запись в лог файл
@@ -620,6 +660,12 @@ def get_json(request):
             if stage.depend_on != {'stages':[]} and stage.id not in actions:
                 stage.depend_on = {'stages':[]}
                 stage.save()
+            if stage.depend_on != {'stages':[]}:
+                for dep in proj_stages.objects.filter(proj=p, stage_order=stage.depend_on['stages']):
+                    if dep.id not in actions:
+                        stage.depend_on = {'stages': []}
+                        stage.save()
+
 
 
             ### Запись в лог файл

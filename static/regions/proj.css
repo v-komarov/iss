@@ -22,7 +22,7 @@ table[group=stages-list] > tbody > tr > td {
 
 
 /* Курсор */
-table[group=proj-list] > tbody > tr > td > a, #toexcel, #addproj,
+table[group=proj-list] > tbody > tr > td > a, #workertask, #addproj,
 table[group=stages-list] > tbody > tr > td > a,
 table[group=stages-list] > tbody > tr > td > strong > a,
 table[group=stages-list] tbody tr td div a {
@@ -31,7 +31,7 @@ table[group=stages-list] tbody tr td div a {
 }
 
 
-table[group=proj-list] > tbody > tr > td > a:hover, #toexcel, #addproj,
+table[group=proj-list] > tbody > tr > td > a:hover, #workertask, #addproj,
 table[group=stages-list] > tbody > tr > td > a:hover,
 table[group=stages-list] > tbody > tr > td > strong > a:hover,
 table[group=stages-list] tbody tr td div a:hover {
@@ -47,7 +47,7 @@ table[group=stages-list] tbody tr td div a:hover {
     margin-bottom:30px;
 }
 
-#addproj, #toexcel {
+#addproj, #workertask {
     margin-left: 30px;
 }
 
