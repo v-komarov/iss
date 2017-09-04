@@ -387,7 +387,7 @@ def projgant(request,project):
     ax.xaxis_date()
     rule = rrulewrapper(WEEKLY, interval=1)
     loc = RRuleLocator(rule)
-    formatter = DateFormatter("%d-%b %Y")
+    formatter = DateFormatter("%d.%m.%Y")
     #formatter = DateFormatter("%d-%b")
 
     ax.xaxis.set_major_locator(loc)

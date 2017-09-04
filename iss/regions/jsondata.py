@@ -286,6 +286,11 @@ def get_json(request):
                 stages = proj.proj_stages_set.all().filter(depend_on__stages=stage.stage_order)
                 send_proj_worker(stages, request.user)
 
+                ### Отметка статуса проекта по выполенному этапу
+                proj.status = stage.name
+                proj.save()
+
+
             ### Запись в лог файл
             logger_proj.info(u"Проект: {proj} - {rowname} {user} отметил {percent} процент выполнения".format(
                 proj=proj.name,

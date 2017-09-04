@@ -83,7 +83,7 @@
                             {# Список выполненых пунктов#}
                             <ul>
                             {% for stage in row.proj_stages_set.all %}
-                                {% if stage.done %}
+                                {% if stage.percent == 100 %}
                                 <li>{{ stage.name }}</li>
                                 {% endif %}
                             {% endfor %}
