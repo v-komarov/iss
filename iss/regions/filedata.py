@@ -8,13 +8,29 @@ import xlwt
 import tempfile
 import os
 import StringIO
+import cStringIO
+import datetime
 
 from operator import itemgetter
+
+from matplotlib import rc
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
+import matplotlib.dates
+from matplotlib.dates import WEEKLY, MONTHLY, DateFormatter, rrulewrapper, RRuleLocator
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy as np
+
 
 from snakebite.client import Client
 
 from iss.regions.models import orders, load_proj_files, proj_stages, proj
 from iss.localdicts.models import regions
+
+
+
+
 
 
 
@@ -302,5 +318,94 @@ def projtemp(request, project):
 
 
 ### Диаграмма Ганта
-def projgant(request, project):
-    pass
+def projgant(request,project):
+
+    ## Отображение без DISPLAY
+    plt.switch_backend('agg')
+
+    ## Отображение кирилицы
+    font = {'family': 'DejaVu Sans',
+            'weight': 'normal'}
+    rc('font', **font)
+
+
+    pr = proj.objects.get(pk=project)
+
+    ### Вычисление пунктов исполнения
+    rows = pr.make_dict()
+    G = pr.make_graph(rows)
+    G = pr.graph_edge_order(G, rows)
+    actions = pr.actions(G)
+
+    ylabels = []
+    customDates = []
+    ylabels_done = []
+    #
+    ### Этапы проекта
+    stages = [item for item in pr.proj_stages_set.all().values()]
+    ### Сортировка
+    sort_keys = [item['stage_order'] for item in stages]
+    sort_keys.sort()
+    while len(sort_keys) > 0:
+        key = sort_keys[0]
+        for item in stages:
+            if item['stage_order'] == key:
+                if item['id'] in actions:
+                    ylabels.append(item['name'])
+                    customDates.append([matplotlib.dates.date2num(item['begin']), matplotlib.dates.date2num(item['end'])])
+                    if item['percent'] == 100:
+                        ylabels_done.append(item['name'])
+
+                sort_keys.remove(key)
+
+
+
+    ilen = len(ylabels)
+    pos = np.arange(0.5, ilen * 0.5 + 0.5, 0.5)
+    task_dates = {}
+    for i, task in enumerate(ylabels):
+        task_dates[task] = customDates[i]
+    #fig = Figure()
+    fig = plt.figure(figsize=(20, 8))
+
+    ax = fig.add_subplot(111)
+
+    ### заголовок
+    ax.set_title(u'Проект: %s' % pr.name)
+
+    for i in range(len(ylabels)):
+        start_date, end_date = task_dates[ylabels[i]]
+        if ylabels[i] in ylabels_done:
+            ax.barh((i * 0.5) + 0.5, end_date - start_date, left=start_date, height=0.3, align='center', edgecolor='lightgreen', color='green', alpha=0.8)
+        else:
+            ax.barh((i * 0.5) + 0.5, end_date - start_date, left=start_date, height=0.3, align='center', edgecolor='lightgreen', color='orange', alpha=0.8)
+    locsy, labelsy = plt.yticks(pos, ylabels)
+    plt.setp(labelsy, fontsize=10)
+    #    ax.axis('tight')
+    ax.set_ylim(ymin=-0.1, ymax=ilen * 0.5 + 0.5)
+    ax.grid(color='g', linestyle=':')
+    ax.xaxis_date()
+    rule = rrulewrapper(WEEKLY, interval=1)
+    loc = RRuleLocator(rule)
+    formatter = DateFormatter("%d-%b %Y")
+    #formatter = DateFormatter("%d-%b")
+
+    ax.xaxis.set_major_locator(loc)
+    ax.xaxis.set_major_formatter(formatter)
+    labelsx = ax.get_xticklabels()
+    plt.setp(labelsx, rotation=30, fontsize=10)
+
+    font = font_manager.FontProperties(size='small')
+    ax.legend(loc=1, prop=font)
+
+    ax.invert_yaxis()
+    fig.autofmt_xdate()
+
+    canvas=FigureCanvas(fig)
+
+
+    response = HttpResponse(content_type="image/png")
+    response['Content-Disposition'] = 'attachment; filename="gantt.png"'
+    canvas.print_png(response)
+
+    return response

@@ -335,7 +335,7 @@ class TaskList(ListView):
         begin = self.session['begin_date'] if self.session.has_key('begin_date') else datetime.datetime.today() - datetime.timedelta(days=30)
         end = self.session['end_date'] if self.session.has_key('end_date') else datetime.datetime.today() + datetime.timedelta(days=30)
 
-        data = proj_stages.objects.filter( (Q(begin__lte=end) & Q(begin__gte=begin)) ).order_by('-begin')
+        data = proj_stages.objects.filter( (Q(begin__gte=begin) & Q(end__lte=end)) | (Q(begin__gte=begin) & Q(begin__lte=end)) | (Q(end__gte=begin) & Q(end__lte=end)) ).order_by('-begin')
 
         data2 = []
         if self.session.has_key('user_id'):

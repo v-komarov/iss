@@ -59,8 +59,8 @@ div[group=paginator] {
 
 /* Отступ для ссылки */
 #to_excel {
-    margin-left:0;
-    padding-left: 400px;
+    margin-left:400px;
+    padding-left: 0;
 }
 
 
