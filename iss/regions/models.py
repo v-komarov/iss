@@ -123,46 +123,6 @@ def write_rows(rows, heads):
 
 
 
-### Выборка элементов ветви, проверка все ли начальные элементы с определенными begin, end, вычисление наследуемых дат
-def branch2head(path, paths, rows):
-
-    ### выбор элементов ветви по условию у всех элементов должно быть совпадение без начального элемента
-    branch = []
-    for i in paths:
-        if i[1:] == path[1:]:
-            branch.append(i)
-
-    ### проверка начальных элементов ветви - есть ли определенность для begin и end
-    for j in branch:
-        item = id2res(j[0], rows)
-        if (item['begin'] == "" or item['end'] == "") and item['depend_on'] == []:
-            return None
-        if (item['begin'] == "" or item['end'] == "") and item['depend_on'] != []:
-            ### вычисление зависимости
-            item_depend = id2res(order2id(item['depend_on'], rows) , rows)
-            if item_depend['begin'] == "" or item_depend['end'] == "":
-                return None
-            else:
-                return {'result': 'depend', 'id': item['id'], 'depend_id': item_depend['id']}
-
-
-    ### Если для всех начальных элементов begin и end определены - вычисляем наследуемые даты (даты наследуются в заголовочных пунктах)
-    begin = datetime.datetime.strptime(id2res(branch[0][0], rows)['begin'], '%d.%m.%Y') # первоначально
-    end = datetime.datetime.strptime(id2res(branch[0][0], rows)['end'], '%d.%m.%Y') # первоначально
-
-
-    for item in branch:
-        item = id2res(j[0], rows)
-        b = datetime.datetime.strptime(item['begin'], '%d.%m.%Y')
-        e = datetime.datetime.strptime(item['end'], '%d.%m.%Y')
-        if b < begin:
-            begin = b
-        if e > end:
-            end = e
-
-    return {'result':'ok','branch': branch, 'begin': begin, 'end': end}
-
-
 
 
 
@@ -376,62 +336,89 @@ class proj(models.Model):
                 G.node[node]['days'] = id2res(node, rows)['days']
 
 
-        ### Добавление связей согласно зависимостей (depend_on)
-        #G = self.graph_edge_depend(G, rows)
 
         ### Атрибуты узлов days
         node_days = nx.get_node_attributes(G, 'days')
 
-        ### Список путей
-        paths = self.paths_stages(G)
+
+        ### Список всех узлов
+        nodes_list = G.nodes()
+        nodes_list.remove(0)
 
         #### Первоначальное заполнение независимых полей исполняемых узлов
-        for path in paths:
-            if path[0] in actions:
-                item = id2res(path[0], rows)
-                begin = check_day(self.start + datetime.timedelta(days=item['deferment']))
-                end = date_plus(begin, item['days'])
-                for x in rows:
-                    if x['id'] == path[0] and id2res(path[0], rows)['depend_on'] == []:
-                        ### Запись
-                        x['begin'] = begin.strftime('%d.%m.%Y')
-                        x['end'] = end.strftime('%d.%m.%Y')
+        for node in actions:
+            item = id2res(node, rows)
+            begin = check_day(self.start + datetime.timedelta(days=item['deferment']))
+            end = date_plus(begin, item['days'])
+            for x in rows:
+                if x['id'] == node and id2res(node, rows)['depend_on'] == []:
+                    ### Запись
+                    x['begin'] = begin.strftime('%d.%m.%Y')
+                    x['end'] = end.strftime('%d.%m.%Y')
+                    ### Исключение из списка узлов уже обработанные
+                    nodes_list.remove(node)
 
 
-        ### Обработка пунктов выше от начальных в каждом пути через случайный выбор
-        while len(paths) > 0:
-            ### Выбор случайного пути
-            path = random.choice(paths)
-            ### Выбор ветки, определение все ли начальные элементы этой ветки с определенными begin и end
-            res = branch2head(path, paths, rows)
-            print path, res
-            if res != None:
-                if res['result'] =='ok':
-                    print path, res['begin'], res['end']
-                    ### Запись наследуемых дат
-                    for y in rows:
-                        if y['id'] == path[1]:
-                            y['begin'] = check_day((res['begin'] + datetime.timedelta(days=y['deferment']))).strftime('%d.%m.%Y')
-                            y['end'] = check_day((res['end'] + datetime.timedelta(days=y['deferment']))).strftime('%d.%m.%Y')
+        #### обход каждого оставшегося узла
+        while len(nodes_list) > 0:
+            node = random.choice(nodes_list)
 
-                    ### Удаление отработанной ветки из списка путей
-                    for t in res['branch']:
-                        paths.remove(t)
-                ### Обработка зависимого пункта
-                if res['result'] == 'depend':
-                    ### окончание одного является началом другого + 1 день
-                    item = id2res(res['id'], rows)
-                    depend_item = id2res(res['depend_id'], rows)
-                    begin = check_day(datetime.datetime.strptime(depend_item['end'], '%d.%m.%Y') + datetime.timedelta(days=item['deferment']+1))
+            ### исполняемы или заголовочный
+            if node in actions:
+                ### Для исполняемых - обработка зависимых пунктов
+                res = id2res(node, rows)
+                depend_item = id2res(order2id(res['depend_on'], rows), rows)
+                if depend_item['begin'] != "" and depend_item['end'] != "":
+                    begin = check_day(datetime.datetime.strptime(depend_item['end'], '%d.%m.%Y') + datetime.timedelta(
+                        days=item['deferment'] + 1))
                     end = date_plus(begin, item['days'])
                     for z in rows:
-                        if z['id'] == item['id']:
+                        if z['id'] == node:
                             z['begin'] = begin.strftime('%d.%m.%Y')
                             z['end'] = end.strftime('%d.%m.%Y')
+                    nodes_list.remove(node)
+
+            else:
+                ### Для заголовочных
+
+                ### Определение нижестоящих соседей узла
+                if nx.has_path(G, node, 0) and node != 0 :
+                    points = list( set(G.neighbors(node)) - set(nx.shortest_path(G, node, 0))  )
+                    if 0 in points:
+                        points.remove(0)
+
+                    if len(points) > 0:
+                        ### Если для нижестоящих установлены даты
+                        date_ok = True
+                        for p in points:
+                            print id2res(p, rows)
+                            if id2res(p, rows)['begin'] == "" or id2res(p, rows)['end'] == "":
+                                date_ok = False
 
 
-        #for n in G.nodes():
-        #    print node_days[n]
+                        if date_ok:
+                            ### вычисление дат
+                            begin = datetime.datetime.strptime(id2res(points[0], rows)['begin'],'%d.%m.%Y')  # первоначально
+                            end = datetime.datetime.strptime(id2res(points[0], rows)['end'],'%d.%m.%Y')  # первоначально
+                            for p in points:
+                                item = id2res(p, rows)
+                                b = datetime.datetime.strptime(item['begin'], '%d.%m.%Y')
+                                e = datetime.datetime.strptime(item['end'], '%d.%m.%Y')
+                                if b < begin:
+                                    begin = b
+                                if e > end:
+                                    end = e
+
+                            ### Запись наследуемых дат
+                            for y in rows:
+                                if y['id'] == node:
+                                    y['begin'] = check_day((begin + datetime.timedelta(days=y['deferment']))).strftime('%d.%m.%Y')
+                                    y['end'] = check_day((end + datetime.timedelta(days=y['deferment']))).strftime('%d.%m.%Y')
+
+                                    nodes_list.remove(node)
+
+                    else:
+                        nodes_list.remove(node)
 
 
 
