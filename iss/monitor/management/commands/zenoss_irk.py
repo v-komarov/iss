@@ -34,7 +34,8 @@ logger = logging.getLogger('debugging')
 loggerjson = logging.getLogger('events')
 
 
-tz = 'Asia/Irkutsk'
+#tz = 'Asia/Irkutsk'
+tz = 'Europe/Moscow'
 irk_tz = timezone(tz)
 
 

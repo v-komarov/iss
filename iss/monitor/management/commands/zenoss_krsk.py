@@ -32,7 +32,8 @@ logger = logging.getLogger('debugging')
 loggerjson = logging.getLogger('events')
 
 
-tz = 'Asia/Krasnoyarsk'
+#tz = 'Asia/Krasnoyarsk'
+tz = 'Europe/Moscow'
 krsk_tz = timezone(tz)
 
 

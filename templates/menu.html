@@ -57,6 +57,7 @@
         <ul class="dropdown-menu">
           <li id="mapaccidents" {% if request.path|slice:'0:16' == "/maps/accidents/" %}class="active"{% endif %}><a href="/maps/accidents/">Аварии на карте</a></li>
           <li id="mapfindip" {% if request.path|slice:'0:13' == "/maps/findip/" %}class="active"{% endif %}><a href="/maps/findip/">Поиск по IP</a></li>
+          <li id="mapports" {% if request.path|slice:'0:12' == "/maps/ports/" %}class="active"{% endif %}><a href="/maps/ports/">Активность портов</a></li>
         </ul>
       </li>
       <li class="dropdown">
@@ -75,7 +76,7 @@
         </a>
         <ul class="dropdown-menu">
           <li id="menuregionsorders" {% if request.path|slice:'0:16' == "/regions/orders/" %}class="active"{% endif %}><a href="/regions/orders/">Таблица заказов</a></li>
-         {# <li id="menuregionsreestr" {% if request.path|slice:'0:16' == "/regions/reestr/" %}class="active"{% endif %}><a href="/regions/reestr/page/1/">Реестр</a></li> #}
+          <li id="menuregionsreestr" {% if request.path|slice:'0:16' == "/regions/reestr/" %}class="active"{% endif %}><a href="/regions/reestr/page/1/">Реестр</a></li>
          {# <li id="menuregionsdocs" {% if request.path|slice:'0:14' == "/regions/docs/" %}class="active"{% endif %}><a href="/regions/docs/">Документы</a></li> #}
           <li id="menuregionsproj" {% if request.path|slice:'0:14' == "/regions/proj/" %}class="active"{% endif %}><a href="/regions/proj/page/1/">Проекты</a></li>
         </ul>

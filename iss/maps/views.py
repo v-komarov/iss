@@ -112,3 +112,41 @@ class MapsFindIp(TemplateView):
 
 
 
+
+
+
+### Отображение портов устройств доступа на картах городов и населенных пунктов
+class MapsPorts(TemplateView):
+
+    template_name = 'maps/ports.html'
+
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+
+        return super(MapsPorts, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(MapsPorts, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+        city_list = address_city.objects.order_by('name')
+        for item in city_list:
+            item.geo_ok = item.geo_ok()
+
+        context['accidents'] = accidents.objects.filter(acc_start__gt=start).order_by('-acc_start')
+        context['city_list'] = city_list
+
+        return context
+

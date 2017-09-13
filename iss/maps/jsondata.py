@@ -2,6 +2,7 @@
 
 import json
 import ipaddress
+import csv
 
 import datetime
 from pytz import timezone
@@ -19,6 +20,19 @@ tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
 start = datetime.datetime(2017, 7, 9, 12, 0, 0, 0, timezone(tz))
+
+
+devices_ports = {}
+
+
+### Чтение данных по портам устройств из csv файла
+with open('iss/maps/csv/ports.csv', 'r') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=';')
+    next(spamreader, None)
+    for row in spamreader:
+        devices_ports[row[0]] = {'oldports': row[1], 'olddate': row[2], 'newports': row[3], 'newdate': row[4]}
+
+
 
 
 def get_json(request):
@@ -198,6 +212,52 @@ def get_json(request):
                 response_data = {"result": "empty"}
 
 
+
+
+
+        ### Получение списка координат устройств, удаленных от центра не более км.
+        if r.has_key("action") and rg("action") == 'get-devices-distance':
+
+            city_id = int(request.GET["city_id"],10)
+
+            city = address_city.objects.get(pk=city_id)
+            rec = address_house.objects.filter(city=city,house=None,street=None).first()
+
+            devices_list = []
+            for item in address_house.objects.all():
+                if item.check_distance(rec.geo["lat"],rec.geo["lng"], 20):
+                    for dev in item.devices_set.all():
+                        ips = dev.get_manage_ip()
+
+                        ports_information = {}
+
+                        if devices_ports.has_key(ips[0]):
+                            ports_information['result'] = "ok"
+                            ports_information['oldports'] = devices_ports[ips[0]]['oldports']
+                            ports_information['newports'] = devices_ports[ips[0]]['newports']
+                            ports_information['olddate'] = devices_ports[ips[0]]['olddate']
+                            ports_information['newdate'] = devices_ports[ips[0]]['newdate']
+                        else:
+                            ports_information['result'] = "empty"
+
+
+                        devices_list.append({
+                            'lat': item.geo['lat'],
+                            'lng': item.geo['lng'],
+                            'ip': " ".join(ips),
+                            'device': dev.device_scheme.name,
+                            'address': item.getaddress(),
+                            'ports_information': ports_information
+                        })
+
+            data = {
+                "lat": rec.geo["lat"],
+                "lng": rec.geo["lng"],
+                "devices": devices_list
+            }
+
+
+            response_data = data
 
 
 

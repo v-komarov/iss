@@ -1,0 +1,18 @@
+#select-cities {
+    width: 200px;
+}
+
+#choise-city {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+#ports-map {
+    border: solid 1px;
+    width:1200px;
+    height:800px;
+    margin-left: 20px;
+}
+
+

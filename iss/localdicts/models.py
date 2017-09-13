@@ -2,6 +2,10 @@
 
 from __future__ import unicode_literals
 
+from math import sin, cos, sqrt, atan2, radians
+
+
+
 from django.db import models
 from django import template
 from django.contrib.postgres.fields import JSONField
@@ -235,6 +239,33 @@ class address_house(models.Model):
             return False
 
 
+
+    ### Проверка дистанции в км
+    def check_distance(self, lat, lng, km):
+
+        if self.geo["result"] != "ok":
+            return False
+
+
+        R = 6373.0
+
+        lat1 = radians(lat)
+        lon1 = radians(lng)
+        lat2 = radians(self.geo['lat'])
+        lon2 = radians(self.geo['lng'])
+
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        distance = R * c
+
+        if distance >= km:
+            return False
+        else:
+            return True
 
 
 
