@@ -28,7 +28,7 @@ from django.contrib.auth.models import User
 from iss.mydecorators import group_required, anonymous_required
 
 from iss.exams.models import questions, sections, tests, tests_results
-from iss.exams.forms import QuestionForm, TestForm, ExamForm
+from iss.exams.forms import QuestionForm, TestForm, ExamForm, ResultForm
 
 
 
@@ -476,6 +476,7 @@ class ResultsList(ListView):
         context['sections'] = sections.objects.order_by('name')
         context['section'] = self.session['exams-section'] if self.session.has_key('exams-section') else "0"
         context['reportlist'] = self.session['reportlist'] if self.session.has_key('reportlist') else []
+        context['form'] = ResultForm()
 
         return context
 

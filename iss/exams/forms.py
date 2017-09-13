@@ -33,3 +33,10 @@ class ExamForm(ModelForm):
     class Meta:
         model = tests_results
         fields = ['worker', 'job', 'department', ]
+
+
+### Форма исправления места работы и должности таблицы результатов
+class ResultForm(ModelForm):
+    class Meta:
+        model = tests_results
+        fields = ['job', 'department', ]

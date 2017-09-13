@@ -68,3 +68,10 @@ div[group=paginator] {
 #to_pdf {
     padding-left: 15px;
 }
+
+
+/* Форма редактирования должности и места работы */
+form#resultdata > table > tbody > tr > td > input#id_job,
+form#resultdata > table > tbody > tr > td > input#id_department {
+    width: 400px;
+}

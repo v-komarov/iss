@@ -392,6 +392,16 @@ def get_json(request):
 
 
 
+        ### Данные результата
+        if r.has_key("action") and rg("action") == 'get-data-result':
+            result_id = request.GET["result_id"]
+            result = tests_results.objects.get(pk=int(result_id, 10))
+
+            response_data = {"result": "ok", "job": result.job, "department": result.department}
+
+
+
+
 
 
 
@@ -453,6 +463,20 @@ def get_json(request):
             t.save()
 
             response_data = {"result": "ok"}
+
+
+
+        ### Сохранение должности и места работы
+        if data.has_key("action") and data["action"] == 'save-result':
+
+            result = tests_results.objects.get(pk=int(data["result_id"], 10))
+            result.job = data["job"].strip()
+            result.department = data["department"].strip()
+            result.save()
+
+            response_data = {"result": "ok"}
+
+
 
 
 
