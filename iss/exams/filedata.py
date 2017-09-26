@@ -12,7 +12,7 @@ from cStringIO import StringIO
 from django.db.models import Q
 
 from iss.exams.models import tests_results
-from iss.exams.printform import QuestionsList, ProtocolPDF, ProtocolListPDF
+from iss.exams.printform import QuestionsList, ProtocolPDF, ProtocolListPDF, ProtocolListPDF3
 
 
 
@@ -131,3 +131,31 @@ def report2(request):
 
     return response
 
+
+
+
+
+### Вывод печатной формы протокола для списка охрана труда Красноярск
+def report3(request):
+
+
+    if request.session.has_key('reportlist'):
+
+        filter =  [ "Q(id=%s)" % item for item in request.session['reportlist']]
+
+        run = "tests_results.objects.filter({filter}).order_by('worker')".format(filter=" | ".join(filter))
+
+        res = eval(run)
+
+    else:
+        res = []
+
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="protocol.pdf"'
+    buff = StringIO()
+    result = ProtocolListPDF3(buff, res)
+    response.write(result.getvalue())
+    buff.close()
+
+    return response

@@ -168,7 +168,7 @@ def QuestionsList(buff, res):
 
 
 
-### --- Печатная протокола списком ---
+### --- Печатная протокола списком охрана труда бланк ---
 def ProtocolListPDF(buff, res):
     Font1 = ttfonts.TTFont('PT', 'fonts/PTC55F.ttf')
     Font2 = ttfonts.TTFont('PTB', 'fonts/PTC75F.ttf')
@@ -199,7 +199,7 @@ def ProtocolListPDF(buff, res):
 
     elements = []
 
-    elements.append(Paragraph(u'Закрытое акционерное общество  «СибТрансТелеКом»', style["MyStyle"]))
+    elements.append(Paragraph(u'________________________________________________', style["MyStyle"]))
     elements.append(Paragraph(u'ПРОТОКОЛ № ___________', style["MyStyle1"]))
     elements.append(Paragraph(u'Заседания комиссии по проверки знаний по охране труда работников', style["MyStyle1"]))
     elements.append(Paragraph(u'"____" ___________________ 201 __г.', style["MyStyle2"]))
@@ -278,6 +278,151 @@ def ProtocolListPDF(buff, res):
     elements.append(Paragraph(u'члены комиссии: _____________________________________________________________________________________________________', style["MyStyle3"]))
     elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
     elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+
+    elements.append(Paragraph(u'Представители:', style["MyStyle3"]))
+    elements.append(Paragraph(u'администрации Красноярского края', style["MyStyle3"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+
+    elements.append(Paragraph(u'органов местного самоуправления', style["MyStyle3"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+
+    elements.append(Paragraph(u'государственной инспекции труда Красноярского края', style["MyStyle3"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+
+
+
+    doc.build(elements)
+
+    return buff
+
+
+
+
+
+
+
+
+### --- Печатная протокола списком охрана труда Крпасноярск---
+def ProtocolListPDF3(buff, res):
+    Font1 = ttfonts.TTFont('PT', 'fonts/PTC55F.ttf')
+    Font2 = ttfonts.TTFont('PTB', 'fonts/PTC75F.ttf')
+    Font3 = ttfonts.TTFont('PTI', 'fonts/PTS56F.ttf')
+
+    pdfmetrics.registerFont(Font1)
+    pdfmetrics.registerFont(Font2)
+    pdfmetrics.registerFont(Font3)
+
+    style = getSampleStyleSheet()
+    style.add(ParagraphStyle(name='MyStyle', wordWrap=True, fontName='PTB', fontSize=12, spaceAfter=3 * mm,
+                             spaceBefore=20 * mm, alignment=1))
+    style.add(ParagraphStyle(name='MyStyle1', wordWrap=True, fontName='PTB', fontSize=12, spaceAfter=0 * mm,
+                             spaceBefore=6 * mm, alignment=1))
+
+    style.add(ParagraphStyle(name='MyStyle0', wordWrap=True, fontName='PT', fontSize=10, spaceAfter=5 * mm,
+                             spaceBefore=5 * mm, alignment=0))
+    style.add(ParagraphStyle(name='MyStyle2', wordWrap=True, fontName='PT', fontSize=10, spaceAfter=0 * mm,
+                             spaceBefore=4 * mm, alignment=0))
+    style.add(ParagraphStyle(name='MyStyle3', wordWrap=True, fontName='PT', fontSize=10, spaceAfter=0 * mm,
+                             spaceBefore=0 * mm, alignment=0))
+
+    style.add(ParagraphStyle(name='litle', wordWrap=True, fontName='PT', fontSize=4, spaceAfter=0 * mm,
+                             spaceBefore=0 * mm, alignment=1))
+
+
+    doc = SimpleDocTemplate(buff, topMargin=10 * mm, bottomMargin=10 * mm, leftMargin=20 * mm, rightMargin=10 * mm)
+
+    elements = []
+
+    elements.append(Paragraph(u'Закрытое акционерное общество  "СибТрансТелеКом"', style["MyStyle"]))
+    elements.append(Paragraph(u'ПРОТОКОЛ № ___________', style["MyStyle1"]))
+    elements.append(Paragraph(u'Заседания комиссии по проверки знаний по охране труда работников', style["MyStyle1"]))
+    elements.append(Paragraph(u'"____" ___________________ 201 __г.', style["MyStyle2"]))
+
+    elements.append(Paragraph(u'   В соответствии с приказом генерального директора от 27 июня 2017 г. № 30 комиссия в составе:', style["MyStyle2"]))
+
+    elements.append(Paragraph(u'Председателя: Бочерикова Андрея Павловича - заместителя Технического директора - Начальника службы эксплуатации магистральной сети', style["MyStyle2"]))
+    #elements.append(Paragraph(u'(Ф.И.О. , должность)', style["litle"]))
+
+    elements.append(Paragraph(u'членов:', style["MyStyle3"]))
+    elements.append(Paragraph(u'1. Бусыгина Павла Генриховича, главного энергетика экспертного отдела', style["MyStyle3"]))
+    elements.append(Paragraph(u'2. Тучина Юрия Михайловича, инженера электропитающих установок', style["MyStyle3"]))
+
+    #elements.append(Paragraph(u'(Ф.И.О. , должность)', style["litle"]))
+    #elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    #elements.append(Paragraph(u'(Ф.И.О. , должность)', style["litle"]))
+
+    elements.append(Paragraph(u'Представителей:', style["MyStyle3"]))
+    elements.append(Paragraph(u'администрации Красноярского края', style["MyStyle3"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , должность)', style["litle"]))
+
+    elements.append(Paragraph(u'органов местного самоуправления', style["MyStyle3"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , должность)', style["litle"]))
+
+    elements.append(Paragraph(u'государственной инспекции труда Красноярского края', style["MyStyle3"]))
+    elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , должность)', style["litle"]))
+
+    elements.append(Paragraph(u'провела проверку знаний требований охраны труда работников по <font face="PTB">Программе обучения работников ЗАО "СибТрансТелеКом" по охране труда, утвержденной</font>', style["MyStyle3"]))
+    elements.append(Paragraph(u'_______________________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(наименование программы обучения по охране труда)', style["litle"]))
+    elements.append(Paragraph(u'в объеме _____________________________________________________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(количество часов)', style["litle"]))
+
+
+
+    if len(res) > 0:
+
+        ### Формирование таблицы
+        data = [[u'№пп', u'ФИО', u'Должность',
+                 u'Наименование\nподразделения\n(цех, участок,\nотдел, лабора-\nтория, мастер-\nская и т.д.)',
+                 u'Результат\nпроверки\n знаний (сдал,\nне сдал) №\nвыданного\nудостоверения',
+                 u'Причина\nпроверки\nзнаний\n(очередная,\nвнеочередная\n и т.д.)',
+                 u'Подпись\nпроверяемого',
+                 ],
+                [u'1', u'2', u'3', u'4', u'5', u'6', u'7'],
+                ]
+
+        n = 1
+        for item in res:
+            data.append([n,
+                         Paragraph(item.worker, style["MyStyle3"]),
+                         Paragraph(item.job, style["MyStyle3"]),
+                         Paragraph(item.department, style["MyStyle3"]),
+                         Paragraph(u'Сдал', style["MyStyle3"]) if item.passed else Paragraph(u'Не сдал', style["MyStyle3"]),
+                         ])
+            n = n + 1
+
+        #t = Table(data, colWidths=[10 * mm, 40 * mm, 30 * mm, 25 * mm, 25 * mm, 25 * mm, 25 * mm], repeatRows=1)
+        t = Table(data, colWidths=[10 * mm, 40 * mm, 30 * mm, 25 * mm, 25 * mm, 25 * mm, 25 * mm])
+        t.setStyle([('FONTNAME', (0, 0), (-1, -1), 'PTB'),
+                    ('FONTSIZE', (0, 0), (-1, -1), 8),
+                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                    ('VALIGN', (0, 0), (-1, 2), 'MIDDLE'),
+                    ('ALIGN', (1, 2), (-1, -1), 'LEFT'),
+                    ('FONTNAME', (0, 1), (-1, -1), 'PT'),
+                    ('VALIGN', (0, 1), (-1, -1), 'TOP'),
+                    ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
+                    ])
+
+        elements.append(t)
+
+
+    elements.append(Paragraph(u'Председатель комиссии Бочериков Андрей Павлович _____________________________________', style["MyStyle2"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+
+    elements.append(Paragraph(u'члены комиссии: 1. Бусыгин Павел Генрихович ____________________________________________________', style["MyStyle3"]))
+    elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
+    elements.append(Paragraph(u'2. Тучин Юрий Михайлович ________________________________________________________________________', style["MyStyle3"]))
     elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))
     elements.append(Paragraph(u'______________________________________________________________________________________________________', style["MyStyle3"]))
     elements.append(Paragraph(u'(Ф.И.О. , подпись)', style["litle"]))

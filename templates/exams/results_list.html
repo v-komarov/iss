@@ -41,7 +41,8 @@
 <div class="row">
 
     <a href="/exams/report/" id="to_excel" title="Выгрузить данные">В Excel</a>
-    <a href="/exams/report2/" id="to_pdf" title="Выгрузить данные">В PDF</a>
+    <a href="/exams/report2/" id="to_pdf" title="Охрана труда бланк">PDF 1</a>
+    <a href="/exams/report3/" id="to_pdf3" title="Охрана труда Красноярск">PDF 3</a>
 
     <h3 class="text-center">Результаты проверки знаний</h3>
 
@@ -71,12 +72,13 @@
                     <th width="10%">Раздел</th>
                     <th width="10%">Название теста</th>
                     <th width="20%">ФИО</th>
-                    <th width="20%">Должность</th>
+                    <th width="15%">Должность</th>
                     <th width="20">Место работы</th>
                     <th width="5%">Дата</th>
                     <th width="5%">Ошибок</th>
                     <th width="2%">PDF</th>
                     <th width="5%">Результат</th>
+                    <th width="5%">IP</th>
                 </tr>
 
             </thead>
@@ -98,9 +100,9 @@
                             {% endif %}
                         <td>{{ row.test.section }}</td>
                         <td>{{ row.test.name }}</td>
-                        <td><a edit>{{ row.worker }}</a></td>
+                        <td>{{ row.worker }}</td>
                         <td><a edit>{{ row.job }}</a></td>
-                        <td>{{ row.department }}</td>
+                        <td><a edit>{{ row.department }}</a></td>
                         <td>{{ row.end|date:"d.m.Y" }}</td>
                         <td>{{ row.mistakes }}</td>
                         <td>
@@ -124,6 +126,7 @@
                                 Сдал
                             {% endif %}
                         </td>
+                        <td>{{ row.ip }}</td>
                     </tr>
 
             {% endfor %}

@@ -135,6 +135,7 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'learn-begin':
             test_id = request.GET["test_id"]
             t = tests.objects.get(pk=int(test_id, 10))
+            ip = request.META.get('REMOTE_ADDR')
 
             ### Формирование и сохранение списка номеров вопросов
             questions_lists = []
@@ -147,6 +148,7 @@ def get_json(request):
             res = tests_results.objects.create(
                 test = t,
                 begin = datetime.datetime.now(),
+                ip = ip,
                 data = {
                     'questions': questions_lists,
                     'mistakes': []
@@ -222,6 +224,7 @@ def get_json(request):
             fio = request.GET["fio"]
             job = request.GET["job"]
             department = request.GET["department"]
+            ip = request.META.get('REMOTE_ADDR')
 
 
             ### Формирование и сохранение списка номеров вопросов
@@ -237,6 +240,7 @@ def get_json(request):
                 department=department.strip(),
                 learning=False,
                 begin=datetime.datetime.now(),
+                ip=ip,
                 data={
                     'questions': questions_lists,
                     'mistakes': [],

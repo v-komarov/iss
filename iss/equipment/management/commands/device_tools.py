@@ -191,7 +191,6 @@ class Command(BaseCommand):
 
         """
             Вывод данных ipaddress, port, номер договора
-        """
 
         from iss.inventory.models import logical_interfaces_prop,netelems,devices
         from iss.localdicts.models import logical_interfaces_prop_list
@@ -224,3 +223,26 @@ class Command(BaseCommand):
 
                     f.write("{ip};{port};{dog};\n".format(ip=ip,port=port,dog=dog))
 
+        """
+
+
+        """
+            Вывод данных ipaddress, модель устрройства, номер договора
+        """
+
+
+        from iss.inventory.models import logical_interfaces_prop,netelems,devices
+        from iss.localdicts.models import logical_interfaces_prop_list, address_house
+
+        f = open('devices_dubl.csv','w')
+
+        #ipv4 = logical_interfaces_prop_list.objects.get(name='ipv4')
+        #onyma = logical_interfaces_prop_list.objects.get(name='onyma')
+
+        ### Выбор всех устройств
+        for addr in address_house.objects.filter():
+            ### Выбор устройств , если на адресе более одного
+            if addr.devices_set.all().count() > 1:
+                for device in addr.devices_set.all():
+                    str = u"{ip};{model};{address};\n".format(address=device.getaddress(), ip=u" ".join(device.get_manage_ip()), model=device.device_scheme.name)
+                    f.write(str.encode("utf-8"))

@@ -19,13 +19,13 @@ table[group=results-list] > tbody > tr > td {
 
 
 /* Курсор */
-table[group=results-list] > tbody > tr > td > a, #to_excel, #to_pdf {
+table[group=results-list] > tbody > tr > td > a, #to_excel, #to_pdf, #to_pdf3 {
     cursor:pointer;
     text-decoration:none;
 }
 
 
-table[group=results-list] > tbody > tr > td > a:hover, #to_excel, #to_pdf {
+table[group=results-list] > tbody > tr > td > a:hover, #to_excel, #to_pdf, #to_pdf3 {
     text-decoration:none;
 }
 
@@ -65,7 +65,7 @@ div[group=paginator] {
 
 
 /* Отступ */
-#to_pdf {
+#to_pdf, #to_pdf3 {
     padding-left: 15px;
 }
 

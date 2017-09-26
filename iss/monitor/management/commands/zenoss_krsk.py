@@ -140,15 +140,6 @@ class Command(BaseCommand):
                     )
 
 
-                ### Логирование для поиска ошибки неотображения всех событий
-                logger.debug(
-                    'evid:{evid} lasttime:{lasttime} firsttime:{firsttime} status:{status} severity:{severity} eventclass:{eventclass} location:{location} ipaddress:{ipaddress}'.format(
-                        evid=evid, severity= r["severity"], status= r["eventState"],
-                        firsttime= r["firstTime"],
-                        lasttime=r["lastTime"], location=location,
-                        eventclass = r["eventClass"]["text"], ipaddress= ipaddress
-                    )
-                )
 
                 ### Формирование нового события или запись в существующие
                 """

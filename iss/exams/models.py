@@ -118,6 +118,7 @@ class tests_results(models.Model):
     data = JSONField(default={'questions': [], 'mistakes': []}, verbose_name='Очередь id вопросов')
     learning = models.BooleanField(default=True, db_index=True, verbose_name='Обучение или экзамен')
     mistakes = models.IntegerField(default=0, verbose_name='Количество ошибок')
+    ip = models.GenericIPAddressField(default='', null=True, verbose_name='Регистрация ip адресов')
 
     def __unicode__(self):
         return self.test.name
