@@ -126,7 +126,7 @@
                                 Сдал
                             {% endif %}
                         </td>
-                        <td>{{ row.ip }}</td>
+                        <td>{% if row.ip %}{{ row.ip }}{% endif %}</td>
                     </tr>
 
             {% endfor %}
