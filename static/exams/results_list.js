@@ -140,7 +140,7 @@ function ClearReport(e) {
 
 
 
-// Редактирование должности и места работы
+// Редактирование ФИО, должности и места работы
 function EditResult(e) {
 
     var result_id = $(this).parents("tr").attr("row_id");
@@ -152,6 +152,7 @@ function EditResult(e) {
 
         if (data["result"] == "ok") {
 
+            $("form#resultdata input#id_worker").val(data["worker"]);
             $("form#resultdata input#id_job").val(data["job"]);
             $("form#resultdata input#id_department").val(data["department"]);
 
@@ -189,13 +190,14 @@ function SaveResult(result_id) {
 
 
                 // Проверка значений
-                if ( $("form#resultdata input#id_job").val() != "" && $("form#resultdata input#id_department").val()!= "" ) {
+                if ( $("form#resultdata input#id_job").val() != "" && $("form#resultdata input#id_department").val()!= "" && $("form#resultdata input#id_worker").val() != "") {
 
 
 
 
                     var data = {};
                     data.result_id = result_id;
+                    data.worker = $("form#resultdata input#id_worker").val();
                     data.job = $("form#resultdata input#id_job").val();
                     data.department = $("form#resultdata input#id_department").val();
                     data.action = "save-result";

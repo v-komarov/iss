@@ -72,6 +72,7 @@ div[group=paginator] {
 
 /* Форма редактирования должности и места работы */
 form#resultdata > table > tbody > tr > td > input#id_job,
-form#resultdata > table > tbody > tr > td > input#id_department {
+form#resultdata > table > tbody > tr > td > input#id_department,
+form#resultdata > table > tbody > tr > td > input#id_worker {
     width: 400px;
 }

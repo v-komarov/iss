@@ -39,4 +39,4 @@ class ExamForm(ModelForm):
 class ResultForm(ModelForm):
     class Meta:
         model = tests_results
-        fields = ['job', 'department', ]
+        fields = ['worker', 'job', 'department', ]
