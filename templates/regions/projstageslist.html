@@ -68,6 +68,7 @@
                 <th>Файлы</th>
                 <th>Коментарий</th>
                 <th width="10%">Выполнено</th>
+                <th>Отказ<br>проблема</th>
                 <th width="5%"><center>Удалить</center></th>
             </tr>
 
@@ -148,7 +149,14 @@
                                 </div>
                             {% endif %}
                         </td>
-
+                        {# Отказ / проблема #}
+                        <td><a problem title="Отказ/проблема">
+                            {% if row.problem.problem %}
+                            <span style="color: red; padding-left: 5px;">Есть</span>
+                            {% else %}
+                            <span style="color: green; padding-left: 5px;">Нет</span>
+                            {% endif %}
+                        </a></td>
                         {# Удаление #}
                         <td><center><a delete title="Удалить"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></center></td>
                     </tr>
@@ -171,6 +179,7 @@
 
 {% include "regions/editstage.html" %}
 {% include "regions/projnotes.html" %}
+{% include "regions/stageproblem.html" %}
 
 
 {% endblock %}

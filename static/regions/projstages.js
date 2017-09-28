@@ -52,6 +52,8 @@ $(document).ready(function() {
     // Удаление пункта
     $("table[group=stages-list] tr td a[delete]").bind("click", DeleteStage);
 
+    // Проблема или отказ
+    $("table[group=stages-list] tr td a[problem]").bind("click", EditProblem);
 
 
     Percents();
@@ -783,4 +785,89 @@ function AddNote(e) {
 
 
 }
+
+
+
+
+
+
+// Редактирование проблемы или отказа
+function EditProblem(e) {
+
+    var row_id = $(this).parents("tr").attr("row_id");
+
+    // Предварительная наполнение полей
+    var jqxhr = $.getJSON("/regions/jsondata/?action=stage-get-problem&row_id="+row_id,
+    function(data) {
+
+
+
+        if (data["result"] == "ok") {
+
+            $("table#problem-table textarea#text-problem-comment").val(data["comment"]);
+            if (data["problem"] == 1) {
+                $("table#problem-table input#problem-click").prop('checked', true);
+            }
+            else { $("table#problem-table input#problem-click").prop('checked', false); }
+
+        }
+
+    })
+
+
+    $("#problem").dialog({
+        title:"Отказ/проблема",
+        buttons:[{ text:"Сохранить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+
+
+            var data = {};
+            data.row_id = row_id;
+            data.comment = $("table#problem-table textarea#text-problem-comment").val();
+            if ( $("table#problem-table input#problem-click").is(':checked') ) {data.problem = 1;}
+            else { data. problem = 0;}
+
+            data.action = "stage-set-problem";
+
+            $.ajax({
+              url: "/regions/jsondata/",
+              type: "POST",
+              dataType: 'json',
+              data:$.toJSON(data),
+                success: function(result) {
+                    if (result["result"] == "ok") { $("#problem").dialog('close'); location.reload(); }
+                }
+
+            });
+
+
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        open: function() {
+        },
+        modal:true,
+        minWidth:400,
+        width:500
+
+    });
+
+
+
+}
+
 

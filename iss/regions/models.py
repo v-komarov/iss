@@ -447,6 +447,7 @@ class proj_stages(models.Model):
     proj = models.ForeignKey(proj, on_delete=models.PROTECT, verbose_name='Связь с проектом')
     workers = models.ManyToManyField(User)
     percent = models.IntegerField(default=0, verbose_name='Процент выполнения')
+    problem = JSONField(default={'problem': False, 'comment': ''}, verbose_name='Отказ/Проблема')
 
 
     def __unicode__(self):

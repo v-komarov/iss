@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 from iss.regions.forms import OrderForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes
 from iss.localdicts.models import regions, proj_temp
-from iss.regions.sendmail import send_proj_worker, send_proj_worker2
+from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
 
 
@@ -439,6 +439,17 @@ def get_json(request):
 
 
 
+        ### Информация об отказе или проблеме (получение данных)
+        if r.has_key("action") and rg("action") == 'stage-get-problem':
+            row_id = int(request.GET["row_id"], 10)
+            stage = proj_stages.objects.get(pk=row_id)
+
+            response_data = {"result": "ok", "comment": stage.problem["comment"], "problem": 1 if stage.problem["problem"] == True else 0 }
+
+
+
+
+
 
     if request.method == "POST":
 
@@ -716,26 +727,40 @@ def get_json(request):
         ### Добавление коментария к этапу или шагу
         if data.has_key("action") and data["action"] == 'proj-adding-note':
             row_id = int(data["row_id"], 10)
-            row_type = data["row_type"]
             note = data["note"]
 
-            if row_type == "stage":
-                stage = proj_stages.objects.get(pk=row_id)
-                proj_notes.objects.create(
-                    author=request.user,
-                    note=note,
-                    stage=stage
-                )
-
-            if row_type == "step":
-                step = proj_steps.objects.get(pk=row_id)
-                proj_notes.objects.create(
-                    author=request.user,
-                    note=note,
-                    step=step
-                )
+            stage = proj_stages.objects.get(pk=row_id)
+            proj_notes.objects.create(
+                author=request.user,
+                note=note,
+                stage=stage
+            )
 
 
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Отметка отказа или проблемы
+        if data.has_key("action") and data["action"] == 'stage-set-problem':
+            row_id = int(data["row_id"], 10)
+            problem = data["problem"]
+            comment = data["comment"].strip()
+            stage = proj_stages.objects.get(pk=row_id)
+
+            stage.problem = {"problem": True if problem == 1 else False, "comment": comment}
+            stage.save()
+
+            ### Запись в лог файл
+            logger_proj.info(u"Проект: {proj} - {stage} {user} отметил проблему".format(
+                proj=stage.proj.name,
+                stage=stage.name,
+                user=request.user.get_username())
+            )
+
+            send_problem(stage)
 
             response_data = {"result": "ok"}
 

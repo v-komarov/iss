@@ -85,3 +85,35 @@ def send_proj_worker2(row_id,worker):
 
 
     return "ok"
+
+
+
+
+### Отправка сообщения об отметки проблемы
+def send_problem(stage):
+
+    p = stage.proj
+
+    if p.author.email != "":
+
+        act = u"Отметка об установки проблемы или отказа" if stage.problem["problem"] == True else u"Снятие отметки об проблеме или отказе"
+
+        email = EmailMessage(
+            subject="Управление проектами",
+            body=u"""
+            <a href='http://10.6.0.22:8000/regions/proj/edit/{proj_id}/'>http://10.6.0.22:8000/</a>
+            <p>
+            {act}<br>
+            Проект: <b>{proj}</b><br>
+            Пункт исполнения: <b>{name}</b><br>
+            Срок выполнения: <b>{begin} - {end}</b>                
+            </p>
+            """.format(act=act, proj=p.name, name=stage.name, begin=stage.begin.strftime('%d.%m.%Y'), end=stage.end.strftime('%d.%m.%Y'), proj_id=p.id),
+            from_email='GAMMA <gamma@sibttk.ru>',
+            to=[p.author.email,]
+        )
+
+        email.content_subtype = "html"
+        email.send()
+
+    return "ok"

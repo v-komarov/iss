@@ -135,3 +135,14 @@ div.row.small div.row.col-md-1 {
   border:none;
 }
 
+
+
+/* Окно отказа или проблемы */
+table#problem-table > tbody > tr > td {
+    vertical-align: top;
+}
+
+table#problem-table > tbody > tr > td > textarea#text-problem-comment {
+    width: 300px;
+    height : 100px;
+}
