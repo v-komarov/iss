@@ -160,3 +160,8 @@ class tests_results(models.Model):
 
         return self.data["questions"]
 
+
+    ### Возвращает количество оставшихся вопросов для отображения в интерфейсе
+    def get_questions_count(self):
+
+        return len(self.data["questions"]) + 1

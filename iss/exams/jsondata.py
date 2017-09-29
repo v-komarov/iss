@@ -174,7 +174,7 @@ def get_json(request):
             if question_id:
 
                 qu = questions.objects.get(pk=question_id)
-                response_data = {"result": "next", "result_id": res.id, "question-name": qu.name, "answers": qu.get_answers_html(), "question_id": question_id, "question_list": res.get_question_list()}
+                response_data = {"result": "next", "result_id": res.id, "question-name": qu.name, "answers": qu.get_answers_html(), "question_id": question_id, "question_list": res.get_question_list(), "questions_count": res.get_questions_count()}
             ### Пустой тест - без вопросов
             else:
                 response_data = {"result": "end"}
@@ -204,7 +204,7 @@ def get_json(request):
                 if question_id:
                     quest = questions.objects.get(pk=question_id)
                     response_data = {"result": "next", "result_id": res.id, "question-name": quest.name,
-                                     "answers": quest.get_answers_html(), "question_id": question_id}
+                                     "answers": quest.get_answers_html(), "question_id": question_id, "questions_count": res.get_questions_count()}
                 ### Тестирование завершено
                 else:
                     res.end = datetime.datetime.now()
@@ -269,7 +269,7 @@ def get_json(request):
                 qu = questions.objects.get(pk=question_id)
                 response_data = {"result": "next", "result_id": res.id, "question-name": qu.name,
                                  "answers": qu.get_answers_html(), "question_id": question_id,
-                                 "question_list": res.get_question_list()}
+                                 "question_list": res.get_question_list() }
             ### Пустой тест - без вопросов
             else:
                 response_data = {"result": "end"}
@@ -298,7 +298,7 @@ def get_json(request):
             if question_id:
                 quest = questions.objects.get(pk=question_id)
                 response_data = {"result": "next", "result_id": res.id, "question-name": quest.name,
-                                 "answers": quest.get_answers_html(), "question_id": question_id}
+                                 "answers": quest.get_answers_html(), "question_id": question_id, "questions_count": res.get_questions_count()}
             ### Тестирование завершено
             else:
                 res.end = datetime.datetime.now()

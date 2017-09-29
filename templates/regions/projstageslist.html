@@ -151,10 +151,12 @@
                         </td>
                         {# Отказ / проблема #}
                         <td><a problem title="Отказ/проблема">
-                            {% if row.problem.problem %}
-                            <span style="color: red; padding-left: 5px;">Есть</span>
-                            {% else %}
-                            <span style="color: green; padding-left: 5px;">Нет</span>
+                            {% if row.id in actions %}
+                                {% if row.problem.problem %}
+                                    <span style="color: red; padding-left: 5px;">Есть</span>
+                                {% else %}
+                                    <span style="color: green; padding-left: 5px;">Нет</span>
+                                {% endif %}
                             {% endif %}
                         </a></td>
                         {# Удаление #}

@@ -77,6 +77,9 @@ function LearnNext(e) {
                 $("div#question table[group=answers] tbody").append(data["answers"]);
                 $("div#question").show();
                 $("div#error").hide();
+
+                // Количество оставшихся вопросов
+                $("q-count").text(data["questions_count"]);
             }
 
             // Наличие ошибки в ответе
@@ -108,6 +111,10 @@ function LearnNext(e) {
                 $("button#begin").show();
                 $("a#back").show();
                 $("button#next").hide();
+
+                // Количество оставшихся вопросов
+                $("q-count").text("0");
+
             }
 
 

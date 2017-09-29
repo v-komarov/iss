@@ -122,6 +122,9 @@ function TestNext(e) {
                 $("div#question table[group=answers] tbody").empty();
                 $("div#question table[group=answers] tbody").append(data["answers"]);
                 $("div#question").show();
+
+                // Количество оставшихся вопросов
+                $("q-count").text(data["questions_count"]);
             }
 
 
@@ -148,6 +151,10 @@ function TestNext(e) {
 
                 // Сброс таймера
                 clearInterval(window.timerId);
+
+                // Количество оставшихся вопросов
+                $("q-count").text("0");
+
 
             }
 
