@@ -241,7 +241,7 @@ def get_json(request):
 
 
             ### Проверка была ли сдача уже сегодня
-            if tests_results.objects.filter(worker__icontains=fio,begin__date=datetime.datetime.now().date(),ip=ip).exists():
+            if tests_results.objects.filter(test=t,worker__icontains=fio,begin__date=datetime.datetime.now().date(),ip=ip).exists():
 
                 response_data = {"result": "goaway"}
 
