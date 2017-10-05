@@ -83,6 +83,8 @@ function TestBegin(e) {
 
                 }
 
+                if (data["result"] == "goaway") {alert("Вы сегодня уже проходили тестирование,\nпопробуйте завтра.");}
+
             })
 
 

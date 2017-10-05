@@ -234,45 +234,55 @@ def get_json(request):
 
             test_id = request.GET["test_id"]
             t = tests.objects.get(pk=int(test_id, 10))
-            fio = request.GET["fio"]
-            job = request.GET["job"]
-            department = request.GET["department"]
+            fio = request.GET["fio"].strip()
+            job = request.GET["job"].strip()
+            department = request.GET["department"].strip()
             ip = get_client_ip(request)
 
 
-            ### Формирование и сохранение списка номеров вопросов
-            questions_lists = []
-            for x in t.questions.all().order_by("?"):
-                questions_lists.append(x.id)
+            ### Проверка была ли сдача уже сегодня
+            if tests_results.objects.filter(worker__icontains=fio,begin__date=datetime.datetime.now().date(),ip=ip).exists():
 
-            ### Создание записи тестирования
-            res = tests_results.objects.create(
-                test=t,
-                worker=fio.strip(),
-                job=job.strip(),
-                department=department.strip(),
-                learning=False,
-                begin=datetime.datetime.now(),
-                ip=ip,
-                data={
-                    'questions': questions_lists,
-                    'mistakes': [],
-                    'questions_dict': t.questions_dict()
-                }
-            )
+                response_data = {"result": "goaway"}
 
-
-            ### Вопрос и список ответов
-            question_id = res.get_question_id()
-            if question_id:
-
-                qu = questions.objects.get(pk=question_id)
-                response_data = {"result": "next", "result_id": res.id, "question-name": qu.name,
-                                 "answers": qu.get_answers_html(), "question_id": question_id,
-                                 "question_list": res.get_question_list() }
-            ### Пустой тест - без вопросов
             else:
-                response_data = {"result": "end"}
+
+                ### Формирование и сохранение списка номеров вопросов
+                questions_lists = []
+                for x in t.questions.all().order_by("?"):
+                    questions_lists.append(x.id)
+
+                ### Создание записи тестирования
+                res = tests_results.objects.create(
+                    test=t,
+                    worker=fio.strip(),
+                    job=job.strip(),
+                    department=department.strip(),
+                    learning=False,
+                    begin=datetime.datetime.now(),
+                    ip=ip,
+                    data={
+                        'questions': questions_lists,
+                        'mistakes': [],
+                        'questions_dict': t.questions_dict()
+                    }
+                )
+
+
+                ### Вопрос и список ответов
+                question_id = res.get_question_id()
+                if question_id:
+
+                    qu = questions.objects.get(pk=question_id)
+                    response_data = {"result": "next", "result_id": res.id, "question-name": qu.name,
+                                     "answers": qu.get_answers_html(), "question_id": question_id,
+                                     "question_list": res.get_question_list() }
+                ### Пустой тест - без вопросов
+                else:
+                    response_data = {"result": "end"}
+
+
+
 
 
 
