@@ -1,6 +1,7 @@
 #coding:utf8
 
 import json
+import csv
 import logging
 from django.core.management.base import BaseCommand, CommandError
 from iss.equipment.models import agregators,scan_iplist,devices_ip,footnodes
@@ -228,7 +229,6 @@ class Command(BaseCommand):
 
         """
             Вывод данных ipaddress, модель устрройства, номер договора
-        """
 
 
         from iss.inventory.models import logical_interfaces_prop,netelems,devices
@@ -246,3 +246,19 @@ class Command(BaseCommand):
                 for device in addr.devices_set.all():
                     str = u"{ip};{model};{address};\n".format(address=device.getaddress(), ip=u" ".join(device.get_manage_ip()), model=device.device_scheme.name)
                     f.write(str.encode("utf-8"))
+
+        """
+
+
+        import numpy as np
+
+        #arr = np.array([], dtype=np.string_)
+
+        with open('iss/equipment/csv/devices-krsk.csv') as csvfile:
+            spamreader = csv.reader(csvfile,delimiter=";")
+            next(spamreader, None)
+            for row in spamreader:
+                #arr = np.append(arr,row[10])
+                pass
+
+        #print len(arr)

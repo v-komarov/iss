@@ -234,7 +234,7 @@ def get_json(request):
 
             test_id = request.GET["test_id"]
             t = tests.objects.get(pk=int(test_id, 10))
-            fio = request.GET["fio"].strip()
+            fio = ' '.join(request.GET["fio"].strip().split())
             job = request.GET["job"].strip()
             department = request.GET["department"].strip()
             ip = get_client_ip(request)
