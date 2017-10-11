@@ -305,7 +305,8 @@ def get_json(request):
                     "combo": Combo_List(d,request),
                     "properties": properties_list(d,request),
                     "statuses": statuses_list(d,request),
-                    "removal": removal_list(d,request)
+                    "removal": removal_list(d,request),
+                    "netelems":d.get_netelems()
                 }
                 response_data = {"result": data}
             else:

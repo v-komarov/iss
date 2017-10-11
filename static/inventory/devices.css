@@ -28,7 +28,9 @@ table[group=slots] > thead > tr > th {
 }
 
 
-table[group=slots],table[group=ports],table[group=combo],table[group=statuses],table[group=removal],table[group=properties],table[group=device-parents],table[group=device-children] {
+table[group=slots],table[group=ports],table[group=combo],
+table[group=statuses],table[group=removal],table[group=properties],
+table[group=device-parents],table[group=device-children], table[group=netelems] {
     margin-top:20px;
 }
 
@@ -96,11 +98,13 @@ form#editpropform > table > tbody > tr > td:nth-child(1) > label:nth-child(1) {
 
 
 /* Для всех ссылок*/
-table[group=devices] > tbody > tr > td > a {
+table[group=devices] > tbody > tr > td > a,
+table[group=netelems] > tbody > tr > td > a {
     text-decoration:none;
 }
 
-table[group=devices] > tbody > tr > td > a:hover {
+table[group=devices] > tbody > tr > td > a:hover,
+table[group=netelems] > tbody > tr > td > a {
     text-decoration:none;
 }
 
@@ -108,6 +112,7 @@ table[group=devices] > tbody > tr > td > a:hover {
 
 
 /* Курсор */
-table[group=devices] > tbody > tr > td > a {
+table[group=devices] > tbody > tr > td > a,
+table[group=netelems] > tbody > tr > td > a {
     cursor:pointer;
 }

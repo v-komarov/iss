@@ -250,15 +250,21 @@ class Command(BaseCommand):
         """
 
 
-        import numpy as np
+        ipaddress = []
 
-        #arr = np.array([], dtype=np.string_)
+
+
+        for d in devices.objects.all():
+            ip = d.get_manage_ip()
+            ipaddress.append(",".join(ip))
+
 
         with open('iss/equipment/csv/devices-krsk.csv') as csvfile:
-            spamreader = csv.reader(csvfile,delimiter=";")
-            next(spamreader, None)
-            for row in spamreader:
-                #arr = np.append(arr,row[10])
-                pass
+            with open('iss/equipment/csv/devices-krsk-2.csv', 'wb') as csvfile2:
+                spamreader = csv.reader(csvfile,delimiter=";")
+                spamwriter = csv.writer(csvfile2,delimiter=";")
+                next(spamreader, None)
+                for row in spamreader:
+                    if row[0] not in ipaddress:
+                        spamwriter.writerow(row)
 
-        #print len(arr)

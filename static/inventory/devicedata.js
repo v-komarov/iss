@@ -21,6 +21,11 @@ $(document).ready(function() {
     $("#page-properties table[group=properties] tbody").on("click", "a", EditProp);
 
 
+    // Переход в интерфейс редактирования сетевого элемента
+    $("#page-netelems table[group=netelems] tbody").on("click", "a", EditNetelems);
+
+
+
     // Установка статуса устройства
     $("#set-device-status").bind("click", SetDeviceStatus);
 
@@ -103,6 +108,7 @@ function ChangeNav(e) {
     $("#nav-removal").toggleClass("active",false);
     $("#nav-parents").toggleClass("active",false);
     $("#nav-properties").toggleClass("active",false);
+    $("#nav-netelems").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -113,6 +119,7 @@ function ChangeNav(e) {
     $("#page-removal").hide();
     $("#page-parents").hide();
     $("#page-properties").hide();
+    $("#page-netelems").hide();
 
     // Название отображаемой страницы (на закладке)
     var a = $(this).parent("li").attr("id").split("-");
@@ -267,6 +274,18 @@ function ShowDeviceData() {
             });
 
 
+            // Связанные с устройством сетевые элементы
+            $("table[group=netelems] tbody").empty();
+            $.each(data["result"]["netelems"], function(key,value) {
+
+
+                var t = "<tr row_id=" + value["id"] +">"
+                +"<td><a>"+value['name']+"</a></td>"
+                +"</tr>";
+
+                $("table[group=netelems] tbody").append(t);
+
+            });
 
 
 
@@ -676,4 +695,17 @@ function DeviceRemoval(e) {
 
 }
 
+
+
+// переход в форму редактирования сетевого элемента
+function EditNetelems(e) {
+
+    var netelem_id = $(this).parents("tr").attr("row_id");
+    var jqxhr = $.getJSON("/inventory/jsondata?savenetelem="+netelem_id,
+    function(data) {
+        win2 = window.open("/inventory/netelementdata/","netelem");
+
+    })
+
+}
 
