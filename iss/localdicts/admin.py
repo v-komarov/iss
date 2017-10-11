@@ -36,6 +36,7 @@ class AddressCityAdmin(admin.ModelAdmin):
     fields = ('name',)
     list_display = ('name',)
     search_fields = ['name']
+    ordering = ['name',]
 
 
 class AddressStreetAdmin(admin.ModelAdmin):
@@ -43,7 +44,7 @@ class AddressStreetAdmin(admin.ModelAdmin):
     fields = ('name',)
     list_display = ('name',)
     search_fields = ['name']
-
+    ordering = ['name',]
 
 
 class AddressHouseAdmin(admin.ModelAdmin):
@@ -52,7 +53,6 @@ class AddressHouseAdmin(admin.ModelAdmin):
     list_display = ('city','street','house','iss_address_id')
     search_fields = ['street','city','house']
     list_filter = ('city','street')
-
 
 
 
