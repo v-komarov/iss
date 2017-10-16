@@ -215,7 +215,7 @@ function ListDevice(e) {
             $.each(data["device_list"], function(key,value) {
 
 
-                var t = "<tr device_id=" + value["id"] +">"
+                var t = "<tr style=\"background-color: moccasin;\" device_id=" + value["id"] +">"
                 +"<td><a device_id=\""+value['id']+"\">"+value['name']+"</a></td>"
                 +"<td><a device_id=\""+value['id']+"\">"+value['serial']+"</a></td>"
                 +"<td><a device_id=\""+value['id']+"\">"+value['address_city']+" "+value['address_street']+" "+value['address_house']+"<a></td>"
@@ -258,7 +258,7 @@ function ListInterfacesData() {
                 }
 
                 // Данные по интерфейсам
-                var t = "<tr interface_id=" + value["interface_id"] +">"
+                var t = "<tr style=\"background-color: palegreen;\" interface_id=" + value["interface_id"] +">"
                 +"<td>"+value['interface_name']+"</td>"
                 +"<td>"+value['interface_comment']+"</td>"
                 +"<td>"+devices+"</td>"
@@ -275,8 +275,8 @@ function ListInterfacesData() {
 
                 // Формирование отображения свойств логического интерфейса
                 $.each(value["props"], function(k,v) {
-                    var tt = "<tr interface_id=" + v["interface_id"] + " prop_id=" + v["prop_id"] + " prop_select_id=" +v["prop_select_id"]+">"
-                    +"<td></td>"
+                    var tt = "<tr style=\"background-color: paleturquoise;\" interface_id=" + v["interface_id"] + " prop_id=" + v["prop_id"] + " prop_select_id=" +v["prop_select_id"]+">"
+                    +"<td>"+value['interface_name']+"&#128736;</td>"
                     +"<td></td>"
                     +"<td></td>"
                     +"<td></td>"

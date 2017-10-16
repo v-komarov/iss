@@ -79,6 +79,7 @@
           <li id="menuregionsreestr" {% if request.path|slice:'0:16' == "/regions/reestr/" %}class="active"{% endif %}><a href="/regions/reestr/page/1/">Реестр</a></li>
          {# <li id="menuregionsdocs" {% if request.path|slice:'0:14' == "/regions/docs/" %}class="active"{% endif %}><a href="/regions/docs/">Документы</a></li> #}
           <li id="menuregionsproj" {% if request.path|slice:'0:14' == "/regions/proj/" %}class="active"{% endif %}><a href="/regions/proj/page/1/">Проекты</a></li>
+          <li id="menureestrproj" {% if request.path|slice:'0:20' == "/regions/reestrproj/" %}class="active"{% endif %}><a href="/regions/reestrproj/page/1/">Реестр проектов</a></li>
         </ul>
       </li>
       <li class="dropdown">

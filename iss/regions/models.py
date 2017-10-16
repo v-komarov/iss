@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp
+from iss.localdicts.models import regions, address_city, proj_temp, address_house
 
 
 
@@ -481,3 +481,37 @@ class proj_notes(models.Model):
 
     def __unicode__(self):
         return self.note
+
+
+
+
+
+
+
+#### Реестр проектов
+class reestr_proj(models.Model):
+    proj_kod = models.CharField(max_length=100, verbose_name='Код проекта')
+    region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион')
+    proj_name = models.CharField(max_length=100, verbose_name='Название проекта')
+    addresses = models.ManyToManyField(address_house)
+    author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор проекта')
+
+
+    def get_absolute_url(self):
+        return reverse('parent-detail', kwargs={'pk': str(self.parent.pk)})
+
+
+
+
+
+### Файлы реестра проекта
+class reestr_proj_files(models.Model):
+    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
+    reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
+    filename = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_load = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.filename
+

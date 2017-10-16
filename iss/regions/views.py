@@ -24,10 +24,11 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic.base import TemplateView,RedirectView
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 
 from iss.localdicts.models import regions, address_city
-from iss.regions.models import orders, reestr, proj, proj_stages
+from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj
 from iss.regions.forms import ProjForm, ProjForm2, StageForm
 
 from iss.mydecorators import group_required,anonymous_required
@@ -366,3 +367,80 @@ class TaskList(ListView):
 
 
 
+
+
+
+
+### реестр проектов (таблица - список)
+class ReestrProjList(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/reestrprojlist.html"
+
+    paginate_by = 100
+
+
+
+    #@method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+            data = reestr_proj.objects.order_by("-id")
+
+            return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(ReestrProjList, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+
+        return context
+
+
+
+
+
+
+### Добавление реестра проекта
+class ReestrProjAdd(CreateView):
+    model = reestr_proj
+    fields = ['proj_kod','region','proj_name']
+    success_url = '/regions/reestrproj/page/1/'
+    template_name = "regions/reestrprojadd.html"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        #form.instance.rowsum = form.instance.price * form.instance.count
+        return super(ReestrProjAdd, self).form_valid(form)
+
+
+
+
+
+### Изменение реестра проекта
+class ReestrProjEdit(UpdateView):
+    model = reestr_proj
+    fields = ['proj_kod','region','proj_name']
+    template_name = "regions/reestrprojedit.html"
+    success_url = '/regions/reestrproj/edit/1/'
+
+
+    def form_valid(self, form):
+        #form.instance.rowsum = form.instance.price * form.instance.count
+        return super(ReestrProjEdit, self).form_valid(form)

@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<link href="{{ MY_STATIC_URL }}regions/reestrprojlist.css" type="text/css" rel="stylesheet">
+
+
+{% include "menu.html" %}
+
+<div class="row">
+
+    <div class="row col-md-8 col-md-2-offset">
+
+        <h3>Создание проекта</h3>
+
+        <form id="reestr-proj-add" method="POST">{% csrf_token %}
+
+            <table class="small">
+            <tbody>
+
+                {{ form.as_table }}
+
+
+                <tr><td></td><td><button type="submit" class="btn btn-default">Сохранить</button></td></tr>
+
+
+            </tbody>
+            </table>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
