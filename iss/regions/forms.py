@@ -2,7 +2,7 @@
 
 from django.forms import ModelForm
 from django import forms
-from iss.regions.models import orders, proj, proj_stages
+from iss.regions.models import orders, proj, proj_stages, reestr_proj
 
 ### Форма ввода и отображения позиции заказа
 class OrderForm(ModelForm):
@@ -38,3 +38,10 @@ class StageForm(ModelForm):
         fields = ['stage_order', 'name', 'days', 'deferment', 'depend_on']
 
 
+
+
+### Форма создание элемента реестра проектов
+class ReestrProjCreateForm(ModelForm):
+    class Meta:
+        model = reestr_proj
+        fields = ['proj_name', 'proj_other','proj_level', 'proj_type', 'block', 'company', 'region']

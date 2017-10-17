@@ -1,14 +1,4 @@
-{% extends "index.html" %}
-
-
-{% block content %}
-
-<link href="{{ MY_STATIC_URL }}regions/reestrprojlist.css" type="text/css" rel="stylesheet">
-
-
-{% include "menu.html" %}
-
-<div class="row">
+<div id="reestr-proj-new" class="row" hidden>
 
     <div class="row col-md-8 col-md-2-offset">
 
@@ -22,9 +12,6 @@
                 {{ form.as_table }}
 
 
-                <tr><td></td><td><button type="submit" class="btn btn-default">Сохранить</button></td></tr>
-
-
             </tbody>
             </table>
 
@@ -33,6 +20,3 @@
     </div>
 
 </div>
-
-
-{% endblock %}

@@ -488,6 +488,37 @@ class regions(models.Model):
 
 
 
+
+
+### Справочник блоков
+class blocks(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Название блока'
+        verbose_name_plural = 'Названия блоков'
+
+
+### Типы проектов
+class proj_types(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Тип проекта'
+        verbose_name_plural = 'Типы проектов'
+
+
+
+
+
+
+
 ### Типовые шаблоны проектов
 class proj_temp(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)

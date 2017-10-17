@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types
 
 
 
@@ -451,7 +451,7 @@ class proj_stages(models.Model):
 
 
     def __unicode__(self):
-        return self.filename
+        return self.name
 
 
 
@@ -490,15 +490,17 @@ class proj_notes(models.Model):
 
 #### Реестр проектов
 class reestr_proj(models.Model):
-    proj_kod = models.CharField(max_length=100, verbose_name='Код проекта')
-    region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион')
+    proj_kod = models.CharField(max_length=100, default="00/0000000/0000000/00", verbose_name='Код проекта')
+    proj_other = models.CharField(max_length=10, default="000000", verbose_name='Код связи с другими системами')
+    proj_level = models.CharField(max_length=2, default="00", verbose_name='Порядковый номер подпроекта')
+    proj_type = models.ForeignKey(proj_types, on_delete=models.PROTECT, verbose_name='Тип проекта', null=True)
+    block = models.ForeignKey(blocks, on_delete=models.PROTECT, verbose_name='Блок', null=True)
+    company = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Признак МР', null=True)
+    region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
     proj_name = models.CharField(max_length=100, verbose_name='Название проекта')
     addresses = models.ManyToManyField(address_house)
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор проекта')
-
-
-    def get_absolute_url(self):
-        return reverse('parent-detail', kwargs={'pk': str(self.parent.pk)})
+    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
 
 
 

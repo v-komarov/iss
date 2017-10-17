@@ -4,6 +4,8 @@ $(document).ready(function() {
     // Управление закладками
     $("ul.nav-tabs li a").bind("click",ChangeNav);
 
+    // маска ввода
+    $("form#reestr-proj-edit #id_proj_kod").mask("99/9999999/99999999/99", {placeholder:" "});
 
 
 });
