@@ -1,7 +1,7 @@
 #!coding:utf-8
 
 from django.contrib import admin
-from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_types
+from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_types, business, passing, rates
 
 class StatusAdmin(admin.ModelAdmin):
     pass
@@ -157,6 +157,25 @@ class ProjTypesAdmin(admin.ModelAdmin):
 
 
 
+class BusinessAdmin(admin.ModelAdmin):
+    fields = ('name',)
+    list_display = ('name',)
+
+
+
+class PassingAdmin(admin.ModelAdmin):
+    fields = ('name',)
+    list_display = ('name',)
+
+
+
+
+class RatesAdmin(admin.ModelAdmin):
+    fields = ('name',)
+    list_display = ('name',)
+
+
+
 
 admin.site.register(TzList)
 admin.site.register(Status,StatusAdmin)
@@ -182,3 +201,8 @@ admin.site.register(regions, RegionsAdmin)
 admin.site.register(proj_temp, ProjTempAdmin)
 admin.site.register(blocks, BlocksAdmin)
 admin.site.register(proj_types, ProjTypesAdmin)
+admin.site.register(business, BusinessAdmin)
+admin.site.register(passing, PassingAdmin)
+admin.site.register(rates, RatesAdmin)
+
+

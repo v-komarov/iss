@@ -29,7 +29,7 @@ from django.core.urlresolvers import reverse
 
 from iss.localdicts.models import regions, address_city
 from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj
-from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm
+from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -440,9 +440,22 @@ class ReestrProjAdd(CreateView):
 ### Изменение реестра проекта
 class ReestrProjEdit(UpdateView):
     model = reestr_proj
-    fields = ['proj_kod','region','proj_name']
+    form_class = ReestrProjUpdateForm
     template_name = "regions/reestrproj/reestrprojedit.html"
     success_url = '/regions/reestrproj/reestrproj/edit/1/'
+
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ReestrProjEdit, self).dispatch(request, *args, **kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        context = super(ReestrProjEdit, self).get_context_data(**kwargs)
+        context["proj"] = self.get_object()
+        return context
 
 
     def form_valid(self, form):

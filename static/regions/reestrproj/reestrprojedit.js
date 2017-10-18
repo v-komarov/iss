@@ -7,6 +7,9 @@ $(document).ready(function() {
     // маска ввода
     $("form#reestr-proj-edit #id_proj_kod").mask("99/9999999/99999999/99", {placeholder:" "});
 
+    // Виджет для даты
+    $("dl dd #id_date_service").datepicker($.datepicker.regional['ru']);
+
 
 });
 
@@ -24,6 +27,9 @@ function ChangeNav(e) {
     $("#nav-2").toggleClass("active",false);
     $("#nav-3").toggleClass("active",false);
     $("#nav-4").toggleClass("active",false);
+    $("#nav-5").toggleClass("active",false);
+    $("#nav-6").toggleClass("active",false);
+    $("#nav-7").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -31,6 +37,9 @@ function ChangeNav(e) {
     $("#page-2").hide();
     $("#page-3").hide();
     $("#page-4").hide();
+    $("#page-5").hide();
+    $("#page-6").hide();
+    $("#page-7").hide();
 
 
     // Название отображаемой страницы (на закладке)

@@ -10,25 +10,49 @@
 
 <div class="row">
 
-    <div class="row col-md-8 col-md-2-offset">
+    <div id="proj-common" class="row col-md-8 col-md-2-offset">
 
         <h3>Карточка проекта</h3>
 
-        <form id="reestr-proj-edit" method="POST">{% csrf_token %}
+            <div class="small col-md-3">
+                    <dl>
+                        <dt>{{ form.proj_kod.label }}</dt>
+                        <dd>{{ form.proj_kod }}</dd>
+                        <dt>{{ form.proj_init.label }}</dt>
+                        <dd>{{ form.proj_init }}</dd>
+                        <dt>{{ form.proj_type.label }}</dt>
+                        <dd>{{ form.proj_type }}</dd>
+                        <dt>{{ form.proj_other.label }}</dt>
+                        <dd>{{ form.proj_other }}</dd>
+                        <dt>{{ form.proj_level.label }}</dt>
+                        <dd>{{ form.proj_level }}</dd>
+                    </dl>
+            </div>
+            <div class="small col-md-5 col-md-1-offset">
+                    <dl>
+                        <dt>{{ form.proj_name.label }}</dt>
+                        <dd>{{ form.proj_name }}</dd>
+                        <dt>{{ form.comment.label }}</dt>
+                        <dd>{{ form.comment }}</dd>
+                    </dl>
+            </div>
+            <div class="small col-md-3 col-md-1-offset">
+                    <dl>
+                        <dt>Создан</dt>
+                        <dd>{{ proj.date_create|date:"d.m.Y" }}</dd>
+                        <dt>{{ form.author.label }}</dt>
+                        <dd>{{ proj.author.get_full_name }}</dd>
+                        <dt>{{ form.executor.label }}</dt>
+                        <dd>{{ form.executor }}</dd>
+                        <dt>{{ form.business.label }}</dt>
+                        <dd>{{ form.business }}</dd>
+                        <dt>Дата оказания услуги</dt>
+                        <dd><input id="id_date_service" maxlength="100" value="{{ proj.date_service|date:'d.m.Y' }}" name="date_service"  type="text" /></dd>
+                    </dl>
+            </div>
 
-            <table class="small">
-            <tbody>
+        <button type="button" class="btn btn-default btn-xs">Сохранить</button>
 
-                {{ form.as_table }}
-
-
-                <tr><td></td><td><button type="button" class="btn btn-default btn-xs">Сохранить</button></td></tr>
-
-
-            </tbody>
-            </table>
-
-        </form>
 
     </div>
 
@@ -37,10 +61,13 @@
 
     <div class="row col-md-8 col-md-offset-1 small">
         <ul class="nav nav-tabs">
-          <li id="nav-1" role="presentation" class="active"><a href="#">Показатели</a></li>
-          <li id="nav-2" role="presentation"><a href="#">Стадии реализации</a></li>
-          <li id="nav-3" role="presentation"><a href="#">Материалы</a></li>
-          <li id="nav-4" role="presentation"><a href="#">Работы</a></li>
+          <li id="nav-1" role="presentation" class="active"><a href="#">Общие</a></li>
+          <li id="nav-2" role="presentation"><a href="#">Показатели</a></li>
+          <li id="nav-3" role="presentation"><a href="#">Стадии</a></li>
+          <li id="nav-4" role="presentation"><a href="#">Документы</a></li>
+          <li id="nav-5" role="presentation"><a href="#">Исполнители</a></li>
+          <li id="nav-6" role="presentation"><a href="#">Даты</a></li>
+          <li id="nav-7" role="presentation"><a href="#">Коментарии</a></li>
         </ul>
     </div>
 
@@ -54,6 +81,9 @@
 {% include "regions/reestrproj/reestrprojedit2.html" %}
 {% include "regions/reestrproj/reestrprojedit3.html" %}
 {% include "regions/reestrproj/reestrprojedit4.html" %}
+{% include "regions/reestrproj/reestrprojedit5.html" %}
+{% include "regions/reestrproj/reestrprojedit6.html" %}
+{% include "regions/reestrproj/reestrprojedit7.html" %}
 
 
 {% endblock %}

@@ -8,3 +8,53 @@ form#reestr-proj-edit > table > tbody > tr > td > select {
     width: 300px;
 }
 
+/* интерфейс общих данных */
+#proj-common {
+	border-color: brown;
+	border-style: solid;
+	border-width: thin;
+	margin: 7px;
+}
+
+input, select {
+    width: 100%;
+
+}
+
+input#id_proj_name, textarea#id_comment {
+    width: 100%;
+}
+
+/* Отступы */
+#page-1 {
+    margin-top: 20px;
+}
+
+
+/* page-1 */
+input#id_contragent, textarea#id_addresses, textarea#id_links {
+    width: 100%;
+}
+
+#page-1 {
+	border-color: green;
+	border-style: solid;
+	border-width: thin;
+	margin: 7px;
+}
+
+
+table[group=addresses] > thead > tr > th,
+table[group=links] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+table[group=addresses] > tbody > tr > td,
+table[group=links] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+

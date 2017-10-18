@@ -15,9 +15,10 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes
-from iss.localdicts.models import regions, proj_temp
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj
+from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
+
 
 
 
@@ -764,6 +765,37 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+
+        ### Создание нового реестра - проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-create':
+
+            name = data["name"].strip()
+            other = data["other"].strip()
+            level = data["level"].strip()
+
+            proj_type = None if data["proj_type"] == "" else proj_types.objects.get(pk=int(data["proj_type"],10))
+            region = None if data["region"] == "" else regions.objects.get(pk=int(data["region"],10))
+            block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
+            proj_init = None if data["proj_init"] == "" else address_companies.objects.get(pk=int(data["proj_init"],10))
+
+            rand = random.randint(11111111,99999999)
+            proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other=other, level=level, proj_init= "00" if proj_init == None else "0%s" % proj_init.id)
+
+            rp = reestr_proj.objects.create(
+                proj_kod = proj_kod,
+                proj_name = name,
+                proj_type = proj_type,
+                proj_other = other,
+                proj_level = level,
+                region = region,
+                block = block,
+                proj_init = proj_init,
+                author = request.user
+            )
+
+            response_data = {"result": "ok", "id": rp.id}
 
 
 

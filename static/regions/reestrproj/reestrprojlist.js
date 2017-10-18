@@ -65,15 +65,18 @@ function AddProj(e) {
 
 
                 // Проверка значений
-                if ( $("#id_name").val() != "" && $("#id_temp").val() != "" && $("#id_start").val() != "" ) {
+                if ( $("form#reestr-proj-add #id_proj_name").val() != "" && $("form#reestr-proj-add #id_proj_other").val() != "" && $("form#reestr-proj-add #id_proj_level").val() != "" ) {
 
-                    /*
                     var data = {};
-                    data.name = $("form#add-proj #id_name").val();
-                    data.start = $("form#add-proj #id_start").val();
-                    data.temp = $("form#add-proj #id_temp").val();
+                    data.name = $("form#reestr-proj-add #id_proj_name").val();
+                    data.other = $("form#reestr-proj-add #id_proj_other").val();
+                    data.level = $("form#reestr-proj-add #id_proj_level").val();
+                    data.proj_init = $("form#reestr-proj-add #id_proj_init").val();
+                    data.proj_type = $("form#reestr-proj-add #id_proj_type").val();
+                    data.region = $("form#reestr-proj-add #id_region").val();
+                    data.block = $("form#reestr-proj-add #id_block").val();
 
-                    data.action = "create-proj";
+                    data.action = "reestrproj-create";
 
 
                     $.ajax({
@@ -82,11 +85,11 @@ function AddProj(e) {
                       dataType: 'json',
                       data:$.toJSON(data),
                         success: function(result) {
-                            if (result["result"] == "ok") { $("#projnew").dialog('close'); location.reload(); }
+                            if (result["result"] == "ok") { $("#reestr-proj-new").dialog('close'); window.location.href = "/regions/reestrproj/edit/"+result["id"]+"/"; }
                         }
 
                     });
-                    */
+
 
                 }
                 else { alert("Заполните поля!"); }

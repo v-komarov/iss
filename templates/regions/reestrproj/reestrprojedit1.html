@@ -1,4 +1,48 @@
-<div id="page-1" class="row">
+<div id="page-1" class="row small col-md-8">
 
-    page-1
+    <div class="row col-md-5 col-md-1-offset">
+
+        <dl>
+            <dt>{{ form.contragent.label }}</dt>
+            <dd>{{ form.contragent }}</dd>
+            <dt>Адресный перечень <button id="add-address" title="Добавить адрес" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></dt>
+            <dd>
+                <table group="addresses" class="table table-bordered table-striped draggable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Город</th>
+                            <th>Улица</th>
+                            <th>Дом</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </dd>
+            <dt>Ссылки <button id="add-link" title="Добавить ссылку" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></dt>
+            <dd>
+                <table group="links" class="table table-bordered table-striped draggable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>url</th>
+                            <th>Коментарий</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </dd>
+        </dl>
+
+    </div>
+
+
+    <div class="small col-md-3 col-md-1-offset">
+        <dl>
+            <dt>{{ form.rates.label }}</dt>
+            <dd>{{ form.rates }}</dd>
+            <dt>{{ form.passing.label }}</dt>
+            <dd>{{ form.passing }}</dd>
+        </dl>
+    </div>
+
+
 </div>

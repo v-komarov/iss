@@ -516,6 +516,45 @@ class proj_types(models.Model):
 
 
 
+### Направление бизнеса
+class business(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Направление бизнеса'
+        verbose_name_plural = 'Направления бизнеса'
+
+
+
+
+### Признак переходящего проекта
+class passing(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Признак переходящего проекта'
+        verbose_name_plural = 'Признаки переходящего проекта'
+
+
+
+
+### Варианты доходности
+class rates(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Доходность'
+        verbose_name_plural = 'Доходности'
+
 
 
 

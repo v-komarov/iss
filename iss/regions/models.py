@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates
 
 
 
@@ -216,7 +216,7 @@ class proj(models.Model):
     datetime_create = models.DateTimeField(null=True, auto_now_add=True)
 
     def __unicode__(self):
-        return self.filename
+        return self.name
 
 
     ### Создание словаря из этапов проекта
@@ -495,13 +495,23 @@ class reestr_proj(models.Model):
     proj_level = models.CharField(max_length=2, default="00", verbose_name='Порядковый номер подпроекта')
     proj_type = models.ForeignKey(proj_types, on_delete=models.PROTECT, verbose_name='Тип проекта', null=True)
     block = models.ForeignKey(blocks, on_delete=models.PROTECT, verbose_name='Блок', null=True)
-    company = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Признак МР', null=True)
     region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
     proj_name = models.CharField(max_length=100, verbose_name='Название проекта')
     addresses = models.ManyToManyField(address_house)
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор проекта')
-    datetime_create = models.DateTimeField(auto_now_add=True, null=True)
+    proj_init = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Инициатор проекта', null=True)
+    executor = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Реализатор проекта', null=True, related_name="executor_company")
+    business = models.ForeignKey(business, on_delete=models.PROTECT, verbose_name='Направление бизнеса', null=True)
+    comment = models.TextField(verbose_name='Описание проекта', default="", null=True)
+    contragent = models.CharField(max_length=100, default="", verbose_name='Контрагент')
+    passing = models.ForeignKey(passing, on_delete=models.PROTECT, verbose_name='Признак переходящего проекта', null=True)
+    rates = models.ForeignKey(rates, on_delete=models.PROTECT, verbose_name='Доходность', null=True)
+    date_create = models.DateField(auto_now_add=True, null=True)
+    date_service = models.DateField(verbose_name='Дата оказания услуги', null=True)
 
+
+    def __unicode__(self):
+        return self.proj_kod
 
 
 
