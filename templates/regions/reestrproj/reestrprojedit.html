@@ -6,7 +6,13 @@
 <link href="{{ MY_STATIC_URL }}regions/reestrproj/reestrprojedit.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="{{ MY_STATIC_URL }}regions/reestrproj/reestrprojedit.js"></script>
 
-{% include "menu.html" %}
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
 
 <div class="row">
 
@@ -85,5 +91,7 @@
 {% include "regions/reestrproj/reestrprojedit6.html" %}
 {% include "regions/reestrproj/reestrprojedit7.html" %}
 
+
+<iframe name="uploadframe" hidden></iframe>
 
 {% endblock %}

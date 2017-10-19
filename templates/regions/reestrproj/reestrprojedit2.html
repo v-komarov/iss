@@ -1,4 +1,20 @@
-<div id="page-2" class="row" hidden>
+<div id="page-2" class="row small" hidden>
 
-    page-2
+    <div>
+
+        <form action="/regions/reestrproj/upload-p2/" id="uploadfile" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="form-group">
+                <input id="upload_file" name="file" type="file">
+                <input type="hidden" id="reestrproj_id" name="reestrproj" value={{ proj.id }} />
+            </div>
+            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+
+        </form>
+
+        <div id="exceltable" class="row col-md-8"></div>
+
+    </div>
+
 </div>
+

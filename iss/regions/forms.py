@@ -57,3 +57,5 @@ class ReestrProjUpdateForm(ModelForm):
         fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_type', 'proj_init', 'proj_kod',
                   'proj_name', 'proj_other', 'proj_level', 'proj_type', 'block', 'region', 'author', 'executor',
                   'comment']
+
+

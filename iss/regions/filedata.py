@@ -409,3 +409,29 @@ def projgant(request,project):
     canvas.print_png(response)
 
     return response
+
+
+
+
+
+### Загрузка файла (реестр проектов закладка показателей)
+def uploadfile_page2(request):
+
+    if request.method == 'POST':
+
+        if request.POST.has_key("reestrproj") and request.FILES.has_key("file"):
+
+            reestrproj = request.POST["reestrproj"]
+
+            filename = request.FILES['file'].name
+            filedata = request.FILES['file'].read()
+
+
+
+    return HttpResponse("""
+    <html><head><script type="text/javascript">
+        window.top.ClearUpload();
+    </script></head></html>
+    """)
+
+

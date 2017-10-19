@@ -58,3 +58,25 @@ table[group=links] > tbody > tr > td {
     vertical-align: top;
 }
 
+
+/* Загрузка файла на закладке 2 */
+#page-2 > form > div.row.col-md-5.col-md-1-offset > input#id_file {
+    width: 80%;
+}
+
+form#uploadfile {
+    padding-top: 5px;
+}
+
+#exceltable {
+    overflow-x: scroll; /* Добавляем полосу прокрутки */
+    height: 300px; /* Высота блока */
+    padding: 5px; /* Поля вокруг текста */
+    border: solid 1px green; /* Параметры рамки */
+    white-space: nowrap; /* Запрещаем перенос строк */
+    margin-top: 10px;
+}
+
+div#page-2.row.small > div {
+    margin-left:7px;
+}

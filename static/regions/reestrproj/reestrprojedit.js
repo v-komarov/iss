@@ -16,6 +16,14 @@ $(document).ready(function() {
 
 
 
+// Очистка поля ввода загружаемого файла
+function ClearUpload() {
+
+    $("form#uploadfile input#upload_file").val("");
+
+}
+
+
 
 
 // Переключение закладок
