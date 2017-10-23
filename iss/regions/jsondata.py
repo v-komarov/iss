@@ -15,7 +15,7 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files
 from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
@@ -446,6 +446,43 @@ def get_json(request):
             stage = proj_stages.objects.get(pk=row_id)
 
             response_data = {"result": "ok", "comment": stage.problem["comment"], "problem": 1 if stage.problem["problem"] == True else 0 }
+
+
+
+
+        ### Реестр проектов : список загруженных в hdfs файлов
+        if r.has_key("action") and rg("action") == 'get-reestrproj-hdfs-files':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            datafiles = []
+            for row in reestr_proj_files.objects.filter(reestr_proj=reestrproj).order_by("-datetime_load"):
+                datafiles.append({
+                    "file_id": row.id,
+                    "filename": row.filename,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_load.strftime("%d.%m.%Y")
+                })
+
+            response_data = {"result": "ok", "data": datafiles }
+
+
+
+
+
+
+        ### Реестр проектов удаление вложеного файла
+        if r.has_key("action") and rg("action") == 'reestrproj-hdfs-delete-file':
+            file_id = request.GET["file_id"]
+
+            reestr_proj_files.objects.get(pk=file_id).delete()
+
+            client = Client('10.6.0.135', 9000)
+            for x in client.delete(['/projects/%s' % file_id,], recurse=True):
+                print x
+
+
+            response_data = { "result": "ok" }
+
 
 
 

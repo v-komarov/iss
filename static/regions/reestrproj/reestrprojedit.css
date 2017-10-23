@@ -45,7 +45,8 @@ input#id_contragent, textarea#id_addresses, textarea#id_links {
 
 
 table[group=addresses] > thead > tr > th,
-table[group=links] > thead > tr > th {
+table[group=links] > thead > tr > th,
+table[group=file-list] > thead > tr > th {
     background-color:#DCDCDC;
     padding: 0;
     text-align: left;
@@ -53,7 +54,8 @@ table[group=links] > thead > tr > th {
 }
 
 table[group=addresses] > tbody > tr > td,
-table[group=links] > tbody > tr > td {
+table[group=links] > tbody > tr > td,
+table[group=file-list] > tbody > tr > td {
     padding: 0;
     vertical-align: top;
 }
@@ -64,7 +66,8 @@ table[group=links] > tbody > tr > td {
     width: 80%;
 }
 
-form#uploadfile {
+form#uploadfile,
+form#uploadfilehdfs {
     padding-top: 5px;
 }
 
@@ -77,6 +80,11 @@ form#uploadfile {
     margin-top: 10px;
 }
 
-div#page-2.row.small > div {
+div#page-2.row.small > div,
+div#page-4.row.small {
     margin-left:7px;
+}
+
+table[group=file-list] {
+    margin-top :5px;
 }

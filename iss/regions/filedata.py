@@ -13,6 +13,9 @@ import datetime
 
 from operator import itemgetter
 
+import pandas as pd
+from pandas import ExcelFile
+
 from matplotlib import rc
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
@@ -25,7 +28,7 @@ import numpy as np
 
 from snakebite.client import Client
 
-from iss.regions.models import orders, load_proj_files, proj_stages, proj
+from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj
 from iss.localdicts.models import regions
 
 
@@ -168,7 +171,7 @@ def upload(request):
     f.close()
 
 
-    run = 'curl -i -X PUT -T %s -L "http://10.6.0.135:50070/webhdfs/v1/projects/%s?user.name=root&op=CREATE&overwrite=true&replication=4"' % (tf.name, rec.id)
+    run = 'curl -i -X PUT -T %s -L "http://10.6.0.135:50070/webhdfs/v1/projects/%s?user.name=root&op=CREATE&overwrite=true&replication=2"' % (tf.name, rec.id)
     os.system(run)
 
 
@@ -425,13 +428,116 @@ def uploadfile_page2(request):
 
             filename = request.FILES['file'].name
             filedata = request.FILES['file'].read()
+            #print filedata
+
+            file_extension = os.path.splitext(filename)[-1]
+
+            if file_extension != ".xls" and file_extension != ".xlsx":
+
+                return HttpResponse("""
+                <html><head><script type="text/javascript">
+                    window.top.ClearUpload();
+                    alert("Формат файла не поддерживается!");
+                </script></head></html>
+                """)
+
+            else:
+
+                #tf = tempfile.NamedTemporaryFile(delete=False)
+
+                excel_data = ExcelFile(StringIO.StringIO(filedata))
+                dataframe = excel_data.parse(excel_data.sheet_names[-1], header=None)
+
+                print dataframe.fillna("")
+
+                #td = pd.read_excel(filedata)
+                #print td.head()
+
+                #os.remove(tf.name)
 
 
 
     return HttpResponse("""
     <html><head><script type="text/javascript">
-        window.top.ClearUpload();
+        window.top.ClearUploadP2();
     </script></head></html>
     """)
+
+
+
+
+
+### Загрузка файлов реестра проектов
+def uploadfile_page4(request):
+
+    reestrproj_id = request.POST["reestr_proj_id"]
+
+    reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+
+
+    filename = request.FILES['fileuploadhdfs'].name
+    filedata = request.FILES['fileuploadhdfs'].read()
+
+    rec = reestr_proj_files.objects.create(
+        reestr_proj = reestrproj,
+        filename = filename.strip(),
+        user = request.user
+    )
+
+    ### Запись во временный файл
+    tf = tempfile.NamedTemporaryFile(delete=False)
+    f = open(tf.name, 'w')
+    f.write(filedata)
+    f.close()
+
+
+    run = 'curl -i -X PUT -T %s -L "http://10.6.0.135:50070/webhdfs/v1/projects/%s?user.name=root&op=CREATE&overwrite=true&replication=2"' % (tf.name, rec.id)
+    os.system(run)
+
+
+    ### Удаление временного файла
+    os.remove(tf.name)
+
+
+    return HttpResponse("""
+    <html><head><script type="text/javascript">
+        window.top.ClearUploadP4();
+        window.top.GetListHdfsFiles();
+    </script></head></html>
+    """)
+
+
+
+
+
+
+### Получение файла реестра проектов
+def getfile2(request):
+
+    if request.method == "GET":
+        file_id = request.GET["file_id"]
+        file_name = request.GET["file_name"]
+
+
+        ### временный файл
+        tfile = "/tmp/{file_id}".format(file_id=file_id)
+
+
+        client = Client('10.6.0.135', 9000)
+        for x in client.copyToLocal(['/projects/%s' % file_id], tfile):
+            print x
+
+        f = open(tfile, 'r')
+        data = f.read()
+        f.close()
+
+        ### Удаление временного файла
+        os.remove(tfile)
+
+
+        response = HttpResponse(data, content_type="application/octet-stream")
+        response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
+        return response
 
 
