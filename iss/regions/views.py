@@ -444,7 +444,7 @@ class ReestrProjEdit(UpdateView):
     template_name = "regions/reestrproj/reestrprojedit.html"
     success_url = '/regions/reestrproj/reestrproj/edit/1/'
 
-
+    @method_decorator(login_required(login_url='/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         self.session = request.session

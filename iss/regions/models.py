@@ -528,3 +528,18 @@ class reestr_proj_files(models.Model):
     def __unicode__(self):
         return self.filename
 
+
+
+
+### Коментарии реестра проектов
+class reestr_proj_comment(models.Model):
+    comment = models.TextField(verbose_name='Коментарий', default="", null=True)
+    reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_create = models.DateTimeField(auto_now_add=True)
+
+
+    def __unicode__(self):
+        return self.comment
+
+

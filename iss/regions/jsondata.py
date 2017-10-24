@@ -15,7 +15,7 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment
 from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
@@ -488,6 +488,27 @@ def get_json(request):
 
 
 
+        ### Реестр проектов: список коментариев
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-comments':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            comment_list = []
+            for row in reestr_proj_comment.objects.filter(reestr_proj=reestrproj).order_by("-datetime_create"):
+                comment_list.append({
+                    "comment": row.comment,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_create.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": comment_list }
+
+
+
+
+
+
+
 
     if request.method == "POST":
 
@@ -833,6 +854,30 @@ def get_json(request):
             )
 
             response_data = {"result": "ok", "id": rp.id}
+
+
+
+
+
+
+        ### Добавление коментария реестра проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-comment-add':
+            reestrproj_id = data["reestrproj_id"]
+            comment = data["comment"].strip()
+
+            if comment != "":
+
+                reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id,10))
+
+                reestr_proj_comment.objects.create(
+                    reestr_proj = reestrproj,
+                    user = request.user,
+                    comment = comment
+                )
+
+            response_data = {"result": "ok"}
+
+
 
 
 

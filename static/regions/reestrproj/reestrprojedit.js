@@ -12,13 +12,104 @@ $(document).ready(function() {
 
     // Список загруженных файлов
     GetListHdfsFiles();
+    // Список коментариев
+    GetListComments();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
 
-
+    // Добавление коментария
+    $("div#page-6 button#addcomment").bind("click", AddComment);
 
 });
+
+
+
+
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+
+
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+
+
+
+// Добавление коментария
+function AddComment(e) {
+
+    // Коментарий
+    var comment = $("div#page-6 textarea#comment").val();
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+
+    var data = {};
+    data.comment = comment;
+    data.reestrproj_id = reestrproj_id;
+
+    data.action = "reestrproj-comment-add";
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+
+    $.ajax({
+      url: "/regions/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
+            if (result["result"] == "ok") {
+
+                // Очистка поля ввода
+                $("div#page-6 textarea#comment").val("");
+                GetListComments();
+
+            }
+        }
+
+    });
+
+}
+
+
+
+
+
+
 
 
 
@@ -104,6 +195,43 @@ function GetListHdfsFiles() {
 
 }
 
+
+
+
+
+// Список коментраиев
+function GetListComments() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-reestrproj-list-comments&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка загруженных файлов
+            $("table[group=comment-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr>"
+                +"<td>"+value['date']+"</td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td>"+value['user']+"</td>"
+                +"</tr>";
+
+                $("table[group=comment-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
 
 
 

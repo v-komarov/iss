@@ -46,7 +46,8 @@ input#id_contragent, textarea#id_addresses, textarea#id_links {
 
 table[group=addresses] > thead > tr > th,
 table[group=links] > thead > tr > th,
-table[group=file-list] > thead > tr > th {
+table[group=file-list] > thead > tr > th,
+table[group=comment-list] > thead > tr > th {
     background-color:#DCDCDC;
     padding: 0;
     text-align: left;
@@ -55,7 +56,8 @@ table[group=file-list] > thead > tr > th {
 
 table[group=addresses] > tbody > tr > td,
 table[group=links] > tbody > tr > td,
-table[group=file-list] > tbody > tr > td {
+table[group=file-list] > tbody > tr > td,
+table[group=comment-list] > tbody > tr > td {
     padding: 0;
     vertical-align: top;
 }
@@ -85,6 +87,22 @@ div#page-4.row.small {
     margin-left:7px;
 }
 
-table[group=file-list] {
+table[group=file-list],
+table[group=comment-list] {
     margin-top :5px;
+}
+
+
+div#page-6.row.small > div.row.col-md-8 > form.form-inline > div.form-group > label,
+div#page-6.row.small > div.row.col-md-8 > form.form-inline > button.btn.btn-default.btn-xs {
+    vertical-align: top;
+}
+
+div#page-6.row.small > div.row.col-md-8 > form.form-inline {
+    margin-top: 5px;
+}
+
+
+div#page-6.row.small > div.row.col-md-8 > form.form-inline > div.form-group > textarea#comment.form-control.small {
+    width: 600px;
 }

@@ -1,4 +1,31 @@
-<div id="page-6" class="row" hidden>
+<div id="page-6" class="row small" hidden>
 
-    page-6
+    <div class="row col-md-8">
+
+        <form class="form-inline">
+          <div class="form-group">
+              <label for="comment">Коментарий</label>
+              <textarea class="form-control small" id="comment" placeholder=""></textarea>
+          </div>
+          <button type="button" id="addcomment" class="btn btn-default btn-xs">Добавить</button>
+        </form>
+
+    </div>
+
+    <div class="row col-md-8">
+
+        <table group="comment-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th width="10%">Дата</th>
+                    <th>Коментарий</th>
+                    <th width="20%">Конетарий оставил</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+
 </div>
