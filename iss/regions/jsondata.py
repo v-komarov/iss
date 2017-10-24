@@ -15,8 +15,8 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment
-from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date
+from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
 
@@ -26,6 +26,8 @@ logger_proj = logging.getLogger('projects')
 
 
 
+tz = 'Asia/Krasnoyarsk'
+krsk_tz = timezone(tz)
 
 
 
@@ -507,6 +509,71 @@ def get_json(request):
 
 
 
+        ### Установка стадии реестра проекта
+        if r.has_key("action") and rg("action") == 'reestrproj-stage-add':
+            reestrproj_id = request.GET["reestrproj_id"]
+            stage_id = request.GET["stage"]
+            stage = stages_list.objects.get(pk=int(stage_id, 10))
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            if reestrproj.stage == stage:
+                response_data = {"result": "error"}
+            else:
+                reestrproj.stage = stage
+                reestrproj.save()
+
+                stages_history.objects.create(
+                    reestr_proj = reestrproj,
+                    stage = stage,
+                    user = request.user
+
+                )
+
+                response_data = {"result": "ok"}
+
+
+
+
+
+        ### Реестр проектов: список стадий
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-stages':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            stage_list = []
+            for row in stages_history.objects.filter(reestr_proj=reestrproj).order_by("-datetime_create"):
+                stage_list.append({
+                    "stage": row.stage.name,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_create.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": stage_list }
+
+
+
+
+        ### Реестр проектов: исполнителей и дат
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-tasks':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            task_list = []
+            for row in reestr_proj_exec_date.objects.filter(reestr_proj=reestrproj).order_by("-datetime_edit"):
+                task_list.append({
+                    "stage": row.stage.name,
+                    "user": row.user.get_full_name(),
+                    "date1": row.date1.strftime("%d.%m.%Y"),
+                    "date2": row.date2.strftime("%d.%m.%Y"),
+                    "date3": row.datetime_edit.strftime("%d.%m.%Y"),
+                    "worker" : row.user.get_full_name()
+                })
+
+
+            response_data = {"result": "ok", "data": task_list }
+
+
+
+
 
 
 
@@ -877,6 +944,30 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+
+
+
+        ### Создание элемента исполнителей и дат в реестре проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-task-create':
+            reestrproj_id = data["reestrproj_id"]
+            stage = None if data["stage"] == "" else stages_list.objects.get(pk=int(data["stage"],10))
+            worker = None if data["worker"] == "" else User.objects.get(pk=int(data["worker"],10))
+            date1 = None if data["date1"].strip() == "" else krsk_tz.localize(datetime.datetime.strptime(data["date1"],"%d.%m.%Y"))
+            date2 = None if data["date2"].strip() == "" else krsk_tz.localize(datetime.datetime.strptime(data["date2"],"%d.%m.%Y"))
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            reestr_proj_exec_date.objects.create(
+                reestr_proj=reestrproj,
+                user=request.user,
+                date1 = date1,
+                date2 = date2,
+                stage = stage,
+                worker = worker
+            )
+
+            response_data = {"result": "ok"}
 
 
 

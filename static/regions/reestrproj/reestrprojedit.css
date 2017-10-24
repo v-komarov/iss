@@ -47,17 +47,22 @@ input#id_contragent, textarea#id_addresses, textarea#id_links {
 table[group=addresses] > thead > tr > th,
 table[group=links] > thead > tr > th,
 table[group=file-list] > thead > tr > th,
-table[group=comment-list] > thead > tr > th {
+table[group=comment-list] > thead > tr > th,
+table[group=stages-list] > thead > tr > th,
+table[group=exec-list] > thead > tr > th {
     background-color:#DCDCDC;
     padding: 0;
     text-align: left;
     vertical-align: top;
 }
 
+
 table[group=addresses] > tbody > tr > td,
 table[group=links] > tbody > tr > td,
 table[group=file-list] > tbody > tr > td,
-table[group=comment-list] > tbody > tr > td {
+table[group=comment-list] > tbody > tr > td,
+table[group=stages-list] > tbody > tr > td,
+table[group=exec-list] > tbody > tr > td {
     padding: 0;
     vertical-align: top;
 }
@@ -88,7 +93,8 @@ div#page-4.row.small {
 }
 
 table[group=file-list],
-table[group=comment-list] {
+table[group=comment-list],
+table[group=stages-list] {
     margin-top :5px;
 }
 
@@ -106,3 +112,21 @@ div#page-6.row.small > div.row.col-md-8 > form.form-inline {
 div#page-6.row.small > div.row.col-md-8 > form.form-inline > div.form-group > textarea#comment.form-control.small {
     width: 600px;
 }
+
+div#page-3.row.small div.row.col-md-8 form.form-inline {
+    margin-top: 5px;
+}
+
+
+
+/* Курсор */
+a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+a:hover {
+    text-decoration:none;
+}
+
+

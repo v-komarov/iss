@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates, stages
 
 
 
@@ -502,6 +502,7 @@ class reestr_proj(models.Model):
     proj_init = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Инициатор проекта', null=True)
     executor = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Реализатор проекта', null=True, related_name="executor_company")
     business = models.ForeignKey(business, on_delete=models.PROTECT, verbose_name='Направление бизнеса', null=True)
+    stage = models.ForeignKey(stages, on_delete=models.PROTECT, verbose_name='Стадия проекта', null=True)
     comment = models.TextField(verbose_name='Описание проекта', default="", null=True)
     contragent = models.CharField(max_length=100, default="", verbose_name='Контрагент')
     passing = models.ForeignKey(passing, on_delete=models.PROTECT, verbose_name='Признак переходящего проекта', null=True)
@@ -513,6 +514,21 @@ class reestr_proj(models.Model):
 
     def __unicode__(self):
         return self.proj_kod
+
+
+
+
+
+### История стадий проекта
+class stages_history(models.Model):
+    reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
+    stage = models.ForeignKey(stages, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_create = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.stage.name
+
 
 
 
@@ -531,6 +547,7 @@ class reestr_proj_files(models.Model):
 
 
 
+
 ### Коментарии реестра проектов
 class reestr_proj_comment(models.Model):
     comment = models.TextField(verbose_name='Коментарий', default="", null=True)
@@ -542,4 +559,19 @@ class reestr_proj_comment(models.Model):
     def __unicode__(self):
         return self.comment
 
+
+
+
+### Исполнители и даты реестра проектов
+class reestr_proj_exec_date(models.Model):
+    date1 = models.DateField(verbose_name='Дата с', null=True)
+    date2 = models.DateField(verbose_name='Дата до', null=True)
+    stage = models.ForeignKey(stages, on_delete=models.PROTECT, null=True, verbose_name="Стадия")
+    worker = models.ForeignKey(User, on_delete=models.PROTECT, null=True, verbose_name="Исполнитель", related_name="worker")
+    reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_edit = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.stage.name
 

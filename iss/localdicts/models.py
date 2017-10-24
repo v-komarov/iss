@@ -558,6 +558,21 @@ class rates(models.Model):
 
 
 
+### Стадии реестра проектов
+class stages(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Стадия реестра проектов'
+        verbose_name_plural = 'Стадии реестра проектов'
+
+
+
+
+
 ### Типовые шаблоны проектов
 class proj_temp(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)

@@ -27,9 +27,9 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 
-from iss.localdicts.models import regions, address_city
+from iss.localdicts.models import regions, address_city, stages
 from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj
-from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm
+from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -397,9 +397,9 @@ class ReestrProjList(ListView):
 
     def get_queryset(self):
 
-            data = reestr_proj.objects.order_by("-id")
+        data = reestr_proj.objects.order_by("-id")
 
-            return data
+        return data
 
 
 
@@ -455,6 +455,8 @@ class ReestrProjEdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ReestrProjEdit, self).get_context_data(**kwargs)
         context["proj"] = self.get_object()
+        context['stages'] = stages.objects.order_by('name')
+        context['task'] = WorkersDatesStagesForm()
         return context
 
 

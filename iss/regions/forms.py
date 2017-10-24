@@ -2,7 +2,7 @@
 
 from django.forms import ModelForm
 from django import forms
-from iss.regions.models import orders, proj, proj_stages, reestr_proj
+from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date
 
 ### Форма ввода и отображения позиции заказа
 class OrderForm(ModelForm):
@@ -59,3 +59,11 @@ class ReestrProjUpdateForm(ModelForm):
                   'comment']
 
 
+
+### Форма исполнителей и дат по стадиям реестра проектов
+class WorkersDatesStagesForm(ModelForm):
+    date1 = forms.CharField(widget=forms.TextInput(), label="Дата с")
+    date2 = forms.CharField(widget=forms.TextInput(), label="Дата до")
+    class Meta:
+        model = reestr_proj_exec_date
+        fields = ['stage', 'date1', 'date2', 'worker']

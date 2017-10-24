@@ -1,4 +1,36 @@
-<div id="page-3" class="row" hidden>
+<div id="page-3" class="row small" hidden>
 
-    page-3
+    <div class="row col-md-8">
+
+        <form class="form-inline">
+          <div class="form-group">
+              <label for="stage">Стадия</label>
+              <select class="form-control input-sm" id="stage" placeholder="">
+                  <option value="">---</option>
+                  {% for st in stages %}
+                    <option value={{ st.id }}>{{ st.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <button type="button" id="addstage" class="btn btn-default btn-xs">Установить</button>
+        </form>
+
+    </div>
+
+
+    <div class="row col-md-8">
+
+        <table group="stages-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th width="10%">Дата</th>
+                    <th>Стадия</th>
+                    <th width="20%">Установил</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
 </div>
