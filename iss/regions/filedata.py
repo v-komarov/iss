@@ -428,7 +428,6 @@ def uploadfile_page2(request):
 
             filename = request.FILES['file'].name
             filedata = request.FILES['file'].read()
-            #print filedata
 
             file_extension = os.path.splitext(filename)[-1]
 
@@ -443,23 +442,25 @@ def uploadfile_page2(request):
 
             else:
 
-                #tf = tempfile.NamedTemporaryFile(delete=False)
+                rp = reestr_proj.objects.get(pk=int(reestrproj, 10))
 
                 excel_data = ExcelFile(StringIO.StringIO(filedata))
-                dataframe = excel_data.parse(excel_data.sheet_names[-1], header=None)
+                df = excel_data.parse(excel_data.sheet_names[-1], header=None)
+                df=df.fillna("")
+                ht = df.to_html(header=False,index=False, float_format=lambda x: '%10.2f' % x, classes="table table-bordered small").encode('utf-8')
 
-                print dataframe.fillna("")
+                data = rp.data
+                data["excel"] = ht
+                rp.data = data
+                rp.save()
 
-                #td = pd.read_excel(filedata)
-                #print td.head()
-
-                #os.remove(tf.name)
 
 
 
     return HttpResponse("""
     <html><head><script type="text/javascript">
         window.top.ClearUploadP2();
+        window.top.GetTableExcel();
     </script></head></html>
     """)
 

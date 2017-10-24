@@ -1,8 +1,18 @@
 #coding: utf-8
 
+
+
+
 from django.forms import ModelForm
 from django import forms
+
+from django.contrib.auth.models import User
+
+
 from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date
+
+
+
 
 ### Форма ввода и отображения позиции заказа
 class OrderForm(ModelForm):
@@ -64,6 +74,12 @@ class ReestrProjUpdateForm(ModelForm):
 class WorkersDatesStagesForm(ModelForm):
     date1 = forms.CharField(widget=forms.TextInput(), label="Дата с")
     date2 = forms.CharField(widget=forms.TextInput(), label="Дата до")
+
+    def __init__(self, *args, **kwargs):
+        super(WorkersDatesStagesForm, self).__init__(*args, **kwargs)
+        users = User.objects.order_by("first_name")
+        self.fields['worker'].choices = [(user.pk, user.get_full_name()) for user in users]
+
     class Meta:
         model = reestr_proj_exec_date
         fields = ['stage', 'date1', 'date2', 'worker']

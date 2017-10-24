@@ -20,6 +20,8 @@ $(document).ready(function() {
     GetListStages();
     // Список исполнителей и дат
     GetListTasks();
+    // Отображение excel таблицы
+    GetTableExcel();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
@@ -428,6 +430,30 @@ function GetListTasks() {
 
 }
 
+
+
+
+
+// Отображение загруженной таблицы excel
+function GetTableExcel() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-reestrproj-table-excel&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение excel таблицы
+            $("#exceltable").empty();
+            $("#exceltable").append(data["table"]);
+            $("table.dataframe tbody tr td").css("padding","1px").css("background-color","sandybrown");
+        }
+
+    })
+
+
+}
 
 
 

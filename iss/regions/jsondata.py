@@ -574,6 +574,16 @@ def get_json(request):
 
 
 
+        ### Реестр проектов: таблица excel
+        if r.has_key("action") and rg("action") == 'get-reestrproj-table-excel':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            data = reestrproj.data
+            if data.has_key('excel'):
+                response_data = {"result": "ok", "table": data["excel"]}
+            else:
+                response_data = {"result": "empty"}
+
 
 
 
