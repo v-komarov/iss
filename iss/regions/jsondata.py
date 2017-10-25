@@ -5,6 +5,7 @@ import decimal
 import datetime
 import random
 import logging
+import time
 
 from pytz import timezone
 
@@ -614,6 +615,50 @@ def get_json(request):
 
 
 
+
+        ### Реестр проектов: список ссылок
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-links':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            link_list = []
+            data = reestrproj.data
+            if data.has_key('link'):
+                for row in data['link']:
+                    link_list.append({
+                        'id':row['id'],
+                        'link':row['link'],
+                        'comment':row['comment']
+                    })
+
+
+            response_data = {"result": "ok", "data": link_list }
+
+
+
+
+
+        ### Удаление ссылки реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-link-delete':
+            row_id = request.GET["row-id"]
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            data = reestrproj.data
+            for row in data["link"]:
+                if row['id'] == int(row_id,10):
+                    data["link"].remove(row)
+
+
+            reestrproj.data = data
+            reestrproj.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
     if request.method == "POST":
 
 
@@ -1027,6 +1072,33 @@ def get_json(request):
             task.save()
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Добавление ссылки в реестре проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-link-add':
+            reestrproj_id = data["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            link = data["link"].strip()
+            comment = data["comment"].strip()
+
+            data = reestrproj.data
+            if data.has_key("link"):
+                data["link"].append({
+                    'id': int(time.time()),
+                    'link': link,
+                    'comment': comment
+                })
+            else:
+                data["link"] = [{'link':link, 'comment':comment}]
+
+            reestrproj.data = data
+            reestrproj.save()
+
+            response_data = {"result": "ok"}
+
 
 
 

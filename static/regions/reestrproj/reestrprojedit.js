@@ -22,12 +22,18 @@ $(document).ready(function() {
     GetListTasks();
     // Отображение excel таблицы
     GetTableExcel();
+    // Отображение ссылок
+    GetListLinks();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
 
     // Удаление элемента исполнители и задачи
     $("#page-5 table[group=exec-list] tbody").on("click", "a[delete-task]", DeleteTask);
+
+    // Удаление ссылки
+    $("#page-1 table[group=links] tbody").on("click", "a[delete-link]", DeleteLink);
+
 
     // Вызов формы редактирования элемента исполнители и даты
     $("#page-5 table[group=exec-list] tbody").on("click", "a[task]", EditTask);
@@ -41,6 +47,8 @@ $(document).ready(function() {
     // Создание задачи (исполнители и даты)
     $("#page-5 a[exec]").bind("click", CreateTask);
 
+    // Добавление ссылки
+    $("#page-1 #add-link").bind("click", AddLink);
 
 });
 
@@ -72,6 +80,62 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+
+
+
+
+
+// Добавление ссылки
+function AddLink(e) {
+
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    // ссылка
+    var link_code = $("#page-1 #link-code").val();
+    // Коментарий к ссылке
+    var link_comment = $("#page-1 #link-comment").val();
+
+    var data = {};
+    data.link = link_code
+    data.comment = link_comment;
+    data.reestrproj_id = reestrproj_id;
+
+    data.action = "reestrproj-link-add";
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+
+    $.ajax({
+      url: "/regions/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
+            if (result["result"] == "ok") {
+
+                $("#page-1 #link-code").val("");
+                $("#page-1 #link-comment").val("");
+                GetListLinks();
+            }
+        }
+
+    });
+
+
 }
 
 
@@ -332,6 +396,38 @@ function DeleteTask(e) {
 
 
 
+
+
+// Удаление ссылки
+function DeleteLink(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    var comment = $(this).parents("tr").children("td").eq(1).text();
+    var row_id = $(this).parents("tr").attr("row_id");
+
+    var deletelink = confirm("Удаляем "+comment+" ?");
+
+    if (deletelink) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-link-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListLinks(); }
+
+        })
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
 // Список загруженных в hdfs файлов
 function GetListHdfsFiles() {
 
@@ -480,6 +576,43 @@ function GetListTasks() {
 
             });
 
+
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Список ссылок
+function GetListLinks() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-reestrproj-list-links&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка загруженных файлов
+            $("table[group=links] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr row_id="+value['id']+" >"
+                +"<td><a href="+value['link']+" target=\"_blank\" >Ссылка</a></td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td><a delete-link><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=links] tbody").append(t);
+
+            });
 
 
         }
