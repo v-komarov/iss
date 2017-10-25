@@ -130,3 +130,7 @@ a:hover {
 }
 
 
+div.col-md-5 > dl > dd > table[group=links],
+div.col-md-5 > dl > dd > table[group=addresses] {
+    margin-top: 5px;
+}

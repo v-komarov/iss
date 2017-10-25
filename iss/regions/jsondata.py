@@ -1092,7 +1092,7 @@ def get_json(request):
                     'comment': comment
                 })
             else:
-                data["link"] = [{'link':link, 'comment':comment}]
+                data["link"] = [{'id':int(time.time()),'link':link, 'comment':comment}]
 
             reestrproj.data = data
             reestrproj.save()
