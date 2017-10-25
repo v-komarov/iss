@@ -14,7 +14,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
 
-from iss.regions.forms import OrderForm
+from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date
 from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
@@ -560,12 +560,13 @@ def get_json(request):
             task_list = []
             for row in reestr_proj_exec_date.objects.filter(reestr_proj=reestrproj).order_by("-datetime_edit"):
                 task_list.append({
-                    "stage": row.stage.name,
+                    "id": row.id,
+                    "stage": row.stage.name if row.stage else "",
                     "user": row.user.get_full_name(),
-                    "date1": row.date1.strftime("%d.%m.%Y"),
-                    "date2": row.date2.strftime("%d.%m.%Y"),
+                    "date1": row.date1.strftime("%d.%m.%Y") if row.date1 else "",
+                    "date2": row.date2.strftime("%d.%m.%Y") if row.date2 else "",
                     "date3": row.datetime_edit.strftime("%d.%m.%Y"),
-                    "worker" : row.user.get_full_name()
+                    "worker" : row.worker.get_full_name() if row.worker else ""
                 })
 
 
@@ -583,6 +584,32 @@ def get_json(request):
                 response_data = {"result": "ok", "table": data["excel"]}
             else:
                 response_data = {"result": "empty"}
+
+
+
+
+
+        ### Отображение формы с данными при элемента исполнители и даты реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-task-edit':
+            task_id = request.GET["task-id"]
+            task = reestr_proj_exec_date.objects.get(pk=int(task_id, 10))
+            form = WorkersDatesStagesForm(instance=task)
+            t = template.Template("{{ form.as_p }}")
+            c = template.Context({'form': form})
+            f = t.render(c)
+
+            response_data = {"result": "ok", "task-id": task_id, "form": f }
+
+
+
+
+        ### Удаление элемента исполнители и даты реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-task-delete':
+            task_id = request.GET["task_id"]
+            task = reestr_proj_exec_date.objects.get(pk=int(task_id, 10))
+            task.delete()
+
+            response_data = {"result": "ok"}
 
 
 
@@ -964,8 +991,8 @@ def get_json(request):
             reestrproj_id = data["reestrproj_id"]
             stage = None if data["stage"] == "" else stages_list.objects.get(pk=int(data["stage"],10))
             worker = None if data["worker"] == "" else User.objects.get(pk=int(data["worker"],10))
-            date1 = None if data["date1"].strip() == "" else krsk_tz.localize(datetime.datetime.strptime(data["date1"],"%d.%m.%Y"))
-            date2 = None if data["date2"].strip() == "" else krsk_tz.localize(datetime.datetime.strptime(data["date2"],"%d.%m.%Y"))
+            date1 = None if data["date1"].strip() == "" else datetime.datetime.strptime(data["date1"],"%d.%m.%Y")
+            date2 = None if data["date2"].strip() == "" else datetime.datetime.strptime(data["date2"],"%d.%m.%Y")
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
             reestr_proj_exec_date.objects.create(
@@ -976,6 +1003,28 @@ def get_json(request):
                 stage = stage,
                 worker = worker
             )
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+        ### Изменение элемента исполнителей и дат в реестре проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-task-edit':
+            stage = None if data["stage"] == "" else stages_list.objects.get(pk=int(data["stage"],10))
+            worker = None if data["worker"] == "" else User.objects.get(pk=int(data["worker"],10))
+            date1 = None if data["date1"].strip() == "" else datetime.datetime.strptime(data["date1"],"%d.%m.%Y")
+            date2 = None if data["date2"].strip() == "" else datetime.datetime.strptime(data["date2"],"%d.%m.%Y")
+            task = reestr_proj_exec_date.objects.get(pk=int(data["task_id"],10))
+
+            task.user=request.user
+            task.date1 = date1
+            task.date2 = date2
+            task.stage = stage
+            task.worker = worker
+            task.save()
 
             response_data = {"result": "ok"}
 

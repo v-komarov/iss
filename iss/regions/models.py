@@ -570,7 +570,7 @@ class reestr_proj_exec_date(models.Model):
     worker = models.ForeignKey(User, on_delete=models.PROTECT, null=True, verbose_name="Исполнитель", related_name="worker")
     reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
     user = models.ForeignKey(User, on_delete=models.PROTECT)
-    datetime_edit = models.DateTimeField(auto_now_add=True)
+    datetime_edit = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return self.stage.name

@@ -72,8 +72,8 @@ class ReestrProjUpdateForm(ModelForm):
 
 ### Форма исполнителей и дат по стадиям реестра проектов
 class WorkersDatesStagesForm(ModelForm):
-    date1 = forms.CharField(widget=forms.TextInput(), label="Дата с")
-    date2 = forms.CharField(widget=forms.TextInput(), label="Дата до")
+    date1 = forms.CharField(widget=forms.DateInput(format="%d.%m.%Y"), label="Дата с")
+    date2 = forms.CharField(widget=forms.DateInput(format="%d.%m.%Y"), label="Дата до")
 
     def __init__(self, *args, **kwargs):
         super(WorkersDatesStagesForm, self).__init__(*args, **kwargs)

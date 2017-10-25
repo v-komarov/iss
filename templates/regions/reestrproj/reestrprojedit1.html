@@ -5,7 +5,8 @@
         <dl>
             <dt>{{ form.contragent.label }}</dt>
             <dd>{{ form.contragent }}</dd>
-            <dt>Адресный перечень <button id="add-address" title="Добавить адрес" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></dt>
+            <dt>Адресный перечень<br>
+                <input id="address" maxlength="100" name="address" type="text" style="width: 90%;"> <button id="add-address" title="Добавить адрес" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></dt>
             <dd>
                 <table group="addresses" class="table table-bordered table-striped draggable" width="100%">
                     <thead>
@@ -18,7 +19,9 @@
                     </thead>
                 </table>
             </dd>
-            <dt>Ссылки <button id="add-link" title="Добавить ссылку" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></dt>
+            <dt>Ссылки<br>
+                ссылка : <input id="link-code" maxlength="100" name="link-code" type="text" style="width: 80%;">
+                коммент: <input id="link" maxlength="100" name="link" type="text" style="width: 80%;"> <button id="add-link" title="Добавить ссылку" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></dt>
             <dd>
                 <table group="links" class="table table-bordered table-striped draggable" width="100%">
                     <thead>

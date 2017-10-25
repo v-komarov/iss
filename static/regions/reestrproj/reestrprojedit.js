@@ -26,6 +26,12 @@ $(document).ready(function() {
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
 
+    // Удаление элемента исполнители и задачи
+    $("#page-5 table[group=exec-list] tbody").on("click", "a[delete-task]", DeleteTask);
+
+    // Вызов формы редактирования элемента исполнители и даты
+    $("#page-5 table[group=exec-list] tbody").on("click", "a[task]", EditTask);
+
     // Добавление коментария
     $("div#page-6 button#addcomment").bind("click", AddComment);
 
@@ -145,7 +151,7 @@ function AddComment(e) {
 
 
 
-
+// Создание задачи (исполнители и даты)
 function CreateTask(e) {
 
     // Очистка полей ввода
@@ -161,10 +167,36 @@ function CreateTask(e) {
 
 
 
+// Редактирование задачи (исполнители и даты)
+function EditTask(e) {
+
+    var task_id = $(this).parents("tr").attr("row_id");
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-task-edit&task-id="+task_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            $("#exec-window").empty();
+            $("#exec-window").append(data["form"]);
+            $("div#exec-window input#id_date1").datepicker($.datepicker.regional['ru']);
+            $("div#exec-window input#id_date2").datepicker($.datepicker.regional['ru']);
+
+        }
+        $("#exec-window").attr("task-id",data["task-id"]);
+
+    })
+
+
+    TaskData(action="reestrproj-task-edit");
+
+}
 
 
 
-// Создание задачи (исполнители и даты)
+
+
+
+// Создание и редактирование задачи (исполнители и даты)
 function TaskData(action) {
 
 
@@ -191,7 +223,7 @@ function TaskData(action) {
                 data.worker = $("#exec-window select#id_worker").val();
                 data.reestrproj_id = $("div#proj-common").attr("reestrproj_id");
                 data.action = action;
-
+                if (action == "reestrproj-task-edit") { data.task_id = $("#exec-window").attr("task-id"); }
 
                 $.ajax({
                   url: "/regions/jsondata/",
@@ -269,6 +301,32 @@ function DeleteHDFSFile(e) {
 
 }
 
+
+
+
+
+
+
+// Удаление элемента исполнители и задачи
+function DeleteTask(e) {
+
+    var task_id = $(this).parents("tr").attr("row_id");
+    var stage = $(this).parents("tr").children("td").eq(2).text();
+    var deletetask = confirm("Удаляем "+stage+" ?");
+
+    if (deletetask) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-task-delete&task_id="+task_id,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListTasks(); }
+
+        })
+
+    }
+
+
+}
 
 
 
@@ -408,13 +466,14 @@ function GetListTasks() {
             $.each(data["data"], function(key,value) {
 
 
-                var t = "<tr>"
-                +"<td>"+value['date1']+"</td>"
-                +"<td>"+value['date2']+"</td>"
-                +"<td>"+value['stage']+"</td>"
-                +"<td>"+value['worker']+"</td>"
-                +"<td>"+value['user']+"</td>"
-                +"<td>"+value['date3']+"</td>"
+                var t = "<tr row_id="+value['id']+">"
+                +"<td><a task>"+value['date1']+"</a></td>"
+                +"<td><a task>"+value['date2']+"</a></td>"
+                +"<td><a task>"+value['stage']+"</a></td>"
+                +"<td><a task>"+value['worker']+"</a></td>"
+                +"<td><a task>"+value['user']+"</a></td>"
+                +"<td><a task>"+value['date3']+"</a></td>"
+                +"<td><a delete-task><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
                 +"</tr>";
 
                 $("table[group=exec-list] tbody").append(t);
