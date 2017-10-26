@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date
-from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list
+from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list, address_house
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
 
@@ -653,6 +653,85 @@ def get_json(request):
             reestrproj.save()
 
             response_data = {"result": "ok"}
+
+
+
+
+        ### Добавление в адресный перечень
+        if r.has_key("action") and rg("action") == 'reestrproj-address-add':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            address_id = request.GET["address_id"]
+            address = address_house.objects.get(pk=int(address_id))
+
+            data = reestrproj.data
+            if data.has_key('address'):
+                data['address'].append({
+                    'address_id': address.id,
+                    'city': address.city.name if address.city else "",
+                    'street': address.street.name if address.street else "",
+                    'house': address.house if address.house else ""
+                })
+            else:
+                data['address'] = [{
+                    'address_id': address.id,
+                    'city': address.city.name,
+                    'street': address.street.name if address.street else "",
+                    'house': address.house if address.house else ""
+                }]
+
+
+            reestrproj.data = data
+            reestrproj.save()
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Адресный перечень
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-address':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            address_list = []
+            data = reestrproj.data
+            if data.has_key('address'):
+                for row in data['address']:
+                    address_list.append({
+                        'address_id':row['address_id'],
+                        'city':row['city'],
+                        'street':row['street'],
+                        'house': row['house']
+                    })
+
+
+
+            response_data = {"result": "ok", "data": address_list }
+
+
+
+
+
+        ### Удаление элемента из адресного перечня реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-address-delete':
+            row_id = request.GET["row-id"]
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            data = reestrproj.data
+            for row in data["address"]:
+                if row['address_id'] == int(row_id,10):
+                    data["address"].remove(row)
+
+
+            reestrproj.data = data
+            reestrproj.save()
+
+            response_data = {"result": "ok"}
+
 
 
 

@@ -24,6 +24,8 @@ $(document).ready(function() {
     GetTableExcel();
     // Отображение ссылок
     GetListLinks();
+    // Отображение адресного перечня
+    GetListAddress();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
@@ -33,6 +35,9 @@ $(document).ready(function() {
 
     // Удаление ссылки
     $("#page-1 table[group=links] tbody").on("click", "a[delete-link]", DeleteLink);
+
+    // Удаление элемента адресного перечня
+    $("#page-1 table[group=addresses] tbody").on("click", "a[delete-address]", DeleteAddress);
 
 
     // Вызов формы редактирования элемента исполнители и даты
@@ -49,6 +54,38 @@ $(document).ready(function() {
 
     // Добавление ссылки
     $("#page-1 #add-link").bind("click", AddLink);
+
+    // Добавление адресного перечня
+    $("#page-1 #add-address").bind("click", AddAddress);
+
+
+    // Поиск адреса
+    $("input#address").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#page-1',
+        position: 'top',
+        select: function (event,ui) {
+            $("input#address").val(ui.item.label);
+            window.address_id = ui.item.value;
+            window.address_label = ui.item.label;
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("input#address").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    })
+
+
+
 
 });
 
@@ -98,42 +135,51 @@ function AddLink(e) {
     // Коментарий к ссылке
     var link_comment = $("#page-1 #link-comment").val();
 
-    var data = {};
-    data.link = link_code
-    data.comment = link_comment;
-    data.reestrproj_id = reestrproj_id;
-
-    data.action = "reestrproj-link-add";
+    if (link_code != "" && link_comment != "") {
 
 
-    var csrftoken = getCookie('csrftoken');
+        var data = {};
+        data.link = link_code
+        data.comment = link_comment;
+        data.reestrproj_id = reestrproj_id;
 
-    $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        data.action = "reestrproj-link-add";
+
+
+        var csrftoken = getCookie('csrftoken');
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             }
-        }
-    });
+        });
 
 
 
 
-    $.ajax({
-      url: "/regions/jsondata/",
-      type: "POST",
-      dataType: 'json',
-      data:$.toJSON(data),
-        success: function(result) {
-            if (result["result"] == "ok") {
+        $.ajax({
+          url: "/regions/jsondata/",
+          type: "POST",
+          dataType: 'json',
+          data:$.toJSON(data),
+            success: function(result) {
+                if (result["result"] == "ok") {
 
-                $("#page-1 #link-code").val("");
-                $("#page-1 #link-comment").val("");
-                GetListLinks();
+                    $("#page-1 #link-code").val("");
+                    $("#page-1 #link-comment").val("");
+                    GetListLinks();
+                }
             }
-        }
 
-    });
+        });
+
+
+
+
+    }
+
 
 
 }
@@ -426,6 +472,59 @@ function DeleteLink(e) {
 
 
 
+// Удаление элемента адресного перечня
+function DeleteAddress(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    var row_id = $(this).parents("tr").attr("row_id");
+    var city = $(this).parents("tr").children("td").eq(0).text();
+    var street = $(this).parents("tr").children("td").eq(1).text();
+    var house = $(this).parents("tr").children("td").eq(2).text();
+
+    var deleteaddress = confirm("Удаляем "+city+" "+street+" "+house+" ?");
+
+    if (deleteaddress) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-address-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListAddress(); }
+
+        })
+
+    }
+
+
+}
+
+
+
+
+
+
+// Добавление адреса (адресный перечень)
+function AddAddress(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    var address_id = window.address_id;
+
+    if (address_id) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-address-add&address_id="+address_id+"&reestrproj_id="+reestrproj_id,
+        function(data) {
+
+            if (data["result"] == "ok") { $("#page-1 input#address").val(""); GetListAddress(); }
+
+        })
+
+    }
+
+}
+
+
+
+
+
 
 
 // Список загруженных в hdfs файлов
@@ -621,6 +720,45 @@ function GetListLinks() {
 
 
 }
+
+
+
+
+
+// Адресный перечень
+function GetListAddress() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-reestrproj-list-address&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка загруженных файлов
+            $("table[group=addresses] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr row_id="+value['address_id']+" >"
+                +"<td>"+value['city']+"</td>"
+                +"<td>"+value['street']+"</td>"
+                +"<td>"+value['house']+"</td>"
+                +"<td><a delete-address><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=addresses] tbody").append(t);
+
+            });
+
+
+        }
+
+    })
+
+
+}
+
 
 
 
