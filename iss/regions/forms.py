@@ -62,9 +62,10 @@ class ReestrProjCreateForm(ModelForm):
 ### Форма редактирования элемента реестра проектов
 class ReestrProjUpdateForm(ModelForm):
     proj_kod = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), label="Код проекта")
+    date_service = forms.CharField(widget=forms.DateInput(format="%d.%m.%Y"), label="Дата оказания услуги")
     class Meta:
         model = reestr_proj
-        fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_init', 'proj_kod',
+        fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_init', 'proj_kod', 'date_service',
                   'proj_name', 'proj_other', 'proj_level', 'proj_sys', 'block', 'region', 'author', 'executor',
                   'comment']
 

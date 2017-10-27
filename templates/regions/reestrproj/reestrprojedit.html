@@ -52,8 +52,8 @@
                         <dd>{{ form.executor }}</dd>
                         <dt>{{ form.business.label }}</dt>
                         <dd>{{ form.business }}</dd>
-                        <dt>Дата оказания услуги</dt>
-                        <dd><input id="id_date_service" maxlength="100" value="{{ proj.date_service|date:'d.m.Y' }}" name="date_service"  type="text" /></dd>
+                        <dt>{{ form.date_service.label }}</dt>
+                        <dd>{{ form.date_service }}</dd>
                     </dl>
             </div>
 

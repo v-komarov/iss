@@ -1110,6 +1110,8 @@ def get_json(request):
             rates_ob = None if data["rates"] == "" else rates.objects.get(pk=int(data["rates"],10))
             passing_ob = None if data["passing"] == "" else passing.objects.get(pk=int(data["passing"], 10))
 
+            service_date = None if data["service"] == "" else datetime.datetime.strptime(data["service"],"%d.%m.%Y")
+
             reestrproj.proj_name = name
             reestrproj.proj_other = other
             reestrproj.proj_level = level
@@ -1118,6 +1120,8 @@ def get_json(request):
 
             reestrproj.passing = passing_ob
             reestrproj.rates = rates_ob
+
+            reestrproj.date_service = service_date
 
             reestrproj.save()
 
