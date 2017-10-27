@@ -85,6 +85,8 @@ $(document).ready(function() {
     })
 
 
+    // Сохранение основных данных карточки проекта
+    $("button#btn-saving").bind("click", ReestrProjDataSave);
 
 
 });
@@ -119,6 +121,68 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+
+
+
+// Сохранение основных данных карточки проекта
+function ReestrProjDataSave(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    $("#saving h3").text("Сохранение выполнено");
+    $("#saving").dialog({show: { effect: "blind", duration: 500 }, hide: { effect: "explode", duration: 1000 }});
+
+
+    var data = {};
+    data.reestrproj_id = reestrproj_id;
+    data.proj_init = $("#proj-common select#id_proj_init").val();
+    data.proj_sys = $("#proj-common select#id_proj_sys").val();
+    data.other = $("#proj-common input#id_proj_other").val();
+    data.level = $("#proj-common input#id_proj_level").val();
+    data.name = $("#proj-common input#id_proj_name").val();
+    data.comment = $("#proj-common textarea#id_comment").val();
+    data.executor = $("#proj-common select#id_executor").val();
+    data.business = $("#proj-common select#id_business").val();
+    data.service = $("#proj-common input#id_date_service").val();
+    data.contragent = $("#page-1 input#id_contragent").val();
+    data.rates = $("#page-1 select#id_rates").val();
+    data.passing = $("#page-1 select#id_passing").val();
+
+    data.action = "reestrproj-common-save";
+
+
+    var csrftoken = getCookie('csrftoken');
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+
+
+
+    $.ajax({
+      url: "/regions/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
+            if (result["result"] == "ok") {
+
+                $("#saving").dialog("close");
+
+            }
+        }
+
+    });
+
+
+
+}
 
 
 

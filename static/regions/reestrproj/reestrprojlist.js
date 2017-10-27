@@ -72,7 +72,7 @@ function AddProj(e) {
                     data.other = $("form#reestr-proj-add #id_proj_other").val();
                     data.level = $("form#reestr-proj-add #id_proj_level").val();
                     data.proj_init = $("form#reestr-proj-add #id_proj_init").val();
-                    data.proj_type = $("form#reestr-proj-add #id_proj_type").val();
+                    data.proj_sys = $("form#reestr-proj-add #id_proj_sys").val();
                     data.region = $("form#reestr-proj-add #id_region").val();
                     data.block = $("form#reestr-proj-add #id_block").val();
 

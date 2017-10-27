@@ -26,8 +26,8 @@
                         <dd>{{ form.proj_kod }}</dd>
                         <dt>{{ form.proj_init.label }}</dt>
                         <dd>{{ form.proj_init }}</dd>
-                        <dt>{{ form.proj_type.label }}</dt>
-                        <dd>{{ form.proj_type }}</dd>
+                        <dt>{{ form.proj_sys.label }}</dt>
+                        <dd>{{ form.proj_sys }}</dd>
                         <dt>{{ form.proj_other.label }}</dt>
                         <dd>{{ form.proj_other }}</dd>
                         <dt>{{ form.proj_level.label }}</dt>
@@ -57,7 +57,7 @@
                     </dl>
             </div>
 
-        <button type="button" class="btn btn-default btn-xs">Сохранить</button>
+        <button id="btn-saving" type="button" class="btn btn-default btn-xs">Сохранить</button>
 
 
     </div>
@@ -90,6 +90,7 @@
 {% include "regions/reestrproj/reestrprojedit6.html" %}
 {# {% include "regions/reestrproj/reestrprojedit7.html" %} #}
 
+{% include "saving.html" %}
 
 <iframe name="uploadframe" hidden></iframe>
 

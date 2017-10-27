@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates, stages
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates, stages, init_reestr_proj
 
 
 
@@ -493,13 +493,13 @@ class reestr_proj(models.Model):
     proj_kod = models.CharField(max_length=100, default="00/0000000/0000000/00", verbose_name='Код проекта')
     proj_other = models.CharField(max_length=10, default="000000", verbose_name='Код связи с другими системами')
     proj_level = models.CharField(max_length=2, default="00", verbose_name='Порядковый номер подпроекта')
-    proj_type = models.ForeignKey(proj_types, on_delete=models.PROTECT, verbose_name='Тип проекта', null=True)
+    proj_sys = models.ForeignKey(proj_types, on_delete=models.PROTECT, verbose_name='Связь систем', null=True)
     block = models.ForeignKey(blocks, on_delete=models.PROTECT, verbose_name='Блок', null=True)
     region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
     proj_name = models.CharField(max_length=100, verbose_name='Название проекта')
     addresses = models.ManyToManyField(address_house)
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор проекта')
-    proj_init = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Инициатор проекта', null=True)
+    proj_init = models.ForeignKey(init_reestr_proj, on_delete=models.PROTECT, verbose_name='Инициатор проекта', null=True)
     executor = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Реализатор проекта', null=True, related_name="executor_company")
     business = models.ForeignKey(business, on_delete=models.PROTECT, verbose_name='Направление бизнеса', null=True)
     stage = models.ForeignKey(stages, on_delete=models.PROTECT, verbose_name='Стадия проекта', null=True)

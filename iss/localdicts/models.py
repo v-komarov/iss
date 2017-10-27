@@ -505,6 +505,7 @@ class blocks(models.Model):
 ### Типы проектов
 class proj_types(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    pref = models.CharField(max_length=10, verbose_name='Префикс', unique=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -569,6 +570,21 @@ class stages(models.Model):
         verbose_name = 'Стадия реестра проектов'
         verbose_name_plural = 'Стадии реестра проектов'
 
+
+
+
+
+### Инициаторы проектов (реестр проектов)
+class init_reestr_proj(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    pref = models.CharField(max_length=10, verbose_name='Префикс', unique=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Инициатор проектов'
+        verbose_name_plural = 'Инициаторы проектов'
 
 
 

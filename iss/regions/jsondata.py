@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date
-from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list, address_house
+from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
 
@@ -1061,7 +1061,7 @@ def get_json(request):
             other = data["other"].strip()
             level = data["level"].strip()
 
-            proj_type = None if data["proj_type"] == "" else proj_types.objects.get(pk=int(data["proj_type"],10))
+            proj_sys = None if data["proj_sys"] == "" else proj_types.objects.get(pk=int(data["proj_sys"],10))
             region = None if data["region"] == "" else regions.objects.get(pk=int(data["region"],10))
             block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
             proj_init = None if data["proj_init"] == "" else address_companies.objects.get(pk=int(data["proj_init"],10))
@@ -1072,7 +1072,7 @@ def get_json(request):
             rp = reestr_proj.objects.create(
                 proj_kod = proj_kod,
                 proj_name = name,
-                proj_type = proj_type,
+                proj_sys = proj_sys,
                 proj_other = other,
                 proj_level = level,
                 region = region,
@@ -1082,6 +1082,47 @@ def get_json(request):
             )
 
             response_data = {"result": "ok", "id": rp.id}
+
+
+
+
+
+
+        ### Сохранение карточки реестра - проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-common-save':
+
+            reestrproj_id = data["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+
+            name = data["name"].strip()
+            other = data["other"].strip()
+            level = data["level"].strip()
+            comment = data["comment"].strip()
+            contragent = data["contragent"].strip()
+
+
+            proj_init = None if data["proj_init"] == "" else init_reestr_proj.objects.get(pk=int(data["proj_init"],10))
+            proj_sys = None if data["proj_sys"] == "" else proj_types.objects.get(pk=int(data["proj_sys"],10))
+            #block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
+            executor = None if data["executor"] == "" else address_companies.objects.get(pk=int(data["executor"],10))
+            business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
+            rates_ob = None if data["rates"] == "" else rates.objects.get(pk=int(data["rates"],10))
+            passing_ob = None if data["passing"] == "" else passing.objects.get(pk=int(data["passing"], 10))
+
+            reestrproj.proj_name = name
+            reestrproj.proj_other = other
+            reestrproj.proj_level = level
+            reestrproj.comment = comment
+            reestrproj.contragent = contragent
+
+            reestrproj.passing = passing_ob
+            reestrproj.rates = rates_ob
+
+            reestrproj.save()
+
+            response_data = {"result": "ok"}
+
 
 
 

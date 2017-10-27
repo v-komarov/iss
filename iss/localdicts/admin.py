@@ -1,7 +1,7 @@
 #!coding:utf-8
 
 from django.contrib import admin
-from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_types, business, passing, rates, stages
+from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_types, business, passing, rates, stages, init_reestr_proj
 
 class StatusAdmin(admin.ModelAdmin):
     pass
@@ -152,8 +152,8 @@ class BlocksAdmin(admin.ModelAdmin):
 
 
 class ProjTypesAdmin(admin.ModelAdmin):
-    fields = ('name',)
-    list_display = ('name',)
+    fields = ('name','pref',)
+    list_display = ('name','pref',)
 
 
 
@@ -179,6 +179,12 @@ class RatesAdmin(admin.ModelAdmin):
 class StagesAdmin(admin.ModelAdmin):
     fields = ('name',)
     list_display = ('name',)
+
+
+
+class InitReestrProjAdmin(admin.ModelAdmin):
+    fields = ('name','pref',)
+    list_display = ('name','pref',)
 
 
 
@@ -211,5 +217,6 @@ admin.site.register(business, BusinessAdmin)
 admin.site.register(passing, PassingAdmin)
 admin.site.register(rates, RatesAdmin)
 admin.site.register(stages, StagesAdmin)
+admin.site.register(init_reestr_proj, InitReestrProjAdmin)
 
 

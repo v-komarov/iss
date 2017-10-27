@@ -420,6 +420,7 @@ def projgant(request,project):
 ### Загрузка файла (реестр проектов закладка показателей)
 def uploadfile_page2(request):
 
+
     if request.method == 'POST':
 
         if request.POST.has_key("reestrproj") and request.FILES.has_key("file"):
@@ -435,7 +436,7 @@ def uploadfile_page2(request):
 
                 return HttpResponse("""
                 <html><head><script type="text/javascript">
-                    window.top.ClearUpload();
+                    window.top.ClearUploadP2();
                     alert("Формат файла не поддерживается!");
                 </script></head></html>
                 """)

@@ -54,7 +54,7 @@ class StageForm(ModelForm):
 class ReestrProjCreateForm(ModelForm):
     class Meta:
         model = reestr_proj
-        fields = ['proj_name', 'proj_other', 'proj_level', 'proj_init', 'proj_type', 'block', 'region']
+        fields = ['proj_name', 'proj_other', 'proj_level', 'proj_init', 'proj_sys', 'block', 'region']
 
 
 
@@ -64,8 +64,8 @@ class ReestrProjUpdateForm(ModelForm):
     proj_kod = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}), label="Код проекта")
     class Meta:
         model = reestr_proj
-        fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_type', 'proj_init', 'proj_kod',
-                  'proj_name', 'proj_other', 'proj_level', 'proj_type', 'block', 'region', 'author', 'executor',
+        fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_init', 'proj_kod',
+                  'proj_name', 'proj_other', 'proj_level', 'proj_sys', 'block', 'region', 'author', 'executor',
                   'comment']
 
 
