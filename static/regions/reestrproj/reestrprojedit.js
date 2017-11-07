@@ -88,6 +88,77 @@ $(document).ready(function() {
     // Сохранение основных данных карточки проекта
     $("button#btn-saving").bind("click", ReestrProjDataSave);
 
+    // окраска кода проекта
+    ReColorCode();
+
+
+    // Изменение последних цифр кода
+    $("#proj-common input#id_proj_level").change(function() {
+        var level = $("#proj-common input#id_proj_level").val();
+        $("projcode").children("span").eq(3).text(level);
+    });
+
+    // Изменение кода связи с другими системами
+    $("#proj-common input#id_proj_other").change(function() {
+        var sys = $("#proj-common select#id_proj_sys").val();
+        if (sys == "") {
+            $("projcode").children("span").eq(2).text($("#proj-common input#id_proj_other").val());
+        }
+        else {
+            // Определение префикса
+            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-sys-pref&sys_id="+sys,
+            function(data) {
+
+                $("projcode").children("span").eq(2).text(data["pref"]+$("#proj-common input#id_proj_other").val());
+
+            })
+
+        }
+    });
+
+
+    // Изменение кода инициатора
+    $("#proj-common select#id_proj_init").change(function() {
+        var init = $("#proj-common select#id_proj_init").val();
+        if (init == "") {
+            $("projcode").children("span").eq(0).text(init);
+        }
+        else {
+            // Определение префикса
+            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-init-pref&init_id="+init,
+            function(data) {
+
+                $("projcode").children("span").eq(0).text(data["pref"]);
+
+            })
+
+        }
+
+    });
+
+
+
+    // Изменение кода связи с системами
+    $("#proj-common select#id_proj_sys").change(function() {
+        var sys = $("#proj-common select#id_proj_sys").val();
+        if (sys == "") {
+            $("projcode").children("span").eq(2).text($("#proj-common input#id_proj_other").val());
+        }
+        else {
+            // Определение префикса
+            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-sys-pref&sys_id="+sys,
+            function(data) {
+
+                $("projcode").children("span").eq(2).text(data["pref"]+$("#proj-common input#id_proj_other").val());
+
+            })
+
+        }
+
+    });
+
+
+
 
 });
 
@@ -124,6 +195,19 @@ function getCookie(name) {
 
 
 
+// раскраска кода проекта
+function ReColorCode() {
+    var code = $("projcode").text().split("/");
+
+    $("projcode").html("<span>"+code[0]+"</span>/<span>"+code[1]+"</span>/<span>"+code[2]+"</span>/<span>"+code[3]+"</span>");
+    $("projcode").children("span").eq(0).css("color","blue");
+    $("projcode").children("span").eq(2).css("color","green");
+    $("projcode").children("span").eq(3).css("color","red");
+
+}
+
+
+
 
 // Сохранение основных данных карточки проекта
 function ReestrProjDataSave(e) {
@@ -136,6 +220,7 @@ function ReestrProjDataSave(e) {
 
     var data = {};
     data.reestrproj_id = reestrproj_id;
+    data.proj_kod = $("#proj-common projcode").text();
     data.proj_init = $("#proj-common select#id_proj_init").val();
     data.proj_sys = $("#proj-common select#id_proj_sys").val();
     data.other = $("#proj-common input#id_proj_other").val();

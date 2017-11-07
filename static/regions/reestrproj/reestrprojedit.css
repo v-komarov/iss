@@ -134,3 +134,19 @@ div.col-md-5 > dl > dd > table[group=links],
 div.col-md-5 > dl > dd > table[group=addresses] {
     margin-top: 5px;
 }
+
+
+select#id_proj_init {
+    border-color: blue;
+    border-width: 2px;
+}
+
+select#id_proj_sys, input#id_proj_other {
+    border-color: green;
+    border-width: 2px;
+}
+
+input#id_proj_level {
+    border-color: red;
+    border-width: 2px;
+}

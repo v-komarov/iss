@@ -736,6 +736,26 @@ def get_json(request):
 
 
 
+        ### Префикс инициатора проекта реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-init-pref':
+            init_id = request.GET["init_id"]
+            init_ob = init_reestr_proj.objects.get(pk=int(init_id, 10))
+
+            response_data = {"pref": init_ob.pref }
+
+
+
+
+        ### Префикс связи с другими системами реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-sys-pref':
+            sys_id = request.GET["sys_id"]
+            sys_ob = proj_types.objects.get(pk=int(sys_id, 10))
+
+            response_data = {"pref": sys_ob.pref }
+
+
+
+
 
 
     if request.method == "POST":
@@ -1057,7 +1077,6 @@ def get_json(request):
         ### Создание нового реестра - проекта
         if data.has_key("action") and data["action"] == 'reestrproj-create':
 
-            print data
 
             name = data["name"].strip()
             other = data["other"].strip()
@@ -1070,8 +1089,11 @@ def get_json(request):
             executor = None if data["executor"] == "" else address_companies.objects.get(pk=int(data["executor"],10))
             business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
 
+            pref_init = proj_init.pref if proj_init else ""
+            pref_sys = proj_sys.pref if proj_sys else ""
+
             rand = random.randint(11111111,99999999)
-            proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other=other, level=level, proj_init= "00" if proj_init == None else "0%s" % proj_init.id)
+            proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other="%s%s" % (proj_sys if proj_sys else "",other), level=level, proj_init=proj_init if proj_init else "")
 
             rp = reestr_proj.objects.create(
                 proj_kod = proj_kod,
@@ -1116,11 +1138,17 @@ def get_json(request):
 
             service_date = None if data["service"] == "" else datetime.datetime.strptime(data["service"],"%d.%m.%Y")
 
+            reestrproj.proj_kod = data["proj_kod"].strip()
             reestrproj.proj_name = name
             reestrproj.proj_other = other
             reestrproj.proj_level = level
             reestrproj.comment = comment
             reestrproj.contragent = contragent
+
+            reestrproj.business = business_ob
+            reestrproj.executor = executor
+            reestrproj.proj_init = proj_init
+            reestrproj.proj_sys = proj_sys
 
             reestrproj.passing = passing_ob
             reestrproj.rates = rates_ob
