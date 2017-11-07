@@ -62,7 +62,6 @@
                 <th>Наименование</th>
                 <th>Города</th>
                 <th>Адреса</th>
-                <th>Тип проекта</th>
                 <th>Исполнители</th>
                 <th>Направление<br>бизнеса</th>
             </tr>
@@ -74,8 +73,8 @@
             <tr>
                 <td><a>{{ row.id }}</a></td>
                 <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_kod }}</a></td>
-                <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage }}</a></td>
-                <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.name }}</a></td>
+                <td>{% if row.stage %}<a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage }}</a>{% else %}{% endif %}</td>
+                <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_name }}</a></td>
                 <td>
                     <ul>
                         {% for addr in row.data.address %}
@@ -90,7 +89,6 @@
                         {% endfor %}
                     </ul>
                 </td>
-                <td></td>
                 <td>
                     <ul>
                         {% for worker in row.reestr_proj_exec_date_set.all %}
@@ -98,7 +96,7 @@
                         {% endfor %}
                     </ul>
                 </td>
-                <td></td>
+                <td>{% if row.business %}{{ row.business }}{% else %}{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>

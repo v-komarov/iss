@@ -73,11 +73,12 @@ function AddProj(e) {
                     data.level = $("form#reestr-proj-add #id_proj_level").val();
                     data.proj_init = $("form#reestr-proj-add #id_proj_init").val();
                     data.proj_sys = $("form#reestr-proj-add #id_proj_sys").val();
-                    data.region = $("form#reestr-proj-add #id_region").val();
-                    data.block = $("form#reestr-proj-add #id_block").val();
+                    data.executor = $("form#reestr-proj-add #id_executor").val();
+                    data.business = $("form#reestr-proj-add #id_business").val();
 
                     data.action = "reestrproj-create";
 
+                    console.log(data);
 
                     $.ajax({
                       url: "/regions/jsondata/",

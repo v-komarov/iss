@@ -1057,14 +1057,18 @@ def get_json(request):
         ### Создание нового реестра - проекта
         if data.has_key("action") and data["action"] == 'reestrproj-create':
 
+            print data
+
             name = data["name"].strip()
             other = data["other"].strip()
             level = data["level"].strip()
 
             proj_sys = None if data["proj_sys"] == "" else proj_types.objects.get(pk=int(data["proj_sys"],10))
-            region = None if data["region"] == "" else regions.objects.get(pk=int(data["region"],10))
-            block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
+            #region = None if data["region"] == "" else regions.objects.get(pk=int(data["region"],10))
+            #block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
             proj_init = None if data["proj_init"] == "" else address_companies.objects.get(pk=int(data["proj_init"],10))
+            executor = None if data["executor"] == "" else address_companies.objects.get(pk=int(data["executor"],10))
+            business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
 
             rand = random.randint(11111111,99999999)
             proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other=other, level=level, proj_init= "00" if proj_init == None else "0%s" % proj_init.id)
@@ -1075,9 +1079,9 @@ def get_json(request):
                 proj_sys = proj_sys,
                 proj_other = other,
                 proj_level = level,
-                region = region,
-                block = block,
                 proj_init = proj_init,
+                business = business_ob,
+                executor = executor,
                 author = request.user
             )
 
