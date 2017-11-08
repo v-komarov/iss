@@ -589,7 +589,8 @@ def get_json(request):
                     "date1": row.date1.strftime("%d.%m.%Y") if row.date1 else "",
                     "date2": row.date2.strftime("%d.%m.%Y") if row.date2 else "",
                     "date3": row.datetime_edit.strftime("%d.%m.%Y"),
-                    "worker" : row.worker.get_full_name() if row.worker else ""
+                    "worker" : row.worker.get_full_name() if row.worker else "",
+                    "block": row.block.name if row.block else ""
                 })
 
 
@@ -1216,6 +1217,7 @@ def get_json(request):
             worker = None if data["worker"] == "" else User.objects.get(pk=int(data["worker"],10))
             date1 = None if data["date1"].strip() == "" else datetime.datetime.strptime(data["date1"],"%d.%m.%Y")
             date2 = None if data["date2"].strip() == "" else datetime.datetime.strptime(data["date2"],"%d.%m.%Y")
+            block_ob = None if data["block"].strip() == "" else blocks.objects.get(pk=int(data["block"],10))
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
             reestr_proj_exec_date.objects.create(
@@ -1224,7 +1226,8 @@ def get_json(request):
                 date1 = date1,
                 date2 = date2,
                 stage = stage,
-                worker = worker
+                worker = worker,
+                block = block_ob
             )
 
             response_data = {"result": "ok"}
@@ -1240,6 +1243,7 @@ def get_json(request):
             worker = None if data["worker"] == "" else User.objects.get(pk=int(data["worker"],10))
             date1 = None if data["date1"].strip() == "" else datetime.datetime.strptime(data["date1"],"%d.%m.%Y")
             date2 = None if data["date2"].strip() == "" else datetime.datetime.strptime(data["date2"],"%d.%m.%Y")
+            block_ob = None if data["block"].strip() == "" else blocks.objects.get(pk=int(data["block"],10))
             task = reestr_proj_exec_date.objects.get(pk=int(data["task_id"],10))
 
             task.user=request.user
@@ -1247,6 +1251,7 @@ def get_json(request):
             task.date2 = date2
             task.stage = stage
             task.worker = worker
+            task.block = block_ob
             task.save()
 
             response_data = {"result": "ok"}

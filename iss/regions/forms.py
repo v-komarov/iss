@@ -66,7 +66,7 @@ class ReestrProjUpdateForm(ModelForm):
     class Meta:
         model = reestr_proj
         fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_init', 'proj_kod', 'date_service',
-                  'proj_name', 'proj_other', 'proj_level', 'proj_sys', 'block', 'region', 'author', 'executor',
+                  'proj_name', 'proj_other', 'proj_level', 'proj_sys', 'region', 'author', 'executor',
                   'comment']
 
 
@@ -83,4 +83,4 @@ class WorkersDatesStagesForm(ModelForm):
 
     class Meta:
         model = reestr_proj_exec_date
-        fields = ['stage', 'date1', 'date2', 'worker']
+        fields = ['stage', 'date1', 'date2', 'worker', 'block']

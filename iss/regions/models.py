@@ -494,7 +494,6 @@ class reestr_proj(models.Model):
     proj_other = models.CharField(max_length=10, default="000000", verbose_name='Код связи с другими системами')
     proj_level = models.CharField(max_length=2, default="00", verbose_name='Порядковый номер подпроекта')
     proj_sys = models.ForeignKey(proj_types, on_delete=models.PROTECT, verbose_name='Связь систем', null=True)
-    block = models.ForeignKey(blocks, on_delete=models.PROTECT, verbose_name='Блок', null=True)
     region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
     proj_name = models.CharField(max_length=100, verbose_name='Название проекта')
     addresses = models.ManyToManyField(address_house)
@@ -572,6 +571,7 @@ class reestr_proj_exec_date(models.Model):
     reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_edit = models.DateTimeField(auto_now=True)
+    block = models.ForeignKey(blocks, on_delete=models.PROTECT, verbose_name='Ответственное подразделение', null=True)
 
     def __unicode__(self):
         return self.stage.name

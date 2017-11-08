@@ -504,6 +504,7 @@ function TaskData(action) {
                 data.date2 = $("#exec-window input#id_date2").val();
                 data.stage = $("#exec-window select#id_stage").val();
                 data.worker = $("#exec-window select#id_worker").val();
+                data.block = $("#exec-window select#id_block").val();
                 data.reestrproj_id = $("div#proj-common").attr("reestrproj_id");
                 data.action = action;
                 if (action == "reestrproj-task-edit") { data.task_id = $("#exec-window").attr("task-id"); }
@@ -843,6 +844,7 @@ function GetListTasks() {
                 +"<td><a task>"+value['date2']+"</a></td>"
                 +"<td><a task>"+value['stage']+"</a></td>"
                 +"<td><a task>"+value['worker']+"</a></td>"
+                +"<td><a task>"+value["block"]+"</a></td>"
                 +"<td><a task>"+value['user']+"</a></td>"
                 +"<td><a task>"+value['date3']+"</a></td>"
                 +"<td><a delete-task><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
