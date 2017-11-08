@@ -30,6 +30,10 @@ $(document).ready(function() {
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
 
+    // Удаление загруженного в hdfs файла
+    $("#page-4 table[group=file-list] tbody").on("click", "input[type=checkbox]", DocProjChecked);
+
+
     // Удаление элемента исполнители и задачи
     $("#page-5 table[group=exec-list] tbody").on("click", "a[delete-task]", DeleteTask);
 
@@ -205,6 +209,26 @@ function ReColorCode() {
     $("projcode").children("span").eq(3).css("color","red");
 
 }
+
+
+
+
+
+
+// Обработка отметки (или снятия) проверки загруженного документа
+function DocProjChecked(e) {
+
+    if($(this).is(":checked")) { var checked = 'yes'; }
+    else { var checked = 'no'; }
+    var file_id = $(this).parents("tr").attr("file_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-doc-check-file&file_id="+file_id+"&checked="+checked,
+    function(data) {
+        GetListComments();
+    })
+
+}
+
 
 
 
@@ -690,10 +714,14 @@ function GetListHdfsFiles() {
             $("table[group=file-list] tbody").empty();
             $.each(data["data"], function(key,value) {
 
+                if (value["checked"] == 1) { var checked_tag = "<input type=\"checkbox\" checked />"; }
+                else { var checked_tag = "<input type=\"checkbox\" />"; }
 
                 var t = "<tr file_id=" + value["file_id"] +" "+ "filename="+value["filename"]+">"
                 +"<td>"+value['date']+"</td>"
                 +"<td><a href=\"/regions/reestrproj/readfile?file_id="+value["file_id"]+"&file_name="+value["filename"]+"\" >"+value['filename']+"</a></td>"
+                +"<td>"+value["filetype"]+"</td>"
+                +"<td>"+checked_tag+"</td>"
                 +"<td>"+value['user']+"</td>"
                 +"<td><a delete-file><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
                 +"</tr>";

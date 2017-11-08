@@ -462,6 +462,8 @@ def get_json(request):
                 datafiles.append({
                     "file_id": row.id,
                     "filename": row.filename,
+                    "filetype": row.doctype.name if row.doctype else "",
+                    "checked": 1 if row.checked else 0,
                     "user": row.user.get_full_name(),
                     "date": row.datetime_load.strftime("%d.%m.%Y")
                 })
@@ -486,6 +488,26 @@ def get_json(request):
 
             response_data = { "result": "ok" }
 
+
+
+
+
+        ### Реестр проектов отметка об проверки вложеного файла
+        if r.has_key("action") and rg("action") == 'reestrproj-doc-check-file':
+            file_id = request.GET["file_id"]
+
+            fp = reestr_proj_files.objects.get(pk=file_id)
+            fp.checked = True if request.GET["checked"] == "yes" else False
+            fp.save()
+
+            ### Запись коментария
+            reestr_proj_comment.objects.create(
+                reestr_proj = fp.reestr_proj,
+                comment = u"Документ {filename}: {check}".format(filename=fp.filename, check=u"установлена отметка проверено" if request.GET["checked"] == "yes" else u"снята отметка проверено" ),
+                user = request.user
+            )
+
+            response_data = { "result": "ok" }
 
 
 

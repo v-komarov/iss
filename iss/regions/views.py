@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 
-from iss.localdicts.models import regions, address_city, stages
+from iss.localdicts.models import regions, address_city, stages, ProjDocTypes
 from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj
 from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
 
@@ -457,6 +457,7 @@ class ReestrProjEdit(UpdateView):
         context["proj"] = self.get_object()
         context['stages'] = stages.objects.order_by('name')
         context['task'] = WorkersDatesStagesForm()
+        context['doctypes'] = ProjDocTypes.objects.order_by('name')
         return context
 
 

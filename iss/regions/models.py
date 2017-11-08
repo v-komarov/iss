@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates, stages, init_reestr_proj
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates, stages, init_reestr_proj, ProjDocTypes
 
 
 
@@ -538,8 +538,10 @@ class reestr_proj_files(models.Model):
     id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
     reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
     filename = models.CharField(max_length=100)
+    doctype = models.ForeignKey(ProjDocTypes, on_delete=models.PROTECT, verbose_name='Тип документа', null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_load = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False, verbose_name='Документ проверен')
 
     def __unicode__(self):
         return self.filename
@@ -554,7 +556,6 @@ class reestr_proj_comment(models.Model):
     reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_create = models.DateTimeField(auto_now_add=True)
-
 
     def __unicode__(self):
         return self.comment

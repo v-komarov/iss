@@ -29,7 +29,7 @@ import numpy as np
 from snakebite.client import Client
 
 from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj
-from iss.localdicts.models import regions
+from iss.localdicts.models import regions, ProjDocTypes
 
 
 
@@ -477,13 +477,16 @@ def uploadfile_page4(request):
     reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
 
-
+    filetype = request.POST['filetype']
     filename = request.FILES['fileuploadhdfs'].name
     filedata = request.FILES['fileuploadhdfs'].read()
+
+    fity =  None if filetype == "" else ProjDocTypes.objects.get(pk=int(filetype,10))
 
     rec = reestr_proj_files.objects.create(
         reestr_proj = reestrproj,
         filename = filename.strip(),
+        doctype = fity,
         user = request.user
     )
 

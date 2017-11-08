@@ -545,6 +545,20 @@ class passing(models.Model):
 
 
 
+### Типы проектных документы
+class ProjDocTypes(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Тип проектных документов'
+        verbose_name_plural = 'Типы проектных документов'
+
+
+
+
 ### Варианты доходности
 class rates(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
