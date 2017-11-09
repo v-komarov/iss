@@ -491,11 +491,11 @@ class proj_notes(models.Model):
 #### Реестр проектов
 class reestr_proj(models.Model):
     proj_kod = models.CharField(max_length=100, default="00/0000000/0000000/00", verbose_name='Код проекта')
-    proj_other = models.CharField(max_length=10, default="000000", verbose_name='Код связи с другими системами')
+    proj_other = models.CharField(max_length=20, default="000000", verbose_name='Код связи с другими системами')
     proj_level = models.CharField(max_length=2, default="00", verbose_name='Порядковый номер подпроекта')
     proj_sys = models.ForeignKey(proj_types, on_delete=models.PROTECT, verbose_name='Связь систем', null=True)
     region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
-    proj_name = models.CharField(max_length=100, verbose_name='Название проекта')
+    proj_name = models.CharField(max_length=200, verbose_name='Название проекта')
     addresses = models.ManyToManyField(address_house)
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор проекта')
     proj_init = models.ForeignKey(init_reestr_proj, on_delete=models.PROTECT, verbose_name='Инициатор проекта', null=True)

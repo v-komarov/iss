@@ -249,7 +249,7 @@ class Command(BaseCommand):
 
         """
 
-
+        """
         ipaddress = []
 
 
@@ -267,4 +267,60 @@ class Command(BaseCommand):
                 for row in spamreader:
                     if row[0] not in ipaddress:
                         spamwriter.writerow(row)
+
+        """
+
+        import pandas as pd
+        from iss.localdicts.models import proj_types, init_reestr_proj, business, address_companies,stages, address_city, address_street, address_house
+        from django.contrib.auth.models import User
+        from iss.regions.models import reestr_proj,stages_history
+
+        author = User.objects.filter(last_name="Васекин")[0] if User.objects.filter(last_name="Васекин").exists() else None
+
+        df = pd.read_excel("iss/equipment/csv/reestrproj.xlsx",header=None, index=None)[1:]
+        df = df.fillna("")
+
+        #stage = stages.objects.get(name="Новый проект")
+
+        for index, row in df.iterrows():
+            name = row[5]
+            pref_init = row[0] # Префикс инициатора проекта
+            unic = row[1] # Уникальный номер проекта
+            pref_sys = row[2] # префикс связи систем
+            code_sys = row[3] # код для связи систем
+            level = row[4] # Том проекта
+            executor_name = row[6] ## реализатор проекта
+            business_name = row[7] # Направление бизнеса
+            stage_name = row[8] # Название стадии
+            addresses = row[10]
+            address = addresses.split(";")
+
+            #pinit = init_reestr_proj.objects.filter(pref=pref_init)[0] if init_reestr_proj.objects.filter(pref=pref_init).exists() else None
+            #ptype = proj_types.objects.filter(pref=pref_sys)[0] if proj_types.objects.filter(pref=pref_sys).exists() else None
+            #execu = address_companies.objects.filter(name=executor_name)[0] if address_companies.objects.filter(name=executor_name).exists() else None
+            #busi = business.objects.filter(name=business_name)[0] if business.objects.filter(name=business_name).exists() else None
+
+            proj_code = u"{pref_init}/{unic}/{pref_sys}{code_sys}/{level}".format(pref_init=pref_init,unic=unic,pref_sys=pref_sys,code_sys=code_sys,level=level)
+
+            if reestr_proj.objects.filter(proj_kod=proj_code).exists():
+                rp = reestr_proj.objects.filter(proj_kod=proj_code).first()
+                for addr in address:
+                    addrs = addr.split(",")
+                    if len(addrs) == 3:
+                        city_name = addrs[0]
+                        street_name = addrs[1]
+                        house_name = addrs[2]
+                        city = address_city.objects.filter(name__icontains=city_name).first() if address_city.objects.filter(name__icontains=city_name).exists() else None
+                        street = address_street.objects.filter(name__icontains=street_name).first() if address_city.objects.filter(name__icontains=street_name).exists() else None
+                        #print city_name,street_name,house_name
+                        if city and street and house_name:
+                            ad = address_house.objects.filter(city=city,street=street,house__icontains=house_name).first() if address_house.objects.filter(city=city,street=street,house__icontains=house_name).exists() else None
+                            print ad
+                #rp.stage = stage
+                #rp.save()
+
+
+
+            #print proj_code, address
+
 
