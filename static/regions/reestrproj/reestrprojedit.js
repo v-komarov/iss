@@ -283,6 +283,7 @@ function ReestrProjDataSave(e) {
             if (result["result"] == "ok") {
 
                 $("#saving").dialog("close");
+                GetListComments();
 
             }
         }
@@ -343,6 +344,7 @@ function AddLink(e) {
                     $("#page-1 #link-code").val("");
                     $("#page-1 #link-comment").val("");
                     GetListLinks();
+                    GetListComments();
                 }
             }
 
@@ -515,7 +517,7 @@ function TaskData(action) {
                   dataType: 'json',
                   data:$.toJSON(data),
                     success: function(result) {
-                        if (result["result"] == "ok") { $("#exec-window").dialog('close'); GetListTasks(); }
+                        if (result["result"] == "ok") { $("#exec-window").dialog('close'); GetListTasks(); GetListComments(); }
                     }
 
                 });
@@ -576,7 +578,7 @@ function DeleteHDFSFile(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-hdfs-delete-file&file_id="+file_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListHdfsFiles(); }
+            if (data["result"] == "ok") { GetListHdfsFiles(); GetListComments(); }
 
         })
 
@@ -603,7 +605,7 @@ function DeleteTask(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-task-delete&task_id="+task_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListTasks(); }
+            if (data["result"] == "ok") { GetListTasks(); GetListComments(); }
 
         })
 
@@ -632,7 +634,7 @@ function DeleteLink(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-link-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListLinks(); }
+            if (data["result"] == "ok") { GetListLinks(); GetListComments(); }
 
         })
 
@@ -662,7 +664,7 @@ function DeleteAddress(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-address-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListAddress(); }
+            if (data["result"] == "ok") { GetListAddress(); GetListComments();}
 
         })
 
@@ -687,7 +689,7 @@ function AddAddress(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-address-add&address_id="+address_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { $("#page-1 input#address").val(""); GetListAddress(); }
+            if (data["result"] == "ok") { $("#page-1 input#address").val(""); GetListAddress(); GetListComments(); }
 
         })
 

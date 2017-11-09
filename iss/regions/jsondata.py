@@ -479,11 +479,22 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'reestrproj-hdfs-delete-file':
             file_id = request.GET["file_id"]
 
-            reestr_proj_files.objects.get(pk=file_id).delete()
+            rpf = reestr_proj_files.objects.get(pk=file_id)
+            reestrproj = rpf.reestr_proj
+            filename = rpf.filename
+            rpf.delete()
 
             client = Client('10.6.0.135', 9000)
             for x in client.delete(['/projects/%s' % file_id,], recurse=True):
                 print x
+
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Удален документ %s" % filename
+            )
+
 
 
             response_data = { "result": "ok" }
@@ -631,7 +642,15 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'reestrproj-task-delete':
             task_id = request.GET["task_id"]
             task = reestr_proj_exec_date.objects.get(pk=int(task_id, 10))
+            reestrproj = task.reestr_proj
+            task_stage = task.stage.name if task.stage else ""
             task.delete()
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = task.reestr_proj,
+                user = request.user,
+                comment = u"Удален элемент исполнителей и дат %s" % task_stage
+            )
 
             response_data = {"result": "ok"}
 
@@ -666,10 +685,19 @@ def get_json(request):
             reestrproj_id = request.GET["reestrproj_id"]
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
+            link = ""
+
             data = reestrproj.data
             for row in data["link"]:
                 if row['id'] == int(row_id,10):
+                    link = row["link"]
                     data["link"].remove(row)
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Удаление ссылки %s" % link
+            )
 
 
             reestrproj.data = data
@@ -686,6 +714,7 @@ def get_json(request):
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
             address_id = request.GET["address_id"]
             address = address_house.objects.get(pk=int(address_id))
+            addr = address.getaddress()
 
             data = reestrproj.data
             if data.has_key('address'):
@@ -702,6 +731,13 @@ def get_json(request):
                     'street': address.street.name if address.street else "",
                     'house': address.house if address.house else ""
                 }]
+
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Добавлен адрес %s" % addr
+            )
 
 
             reestrproj.data = data
@@ -744,10 +780,21 @@ def get_json(request):
             reestrproj_id = request.GET["reestrproj_id"]
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
+            addr = ""
+
             data = reestrproj.data
             for row in data["address"]:
                 if row['address_id'] == int(row_id,10):
+                    addr = u"{city} {street} {house}".format(city=row["city"],street=row["street"],house=row["house"])
                     data["address"].remove(row)
+
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Удален адрес %s" % addr
+            )
+
 
 
             reestrproj.data = data
@@ -1180,6 +1227,13 @@ def get_json(request):
 
             reestrproj.save()
 
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Сохранены данные карточки проекта"
+            )
+
+
             response_data = {"result": "ok"}
 
 
@@ -1254,6 +1308,13 @@ def get_json(request):
             task.block = block_ob
             task.save()
 
+            reestr_proj_comment.objects.create(
+                reestr_proj = task.reestr_proj,
+                user = request.user,
+                comment = u"Изменен элемент исполнителей и дат %s" % task.stage.name if task.stage else ""
+            )
+
+
             response_data = {"result": "ok"}
 
 
@@ -1276,6 +1337,14 @@ def get_json(request):
                 })
             else:
                 data["link"] = [{'id':int(time.time()),'link':link, 'comment':comment}]
+
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Добавлена ссылка %s" % link
+            )
+
 
             reestrproj.data = data
             reestrproj.save()

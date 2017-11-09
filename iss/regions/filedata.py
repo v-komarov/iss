@@ -28,7 +28,7 @@ import numpy as np
 
 from snakebite.client import Client
 
-from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj
+from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment
 from iss.localdicts.models import regions, ProjDocTypes
 
 
@@ -455,6 +455,11 @@ def uploadfile_page2(request):
                 rp.data = data
                 rp.save()
 
+                reestr_proj_comment.objects.create(
+                    reestr_proj = rp,
+                    user = request.user,
+                    comment = u"Загружена таблица показателей"
+                )
 
 
 
@@ -462,6 +467,7 @@ def uploadfile_page2(request):
     <html><head><script type="text/javascript">
         window.top.ClearUploadP2();
         window.top.GetTableExcel();
+        window.top.GetListComments();
     </script></head></html>
     """)
 
@@ -490,6 +496,12 @@ def uploadfile_page4(request):
         user = request.user
     )
 
+    reestr_proj_comment.objects.create(
+        reestr_proj=reestrproj,
+        user=request.user,
+        comment=u"Загружен документ %s" % filename
+    )
+
     ### Запись во временный файл
     tf = tempfile.NamedTemporaryFile(delete=False)
     f = open(tf.name, 'w')
@@ -509,6 +521,7 @@ def uploadfile_page4(request):
     <html><head><script type="text/javascript">
         window.top.ClearUploadP4();
         window.top.GetListHdfsFiles();
+        window.top.GetListComments();
     </script></head></html>
     """)
 
