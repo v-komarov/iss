@@ -1155,15 +1155,15 @@ def get_json(request):
             proj_sys = None if data["proj_sys"] == "" else proj_types.objects.get(pk=int(data["proj_sys"],10))
             #region = None if data["region"] == "" else regions.objects.get(pk=int(data["region"],10))
             #block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
-            proj_init = None if data["proj_init"] == "" else address_companies.objects.get(pk=int(data["proj_init"],10))
+            proj_init = None if data["proj_init"] == "" else init_reestr_proj.objects.get(pk=int(data["proj_init"],10))
             executor = None if data["executor"] == "" else address_companies.objects.get(pk=int(data["executor"],10))
             business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
 
-            pref_init = proj_init.pref if proj_init else ""
+            #pref_init = proj_init.pref if proj_init else ""
             pref_sys = proj_sys.pref if proj_sys else ""
 
             rand = random.randint(11111111,99999999)
-            proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other="%s%s" % (proj_sys if proj_sys else "",other), level=level, proj_init=proj_init if proj_init else "")
+            proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other=u"%s%s" % (proj_sys if proj_sys else u"",other), level=level, proj_init=proj_init.name if proj_init else u"")
 
             rp = reestr_proj.objects.create(
                 proj_kod = proj_kod,

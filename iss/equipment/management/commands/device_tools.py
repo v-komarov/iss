@@ -302,20 +302,23 @@ class Command(BaseCommand):
 
             proj_code = u"{pref_init}/{unic}/{pref_sys}{code_sys}/{level}".format(pref_init=pref_init,unic=unic,pref_sys=pref_sys,code_sys=code_sys,level=level)
 
-            if reestr_proj.objects.filter(proj_kod=proj_code).exists():
-                rp = reestr_proj.objects.filter(proj_kod=proj_code).first()
-                for addr in address:
-                    addrs = addr.split(",")
-                    if len(addrs) == 3:
-                        city_name = addrs[0]
-                        street_name = addrs[1]
-                        house_name = addrs[2]
-                        city = address_city.objects.filter(name__icontains=city_name).first() if address_city.objects.filter(name__icontains=city_name).exists() else None
-                        street = address_street.objects.filter(name__icontains=street_name).first() if address_city.objects.filter(name__icontains=street_name).exists() else None
-                        #print city_name,street_name,house_name
-                        if city and street and house_name:
-                            ad = address_house.objects.filter(city=city,street=street,house__icontains=house_name).first() if address_house.objects.filter(city=city,street=street,house__icontains=house_name).exists() else None
-                            print ad
+            for addr in address:
+                addrs = addr.split(",")
+                if len(addrs) == 3:
+                    city_name = addrs[0].encode("utf-8")
+                    street_name = addrs[1].encode("utf-8").replace("ул","").replace(".","")
+                    house_name = addrs[2].encode("utf-8").replace("д","").replace(".","")
+                    city = address_city.objects.filter(name__icontains=city_name).first() if address_city.objects.filter(name__icontains=city_name).exists() else None
+                    street = address_street.objects.filter(name__icontains=street_name).first() if address_street.objects.filter(name__icontains=street_name).exists() else None
+                    # print city_name,street_name,house_name
+                    print city,street,house_name,street_name
+                    if city and street and house_name:
+                        ad = address_house.objects.filter(city=city, street=street,house__icontains=house_name).first() if address_house.objects.filter(city=city, street=street, house__icontains=house_name).exists() else None
+                        print ad
+
+
+                        #if reestr_proj.objects.filter(proj_kod=proj_code).exists():
+            #    rp = reestr_proj.objects.filter(proj_kod=proj_code).first()
                 #rp.stage = stage
                 #rp.save()
 
