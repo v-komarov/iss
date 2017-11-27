@@ -816,15 +816,6 @@ def get_json(request):
 
 
 
-        ### Префикс связи с другими системами реестра проектов
-        if r.has_key("action") and rg("action") == 'reestrproj-sys-pref':
-            sys_id = request.GET["sys_id"]
-            sys_ob = proj_types.objects.get(pk=int(sys_id, 10))
-
-            response_data = {"pref": sys_ob.pref }
-
-
-
 
 
 
@@ -1149,31 +1140,20 @@ def get_json(request):
 
 
             name = data["name"].strip()
-            other = data["other"].strip()
-            level = data["level"].strip()
 
-            proj_sys = None if data["proj_sys"] == "" else proj_types.objects.get(pk=int(data["proj_sys"],10))
-            #region = None if data["region"] == "" else regions.objects.get(pk=int(data["region"],10))
-            #block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
-            proj_init = None if data["proj_init"] == "" else init_reestr_proj.objects.get(pk=int(data["proj_init"],10))
-            executor = None if data["executor"] == "" else address_companies.objects.get(pk=int(data["executor"],10))
-            business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
-
-            #pref_init = proj_init.pref if proj_init else ""
-            pref_sys = proj_sys.pref if proj_sys else ""
 
             rand = random.randint(11111111,99999999)
-            proj_kod = u"{proj_init}/{rand}/{other}/{level}".format(rand=rand, other=u"%s%s" % (proj_sys if proj_sys else u"",other), level=level, proj_init=proj_init.name if proj_init else u"")
+            proj_kod = u"/{rand}/000000/00".format(rand=rand)
 
             rp = reestr_proj.objects.create(
                 proj_kod = proj_kod,
                 proj_name = name,
-                proj_sys = proj_sys,
-                proj_other = other,
-                proj_level = level,
-                proj_init = proj_init,
-                business = business_ob,
-                executor = executor,
+                proj_sys = None,
+                proj_other = "000000",
+                proj_level = "00",
+                proj_init = None,
+                business = None,
+                executor = None,
                 author = request.user
             )
 
@@ -1193,14 +1173,11 @@ def get_json(request):
 
             name = data["name"].strip()
             other = data["other"].strip()
-            level = data["level"].strip()
             comment = data["comment"].strip()
             contragent = data["contragent"].strip()
 
 
             proj_init = None if data["proj_init"] == "" else init_reestr_proj.objects.get(pk=int(data["proj_init"],10))
-            proj_sys = None if data["proj_sys"] == "" else proj_types.objects.get(pk=int(data["proj_sys"],10))
-            #block = None if data["block"] == "" else regions.objects.get(pk=int(data["block"],10))
             executor = None if data["executor"] == "" else address_companies.objects.get(pk=int(data["executor"],10))
             business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
             rates_ob = None if data["rates"] == "" else rates.objects.get(pk=int(data["rates"],10))
@@ -1211,14 +1188,12 @@ def get_json(request):
             reestrproj.proj_kod = data["proj_kod"].strip()
             reestrproj.proj_name = name
             reestrproj.proj_other = other
-            reestrproj.proj_level = level
             reestrproj.comment = comment
             reestrproj.contragent = contragent
 
             reestrproj.business = business_ob
             reestrproj.executor = executor
             reestrproj.proj_init = proj_init
-            reestrproj.proj_sys = proj_sys
 
             reestrproj.passing = passing_ob
             reestrproj.rates = rates_ob

@@ -49,7 +49,8 @@ table[group=links] > thead > tr > th,
 table[group=file-list] > thead > tr > th,
 table[group=comment-list] > thead > tr > th,
 table[group=stages-list] > thead > tr > th,
-table[group=exec-list] > thead > tr > th {
+table[group=exec-list] > thead > tr > th,
+table[group=child-list] > thead > tr > th {
     background-color:#DCDCDC;
     padding: 0;
     text-align: left;
@@ -62,7 +63,8 @@ table[group=links] > tbody > tr > td,
 table[group=file-list] > tbody > tr > td,
 table[group=comment-list] > tbody > tr > td,
 table[group=stages-list] > tbody > tr > td,
-table[group=exec-list] > tbody > tr > td {
+table[group=exec-list] > tbody > tr > td,
+table[group=child-list] > tbody > tr > td {
     padding: 0;
     vertical-align: top;
 }
@@ -141,12 +143,18 @@ select#id_proj_init {
     border-width: 2px;
 }
 
-select#id_proj_sys, input#id_proj_other {
+
+input#id_proj_other {
     border-color: green;
     border-width: 2px;
 }
 
-input#id_proj_level {
-    border-color: red;
-    border-width: 2px;
+
+a#create-child-proj {
+    margin-left:15px;
+}
+
+
+table[group=child-list] {
+    margin-top: 10px;
 }

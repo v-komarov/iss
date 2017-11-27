@@ -179,8 +179,9 @@ class RatesAdmin(admin.ModelAdmin):
 
 
 class StagesAdmin(admin.ModelAdmin):
-    fields = ('name',)
-    list_display = ('name',)
+    fields = ('name','level')
+    list_display = ('name','level')
+    ordering = ['name', 'level']
 
 
 

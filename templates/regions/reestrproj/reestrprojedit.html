@@ -26,12 +26,8 @@
                         <dd><projcode>{{ proj.proj_kod }}</projcode></dd>
                         <dt>{{ form.proj_init.label }}</dt>
                         <dd>{{ form.proj_init }}</dd>
-                        <dt>{{ form.proj_sys.label }}</dt>
-                        <dd>{{ form.proj_sys }}</dd>
                         <dt>{{ form.proj_other.label }}</dt>
                         <dd>{{ form.proj_other }}</dd>
-                        <dt>{{ form.proj_level.label }}</dt>
-                        <dd>{{ form.proj_level }}</dd>
                     </dl>
             </div>
             <div class="small col-md-5 col-md-1-offset">
@@ -73,6 +69,7 @@
           <li id="nav-4" role="presentation"><a href="#">Документы</a></li>
           <li id="nav-5" role="presentation"><a href="#">Исполнители и даты</a></li>
           <li id="nav-6" role="presentation"><a href="#">Коментарии</a></li>
+          <li id="nav-7" role="presentation"><a href="#">Дочерние проекты</a></li>
         </ul>
     </div>
 
@@ -88,8 +85,9 @@
 {% include "regions/reestrproj/reestrprojedit4.html" %}
 {% include "regions/reestrproj/reestrprojedit5.html" %}
 {% include "regions/reestrproj/reestrprojedit6.html" %}
-{# {% include "regions/reestrproj/reestrprojedit7.html" %} #}
-
+{% if not proj.main_proj %}
+    {% include "regions/reestrproj/reestrprojedit7.html" %}
+{% endif %}
 {% include "saving.html" %}
 
 <iframe name="uploadframe" hidden></iframe>

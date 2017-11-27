@@ -397,7 +397,7 @@ class ReestrProjList(ListView):
 
     def get_queryset(self):
 
-        data = reestr_proj.objects.order_by("-id")
+        data = reestr_proj.objects.filter(main_proj=None).order_by("-id")
 
         return data
 

@@ -96,28 +96,21 @@ $(document).ready(function() {
     ReColorCode();
 
 
-    // Изменение последних цифр кода
-    $("#proj-common input#id_proj_level").change(function() {
-        var level = $("#proj-common input#id_proj_level").val();
-        $("projcode").children("span").eq(3).text(level);
-    });
 
     // Изменение кода связи с другими системами
     $("#proj-common input#id_proj_other").change(function() {
-        var sys = $("#proj-common select#id_proj_sys").val();
-        if (sys == "") {
-            $("projcode").children("span").eq(2).text($("#proj-common input#id_proj_other").val());
+
+        if ($("#proj-common input#id_proj_other").val() == "") {
+
+            $("projcode").children("span").eq(2).text("NONE");
+
         }
         else {
-            // Определение префикса
-            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-sys-pref&sys_id="+sys,
-            function(data) {
 
-                $("projcode").children("span").eq(2).text(data["pref"]+$("#proj-common input#id_proj_other").val());
-
-            })
+            $("projcode").children("span").eq(2).text("eisup"+$("#proj-common input#id_proj_other").val());
 
         }
+
     });
 
 
@@ -140,26 +133,6 @@ $(document).ready(function() {
 
     });
 
-
-
-    // Изменение кода связи с системами
-    $("#proj-common select#id_proj_sys").change(function() {
-        var sys = $("#proj-common select#id_proj_sys").val();
-        if (sys == "") {
-            $("projcode").children("span").eq(2).text($("#proj-common input#id_proj_other").val());
-        }
-        else {
-            // Определение префикса
-            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-sys-pref&sys_id="+sys,
-            function(data) {
-
-                $("projcode").children("span").eq(2).text(data["pref"]+$("#proj-common input#id_proj_other").val());
-
-            })
-
-        }
-
-    });
 
 
 
@@ -246,9 +219,7 @@ function ReestrProjDataSave(e) {
     data.reestrproj_id = reestrproj_id;
     data.proj_kod = $("#proj-common projcode").text();
     data.proj_init = $("#proj-common select#id_proj_init").val();
-    data.proj_sys = $("#proj-common select#id_proj_sys").val();
     data.other = $("#proj-common input#id_proj_other").val();
-    data.level = $("#proj-common input#id_proj_level").val();
     data.name = $("#proj-common input#id_proj_name").val();
     data.comment = $("#proj-common textarea#id_comment").val();
     data.executor = $("#proj-common select#id_executor").val();
@@ -983,7 +954,7 @@ function ChangeNav(e) {
     $("#nav-4").toggleClass("active",false);
     $("#nav-5").toggleClass("active",false);
     $("#nav-6").toggleClass("active",false);
-    //$("#nav-7").toggleClass("active",false);
+    $("#nav-7").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -993,7 +964,7 @@ function ChangeNav(e) {
     $("#page-4").hide();
     $("#page-5").hide();
     $("#page-6").hide();
-    //$("#page-7").hide();
+    $("#page-7").hide();
 
 
     // Название отображаемой страницы (на закладке)

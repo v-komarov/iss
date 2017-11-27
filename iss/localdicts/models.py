@@ -563,6 +563,7 @@ class ProjDocTypes(models.Model):
 class rates(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
 
+
     def __unicode__(self):
         return self.name
 
@@ -576,6 +577,7 @@ class rates(models.Model):
 ### Стадии реестра проектов
 class stages(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    level = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Связь со стадией', null=True)
 
     def __unicode__(self):
         return self.name

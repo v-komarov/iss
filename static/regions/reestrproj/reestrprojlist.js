@@ -45,8 +45,6 @@ function AddProj(e) {
 
     // Предварительная очистка полей
     $("form#reestr-proj-add #id_proj_name").val("");
-    $("form#reestr-proj-add #id_proj_other").val("00000");
-    $("form#reestr-proj-add #id_proj_level").val("00");
 
     $("#reestr-proj-new").dialog({
         title:"Новый элемент реестра проектов",
@@ -69,16 +67,9 @@ function AddProj(e) {
 
                     var data = {};
                     data.name = $("form#reestr-proj-add #id_proj_name").val();
-                    data.other = $("form#reestr-proj-add #id_proj_other").val();
-                    data.level = $("form#reestr-proj-add #id_proj_level").val();
-                    data.proj_init = $("form#reestr-proj-add #id_proj_init").val();
-                    data.proj_sys = $("form#reestr-proj-add #id_proj_sys").val();
-                    data.executor = $("form#reestr-proj-add #id_executor").val();
-                    data.business = $("form#reestr-proj-add #id_business").val();
 
                     data.action = "reestrproj-create";
 
-                    console.log(data);
 
                     $.ajax({
                       url: "/regions/jsondata/",
