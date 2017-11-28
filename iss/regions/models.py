@@ -508,7 +508,7 @@ class reestr_proj(models.Model):
     date_create = models.DateField(auto_now_add=True, null=True)
     date_service = models.DateField(verbose_name='Дата оказания услуги', null=True)
     data = JSONField(default={}, verbose_name='Данные')
-    main_proj = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Родительский элемент', null=True)
+    main_proj = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Родительский элемент', null=True, related_name="level")
 
 
     def __unicode__(self):

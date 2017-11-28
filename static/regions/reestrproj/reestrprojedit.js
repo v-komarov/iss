@@ -26,6 +26,8 @@ $(document).ready(function() {
     GetListLinks();
     // Отображение адресного перечня
     GetListAddress();
+    // Отображение списка дочерних проектов
+    GetListChildren();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
@@ -61,6 +63,9 @@ $(document).ready(function() {
 
     // Добавление адресного перечня
     $("#page-1 #add-address").bind("click", AddAddress);
+
+    // Создание дочернего проекта
+    $("#page-7 a#create-child-proj").bind("click", AddChildProj);
 
 
     // Поиск адреса
@@ -936,6 +941,141 @@ function GetTableExcel() {
 
 
 }
+
+
+
+
+
+
+
+// Список дочерних проектов
+function GetListChildren() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-reestrproj-list-children&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка дочерних проектов
+            $("table[group=child-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr row_id="+value['id']+">"
+                +"<td><a child target=\"_blank\" href=\"/regions/reestrproj/edit/"+value["id"]+"/\">"+value['kod']+"</a></td>"
+                +"<td><a child target=\"_blank\" href=\"/regions/reestrproj/edit/"+value["id"]+"/\">"+value['level']+"</a></td>"
+                +"<td><a child target=\"_blank\" href=\"/regions/reestrproj/edit/"+value["id"]+"/\">"+value['stage']+"</a></td>"
+                +"<td><a child target=\"_blank\" href=\"/regions/reestrproj/edit/"+value["id"]+"/\">"+value['name']+"</a></td>"
+                +"<td><a child target=\"_blank\" href=\"/regions/reestrproj/edit/"+value["id"]+"/\">"+value["create"]+"</a></td>"
+                +"<td><a child target=\"_blank\" href=\"/regions/reestrproj/edit/"+value["id"]+"/\">"+value['author']+"</a></td>"
+                +"</tr>";
+
+                $("table[group=child-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+
+
+
+// Создание дочернего проекта
+function AddChildProj(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-child-level&reestrproj_id="+reestrproj_id,
+    function(data2) {
+
+        $("form#reestr-proj-add2 #id_proj_name").val($("#proj-common input#id_proj_name").val()+" ("+data2["level"]+")");
+
+
+        $("#reestr-proj-new2").dialog({
+            title:"Новый дочерний элемент",
+            buttons:[{ text:"Сохранить",click: function() {
+
+                var csrftoken = getCookie('csrftoken');
+
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
+                    }
+                });
+
+
+
+                    // Проверка значений
+                    if ( $("form#reestr-proj-add2 #id_proj_name").val() != "" ) {
+
+                        var data = {};
+                        data.name = $("form#reestr-proj-add2 #id_proj_name").val();
+                        data.level = data2["level"];
+                        data.reestrproj_id = reestrproj_id;
+                        data.action = "reestrproj-create-child";
+
+
+                        $.ajax({
+                          url: "/regions/jsondata/",
+                          type: "POST",
+                          dataType: 'json',
+                          data:$.toJSON(data),
+                            success: function(result) {
+                                if (result["result"] == "ok") { $("#reestr-proj-new2").dialog('close'); GetListChildren(); GetListComments();}
+                            }
+
+                        });
+
+
+                    }
+                    else { alert("Заполните поля!"); }
+
+
+            }},
+
+
+                {text:"Закрыть",click: function() {
+                $(this).dialog("close")}}
+            ],
+            open: function() {
+            },
+            modal:true,
+            minWidth:400,
+            width:600
+
+        });
+
+
+
+
+    })
+
+
+
+}
+
+
+
+
+
+
+
+
+
 
 
 

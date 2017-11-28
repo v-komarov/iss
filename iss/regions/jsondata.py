@@ -817,6 +817,45 @@ def get_json(request):
 
 
 
+        ### Определение номера тома дочернего элемента реестра проектов
+        if r.has_key("action") and rg("action") == 'reestrproj-child-level':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            level = 1
+            for item in reestr_proj.objects.filter(main_proj=reestrproj):
+                if int(item.proj_level,10) >= level:
+                    level = int(item.proj_level,10) + 1
+
+            response_data = {"level": ("0%s" % level)[:2] }
+
+
+
+
+
+        ### Реестр проектов: Список дочерних проектов
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-children':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            child_list = []
+            for row in reestr_proj.objects.filter(main_proj=reestrproj).order_by("proj_level"):
+                child_list.append({
+                    "id": row.id,
+                    "kod": row.proj_kod,
+                    "level": row.proj_level,
+                    "name": row.proj_name,
+                    "stage": row.stage.name if row.stage else "",
+                    "author": row.author.get_full_name(),
+                    "create": row.date_create.strftime("%d.%m.%Y") if row.date_create else ""
+                })
+
+
+            response_data = {"result": "ok", "data": child_list }
+
+
+
+
+
+
 
 
     if request.method == "POST":
@@ -1135,6 +1174,53 @@ def get_json(request):
 
 
 
+
+
+
+        ### Создание дочернего реестра - проекта
+        if data.has_key("action") and data["action"] == 'reestrproj-create-child':
+
+            reestrproj_id = data["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+
+            name = data["name"].strip()
+            level = data["level"].strip()
+
+            proj_kod = reestrproj.proj_kod.split("/")
+            proj_kod[3] = level
+            proj_kod = "/".join(proj_kod)
+
+            rp = reestr_proj.objects.create(
+                main_proj = reestrproj,
+                proj_kod = proj_kod,
+                proj_name = name,
+                proj_other = reestrproj.proj_other,
+                proj_level = level,
+                stage = reestrproj.stage,
+                proj_init = reestrproj.proj_init,
+                business = reestrproj.business,
+                executor = reestrproj.executor,
+                author = request.user
+            )
+
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = "Создан дочерний элемент %s" % name
+            )
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+
+
         ### Создание нового реестра - проекта
         if data.has_key("action") and data["action"] == 'reestrproj-create':
 
@@ -1148,7 +1234,6 @@ def get_json(request):
             rp = reestr_proj.objects.create(
                 proj_kod = proj_kod,
                 proj_name = name,
-                proj_sys = None,
                 proj_other = "000000",
                 proj_level = "00",
                 proj_init = None,

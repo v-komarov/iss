@@ -58,6 +58,7 @@
             <tr style="background-color:gainsboro;">
                 <th>№пп</th>
                 <th>Код</th>
+                <th>Том</th>
                 <th>Стадия</th>
                 <th>Наименование</th>
                 <th>Города</th>
@@ -70,34 +71,72 @@
 
         <tbody class="small">
             {% for row in object_list %}
-            <tr>
-                <td><a>{{ row.id }}</a></td>
-                <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_kod }}</a></td>
-                <td>{% if row.stage %}<a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage }}</a>{% else %}{% endif %}</td>
-                <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_name }}</a></td>
-                <td>
-                    <ul>
-                        {% for addr in row.data.address %}
-                            <li>{{ addr.city }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        {% for addr in row.data.address %}
-                            <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        {% for worker in row.reestr_proj_exec_date_set.all %}
-                            <li>{{ worker.worker.get_full_name }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td>{% if row.business %}{{ row.business }}{% else %}{% endif %}</td>
-            </tr>
+                {% if row.main_proj == None %}
+                    <tr>
+                        <td><a>{{ row.id }}</a></td>
+                        <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_kod }}</a></td>
+                        <td>{{ row.proj_level }}</td>
+                        <td>{% if row.stage %}<a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage }}</a>{% else %}{% endif %}</td>
+                        <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_name }}</a></td>
+                        <td>
+                            <ul>
+                                {% for addr in row.data.address %}
+                                    <li>{{ addr.city }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                {% for addr in row.data.address %}
+                                    <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                {% for worker in row.reestr_proj_exec_date_set.all %}
+                                    <li>{{ worker.worker.get_full_name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{% if row.business %}{{ row.business }}{% else %}{% endif %}</td>
+                    </tr>
+
+
+                    {# Отображение дочерних проектов #}
+                    {% for item in row.level.all %}
+                        <tr child>
+                            <td><a>{{ item.id }}</a></td>
+                            <td><a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.proj_kod }}</a></td>
+                            <td>{{ item.proj_level }}</td>
+                            <td>{% if item.stage %}<a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.stage }}</a>{% else %}{% endif %}</td>
+                            <td><a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.proj_name }}</a></td>
+                            <td>
+                                <ul>
+                                    {% for addr in item.data.address %}
+                                        <li>{{ addr.city }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    {% for addr in item.data.address %}
+                                        <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    {% for worker in item.reestr_proj_exec_date_set.all %}
+                                        <li>{{ worker.worker.get_full_name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>{% if item.business %}{{ item.business }}{% else %}{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+
+                {% endif %}
             {% endfor %}
         </tbody>
 

@@ -158,3 +158,15 @@ a#create-child-proj {
 table[group=child-list] {
     margin-top: 10px;
 }
+
+
+/* Форма создания нового элемента */
+form#reestr-proj-add2 > table > tbody > tr > td > input,
+form#reestr-proj-add2 > table > tbody > tr > td > select {
+    width: 300px;
+}
+
+
+form#reestr-proj-add2 > table > tbody > tr > th > label {
+    width: 250px;
+}

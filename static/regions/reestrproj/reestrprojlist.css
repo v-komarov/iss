@@ -57,3 +57,6 @@ form#reestr-proj-add > table > tbody > tr > th > label {
 }
 
 
+table[group=proj-list] > tbody > tr[child] > td > a {
+    color:green;
+}
