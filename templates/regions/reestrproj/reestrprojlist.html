@@ -76,7 +76,7 @@
                         <td><a>{{ row.id }}</a></td>
                         <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_kod }}</a></td>
                         <td>{{ row.proj_level }}</td>
-                        <td>{% if row.stage %}<a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage }}</a>{% else %}{% endif %}</td>
+                        <td>{% if row.stage %}<a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage.getfullname }}</a>{% else %}{% endif %}</td>
                         <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_name }}</a></td>
                         <td>
                             <ul>
@@ -109,7 +109,7 @@
                             <td><a>{{ item.id }}</a></td>
                             <td><a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.proj_kod }}</a></td>
                             <td>{{ item.proj_level }}</td>
-                            <td>{% if item.stage %}<a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.stage }}</a>{% else %}{% endif %}</td>
+                            <td>{% if item.stage %}<a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.stage.getfullname }}</a>{% else %}{% endif %}</td>
                             <td><a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.proj_name }}</a></td>
                             <td>
                                 <ul>

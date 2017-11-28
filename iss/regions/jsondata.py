@@ -576,7 +576,7 @@ def get_json(request):
             stage_list = []
             for row in stages_history.objects.filter(reestr_proj=reestrproj).order_by("-datetime_create"):
                 stage_list.append({
-                    "stage": row.stage.name,
+                    "stage": row.stage.getfullname(),
                     "user": row.user.get_full_name(),
                     "date": row.datetime_create.strftime("%d.%m.%Y")
                 })
@@ -595,7 +595,7 @@ def get_json(request):
             for row in reestr_proj_exec_date.objects.filter(reestr_proj=reestrproj).order_by("-datetime_edit"):
                 task_list.append({
                     "id": row.id,
-                    "stage": row.stage.name if row.stage else "",
+                    "stage": row.stage.getfullname(),
                     "user": row.user.get_full_name(),
                     "date1": row.date1.strftime("%d.%m.%Y") if row.date1 else "",
                     "date2": row.date2.strftime("%d.%m.%Y") if row.date2 else "",

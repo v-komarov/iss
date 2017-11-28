@@ -8,7 +8,12 @@
               <select class="form-control input-sm" id="stage" placeholder="">
                   <option value="">---</option>
                   {% for st in stages %}
-                    <option value={{ st.id }}>{{ st.name }}</option>
+                    {% if st.level == None %}
+                        <option value={{ st.id }}>{{ st.name }}</option>
+                        {% for st2 in st.stage2.all %}
+                            <option value={{ st2.id }}>&nbsp;&nbsp;&nbsp;&nbsp;{{ st2.name }}</option>
+                        {% endfor %}
+                    {% endif %}
                   {% endfor %}
               </select>
           </div>

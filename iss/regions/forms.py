@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 
 
 from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date
-
+from iss.localdicts.models import stages
 
 
 
@@ -80,6 +80,13 @@ class WorkersDatesStagesForm(ModelForm):
         super(WorkersDatesStagesForm, self).__init__(*args, **kwargs)
         users = User.objects.order_by("first_name")
         self.fields['worker'].choices = [(user.pk, user.get_full_name()) for user in users]
+        stages_choices = [("","-----"),]
+        for item in stages.objects.filter(level=None).order_by("name"):
+            stages_choices.append((item.id,item.name))
+            for item2 in item.stage2.all():
+                stages_choices.append((item2.id, "    "+item2.name))
+
+        self.fields['stage'].choices = stages_choices
 
     class Meta:
         model = reestr_proj_exec_date

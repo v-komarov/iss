@@ -577,10 +577,16 @@ class rates(models.Model):
 ### Стадии реестра проектов
 class stages(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
-    level = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Связь со стадией', null=True)
+    level = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Связь со стадией', null=True, related_name="stage2")
 
     def __unicode__(self):
         return self.name
+
+    def getfullname(self):
+        if self.level == None:
+            return self.name
+        else:
+            return "{stage2} -> {stage}".format(stage=self.name, stage2=self.level.name)
 
     class Meta:
         verbose_name = 'Стадия реестра проектов'
