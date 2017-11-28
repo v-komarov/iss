@@ -577,7 +577,7 @@ class rates(models.Model):
 ### Стадии реестра проектов
 class stages(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
-    level = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Связь со стадией', null=True, related_name="stage2")
+    level = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Связь со стадией', null=True, related_name="stage2", blank=True)
 
     def __unicode__(self):
         return self.name

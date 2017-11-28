@@ -28,6 +28,10 @@
                         <dd>{{ form.proj_init }}</dd>
                         <dt>{{ form.proj_other.label }}</dt>
                         <dd>{{ form.proj_other }}</dd>
+                        {% if proj.main_proj %}
+                            <dt>Родительский проект</dt>
+                            <dd><a target="_blank" href="/regions/reestrproj/edit/{{ proj.main_proj.id }}/">{{ proj.proj_kod }}</a></dd>
+                        {% endif %}
                     </dl>
             </div>
             <div class="small col-md-5 col-md-1-offset">
