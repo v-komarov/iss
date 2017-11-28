@@ -4,6 +4,8 @@ $(document).ready(function() {
     // Добавить элемент в реестр проектов
     $("#addproj").bind("click",AddProj);
 
+    // Поиск по строке
+    $("button#search-button").bind("click",Search);
 
 
 });
@@ -35,6 +37,28 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
+// Поиск
+function Search(e) {
+
+    var search = $("input#search-text").val();
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search="+search,
+    function(data) {
+
+        if (data["result"] == "ok") { location.reload(); }
+
+    })
+
+}
+
+
+
 
 
 

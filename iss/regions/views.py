@@ -459,6 +459,7 @@ class ReestrProjEdit(UpdateView):
         context['task'] = WorkersDatesStagesForm()
         context['doctypes'] = ProjDocTypes.objects.order_by('name')
         context['form2'] = ReestrProjCreateForm()
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
         return context
 
 

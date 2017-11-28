@@ -856,6 +856,24 @@ def get_json(request):
 
 
 
+        ### Реестр проектов: поиск
+        if r.has_key("action") and rg("action") == 'reestrproj-list-search':
+            search = request.GET["search"].strip()
+
+            if search == "" and request.session.has_key("search_text"):
+                del request.session["search_text"]
+            else:
+                request.session["search_text"] = search
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+
 
 
     if request.method == "POST":
