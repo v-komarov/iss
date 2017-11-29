@@ -29,6 +29,11 @@
                         <option value="{{ item.id }}">{{ item.name }}</option>
                     {% endfor %}
             </select>
+
+            <label for="search-result">Поиск</label>
+            <input id="search-result" type="text" class="form-control input-sm" value="{{ search_result }}" />
+            <button id="search-button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
+            <button id="clear-button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
         </form>
     </div>
 </div>

@@ -28,6 +28,13 @@ $(document).ready(function() {
 
 
 
+    // Поиск результата
+    $("button#search-button").bind("click", Search);
+
+    // Отмена поиска
+    $("button#clear-button").bind("click", ClearSearch);
+
+
 });
 
 
@@ -57,6 +64,47 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
+
+
+
+
+// Поиск по строке
+function Search(e) {
+
+    var search = $("input#search-result").val();
+
+    var jqxhr = $.getJSON("/exams/jsondata/?action=search-result&search="+search,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+        }
+
+    })
+
+
+}
+
+
+
+
+// Отмена поиска по строке
+function ClearSearch(e) {
+
+    $("input#search-result").val("");
+
+    var jqxhr = $.getJSON("/exams/jsondata/?action=search-result&search=",
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+        }
+
+    })
+
+
+}
 
 
 

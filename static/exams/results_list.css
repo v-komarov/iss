@@ -76,3 +76,9 @@ form#resultdata > table > tbody > tr > td > input#id_department,
 form#resultdata > table > tbody > tr > td > input#id_worker {
     width: 400px;
 }
+
+
+/* Ширина поля поиска */
+input#search-result {
+    width: 300px;
+}

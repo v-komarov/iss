@@ -460,7 +460,11 @@ class ResultsList(ListView):
 
         if self.session.has_key('exams-section'):
             section = sections.objects.get(pk=int(self.session["exams-section"], 10))
-            data = tests_results.objects.filter(test__section=section, learning=False).exclude(end=None).order_by('-end')
+            # Поиск
+            if self.session.has_key('search_result'):
+                data = tests_results.objects.filter(test__section=section, learning=False, worker__icontains=self.session['search_result']).exclude(end=None).order_by('-end')
+            else:
+                data = tests_results.objects.filter(test__section=section, learning=False).exclude(end=None).order_by('-end')
         else:
             data = []
 
@@ -477,6 +481,7 @@ class ResultsList(ListView):
         context['section'] = self.session['exams-section'] if self.session.has_key('exams-section') else "0"
         context['reportlist'] = self.session['reportlist'] if self.session.has_key('reportlist') else []
         context['form'] = ResultForm()
+        context['search_result'] = self.session['search_result'] if self.session.has_key('search_result') else ""
 
         return context
 

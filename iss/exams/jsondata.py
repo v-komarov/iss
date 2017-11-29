@@ -430,6 +430,20 @@ def get_json(request):
 
 
 
+        ### Стока поиска результата
+        if r.has_key("action") and rg("action") == 'search-result':
+            search = request.GET["search"].strip()
+
+            if request.session.has_key("search_result") and search == "":
+                del request.session["search_result"]
+            elif search != "":
+                request.session["search_result"] = search
+
+            response_data = { "result": "ok" }
+
+
+
+
 
 
     if request.method == "POST":
