@@ -563,6 +563,7 @@ def get_json(request):
 
                 )
 
+
                 response_data = {"result": "ok"}
 
 
@@ -651,6 +652,7 @@ def get_json(request):
                 user = request.user,
                 comment = u"Удален элемент исполнителей и дат %s" % task_stage
             )
+
 
             response_data = {"result": "ok"}
 
@@ -858,7 +860,7 @@ def get_json(request):
 
         ### Реестр проектов: поиск
         if r.has_key("action") and rg("action") == 'reestrproj-list-search':
-            search = request.GET["search"].strip()
+            search = request.GET["search"]
 
             if search == "" and request.session.has_key("search_text"):
                 del request.session["search_text"]
@@ -1312,6 +1314,10 @@ def get_json(request):
             )
 
 
+            ### Формирование индекса поиска
+            reestrproj.create_search_index()
+
+
             response_data = {"result": "ok"}
 
 
@@ -1362,6 +1368,8 @@ def get_json(request):
                 block = block_ob
             )
 
+
+
             response_data = {"result": "ok"}
 
 
@@ -1391,6 +1399,7 @@ def get_json(request):
                 user = request.user,
                 comment = u"Изменен элемент исполнителей и дат %s" % task.stage.name if task.stage else ""
             )
+
 
 
             response_data = {"result": "ok"}

@@ -509,10 +509,57 @@ class reestr_proj(models.Model):
     date_service = models.DateField(verbose_name='Дата оказания услуги', null=True)
     data = JSONField(default={}, verbose_name='Данные')
     main_proj = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Родительский элемент', null=True, related_name="level")
-
+    search_index = models.TextField(verbose_name='Родительский элемент', null=True, default="")
 
     def __unicode__(self):
         return self.proj_kod
+
+
+    ### Формирование индекса поиска
+    def create_search_index(self):
+        search_index = set()
+
+        ### Код проекта
+        search_index.add(self.proj_kod.decode("utf-8"))
+
+        ## Название проекта
+        for w in self.proj_name.split():
+            search_index.add(w.decode("utf-8"))
+
+        ### Инициатор проекта
+        if self.proj_init:
+            search_index.add(self.proj_init.name)
+
+        ### Реализатор проекта
+        if self.executor:
+            search_index.add(self.executor.name)
+
+        ### Этапы
+        if self.stage:
+            search_index.add(self.stage.getfullname())
+
+        ### Адрес
+        if self.data.has_key('address'):
+            for addr in self.data["address"]:
+                search_index.add(addr["city"])
+                search_index.add(addr["street"])
+
+        ### Контрагент
+        for w in self.contragent.split():
+            search_index.add(w.decode("utf-8"))
+
+        ### Исполнители
+        for ex in self.reestr_proj_exec_date_set.all():
+            for w in ex.worker.get_full_name().split():
+                search_index.add(w)
+
+
+        self.search_index = u" ".join(list(search_index))
+        self.save()
+
+
+        return "ok"
+
 
 
 

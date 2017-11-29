@@ -397,7 +397,10 @@ class ReestrProjList(ListView):
 
     def get_queryset(self):
 
-        data = reestr_proj.objects.order_by("-id")
+        if self.session.has_key("search_text"):
+            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"]).order_by("-id")
+        else:
+            data = reestr_proj.objects.order_by("-id")
 
         return data
 
@@ -410,6 +413,7 @@ class ReestrProjList(ListView):
         context = super(ReestrProjList, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['form'] = ReestrProjCreateForm()
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
 
         return context
 
@@ -459,7 +463,7 @@ class ReestrProjEdit(UpdateView):
         context['task'] = WorkersDatesStagesForm()
         context['doctypes'] = ProjDocTypes.objects.order_by('name')
         context['form2'] = ReestrProjCreateForm()
-        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
         return context
 
 
