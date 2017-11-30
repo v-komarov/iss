@@ -6,6 +6,7 @@ import datetime
 import random
 import logging
 import time
+import uuid
 
 from pytz import timezone
 
@@ -17,7 +18,7 @@ from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date
-from iss.localdicts.models import regions, proj_temp, proj_types, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing
+from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
 
 
@@ -871,6 +872,50 @@ def get_json(request):
             response_data = {"result": "ok"}
 
 
+
+
+
+        ### Реестр проектов: Добавление кода связи с другими системами
+        if r.has_key("action") and rg("action") == 'reestrproj-other-system-add':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            other_system = proj_other_system.objects.get(pk=int(request.GET["system_id"],10))
+            other_code = request.GET["system_code"].strip()
+
+            if reestrproj.data.has_key("other_system"):
+                reestrproj.data["other_system"].append({"id": str(uuid.uuid4()), "other_id": other_system.id, "other_name": other_system.name, "other_code": other_code})
+            else:
+                reestrproj.data["other_system"] = [{"id": str(uuid.uuid4()), "other_id": other_system.id, "other_name": other_system.name, "other_code": other_code}]
+
+            reestrproj.save()
+
+            reestr_proj_comment.objects.create(
+                reestr_proj = reestrproj,
+                user = request.user,
+                comment = u"Добавлена связь с другой системой {system} {code}".format(system=other_system.name,code=other_code)
+            )
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Реестр проектов: Получение списка связи с другими системами
+        if r.has_key("action") and rg("action") == 'reestrproj-other-system-list':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            system_list = []
+            if reestrproj.data.has_key("other_system"):
+                for item in reestrproj.data["other_system"]:
+                    system_list.append({
+                        'id':item['id'],
+                        'other_name':item['other_name'],
+                        'other_code':item['other_code']
+                    })
+
+            response_data = {"result": "ok", "system": system_list}
 
 
 

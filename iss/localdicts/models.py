@@ -502,17 +502,16 @@ class blocks(models.Model):
         verbose_name_plural = 'Названия блоков'
 
 
-### Типы проектов
-class proj_types(models.Model):
+### Справочник связи с другими системами
+class proj_other_system(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
-    pref = models.CharField(max_length=10, verbose_name='Префикс', unique=True, null=True)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        verbose_name = 'Тип проекта'
-        verbose_name_plural = 'Типы проектов'
+        verbose_name = 'Связи с другими системами'
+        verbose_name_plural = 'Связи с другими системами'
 
 
 

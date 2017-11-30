@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, proj_types, business, passing, rates, stages, init_reestr_proj, ProjDocTypes
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, business, passing, rates, stages, init_reestr_proj, ProjDocTypes
 
 
 
@@ -552,6 +552,13 @@ class reestr_proj(models.Model):
         for ex in self.reestr_proj_exec_date_set.all():
             for w in ex.worker.get_full_name().split():
                 search_index.add(w)
+
+        ### Связь с другими системами
+        if self.data.has_key('other_system'):
+            for code in self.data['other_system']:
+                search_index.add(code['other_name'])
+                search_index.add(code['other_code'])
+
 
 
         self.search_index = u" ".join(list(search_index))

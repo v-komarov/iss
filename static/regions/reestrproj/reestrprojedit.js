@@ -28,6 +28,8 @@ $(document).ready(function() {
     GetListAddress();
     // Отображение списка дочерних проектов
     GetListChildren();
+    // Отображение списка связи с другими системами
+    GetListOtherSystems();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
@@ -66,6 +68,9 @@ $(document).ready(function() {
 
     // Создание дочернего проекта
     $("#page-7 a#create-child-proj").bind("click", AddChildProj);
+
+    // Добавление кода других систем
+    $("#page-1 button#append-system-code").bind("click", AddOtherSystem);
 
 
     // Поиск адреса
@@ -676,6 +681,35 @@ function AddAddress(e) {
 
 
 
+// Добавление связи с другой системой
+function AddOtherSystem(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    var other_system_name = $("#page-1 select#other-system").val();
+    var other_system_code = $("#page-1 input#system-code").val();
+
+        if (other_system_name != "" && other_system_code != "") {
+
+            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-other-system-add&system_id="+other_system_name+"&system_code="+other_system_code+"&reestrproj_id="+reestrproj_id,
+            function(data) {
+
+                if (data["result"] == "ok") {
+                    $("#page-1 select#other-system").val("");
+                    $("#page-1 input#system-code").val("");
+                    GetListOtherSystems();
+                    GetListComments();
+                }
+
+            })
+
+
+        }
+
+
+}
+
+
+
 
 
 
@@ -916,6 +950,43 @@ function GetListAddress() {
 
 }
 
+
+
+
+
+
+// Список связи с другими системами
+function GetListOtherSystems() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-other-system-list&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+            console.log(data);
+            // Отображение списка связи с другими системами
+            $("table[group=systems] tbody").empty();
+            $.each(data["system"], function(key,value) {
+
+
+                var t = "<tr row_id="+value['id']+" >"
+                +"<td>"+value['other_name']+"</td>"
+                +"<td>"+value['other_code']+"</td>"
+                +"<td><a delete-system><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=systems] tbody").append(t);
+
+            });
+
+
+        }
+
+    })
+
+
+}
 
 
 

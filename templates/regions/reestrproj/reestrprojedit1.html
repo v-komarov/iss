@@ -40,14 +40,41 @@
     </div>
 
 
-    <div class="col-md-3 col-md-1-offset">
+    <div class="col-md-5 col-md-1-offset">
         <dl>
             <dt>{{ form.rates.label }}</dt>
             <dd>{{ form.rates }}</dd>
             <dt>{{ form.passing.label }}</dt>
             <dd>{{ form.passing }}</dd>
         </dl>
+        <dl>
+            <dt>Связь с другими системами<br>
+                <select id="other-system">
+                    <option value="">----</option>
+                    {% for item in other_system %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+                <input id="system-code" type="text" />
+                <button id="append-system-code" class="btn btn-default btn-xs" title="Добавить"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+            </dt>
+
+            <dd>
+                <table group="systems" class="table table-bordered table-striped draggable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Система</th>
+                            <th>Код</th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </dd>
+        </dl>
     </div>
+
 
 
 </div>

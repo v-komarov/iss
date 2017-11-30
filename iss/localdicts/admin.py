@@ -1,7 +1,7 @@
 #!coding:utf-8
 
 from django.contrib import admin
-from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_types, business, passing, rates, stages, init_reestr_proj
+from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_other_system, business, passing, rates, stages, init_reestr_proj
 from iss.localdicts.models import ProjDocTypes
 
 
@@ -153,9 +153,9 @@ class BlocksAdmin(admin.ModelAdmin):
 
 
 
-class ProjTypesAdmin(admin.ModelAdmin):
-    fields = ('name','pref',)
-    list_display = ('name','pref',)
+class ProjOtherSystemAdmin(admin.ModelAdmin):
+    fields = ('name',)
+    list_display = ('name',)
 
 
 
@@ -222,7 +222,7 @@ admin.site.register(logical_interfaces_prop_list,LogicalInterfacePropAdmin)
 admin.site.register(regions, RegionsAdmin)
 admin.site.register(proj_temp, ProjTempAdmin)
 admin.site.register(blocks, BlocksAdmin)
-admin.site.register(proj_types, ProjTypesAdmin)
+admin.site.register(proj_other_system, ProjOtherSystemAdmin)
 admin.site.register(business, BusinessAdmin)
 admin.site.register(passing, PassingAdmin)
 admin.site.register(rates, RatesAdmin)
