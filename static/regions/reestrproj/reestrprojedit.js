@@ -47,6 +47,9 @@ $(document).ready(function() {
     // Удаление элемента адресного перечня
     $("#page-1 table[group=addresses] tbody").on("click", "a[delete-address]", DeleteAddress);
 
+    // Удаление элемента связи с другими системами
+    $("#page-1 table[group=systems] tbody").on("click", "a[delete-system]", DeleteOtherSystem);
+
 
     // Вызов формы редактирования элемента исполнители и даты
     $("#page-5 table[group=exec-list] tbody").on("click", "a[task]", EditTask);
@@ -646,6 +649,35 @@ function DeleteAddress(e) {
         function(data) {
 
             if (data["result"] == "ok") { GetListAddress(); GetListComments();}
+
+        })
+
+    }
+
+
+}
+
+
+
+
+
+
+// Удаление элемента связи с другими системами
+function DeleteOtherSystem(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    var row_id = $(this).parents("tr").attr("row_id");
+    var system = $(this).parents("tr").children("td").eq(0).text();
+    var code = $(this).parents("tr").children("td").eq(1).text();
+
+    var deletesystem = confirm("Удаляем "+system+" "+code+" ?");
+
+    if (deletesystem) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-other-system-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListOtherSystems(); GetListComments();}
 
         })
 

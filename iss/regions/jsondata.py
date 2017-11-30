@@ -920,6 +920,30 @@ def get_json(request):
 
 
 
+        ### Реестр проектов: Удаление элемента связи с другими системами
+        if r.has_key("action") and rg("action") == 'reestrproj-other-system-delete':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            system_id = request.GET["row-id"]
+
+            for item in reestrproj.data["other_system"]:
+                if item["id"] == system_id:
+
+                    reestr_proj_comment.objects.create(
+                        reestr_proj=reestrproj,
+                        user=request.user,
+                        comment=u"Удалена связь с другой системой {system} {code}".format(system=item["other_name"], code=item["other_code"])
+                    )
+
+                    reestrproj.data["other_system"].remove(item)
+                    reestrproj.save()
+
+
+
+
+            response_data = {"result": "ok"}
+
+
 
 
 
