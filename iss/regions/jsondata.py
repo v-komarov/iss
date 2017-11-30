@@ -861,7 +861,7 @@ def get_json(request):
 
         ### Реестр проектов: поиск
         if r.has_key("action") and rg("action") == 'reestrproj-list-search':
-            search = request.GET["search"]
+            search = request.GET["search"].strip()
 
             if search == "" and request.session.has_key("search_text"):
                 del request.session["search_text"]

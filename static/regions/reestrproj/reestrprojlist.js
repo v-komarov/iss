@@ -7,6 +7,9 @@ $(document).ready(function() {
     // Поиск по строке
     $("button#search-button").bind("click",Search);
 
+    // Отмена поиска
+    $("button#clear-button").bind("click", ClearSearch);
+
 
 });
 
@@ -58,6 +61,21 @@ function Search(e) {
 }
 
 
+
+// Отмена поиска
+function ClearSearch(e) {
+
+    $("input#search-text").val("");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search=",
+    function(data) {
+
+        if (data["result"] == "ok") { location.reload(); }
+
+    })
+
+
+}
 
 
 
