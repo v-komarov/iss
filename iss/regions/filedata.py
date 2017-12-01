@@ -559,3 +559,95 @@ def getfile2(request):
         return response
 
 
+
+
+
+
+
+
+### Вывод реестра проектов в excel файл
+def reestrprojexcel(request):
+
+
+    book = xlwt.Workbook()
+
+    sh = book.add_sheet(u"Реестр проектов")
+
+    style_bold = xlwt.easyxf('font: bold 1;')
+    style_normal = xlwt.easyxf('')
+
+    sh.col(2).width = 15000
+    sh.col(3).width = 15000
+    sh.col(4).width = 15000
+    sh.col(6).width = 15000
+    sh.col(7).width = 15000
+    sh.col(8).width = 15000
+    sh.col(13).width = 15000
+    sh.col(14).width = 15000
+
+    ### Заголовок
+    sh.write(0, 0, u"Код", style=style_bold)
+    sh.write(0, 1, u"Том", style=style_bold)
+    sh.write(0, 2, u"Стадия", style=style_bold)
+    sh.write(0, 3, u"Название", style=style_bold)
+    sh.write(0, 4, u"Описание", style=style_bold)
+    sh.write(0, 5, u"ЕИСУП", style=style_bold)
+    sh.write(0, 6, u"Контрагент", style=style_bold)
+    sh.write(0, 7, u"Инициатор", style=style_bold)
+    sh.write(0, 8, u"Реализатор", style=style_bold)
+    sh.write(0, 9, u"Направление бизнеса", style=style_bold)
+    sh.write(0, 10, u"Дата оказания услуги", style=style_bold)
+    sh.write(0, 11, u"Доходность", style=style_bold)
+    sh.write(0, 12, u"Признак переходящего проекта", style=style_bold)
+    sh.write(0, 13, u"Адресный перечень", style=style_bold)
+    sh.write(0, 14, u"Исполнители", style=style_bold)
+
+
+    ### Получение данных
+    if request.session.has_key("search_text"):
+        data = reestr_proj.objects.filter(search_index__icontains=request.session["search_text"]).order_by("-id")
+    else:
+        data = reestr_proj.objects.order_by("-id")
+
+
+    n = 1 ## Строка в листе
+    for row in data:
+        sh.write(n, 0, row.proj_kod, style=style_normal)
+        sh.write(n, 1, row.proj_level, style=style_normal)
+        sh.write(n, 2, row.stage.getfullname() if row.stage else "", style=style_normal)
+        sh.write(n, 3, row.proj_name, style=style_normal)
+        sh.write(n, 4, row.comment, style=style_normal)
+        sh.write(n, 5, row.proj_other, style=style_normal)
+        sh.write(n, 6, row.contragent, style=style_normal)
+        sh.write(n, 7, row.proj_init.name if row.proj_init else "", style=style_normal)
+        sh.write(n, 8, row.executor.name if row.executor else "", style=style_normal)
+        sh.write(n, 9, row.business.name if row.business else "", style=style_normal)
+        sh.write(n, 10, row.date_service.strftime("%d.%m.%Y") if row.date_service else "", style=style_normal)
+        sh.write(n, 11, row.rates.name if row.rates else "", style=style_normal)
+        sh.write(n, 12, row.passing.name if row.passing else "", style=style_normal)
+
+        ### Адресный перечень
+        address_list = ""
+        if row.data.has_key("address"):
+            for addr in row.data["address"]:
+                address_list =  address_list + u"{city} {street} {house}; ".format(city=addr["city"],street=addr["street"],house=addr["house"])
+
+        sh.write(n, 13, address_list, style=style_normal)
+
+        ### Исполнители
+        worker_list = ""
+        for w in row.reestr_proj_exec_date_set.all():
+            worker_list = worker_list + u"{worker}; ".format(worker=w.worker.get_full_name())
+
+        sh.write(n, 14, worker_list, style=style_normal)
+
+
+        n += 1
+
+
+    response = HttpResponse(content_type="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="Реестр проектов.xls"'
+    book.save(response)
+    return response
+
+
