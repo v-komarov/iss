@@ -576,6 +576,10 @@ def reestrprojexcel(request):
     style_bold = xlwt.easyxf('font: bold 1;')
     style_normal = xlwt.easyxf('')
 
+    style_wrap = xlwt.easyxf('align: wrap yes')
+
+
+    sh.col(0).width = 10000
     sh.col(2).width = 15000
     sh.col(3).width = 15000
     sh.col(4).width = 15000
@@ -584,6 +588,7 @@ def reestrprojexcel(request):
     sh.col(8).width = 15000
     sh.col(13).width = 15000
     sh.col(14).width = 15000
+    sh.col(15).width = 30000
 
     ### Заголовок
     sh.write(0, 0, u"Код", style=style_bold)
@@ -600,7 +605,8 @@ def reestrprojexcel(request):
     sh.write(0, 11, u"Доходность", style=style_bold)
     sh.write(0, 12, u"Признак переходящего проекта", style=style_bold)
     sh.write(0, 13, u"Адресный перечень", style=style_bold)
-    sh.write(0, 14, u"Исполнители", style=style_bold)
+    sh.write(0, 14, u"Исполнители", style=style_wrap)
+    sh.write(0, 15, u"Коментарии", style=style_wrap)
 
 
     ### Получение данных
@@ -637,9 +643,16 @@ def reestrprojexcel(request):
         ### Исполнители
         worker_list = ""
         for w in row.reestr_proj_exec_date_set.all():
-            worker_list = worker_list + u"{worker}; ".format(worker=w.worker.get_full_name())
+            worker_list = worker_list + u"{worker} ({stage} {date1} - {date2}); ".format(worker=w.worker.get_full_name(), stage=w.stage.name if w.stage else "", date1=w.date1.strftime("%d.%m.%Y") if w.date1 else "", date2=w.date2.strftime("%d.%m.%Y") if w.date2 else "")
 
         sh.write(n, 14, worker_list, style=style_normal)
+
+        ### Комментарии
+        comments = ""
+        for c in row.reestr_proj_comment_set.all():
+            comments = comments + u"{comment} [{worker} {date}]; ".format(comment=c.comment, worker=c.user.get_full_name(), date=c.datetime_create.strftime("%d.%m.%Y"))
+
+        sh.write(n, 15, comments, style=style_normal)
 
 
         n += 1
