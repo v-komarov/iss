@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from iss.localdicts.models import TzList,Status,Severity,accident_group,accident_list,accident_cats,address_city,address_street,address_house,address_companies,email_templates,address_templates,slots,ports,interfaces,port_status,slot_status,device_status,logical_interfaces_prop_list, regions, proj_temp, blocks, proj_other_system, business, passing, rates, stages, init_reestr_proj
-from iss.localdicts.models import ProjDocTypes
+from iss.localdicts.models import ProjDocTypes, message_type
 
 
 class StatusAdmin(admin.ModelAdmin):
@@ -199,6 +199,15 @@ class ProjDocTypesAdmin(admin.ModelAdmin):
 
 
 
+class MessageTypeAdmin(admin.ModelAdmin):
+    fields = ('name','email',)
+    list_display = ('name','email',)
+
+
+
+
+
+
 admin.site.register(TzList)
 admin.site.register(Status,StatusAdmin)
 admin.site.register(Severity,SeverityAdmin)
@@ -229,5 +238,6 @@ admin.site.register(rates, RatesAdmin)
 admin.site.register(stages, StagesAdmin)
 admin.site.register(init_reestr_proj, InitReestrProjAdmin)
 admin.site.register(ProjDocTypes, ProjDocTypesAdmin)
+admin.site.register(message_type, MessageTypeAdmin)
 
 

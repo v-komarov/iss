@@ -30,6 +30,8 @@ $(document).ready(function() {
     GetListChildren();
     // Отображение списка связи с другими системами
     GetListOtherSystems();
+    // Отображение истории оповещений
+    GetListMessageHistory();
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
@@ -74,6 +76,11 @@ $(document).ready(function() {
 
     // Добавление кода других систем
     $("#page-1 button#append-system-code").bind("click", AddOtherSystem);
+
+    // Отправка оповещения
+    $("#page-8 button#message-send").bind("click", MessageSend);
+
+
 
 
     // Поиск адреса
@@ -745,6 +752,37 @@ function AddOtherSystem(e) {
 
 
 
+
+// Отправка оповещения
+function MessageSend(e) {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    var message_type = $("#page-8 select#message-type").val();
+
+        if (message_type != "") {
+
+            var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-message-send&message_type="+message_type+"&reestrproj_id="+reestrproj_id,
+            function(data) {
+
+                if (data["result"] == "ok") {
+                    $("#page-8 select#message-type").val("");
+                    GetListMessageHistory();
+                }
+
+            })
+
+
+        }
+
+
+}
+
+
+
+
+
+
+
 // Список загруженных в hdfs файлов
 function GetListHdfsFiles() {
 
@@ -996,7 +1034,6 @@ function GetListOtherSystems() {
     function(data) {
 
         if (data["result"] == "ok") {
-            console.log(data);
             // Отображение списка связи с другими системами
             $("table[group=systems] tbody").empty();
             $.each(data["system"], function(key,value) {
@@ -1019,6 +1056,47 @@ function GetListOtherSystems() {
 
 
 }
+
+
+
+
+
+
+
+// Список отправленных оповещений
+function GetListMessageHistory() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-message-list&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+            // Отображение списка связи с другими системами
+            $("table[group=messages-list] tbody").empty();
+            $.each(data["messages"], function(key,value) {
+
+
+                var t = "<tr>"
+                +"<td>"+value['date']+"</td>"
+                +"<td>"+value['message_type']+"</td>"
+                +"<td>"+value['emails']+"</td>"
+                +"<td>"+value['user']+"</td>"
+                +"</tr>";
+
+                $("table[group=messages-list] tbody").append(t);
+
+            });
+
+
+        }
+
+    })
+
+
+}
+
+
 
 
 
@@ -1198,6 +1276,7 @@ function ChangeNav(e) {
     $("#nav-5").toggleClass("active",false);
     $("#nav-6").toggleClass("active",false);
     $("#nav-7").toggleClass("active",false);
+    $("#nav-8").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -1208,6 +1287,7 @@ function ChangeNav(e) {
     $("#page-5").hide();
     $("#page-6").hide();
     $("#page-7").hide();
+    $("#page-8").hide();
 
 
     // Название отображаемой страницы (на закладке)

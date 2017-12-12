@@ -16,7 +16,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 
-from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, business, passing, rates, stages, init_reestr_proj, ProjDocTypes
+from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, business, passing, rates, stages, init_reestr_proj, ProjDocTypes, message_type
 
 
 
@@ -629,4 +629,16 @@ class reestr_proj_exec_date(models.Model):
 
     def __unicode__(self):
         return self.stage.name
+
+
+
+
+### история отправки сообщений
+class reestr_proj_messages_history(models.Model):
+    message_type = models.ForeignKey(message_type, null=True, on_delete=models.PROTECT, verbose_name='Связь с типом сообщений')
+    reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    emails = models.CharField(max_length=200, verbose_name='Список email', default="")
+    datetime_create = models.DateTimeField(auto_now_add=True)
+
 

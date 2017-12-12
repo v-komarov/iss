@@ -1,0 +1,37 @@
+<div id="page-8" class="row small" hidden>
+
+    <div class="row col-md-8">
+
+        <form class="form-inline">
+          <div class="form-group">
+              <label for="message-type">Вид оповещения</label>
+              <select class="form-control input-sm" id="message-type" placeholder="">
+                  <option value="">---</option>
+                  {% for m in message_type %}
+                    <option value={{ m.id }}>{{ m.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <button type="button" id="message-send" class="btn btn-default btn-xs">Отправить</button>
+        </form>
+
+    </div>
+
+
+    <div class="row col-md-8">
+
+        <table group="messages-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th width="10%">Дата</th>
+                    <th>Вид оповещения</th>
+                    <th>email</th>
+                    <th width="20%">Отправил</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+</div>

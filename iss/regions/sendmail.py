@@ -117,3 +117,30 @@ def send_problem(stage):
         email.send()
 
     return "ok"
+
+
+
+
+### Отправка оповещения из реестра проектов
+def send_reestr_proj(mess,reestrproj,user):
+
+
+    email = EmailMessage(
+        subject="Реестр проектов",
+        body=u"""
+        <a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>
+        <p>
+        Оповещение из карточки проекта
+        {name}<br>
+        Вид оповещения: {mess_type}<br>
+        Оповещение отправил: {user}<br>
+        </p>
+        """.format(id=reestrproj.id, name=reestrproj.proj_name, mess_type=mess.name, user=user.get_full_name()),
+        from_email='GAMMA <gamma@sibttk.ru>',
+        to=mess.email.split(";")
+    )
+
+    email.content_subtype = "html"
+    email.send()
+
+    return "ok"

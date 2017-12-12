@@ -51,7 +51,8 @@ table[group=comment-list] > thead > tr > th,
 table[group=stages-list] > thead > tr > th,
 table[group=exec-list] > thead > tr > th,
 table[group=child-list] > thead > tr > th,
-table[group=systems] > thead > tr > th {
+table[group=systems] > thead > tr > th,
+table[group=messages-list] > thead > tr > th {
     background-color:#DCDCDC;
     padding: 0;
     text-align: left;
@@ -66,7 +67,8 @@ table[group=comment-list] > tbody > tr > td,
 table[group=stages-list] > tbody > tr > td,
 table[group=exec-list] > tbody > tr > td,
 table[group=child-list] > tbody > tr > td,
-table[group=systems] > tbody > tr > td {
+table[group=systems] > tbody > tr > td,
+table[group=messages-list] > tbody > tr > td {
     padding: 0;
     vertical-align: top;
 }
@@ -185,4 +187,11 @@ input#system-code {
 
 table[group=systems] {
     margin-top: 5px;
+}
+
+
+/* Восьмая закладка */
+div#page-8.row.small div.row.col-md-8 form.form-inline {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

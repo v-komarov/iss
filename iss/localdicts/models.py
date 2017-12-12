@@ -573,6 +573,21 @@ class rates(models.Model):
 
 
 
+### Виды уведомлений для реестра проектов
+class message_type(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    email = models.CharField(max_length=100, verbose_name='email')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Вид уведомления'
+        verbose_name_plural = 'Виды уведомлений'
+
+
+
+
 ### Стадии реестра проектов
 class stages(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)

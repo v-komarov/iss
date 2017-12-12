@@ -17,9 +17,9 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date
-from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system
-from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history
+from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
+from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj
 
 
 
@@ -942,6 +942,54 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Реестр проектов: Отправка оповещения
+        if r.has_key("action") and rg("action") == 'reestrproj-message-send':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            mess = message_type.objects.get(pk=int(request.GET["message_type"],10))
+
+            if send_reestr_proj(mess,reestrproj,request.user) == "ok":
+
+                reestr_proj_messages_history.objects.create(
+                    message_type=mess,
+                    reestr_proj=reestrproj,
+                    user=request.user,
+                    emails=mess.email
+                )
+
+
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+
+
+        ### Реестр проектов: Получение списка истории отправки оповещений
+        if r.has_key("action") and rg("action") == 'reestrproj-message-list':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            message_list = []
+            for item in reestr_proj_messages_history.objects.filter(reestr_proj=reestrproj).order_by('-datetime_create'):
+                message_list.append({
+                    'message_type':item.message_type.name,
+                    'date':item.datetime_create.strftime("%d.%m.%Y") if item.datetime_create else "",
+                    'emails':item.emails,
+                    'user': item.user.get_full_name(),
+                })
+
+            response_data = {"result": "ok", "messages": message_list}
+
+
+
 
 
 
