@@ -126,7 +126,7 @@ def send_reestr_proj(mess,reestrproj,user):
 
 
     email = EmailMessage(
-        subject="Реестр проектов",
+        subject="Реестр проектов [{mess_type}] {code} {name}".format(mess_type=mess.name.encode("utf-8"),code=reestrproj.proj_kod.encode("utf-8"),name=reestrproj.proj_name.encode("utf-8")),
         body=u"""
         <a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>
         <p>

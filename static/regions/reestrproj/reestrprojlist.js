@@ -54,7 +54,7 @@ function Search(e) {
     var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search="+search,
     function(data) {
 
-        if (data["result"] == "ok") { location.reload(); }
+        if (data["result"] == "ok") { location.href="/regions/reestrproj/page/1/"; }
 
     })
 
@@ -70,7 +70,7 @@ function ClearSearch(e) {
     var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search=",
     function(data) {
 
-        if (data["result"] == "ok") { location.reload(); }
+        if (data["result"] == "ok") { location.href="/regions/reestrproj/page/1/"; }
 
     })
 
