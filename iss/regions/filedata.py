@@ -510,6 +510,7 @@ def uploadfile_page4(request):
 
 
     run = 'curl -i -X PUT -T %s -L "http://10.6.0.135:50070/webhdfs/v1/projects/%s?user.name=root&op=CREATE&overwrite=true&replication=2"' % (tf.name, rec.id)
+
     os.system(run)
 
 
