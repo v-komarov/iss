@@ -67,7 +67,7 @@ class ReestrProjUpdateForm(ModelForm):
         model = reestr_proj
         fields = ['rates', 'passing', 'contragent', 'business', 'author', 'proj_init', 'proj_kod', 'date_service',
                   'proj_name', 'proj_other', 'region', 'author', 'executor',
-                  'comment']
+                  'comment', 'object_price', 'smr_price', 'other_price']
 
 
 

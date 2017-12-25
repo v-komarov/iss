@@ -9,12 +9,15 @@ import uuid
 import datetime
 import random
 import networkx as nx
+from decimal import Decimal
 
 
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 from iss.localdicts.models import regions, address_city, proj_temp, address_house, address_companies, blocks, business, passing, rates, stages, init_reestr_proj, ProjDocTypes, message_type
 
@@ -510,6 +513,11 @@ class reestr_proj(models.Model):
     data = JSONField(default={}, verbose_name='Данные')
     main_proj = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Родительский элемент', null=True, related_name="level")
     search_index = models.TextField(verbose_name='Родительский элемент', null=True, default="")
+    object_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость объекта (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
+    smr_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость СМР (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
+    other_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость оборудования, инструментов (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))] )
+
+
 
     def __unicode__(self):
         return self.proj_kod

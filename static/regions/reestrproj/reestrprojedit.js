@@ -248,8 +248,12 @@ function ReestrProjDataSave(e) {
     data.contragent = $("#page-1 input#id_contragent").val();
     data.rates = $("#page-1 select#id_rates").val();
     data.passing = $("#page-1 select#id_passing").val();
+    data.object_price = $("#proj-common input#id_object_price").val();
+    data.smr_price = $("#proj-common input#id_smr_price").val();
+    data.other_price = $("#proj-common input#id_other_price").val();
 
     data.action = "reestrproj-common-save";
+
 
 
     var csrftoken = getCookie('csrftoken');

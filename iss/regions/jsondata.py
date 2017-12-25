@@ -8,6 +8,8 @@ import logging
 import time
 import uuid
 
+from decimal import Decimal
+
 from pytz import timezone
 
 from snakebite.client import Client
@@ -1389,6 +1391,7 @@ def get_json(request):
         ### Сохранение карточки реестра - проекта
         if data.has_key("action") and data["action"] == 'reestrproj-common-save':
 
+
             reestrproj_id = data["reestrproj_id"]
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
@@ -1397,6 +1400,10 @@ def get_json(request):
             other = data["other"].strip()
             comment = data["comment"].strip()
             contragent = data["contragent"].strip()
+
+            object_price = Decimal(data["object_price"].strip().replace(",","."))
+            smr_price = Decimal(data["smr_price"].strip().replace(",","."))
+            other_price = Decimal(data["other_price"].strip().replace(",","."))
 
 
             proj_init = None if data["proj_init"] == "" else init_reestr_proj.objects.get(pk=int(data["proj_init"],10))
@@ -1421,6 +1428,10 @@ def get_json(request):
             reestrproj.rates = rates_ob
 
             reestrproj.date_service = service_date
+
+            reestrproj.object_price = object_price
+            reestrproj.smr_price = smr_price
+            reestrproj.other_price = other_price
 
             reestrproj.save()
 

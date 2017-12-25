@@ -28,6 +28,12 @@
                         <dd>{{ form.proj_init }}</dd>
                         <dt>{{ form.proj_other.label }}</dt>
                         <dd>{{ form.proj_other }}</dd>
+                        <dt>{{ form.object_price.label }}</dt>
+                        <dd>{{ form.object_price }}</dd>
+                        <dt>{{ form.smr_price.label }}</dt>
+                        <dd>{{ form.smr_price }}</dd>
+                        <dt>{{ form.other_price.label }}</dt>
+                        <dd>{{ form.other_price }}</dd>
                         {% if proj.main_proj %}
                             <dt>Родительский проект</dt>
                             <dd><a target="_blank" href="/regions/reestrproj/edit/{{ proj.main_proj.id }}/">{{ proj.proj_kod }}</a></dd>

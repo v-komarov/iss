@@ -608,6 +608,9 @@ def reestrprojexcel(request):
     sh.write(0, 13, u"Адресный перечень", style=style_bold)
     sh.write(0, 14, u"Исполнители", style=style_wrap)
     sh.write(0, 15, u"Коментарии", style=style_wrap)
+    sh.write(0, 16, u"Стоимость объекта", style=style_bold)
+    sh.write(0, 17, u"СМР стоимость", style=style_bold)
+    sh.write(0, 18, u"Стоимость оборудования, инстраметов", style=style_bold)
 
 
     ### Получение данных
@@ -654,6 +657,10 @@ def reestrprojexcel(request):
             comments = comments + u"{comment} [{worker} {date}]; ".format(comment=c.comment, worker=c.user.get_full_name(), date=c.datetime_create.strftime("%d.%m.%Y"))
 
         sh.write(n, 15, comments, style=style_normal)
+
+        sh.write(n, 16, row.object_price, style=style_normal)
+        sh.write(n, 17, row.smr_price, style=style_normal)
+        sh.write(n, 18, row.other_price, style=style_normal)
 
 
         n += 1
