@@ -674,3 +674,54 @@ def reestrprojexcel(request):
     return response
 
 
+
+
+
+
+
+### Вывод всех  показателей реестра проектов в excel файл
+def reestrprojexcelall(request):
+
+
+    book = xlwt.Workbook()
+
+    style_bold = xlwt.easyxf('font: bold 1;')
+    style_normal = xlwt.easyxf('')
+
+    style_wrap = xlwt.easyxf('align: wrap yes')
+
+
+    ### Получение данных
+    if request.session.has_key("search_text"):
+        data = reestr_proj.objects.filter(search_index__icontains=request.session["search_text"]).order_by("-id")
+    else:
+        data = reestr_proj.objects.order_by("-id")
+
+
+    for page in data:
+        if page.data.has_key("excel"):
+            sh = book.add_sheet(u"%s" % page.proj_kod.replace("/","-").replace(" ","_"))
+
+            tables = pd.read_html(page.data["excel"], index_col=False, header=None)
+            table = tables[0].fillna("")
+            columns = table.columns.size
+
+            for i in range(0,columns):
+                sh.col(i).width = 5000
+
+            n = 0  ## Строка в листе
+            for row in table.iterrows():
+
+                for i in range(0,columns):
+                    val = table.get_value(n,i)
+                    sh.write(n, i, val, style=style_normal)
+                n += 1
+
+
+
+    response = HttpResponse(content_type="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename="Реестр проектов.xls"'
+    book.save(response)
+    return response
+
+

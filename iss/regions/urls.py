@@ -4,7 +4,7 @@
 from django.conf.urls import url
 from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit
 from iss.regions.jsondata import get_json
-from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel
+from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall
 
 
 urlpatterns = [
@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'reestrproj/edit/(?P<pk>\d+)/$', ReestrProjEdit.as_view()),
     url(r'reestrproj/readfile/$', getfile2),
     url(r'reestrproj/excel/$', reestrprojexcel),
+    url(r'reestrproj/excelall/$', reestrprojexcelall),
     url(r'orders/$', Orders.as_view()),
     url(r'reestr/page/(?P<page>\d+)/$', Reestr.as_view()),
     url(r'reestr/edit/(?P<pk>\d+)/$', ReestrUpdate.as_view(), name='edit-reestr'),
