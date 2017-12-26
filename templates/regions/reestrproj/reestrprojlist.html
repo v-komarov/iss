@@ -30,6 +30,8 @@
         <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
         <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
         <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+        <a target="_blank" class="col-md-offset-2" id="man" href="{{ MY_STATIC_URL }}regions/reestrproj/help/man.html" title="Документация">Документация</a>
+        </form>
     </div>
 </div>
 
@@ -63,6 +65,7 @@
 
             <tr style="background-color:gainsboro;">
                 <th>№пп</th>
+                <th>Регион</th>
                 <th>Код</th>
                 <th>Том</th>
                 <th>Стадия</th>
@@ -80,6 +83,7 @@
                 {% if row.main_proj == None %}
                     <tr>
                         <td><a>{{ row.id }}</a></td>
+                        <td>{% if row.region %}{{ row.region }}{% endif %}</td>
                         <td><a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.proj_kod }}</a></td>
                         <td>{{ row.proj_level }}</td>
                         <td>{% if row.stage %}<a href="/regions/reestrproj/edit/{{ row.id }}">{{ row.stage.getfullname }}</a>{% else %}{% endif %}</td>
@@ -113,6 +117,7 @@
                     {% for item in row.level.all %}
                         <tr child>
                             <td><a>{{ item.id }}</a></td>
+                            <td>{% if item.region %}{{ item.region }}{% endif %}</td>
                             <td><a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.proj_kod }}</a></td>
                             <td>{{ item.proj_level }}</td>
                             <td>{% if item.stage %}<a href="/regions/reestrproj/edit/{{ item.id }}">{{ item.stage.getfullname }}</a>{% else %}{% endif %}</td>

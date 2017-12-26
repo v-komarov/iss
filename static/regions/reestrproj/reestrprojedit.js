@@ -251,6 +251,8 @@ function ReestrProjDataSave(e) {
     data.object_price = $("#proj-common input#id_object_price").val();
     data.smr_price = $("#proj-common input#id_smr_price").val();
     data.other_price = $("#proj-common input#id_other_price").val();
+    data.region = $("#proj-common select#id_region").val();
+
 
     data.action = "reestrproj-common-save";
 

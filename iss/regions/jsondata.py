@@ -1411,6 +1411,7 @@ def get_json(request):
             business_ob = None if data["business"] == "" else business.objects.get(pk=int(data["business"],10))
             rates_ob = None if data["rates"] == "" else rates.objects.get(pk=int(data["rates"],10))
             passing_ob = None if data["passing"] == "" else passing.objects.get(pk=int(data["passing"], 10))
+            region_ob = None if data["region"] == "" else regions.objects.get(pk=int(data["region"], 10))
 
             service_date = None if data["service"] == "" else datetime.datetime.strptime(data["service"],"%d.%m.%Y")
 
@@ -1432,6 +1433,8 @@ def get_json(request):
             reestrproj.object_price = object_price
             reestrproj.smr_price = smr_price
             reestrproj.other_price = other_price
+
+            reestrproj.region = region_ob
 
             reestrproj.save()
 

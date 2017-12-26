@@ -22,13 +22,13 @@ table[group=stages-list] > tbody > tr > td {
 
 
 /* Курсор */
-table[group=proj-list] > tbody > tr > td > a, #addproj {
+table[group=proj-list] > tbody > tr > td > a, #addproj, #man {
     cursor:pointer;
     text-decoration:none;
 }
 
 
-table[group=proj-list] > tbody > tr > td > a:hover,  #addproj {
+table[group=proj-list] > tbody > tr > td > a:hover,  #addproj, #man {
     text-decoration:none;
 }
 
