@@ -617,6 +617,8 @@ class reestr_proj_comment(models.Model):
     reestr_proj = models.ForeignKey(reestr_proj, null=True, on_delete=models.PROTECT, verbose_name='Связь реестром проектов')
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_create = models.DateTimeField(auto_now_add=True)
+    log = models.BooleanField(default=False) # Лог или сообщение
+
 
     def __unicode__(self):
         return self.comment

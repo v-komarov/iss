@@ -16,6 +16,8 @@ $(document).ready(function() {
     GetListHdfsFiles();
     // Список коментариев
     GetListComments();
+    // Список логов
+    GetListLogs();
     // Список истории стадий
     GetListStages();
     // Список исполнителей и дат
@@ -217,7 +219,7 @@ function DocProjChecked(e) {
 
     var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-doc-check-file&file_id="+file_id+"&checked="+checked,
     function(data) {
-        GetListComments();
+        GetListLogs();
     })
 
 }
@@ -280,7 +282,7 @@ function ReestrProjDataSave(e) {
             if (result["result"] == "ok") {
 
                 $("#saving").dialog("close");
-                GetListComments();
+                GetListLogs();
 
             }
         }
@@ -341,7 +343,7 @@ function AddLink(e) {
                     $("#page-1 #link-code").val("");
                     $("#page-1 #link-comment").val("");
                     GetListLinks();
-                    GetListComments();
+                    GetListLogs();
                 }
             }
 
@@ -575,7 +577,7 @@ function DeleteHDFSFile(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-hdfs-delete-file&file_id="+file_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListHdfsFiles(); GetListComments(); }
+            if (data["result"] == "ok") { GetListHdfsFiles(); GetListLogs(); }
 
         })
 
@@ -602,7 +604,7 @@ function DeleteTask(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-task-delete&task_id="+task_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListTasks(); GetListComments(); }
+            if (data["result"] == "ok") { GetListTasks(); GetListLogs(); }
 
         })
 
@@ -631,7 +633,7 @@ function DeleteLink(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-link-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListLinks(); GetListComments(); }
+            if (data["result"] == "ok") { GetListLinks(); GetListLogs(); }
 
         })
 
@@ -661,7 +663,7 @@ function DeleteAddress(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-address-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListAddress(); GetListComments();}
+            if (data["result"] == "ok") { GetListAddress(); GetListLogs();}
 
         })
 
@@ -690,7 +692,7 @@ function DeleteOtherSystem(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-other-system-delete&row-id="+row_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListOtherSystems(); GetListComments();}
+            if (data["result"] == "ok") { GetListOtherSystems(); GetListLogs();}
 
         })
 
@@ -715,7 +717,7 @@ function AddAddress(e) {
         var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-address-add&address_id="+address_id+"&reestrproj_id="+reestrproj_id,
         function(data) {
 
-            if (data["result"] == "ok") { $("#page-1 input#address").val(""); GetListAddress(); GetListComments(); }
+            if (data["result"] == "ok") { $("#page-1 input#address").val(""); GetListAddress(); GetListLogs(); }
 
         })
 
@@ -742,7 +744,7 @@ function AddOtherSystem(e) {
                     $("#page-1 select#other-system").val("");
                     $("#page-1 input#system-code").val("");
                     GetListOtherSystems();
-                    GetListComments();
+                    GetListLogs();
                 }
 
             })
@@ -866,6 +868,44 @@ function GetListComments() {
 
 }
 
+
+
+
+
+
+// Список логов
+function GetListLogs() {
+
+    var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-reestrproj-list-logs&reestrproj_id="+reestrproj_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка загруженных файлов
+            $("table[group=log-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr>"
+                +"<td>"+value['date']+"</td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td>"+value['user']+"</td>"
+                +"</tr>";
+
+                $("table[group=log-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
 
 
 
@@ -1283,6 +1323,7 @@ function ChangeNav(e) {
     $("#nav-6").toggleClass("active",false);
     $("#nav-7").toggleClass("active",false);
     $("#nav-8").toggleClass("active",false);
+    $("#nav-9").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -1294,6 +1335,7 @@ function ChangeNav(e) {
     $("#page-6").hide();
     $("#page-7").hide();
     $("#page-8").hide();
+    $("#page-9").hide();
 
 
     // Название отображаемой страницы (на закладке)

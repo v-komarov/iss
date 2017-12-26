@@ -458,7 +458,8 @@ def uploadfile_page2(request):
                 reestr_proj_comment.objects.create(
                     reestr_proj = rp,
                     user = request.user,
-                    comment = u"Загружена таблица показателей"
+                    comment = u"Загружена таблица показателей",
+                    log=True
                 )
 
 
@@ -499,7 +500,8 @@ def uploadfile_page4(request):
     reestr_proj_comment.objects.create(
         reestr_proj=reestrproj,
         user=request.user,
-        comment=u"Загружен документ %s" % filename
+        comment=u"Загружен документ %s" % filename,
+        log=True
     )
 
     ### Запись во временный файл

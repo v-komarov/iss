@@ -495,7 +495,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Удален документ %s" % filename
+                comment = u"Удален документ %s" % filename,
+                log=True
             )
 
 
@@ -518,7 +519,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = fp.reestr_proj,
                 comment = u"Документ {filename}: {check}".format(filename=fp.filename, check=u"установлена отметка проверено" if request.GET["checked"] == "yes" else u"снята отметка проверено" ),
-                user = request.user
+                user = request.user,
+                log=True
             )
 
             response_data = { "result": "ok" }
@@ -532,7 +534,7 @@ def get_json(request):
             reestrproj_id = request.GET["reestrproj_id"]
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
             comment_list = []
-            for row in reestr_proj_comment.objects.filter(reestr_proj=reestrproj).order_by("-datetime_create"):
+            for row in reestr_proj_comment.objects.filter(reestr_proj=reestrproj,log=False).order_by("-datetime_create"):
                 comment_list.append({
                     "comment": row.comment,
                     "user": row.user.get_full_name(),
@@ -541,6 +543,24 @@ def get_json(request):
 
 
             response_data = {"result": "ok", "data": comment_list }
+
+
+
+
+        ### Реестр проектов: список логов
+        if r.has_key("action") and rg("action") == 'get-reestrproj-list-logs':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+            log_list = []
+            for row in reestr_proj_comment.objects.filter(reestr_proj=reestrproj,log=True).order_by("-datetime_create"):
+                log_list.append({
+                    "comment": row.comment,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_create.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": log_list }
 
 
 
@@ -653,7 +673,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = task.reestr_proj,
                 user = request.user,
-                comment = u"Удален элемент исполнителей и дат %s" % task_stage
+                comment = u"Удален элемент исполнителей и дат %s" % task_stage,
+                log=True
             )
 
 
@@ -701,7 +722,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Удаление ссылки %s" % link
+                comment = u"Удаление ссылки %s" % link,
+                log=True
             )
 
 
@@ -741,7 +763,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Добавлен адрес %s" % addr
+                comment = u"Добавлен адрес %s" % addr,
+                log=True
             )
 
 
@@ -797,7 +820,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Удален адрес %s" % addr
+                comment = u"Удален адрес %s" % addr,
+                log=True
             )
 
 
@@ -934,7 +958,8 @@ def get_json(request):
                     reestr_proj_comment.objects.create(
                         reestr_proj=reestrproj,
                         user=request.user,
-                        comment=u"Удалена связь с другой системой {system} {code}".format(system=item["other_name"], code=item["other_code"])
+                        comment=u"Удалена связь с другой системой {system} {code}".format(system=item["other_name"], code=item["other_code"]),
+                        log=True
                     )
 
                     reestrproj.data["other_system"].remove(item)
@@ -1347,7 +1372,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = "Создан дочерний элемент %s" % name
+                comment = "Создан дочерний элемент %s" % name,
+                log=True
             )
 
 
@@ -1441,7 +1467,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Сохранены данные карточки проекта"
+                comment = u"Сохранены данные карточки проекта",
+                log=True
             )
 
 
@@ -1528,7 +1555,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = task.reestr_proj,
                 user = request.user,
-                comment = u"Изменен элемент исполнителей и дат %s" % task.stage.name if task.stage else ""
+                comment = u"Изменен элемент исполнителей и дат %s" % task.stage.name if task.stage else "",
+                log=True
             )
 
 
@@ -1560,7 +1588,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Добавлена ссылка %s" % link
+                comment = u"Добавлена ссылка %s" % link,
+                log=True
             )
 
 
