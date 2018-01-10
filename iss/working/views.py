@@ -20,12 +20,12 @@ class WorkList(ListView):
 
 
     #model = devices_ip
-    template_name = "working/work_list.html"
+    template_name = "working/card.html"
     paginate_by = 100
 
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(group_required(group='working',redirect_url='/mainmenu/'))
+    #@method_decorator(group_required(group='working',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.session = request.session
         return super(ListView, self).dispatch(request, *args, **kwargs)

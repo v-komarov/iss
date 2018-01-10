@@ -22,20 +22,19 @@
           <li id="menuzkl" {% if request.path|slice:'0:13' == "/monitor/zkl/" %}class="active"{% endif %}><a href="/monitor/zkl/">ЗКЛ</a></li>
         </ul>
       </li>
-      {% comment %}
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-          Работы
+          Учет рабочего времени
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li id="menuworking" {% if request.path|slice:'0:18' == "/working/worklist/" %}class="active"{% endif %}><a href="/working/worklist/page/1/">Плановые работы</a></li>
-          <li><a href="#">Аварийные работы</a></li>
+          <li id="menuworking" {% if request.path|slice:'0:14' == "/working/card/" %}class="active"{% endif %}><a href="/working/card/">Личная карточка</a></li>
+          <li><a href="#">Подготовка отчетности</a></li>
           <li class="divider"></li>
           <li><a href="#">Отчет</a></li>
         </ul>
       </li>
-      {% endcomment %}
+      {% comment %}
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Топология сети
@@ -49,6 +48,7 @@
           <li id="menutopology" {% if request.path|slice:'0:20' == "/equipment/topology/" %}class="active"{% endif %}><a href="/equipment/topology/">Топология</a></li>
         </ul>
       </li>
+      {% endcomment %}
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Карты

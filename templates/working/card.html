@@ -1,0 +1,40 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/working.js"></script>
+<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
+<link href="{{ MY_STATIC_URL }}working/working.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+
+
+<div class="row col-md-8">
+
+    <h4>Личная карточка</h4>
+
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}

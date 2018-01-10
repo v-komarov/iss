@@ -720,7 +720,7 @@ def reestrprojexcelall(request):
 
 
     response = HttpResponse(content_type="application/ms-excel")
-    response['Content-Disposition'] = 'attachment; filename="Реестр проектов.xls"'
+    response['Content-Disposition'] = 'attachment; filename="Показатели.xls"'
     book.save(response)
     return response
 

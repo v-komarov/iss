@@ -6,5 +6,5 @@ from iss.working.views import WorkList
 
 
 urlpatterns = [
-    url(r'worklist/page/(?P<page>\d+)/$', WorkList.as_view()),
+    url(r'card/$', WorkList.as_view()),
 ]
