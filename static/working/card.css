@@ -8,8 +8,14 @@
 }
 
 
-table[group=worklist] > thead > tr > th {
+table[group=marks-card] > thead > tr > th {
+    background-color:#DCDCDC;
     padding: 0;
     text-align: left;
     vertical-align: top;
+}
+
+
+.row#buttons {
+    margin-bottom: 5px;
 }

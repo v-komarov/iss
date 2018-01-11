@@ -7,9 +7,8 @@
 {% load tz %}
 
 
-<script type="text/javascript" src="{{ MY_STATIC_URL }}working/working.js"></script>
-<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
-<link href="{{ MY_STATIC_URL }}working/working.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/card.js"></script>
+<link href="{{ MY_STATIC_URL }}working/card.css" type="text/css" rel="stylesheet">
 
 
 
@@ -23,7 +22,6 @@
 
 
 
-
 <div class="row col-md-8">
 
     <h4>Личная карточка</h4>
@@ -31,6 +29,31 @@
 </div>
 
 
+<div id="buttons" class="row col-md-8">
+
+    <button id="working-start" title="Начать работу" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span></button>
+    <button id="working-end" title="Завершить работу" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-home"></span></button>
+    <button id="relax-start" title="Перерыв в работе начало" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-flag"></span></button>
+    <button id="relax-end" title="Перерыв в работе завершение" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-off"></span></button>
+    &nbsp;&nbsp;&nbsp;&nbsp;Статус : <user-status></user-status>
+</div>
+
+
+<div class="row col-md-8">
+
+    <table group="marks-card" class="table table-bordered table-striped draggable small" width="100%">
+        <thead>
+            <tr>
+                <th>Показатель</th>
+                <th width="10%">Количество</th>
+                <th>Комментарий</th>
+                <th width="10%">Добавить</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+</div>
 
 
 

@@ -8,61 +8,51 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from iss.mydecorators import group_required,anonymous_required
-
-#from iss.working.models import works
-
+from django.views.generic.base import TemplateView,RedirectView
 
 
 
 
 
-class WorkList(ListView):
 
 
-    #model = devices_ip
+class WorkCard(TemplateView):
+
+
     template_name = "working/card.html"
-    paginate_by = 100
 
 
     @method_decorator(login_required(login_url='/'))
     #@method_decorator(group_required(group='working',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
+        self.request = request
         self.session = request.session
-        return super(ListView, self).dispatch(request, *args, **kwargs)
+        self.user = request.user
 
 
-
-    def get_queryset(self):
-
-
-
-        return []
-
-
-
-
+        return super(WorkCard, self).dispatch(request, *args, **kwargs)
 
 
 
 
     def get_context_data(self, **kwargs):
-        context = super(WorkList, self).get_context_data(**kwargs)
-
+        context = super(WorkCard, self).get_context_data(**kwargs)
 
         if self.session.has_key('tz'):
             context['tz']= self.session['tz']
         else:
             context['tz']= 'UTC'
 
-
-        # search
-        if self.session.has_key('search'):
-            context['search'] = self.session['search']
-        else:
-            context['search'] = ""
-
+        context['work_status'] = self.user.profile.work_status
+        context['relax_status'] = self.user.profile.relax_status
 
         return context
+
+
+
+
+
+
 
 
 
