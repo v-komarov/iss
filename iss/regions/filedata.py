@@ -10,6 +10,7 @@ import os
 import StringIO
 import cStringIO
 import datetime
+import mimetypes
 
 from operator import itemgetter
 
@@ -34,7 +35,7 @@ from iss.localdicts.models import regions, ProjDocTypes
 
 
 
-
+mimetypes.init()
 
 
 
@@ -208,8 +209,10 @@ def getfile(request):
         ### Удаление временного файла
         os.remove(tfile)
 
+        content_type =  mimetypes.types_map[".%s" % file_name.split('.')[-1]]
 
-        response = HttpResponse(data, content_type="application/octet-stream")
+        response = HttpResponse(data, content_type=content_type)
+        #response = HttpResponse(data, content_type="application/octet-stream")
         response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
         return response
 
@@ -556,8 +559,10 @@ def getfile2(request):
         ### Удаление временного файла
         os.remove(tfile)
 
+        content_type =  mimetypes.types_map[".%s" % file_name.split('.')[-1]]
 
-        response = HttpResponse(data, content_type="application/octet-stream")
+        response = HttpResponse(data, content_type=content_type)
+        #response = HttpResponse(data, content_type="application/octet-stream")
         response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
         return response
 
