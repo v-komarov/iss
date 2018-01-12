@@ -18,7 +18,10 @@ from django import template
 from django.db.models import F,Func,Value
 from django.db import models
 from django.db.models import Q
+from django.db.models import Count
 
+
+from iss.working.models import working_time, working_relax, marks, working_log
 
 
 
@@ -50,6 +53,13 @@ def get_json(request):
             user.profile.work_status = True
             user.save()
 
+
+            if not working_time.objects.filter(user=user,current=True).exists():
+                ### Создание записи "Смены"
+                working_time.objects.create(
+                    user=user
+                )
+
             response_data = { "result": "ok" }
 
 
@@ -60,6 +70,13 @@ def get_json(request):
             user = request.user
             user.profile.work_status = False
             user.save()
+
+            if working_time.objects.filter(user=user,current=True).exists():
+                ### Завершение работы (смены)
+                current = working_time.objects.filter(current=True,user=user).last()
+                current.current = False
+                current.save()
+
 
             response_data = { "result": "ok" }
 
@@ -72,6 +89,12 @@ def get_json(request):
             user.profile.relax_status = True
             user.save()
 
+            if not working_relax.objects.filter(user=user,current=True).exists():
+                ### Создание перерыва
+                working_relax.objects.create(
+                    user=user
+                )
+
             response_data = { "result": "ok" }
 
 
@@ -83,7 +106,55 @@ def get_json(request):
             user.profile.relax_status = False
             user.save()
 
+            if working_relax.objects.filter(user=user,current=True).exists():
+                ### Завершение перерыва
+                current = working_relax.objects.filter(current=True,user=user).last()
+                current.current = False
+                current.save()
+
+
             response_data = { "result": "ok" }
+
+
+
+        ### Добавление действия - события
+        if r.has_key("action") and rg("action") == 'plus-event':
+            comment = request.GET["comment"].strip()
+            mark_id = int(request.GET["mark_id"],10)
+            mark = marks.objects.get(pk=mark_id)
+            user = request.user
+            if working_time.objects.filter(user=user,current=True).exists():
+                wt = working_time.objects.filter(user=user,current=True).last()
+                working_log.objects.create(
+                    user=user,
+                    mark=mark,
+                    working=wt,
+                    comment=comment
+
+                )
+
+                count = working_log.objects.filter(mark=mark,user=user,working=wt).count()
+
+                response_data = { "result": "ok", "count": count, "mark_id": mark_id }
+            else:
+                response_data = { "result": "error" }
+
+
+
+
+        ### Первоначальное отображение событий или действий в карточке
+        if r.has_key("action") and rg("action") == 'showcount':
+            user = request.user
+            if working_time.objects.filter(user=user,current=True).exists():
+                wt = working_time.objects.filter(user=user,current=True).last()
+
+                items = working_log.objects.filter(working=wt).values('mark').annotate(count=Count('mark'))
+
+                response_data = {"result": "ok", "items": eval(str(items))}
+            else:
+                response_data = {"result": "error"}
+
+
 
 
 

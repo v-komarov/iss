@@ -44,10 +44,10 @@ class working_log(models.Model):
 
 ### Учет рабочего времени
 class working_time(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment = models.TextField(verbose_name='Коментарий', default="", null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     datetime_begin = models.DateTimeField(auto_now_add=True, verbose_name='Начало периода')
     datetime_end = models.DateTimeField(auto_now=True, null=True, verbose_name='Завершение периода')
+    current = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.user
@@ -58,9 +58,9 @@ class working_time(models.Model):
 class working_relax(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     working = models.ForeignKey(working_time, on_delete=models.CASCADE, null=True, default=None)
-    comment = models.TextField(verbose_name='Коментарий', default="", null=True)
     datetime_begin = models.DateTimeField(auto_now_add=True, verbose_name='Начало перерыва')
     datetime_end = models.DateTimeField(auto_now=True, null=True, verbose_name='Завершение перерыва')
+    current = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.user

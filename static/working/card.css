@@ -16,6 +16,36 @@ table[group=marks-card] > thead > tr > th {
 }
 
 
+table[group=marks-card] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+
+
 .row#buttons {
     margin-bottom: 5px;
 }
+
+
+
+
+/* Курсор */
+table[group=marks-card] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=marks-card] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+table[group=marks-card] > tbody > tr > td > input {
+    width: 100%;
+}
+
+/*table[group=marks-card] > tbody > tr > td:nth-child(4)*/

@@ -11,7 +11,7 @@ from iss.mydecorators import group_required,anonymous_required
 from django.views.generic.base import TemplateView,RedirectView
 
 
-
+from iss.working.models import marks
 
 
 
@@ -45,6 +45,7 @@ class WorkCard(TemplateView):
 
         context['work_status'] = self.user.profile.work_status
         context['relax_status'] = self.user.profile.relax_status
+        context['marks_table'] = marks.objects.filter(visible=True).order_by('order')
 
         return context
 

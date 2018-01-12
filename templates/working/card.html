@@ -32,14 +32,14 @@
 <div id="buttons" class="row col-md-8">
 
     <button id="working-start" title="Начать работу" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span></button>
-    <button id="working-end" title="Завершить работу" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-home"></span></button>
-    <button id="relax-start" title="Перерыв в работе начало" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-flag"></span></button>
-    <button id="relax-end" title="Перерыв в работе завершение" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-off"></span></button>
+    <button id="working-end" title="Завершить работу" class="btn btn-default btn-xs" hidden><span class="glyphicon glyphicon-home"></span></button>
+    <button id="relax-start" title="Перерыв в работе начало" class="btn btn-default btn-xs" hidden><span class="glyphicon glyphicon-flag"></span></button>
+    <button id="relax-end" title="Перерыв в работе завершение" class="btn btn-default btn-xs" hidden><span class="glyphicon glyphicon-off"></span></button>
     &nbsp;&nbsp;&nbsp;&nbsp;Статус : <user-status></user-status>
 </div>
 
 
-<div class="row col-md-8">
+<div class="row col-md-7">
 
     <table group="marks-card" class="table table-bordered table-striped draggable small" width="100%">
         <thead>
@@ -50,7 +50,16 @@
                 <th width="10%">Добавить</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            {% for item in marks_table %}
+                <tr mark_id={{ item.id }}>
+                    <td>{{ item.name }}</td>
+                    <td align="center"></td>
+                    <td><input type="text"  /></td>
+                    <td align="center"><a hidden><span class="glyphicon glyphicon-plus"></span></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
 </div>
