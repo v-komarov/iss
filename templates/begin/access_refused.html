@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+
+<link href="{{ MY_STATIC_URL }}begin/access_refused.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}begin/access_refused.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+{% include "begin/note_dialog.html" %}
+
+
+{% endblock %}

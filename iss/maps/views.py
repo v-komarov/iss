@@ -45,7 +45,7 @@ class MapsAccidents(TemplateView):
 
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(group_required(group='maps', redirect_url='/mainmenu/'))
+    @method_decorator(group_required(group='maps', redirect_url='/begin/access-refused'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         self.session = request.session
@@ -86,7 +86,7 @@ class MapsFindIp(TemplateView):
 
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(group_required(group='maps', redirect_url='/mainmenu/'))
+    @method_decorator(group_required(group='maps', redirect_url='/begin/access-refused'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         self.session = request.session

@@ -56,6 +56,21 @@ def MainMenu(request):
 
 
 
+
+
+def AccessRefused(request):
+
+    template_name = "begin/access_refused.html"
+
+    c = RequestContext(request,locals())
+    return render_to_response(template_name, c)
+
+
+
+
+
+
+
 def LogOut(request):
 
     logout(request)
