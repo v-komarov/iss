@@ -1,6 +1,9 @@
 #coding:utf-8
 from __future__ import unicode_literals
 
+import datetime
+from pytz import timezone
+
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
@@ -8,6 +11,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+tz = 'Asia/Krasnoyarsk'
+krsk_tz = timezone(tz)
 
 
 
@@ -51,6 +56,38 @@ class working_time(models.Model):
 
     def __unicode__(self):
         return self.user
+
+    ### Подсчет длительности рабочего времени
+    def get_work_hour(self):
+
+        ### Если смена еще не завершена
+        if self.current:
+            duration = int((datetime.datetime.now(krsk_tz) - self.datetime_begin).total_seconds()/3600)
+            #print self.datetime_begin, datetime.datetime.now(krsk_tz)
+        ### Если смена уже завешена
+        else:
+            duration = int((self.datetime_end - self.datetime_begin).total_seconds()/3600)
+
+        return duration
+
+
+
+
+    ### Подсчет длительности перерыва в мин
+    def get_relax_min(self):
+
+        ### Перебор перерывов
+        duration = 0
+        for item in self.working_relax_set.all():
+
+            if item.current:
+                duration += int((datetime.datetime.now(krsk_tz) - item.datetime_begin).total_seconds() / 60)
+            else:
+                duration += int((item.datetime_end - item.datetime_begin).total_seconds() / 60)
+
+        return duration
+
+
 
 
 

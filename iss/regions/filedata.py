@@ -36,7 +36,7 @@ from iss.localdicts.models import regions, ProjDocTypes
 
 
 mimetypes.init()
-
+mimetypes.add_type('application/xslt+xml','.xslx')
 
 
 

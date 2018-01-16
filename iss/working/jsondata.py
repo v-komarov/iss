@@ -89,10 +89,12 @@ def get_json(request):
             user.profile.relax_status = True
             user.save()
 
-            if not working_relax.objects.filter(user=user,current=True).exists():
+            if not working_relax.objects.filter(user=user,current=True).exists() and user.working_time_set.filter(current=True).exists():
+
                 ### Создание перерыва
                 working_relax.objects.create(
-                    user=user
+                    user=user,
+                    working=user.working_time_set.filter(current=True).last()
                 )
 
             response_data = { "result": "ok" }
@@ -106,10 +108,11 @@ def get_json(request):
             user.profile.relax_status = False
             user.save()
 
-            if working_relax.objects.filter(user=user,current=True).exists():
+            if working_relax.objects.filter(user=user,current=True).exists() and user.working_time_set.filter(current=True).exists():
                 ### Завершение перерыва
                 current = working_relax.objects.filter(current=True,user=user).last()
                 current.current = False
+                current.working = user.working_time_set.filter(current=True).last()
                 current.save()
 
 

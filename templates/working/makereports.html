@@ -1,0 +1,126 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/makereports.js"></script>
+<link href="{{ MY_STATIC_URL }}working/makereports.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+    <div class="row">
+        <h4>Подготовка отчетов</h4>
+    </div>
+
+
+    <div class="row">
+        <div class="form-inline">
+            <div id="manager" class="form-group">
+                <label for="create-text">Название отчета</label>
+                <input id="create-text" value="{{ search_text }}" width="100%" type="text" />
+                <button id="create-button" title="Создать отчет" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-saved"></span></button>
+                <button id="clear-button" title="Очистить" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/working/makereports/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/working/makereports/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="makereports-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Статус</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Длительность (час.)</th>
+                <th>Перерывы длительность (мин.)</th>
+                <th width="5%">Событий</th>
+                <th>Сотрудник</th>
+                <th>График</th>
+                <th width="5%">Включить<br>в отчет</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                    <tr>
+                        <td>
+                            {% if row.user.Profile_set.work_status and not row.user.Profile_set.relax_status %}
+                                <a>Работа</a>
+                            {% elif row.user.Profile_set.work_status and row.user.Profile_set.relax_status %}
+                                <a>Перерыв</a>
+                            {% elif not row.user.Profile_set.work_status %}
+                                <a>Завершен</a>
+                            {% endif %}
+                        </td>
+                        {% timezone tz %}
+                        <td><a>{{ row.datetime_begin|date:"d.m.Y H:i e" }}</a></td>
+                        <td><a>{{ row.datetime_end|date:"d.m.Y H:i e" }}</a></td>
+                        {% endtimezone %}
+                        <td><a>{{ row.get_work_hour }}</a></td>
+                        <td><a>{{ row.get_relax_min }}</a></td>
+                        <td><a>{{ row.working_log_set.count }}</a></td>
+                        <td><a>{{ row.user.get_full_name }}</a></td>
+                        <td></td>
+                        <td align="center"><a title="Включить/выключить в отчет"><span class="glyphicon glyphicon-unchecked"></span></a></td>
+                    </tr>
+
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/working/makereports/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/working/makereports/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+{% endblock %}
