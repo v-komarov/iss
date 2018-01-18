@@ -1,0 +1,98 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/events.js"></script>
+<link href="{{ MY_STATIC_URL }}working/events.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+    <div class="row">
+        <h4>События</h4>
+    </div>
+
+
+    <div class="row col-md-7">
+        <table group="userdata" class="table table-bordered table-striped" width="100%">
+            <tbody class="small">
+                <tr>
+                    <td style="border: solid 1px gray;padding-left: 2px;">Сотрудник</td>
+                    <td style="border: solid 1px gray;padding-left: 2px;">{{ user.get_full_name }}</td>
+                </tr>
+                <tr>
+                    <td style="border: solid 1px gray;padding-left: 2px;">Длительность (час.)</td>
+                    <td style="border: solid 1px gray;padding-left: 2px;">{{ worktime }}</td>
+                </tr>
+                <tr>
+                    <td style="border: solid 1px gray;padding-left: 2px;">Перерывы (мин.)</td>
+                    <td style="border: solid 1px gray;padding-left: 2px;">{{ relaxtime }}</td>
+                </tr>
+                <tr>
+                    <td style="border: solid 1px gray;padding-left: 2px;">Событий</td>
+                    <td style="border: solid 1px gray;padding-left: 2px;">{{ events }}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+
+<div class="row">
+
+
+
+    <table group="events-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th width="10%" style="border: solid 1px gray;padding-left: 2px;">Дата и время</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Показатель</th>
+                <th width="5%" style="border: solid 1px gray;padding-left: 2px;">Длительность (мин.)</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Комментарий</th>
+                <th width="5%" style="border: solid 1px gray;padding-left: 2px;">Включать в отчеты</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                    <tr row_id={{ row.id }}>
+                        {% timezone tz %}
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
+                        {% endtimezone %}
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.mark.name }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{% if row.duration %}{{ row.duration }}{% endif %}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.comment }}</td>
+                        <td style="border: solid 1px gray;"align="center"><a report title="Включить/выключить в отчет">{% if row.visible %}<span class="glyphicon glyphicon-check">{% else %}<span class="glyphicon glyphicon-unchecked">{% endif %}</span></a></td>
+
+                    </tr>
+
+            {% endfor %}
+        </tbody>
+
+
+    </table>
+
+
+</div>
+
+
+
+
+{% endblock %}

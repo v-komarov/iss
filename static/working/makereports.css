@@ -29,11 +29,25 @@ table[group=makereports-list] > tbody > tr > td {
 table[group=makereports-list] > tbody > tr > td > a {
     cursor:pointer;
     text-decoration:none;
+    color: black;
 }
 
 
 table[group=makereports-list] > tbody > tr > td > a:hover {
     text-decoration:none;
+    color: black;
 }
 
 
+table[group=makereports-list] > tbody > tr > td {
+    background-color: #D8BFD8;
+}
+
+
+#report-error > h3 {
+    color: red;
+}
+
+#report-ok > h3 {
+    color: green;
+}

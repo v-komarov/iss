@@ -1,0 +1,41 @@
+.row {
+    margin:0;
+}
+
+
+
+table[group=reports-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=reports-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+
+
+
+/* Курсор */
+table[group=reports-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+    color: black;
+}
+
+
+table[group=reports-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+    color: black;
+}
+
+
+table[group=reports-list] > tbody > tr > td {
+    background-color: #FFDAB9;
+}
+

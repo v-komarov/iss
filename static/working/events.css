@@ -1,0 +1,53 @@
+.row {
+    margin:0;
+}
+
+
+
+table[group=events-list] > thead > tr > th,
+table[group=userdata] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=events-list] > tbody > tr > td,
+table[group=userdata] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+
+/* Курсор */
+table[group=events-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=events-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+table[group=userdata] > tbody > tr > td {
+    background-color: #AFEEEE;
+}
+
+table[group=events-list] > tbody > tr > td {
+    background-color: #7FFFD4;
+}
+
+
+.selltable {
+    border: solid 1px gray;
+}
+
+td, th {
+    padding-left: 2px;
+}
+

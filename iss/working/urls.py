@@ -2,7 +2,7 @@
 
 
 from django.conf.urls import url
-from iss.working.views import WorkCard, MakeReports
+from iss.working.views import WorkCard, MakeReports, Events, Reports
 from iss.working.jsondata import get_json
 
 
@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'card/$', WorkCard.as_view()),
     url(r'jsondata/$', get_json),
     url(r'makereports/(?P<page>\d+)/$', MakeReports.as_view()),
+    url(r'events/(?P<pk>\d+)/$', Events.as_view()),
+    url(r'reports/(?P<page>\d+)/$', Reports.as_view()),
 ]

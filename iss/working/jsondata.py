@@ -4,6 +4,7 @@ import datetime
 import json
 import logging
 import operator
+import pickle
 
 from pytz import timezone
 from pprint import pformat
@@ -21,7 +22,7 @@ from django.db.models import Q
 from django.db.models import Count
 
 
-from iss.working.models import working_time, working_relax, marks, working_log
+from iss.working.models import working_time, working_relax, marks, working_log, working_reports
 
 
 
@@ -89,7 +90,7 @@ def get_json(request):
             user.profile.relax_status = True
             user.save()
 
-            if not working_relax.objects.filter(user=user,current=True).exists() and user.working_time_set.filter(current=True).exists():
+            if (not working_relax.objects.filter(user=user,current=True).exists()) and user.working_time_set.filter(current=True).exists():
 
                 ### Создание перерыва
                 working_relax.objects.create(
@@ -110,10 +111,10 @@ def get_json(request):
 
             if working_relax.objects.filter(user=user,current=True).exists() and user.working_time_set.filter(current=True).exists():
                 ### Завершение перерыва
-                current = working_relax.objects.filter(current=True,user=user).last()
-                current.current = False
-                current.working = user.working_time_set.filter(current=True).last()
-                current.save()
+                for current in working_relax.objects.filter(current=True,user=user):
+                    current.current = False
+                    current.working = user.working_time_set.filter(current=True).last()
+                    current.save()
 
 
             response_data = { "result": "ok" }
@@ -157,6 +158,127 @@ def get_json(request):
             else:
                 response_data = {"result": "error"}
 
+
+
+
+        ### Отметка строк смен для включения в отчет
+        if r.has_key("action") and rg("action") == 'include-report-working':
+            row_id = int(request.GET["row_id"],10)
+            if request.session.has_key("include_report"):
+                tmp = pickle.loads(request.session["include_report"])
+                if not row_id in tmp:
+                    tmp.append(row_id)
+                    request.session["include_report"] = pickle.dumps(tmp)
+
+
+            else:
+                request.session["include_report"] = pickle.dumps([row_id])
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Сенятие отметки строк смен для включения в отчет
+        if r.has_key("action") and rg("action") == 'exclude-report-working':
+            row_id = int(request.GET["row_id"], 10)
+            if request.session.has_key("include_report"):
+                tmp = pickle.loads(request.session["include_report"])
+                if row_id in tmp:
+                    tmp.remove(row_id)
+                    request.session["include_report"] = pickle.dumps(tmp)
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Отметка строк событий для включения в отчет
+        if r.has_key("action") and rg("action") == 'include-report-event':
+            row_id = int(request.GET["row_id"],10)
+            evt = working_log.objects.get(pk=row_id)
+            evt.visible = True
+            evt.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Снятие отметки строк событий для включения в отчет
+        if r.has_key("action") and rg("action") == 'exclude-report-event':
+            row_id = int(request.GET["row_id"],10)
+            evt = working_log.objects.get(pk=row_id)
+            evt.visible = False
+            evt.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Создание отчета
+        if r.has_key("action") and rg("action") == 'create-report':
+            name = request.GET["report_name"].strip()
+            if request.session.has_key("include_report"):
+                report_list = pickle.loads(request.session["include_report"])
+                if len(report_list) > 0:
+
+                    ### Первоначально
+                    datetime_start = []
+                    datetime_end = []
+                    workers_count = set()
+                    marks_list = {}
+                    work_hour = 0
+                    relax_min = 0
+                    events_count = 0
+
+                    for item in report_list:
+                        work_time = working_time.objects.get(pk=item)
+                        workers_count.add(work_time.user.id)
+                        work_hour += work_time.get_work_hour()
+                        relax_min += work_time.get_relax_min()
+                        datetime_start.append(work_time.get_datetime_begin())
+                        datetime_end.append(work_time.get_datetime_end())
+
+                        for evt in work_time.working_log_set.filter(visible=True):
+                            events_count += 1
+                            if marks_list.has_key(evt.mark.name):
+                                marks_list[evt.mark.name] += 1
+                            else:
+                                marks_list[evt.mark.name] = 1
+
+
+                    ### Определение диапазона дат
+                    datetime_start.sort()
+                    datetime_start = datetime_start[0]
+                    datetime_end.sort()
+                    datetime_end = datetime_end[-1]
+
+                    working_reports.objects.create(
+                        name = name,
+                        author = request.user,
+                        datetime_begin = datetime_start,
+                        datetime_end = datetime_end,
+                        workers_count = len(workers_count),
+                        events_count = events_count,
+                        work_time = work_hour,
+                        relax_time = relax_min,
+                        data = marks_list
+
+                    )
+
+                    del request.session["include_report"]
+                    response_data = {"result": "ok"}
+                else:
+                    response_data = {"result": "error"}
+
+
+            else:
+                response_data = {"result": "error"}
 
 
 

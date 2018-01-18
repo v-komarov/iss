@@ -1,0 +1,115 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/reports.js"></script>
+<link href="{{ MY_STATIC_URL }}working/reports.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+    <div class="row">
+        <h4>Сформированные отчеты</h4>
+    </div>
+
+
+</div>
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/working/reports/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/working/reports/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="reports-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th style="border: solid 1px gray;padding-left: 2px;">Период<br>начало</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Период<br>окончание</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Название<br>отчета</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Сотрудников</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Длительность<br>(час.)</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Перерывы<br>длительность<br>(мин.)</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Событий</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Показатели</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Создал</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Дата создания</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                    <tr row_id={{ row.id }}>
+                        {% timezone tz %}
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.datetime_begin|date:"d.m.Y H:i e" }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.datetime_end|date:"d.m.Y H:i e" }}</td>
+                        {% endtimezone %}
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.name }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.workers_count }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.work_time }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.relax_time }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.events_count }}</td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">
+                            <dl>
+                                {% for key, value in row.data.items %}
+                                    <dt>{{ key }} - {{ value }}</dt>
+                                {% endfor %}
+                            </dl>
+                        </td>
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.author.get_full_name }}</td>
+                        {% timezone tz %}
+                        <td style="border: solid 1px gray;padding-left: 2px;">{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
+                        {% endtimezone %}
+                    </tr>
+
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/working/reports/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/working/reports/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+{% endblock %}
