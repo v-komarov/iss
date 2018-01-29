@@ -284,6 +284,22 @@ def get_json(request):
 
 
 
+
+        ### Получение статусов пользователя для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'get-desk-statuses':
+
+            ip = request.META.get('REMOTE_ADDR')
+            user = request.user
+            work = "yes" if user.profile.work_status else "no"
+            relax = "yes" if user.profile.relax_status else "no"
+
+            response_data = {"result": "ok", "work": work, "relax": relax}
+
+
+
+
+
+
     if request.method == "POST":
 
 

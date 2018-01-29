@@ -24,6 +24,7 @@ class Profile(models.Model):
     work_status = models.BooleanField(default=False, verbose_name="Статус смены") ### Для личной карточки учета рабочего времени
     relax_status = models.BooleanField(default=False, verbose_name="Статус перевыва в работе") ### Для личной карточки учета рабочего времени
     settings = JSONField(default={})
+    ip = models.CharField(max_length=15,null=True, default=None)
 
 
 

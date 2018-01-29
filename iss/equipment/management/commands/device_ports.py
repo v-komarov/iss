@@ -59,12 +59,12 @@ class Command(BaseCommand):
 
         """
         with open('iss/equipment/json/%s' % filename) as f:
-            for row in f.readlines():
-                item = json.loads(row)
-                ip = item.keys()[0]
-                ports = item[ip]
-                print ip,ports
+            d = json.load(f)
 
+            for ip in d["ports"].keys():
+                ports = d["ports"][ip]
+
+                print ip, ports
 
                 ### Поиск по ip адресу на интерфейсе manager
                 if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
@@ -78,9 +78,7 @@ class Command(BaseCommand):
                     ### Обход портов устройства
                     for p in device.devices_ports_set.all():
                         ### Проверка порта
-                        if p.num == '25' or p.num == '26':
-                            p.status = port_tech
-                        elif p.num.decode("utf-8") in ports:
+                        if int(p.num.decode("utf-8"),10) in ports:
                             p.status = port_use
                         else:
                             p.status = port_rez
@@ -94,7 +92,5 @@ class Command(BaseCommand):
                 ### ip адрес не найден
                 else:
                     logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=ip))
-
-
 
 

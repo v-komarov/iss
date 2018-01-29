@@ -205,3 +205,42 @@ class Reports(ListView):
 
 
 
+
+
+
+
+class StartDesktop(TemplateView):
+
+
+    template_name = "working/start_desktop.html"
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='working',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+        return super(StartDesktop, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(StartDesktop, self).get_context_data(**kwargs)
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+        ip = self.request.META.get('REMOTE_ADDR')
+        prof = self.user.profile
+        prof.ip = ip
+        prof.save()
+
+        context['ip'] = ip
+
+        return context

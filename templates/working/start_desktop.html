@@ -1,0 +1,26 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/start_desktop.js"></script>
+<link href="{{ MY_STATIC_URL }}working/start_desktop.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+{% include "working/ip_info.html" %}
+
+
+{% endblock %}
