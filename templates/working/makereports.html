@@ -77,12 +77,10 @@
             {% for row in object_list %}
                     <tr row_id={{ row.id }}>
                         <td style="border: solid 1px gray;padding-left: 2px;">
-                            {% if row.user.Profile_set.work_status and not row.user.Profile_set.relax_status %}
-                                <a href="/working/events/{{ row.id }}/" target="_blank">Работа</a>
-                            {% elif row.user.Profile_set.work_status and row.user.Profile_set.relax_status %}
-                                <a href="/working/events/{{ row.id }}/" target="_blank">Перерыв</a>
-                            {% elif not row.user.Profile_set.work_status %}
-                                <a href="/working/events/{{ row.id }}/" target="_blank">Завершен</a>
+                            {% if row.current %}
+                                <a href="/working/events/{{ row.id }}/" target="_blank">Открыто</a>
+                            {% else %}
+                                <a href="/working/events/{{ row.id }}/" target="_blank">Завершено</a>
                             {% endif %}
                         </td>
                         {% timezone tz %}
