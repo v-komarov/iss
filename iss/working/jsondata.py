@@ -1,9 +1,6 @@
 #coding:utf-8
 
-import datetime
 import json
-import logging
-import operator
 import pickle
 
 from pytz import timezone
@@ -11,18 +8,45 @@ from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.inventory.models import devices_scheme,devices,devices_ports,devices_slots,devices_combo,devices_properties,devices_statuses,devices_removal,netelems,logical_interfaces,logical_interfaces_prop
-from iss.localdicts.models import ports,slots,interfaces,address_companies,address_house,port_status,slot_status,device_status,logical_interfaces_prop_list
-from django.shortcuts import redirect
-from django.core import serializers
-from django import template
-from django.db.models import F,Func,Value
-from django.db import models
-from django.db.models import Q
 from django.db.models import Count
+from django.contrib.auth.models import User
+
+
 
 
 from iss.working.models import working_time, working_relax, marks, working_log, working_reports
+from iss.monitor.models import Profile
+
+
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+
+
+
+### Определение пользователя по ip адресу
+def get_ip_user(request):
+
+    ip = get_client_ip(request)
+
+    prof = Profile.objects.filter(ip=ip)
+
+    if prof.exists():
+        return prof.first().user
+    else:
+        return None
+
+
+
+
 
 
 
@@ -288,12 +312,134 @@ def get_json(request):
         ### Получение статусов пользователя для desktop (по ip адресу)
         if r.has_key("action") and rg("action") == 'get-desk-statuses':
 
-            ip = request.META.get('REMOTE_ADDR')
-            user = request.user
-            work = "yes" if user.profile.work_status else "no"
-            relax = "yes" if user.profile.relax_status else "no"
+            user = get_ip_user(request)
 
-            response_data = {"result": "ok", "work": work, "relax": relax}
+            if user:
+
+                work = "yes" if user.profile.work_status else "no"
+                relax = "yes" if user.profile.relax_status else "no"
+
+                ### Список доступных видов событий (действий)
+                evt_btn = []
+                for evt in marks.objects.filter(visible=True):
+                    evt_btn.append(
+                        {"id": evt.id, "name" : evt.name}
+                    )
+
+                response_data = {"result": "ok", "work": work, "relax": relax, "user": user.get_full_name(), "evt_btn": evt_btn}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+        ### Начало работы (смены) для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'work-desk-start':
+
+            user = get_ip_user(request)
+            user.profile.work_status = True
+            user.save()
+
+
+            if not working_time.objects.filter(user=user,current=True).exists():
+                ### Создание записи "Смены"
+                working_time.objects.create(
+                    user=user
+                )
+
+            response_data = { "result": "ok" }
+
+
+
+        ### Завершение работы (смены) для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'work-desk-end':
+
+            user = get_ip_user(request)
+            user.profile.work_status = False
+            user.save()
+
+            if working_time.objects.filter(user=user,current=True).exists():
+                ### Завершение работы (смены)
+                current = working_time.objects.filter(current=True,user=user).last()
+                current.current = False
+                current.save()
+
+
+            response_data = { "result": "ok" }
+
+
+
+
+        ### Начало перерыва для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'relax-desk-start':
+
+            user = get_ip_user(request)
+            user.profile.relax_status = True
+            user.save()
+
+
+            if (not working_relax.objects.filter(user=user,current=True).exists()) and user.working_time_set.filter(current=True).exists():
+
+                ### Создание перерыва
+                working_relax.objects.create(
+                    user=user,
+                    working=user.working_time_set.filter(current=True).last()
+                )
+
+            response_data = { "result": "ok" }
+
+
+
+
+        ### Завершение перерыва для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'relax-desk-end':
+
+            user = get_ip_user(request)
+            user.profile.relax_status = False
+            user.save()
+
+
+            if working_relax.objects.filter(user=user,current=True).exists() and user.working_time_set.filter(current=True).exists():
+                ### Завершение перерыва
+                for current in working_relax.objects.filter(current=True,user=user):
+                    current.current = False
+                    current.working = user.working_time_set.filter(current=True).last()
+                    current.save()
+
+            response_data = { "result": "ok" }
+
+
+
+
+        ### Отметка события для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'evt-desk':
+
+            user = get_ip_user(request)
+
+            if user.profile.relax_status == False and user.profile.work_status == True:
+                evtid = int(request.GET["evtid"], 10)
+                mark = marks.objects.get(pk=evtid)
+                if working_time.objects.filter(user=user,current=True).exists():
+                    wt = working_time.objects.filter(user=user,current=True).last()
+                    working_log.objects.create(
+                        user=user,
+                        mark=mark,
+                        working=wt,
+                        comment="desktop"
+
+                    )
+
+                    count = working_log.objects.filter(mark=mark,user=user,working=wt).count()
+                    response_data = { "result": "ok", "name": mark.name, "count":count }
+
+                else:
+                    response_data = { "result": "error" }
+
+
+            else:
+
+                response_data = { "result": "error" }
 
 
 

@@ -16,6 +16,20 @@ from iss.working.models import marks, working_time, working_log, working_reports
 
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+
+
+
+
+
 class WorkCard(TemplateView):
 
 
@@ -236,7 +250,7 @@ class StartDesktop(TemplateView):
         else:
             context['tz']= 'UTC'
 
-        ip = self.request.META.get('REMOTE_ADDR')
+        ip = get_client_ip(self.request)
         prof = self.user.profile
         prof.ip = ip
         prof.save()

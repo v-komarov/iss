@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+
+<link href="{{ MY_STATIC_URL }}begin/userattrs.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+<div class="row">
+    <h4>Учетные данные</h4>
+    <form class="small" method="POST">{% csrf_token %}
+        <dl class="dl-horizontal">
+
+            <dt>{{ form.first_name.label }}</dt>
+            <dd>{{ form.first_name }}</dd>
+
+            <dt>{{ form.last_name.label }}</dt>
+            <dd>{{ form.last_name }}</dd>
+
+            <dt>{{ form.email.label }}</dt>
+            <dd>{{ form.email }}</dd>
+
+            <dt>{{ form.phone.label }}</dt>
+            <dd>{{ form.phone }}</dd>
+
+            <dt></dt>
+            <dd><button class="btn btn-primary btn-xs" type="submit">Сохранить</button></dd>
+
+        </dl>
+    </form>
+</div>
+
+
+{% endblock %}

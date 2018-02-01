@@ -6,7 +6,7 @@ from iss.working.models import marks
 class MarksAdmin(admin.ModelAdmin):
 
     fields = ('name', 'order', 'visible')
-    list_display = ('name', 'order', 'visible')
+    list_display = ('id', 'name', 'order', 'visible')
     ordering = ['order',]
 
 
