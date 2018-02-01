@@ -8,9 +8,9 @@ from iss.working.models import marks, working_time, working_log
 
 
 ### Входящие звонки
-callin = marks.objects.get(pk=1)
+callin = marks.objects.get(pk=3)
 ### Исходящие звонки
-callout = marks.objects.get(pk=2)
+callout = marks.objects.get(pk=4)
 
 
 
@@ -25,6 +25,7 @@ class Command(BaseCommand):
 
 
         cdr = args[0]
+        #print cdr
 
         """
 
@@ -34,6 +35,7 @@ class Command(BaseCommand):
         """
 
         st = cdr.split(",")
+        #print st
         sec = st[2]
         call_from = st[3]
         call_to = st[6]
@@ -56,14 +58,14 @@ class Command(BaseCommand):
             call_type = "out"
 
 
-        if user == None or user.is_active() == False:
+        if user == None or user.is_active == False:
             exit()
         elif call_type == "in":
             mark = callin
-            comment = "%s -> %s" % (call_from,call_to)
+            comment = "%s -> %s" % (call_to,call_from)
         elif call_type == "out":
             mark =callout
-            comment = "%s -> %s" % (call_to,call_from)
+            comment = "%s -> %s" % (call_from,call_to)
         else:
             exit()
 
@@ -74,7 +76,8 @@ class Command(BaseCommand):
                 user=user,
                 mark=mark,
                 working=wt,
-                comment=comment
+                comment=comment,
+                duration = int(sec)
 
             )
 
