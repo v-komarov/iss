@@ -62,7 +62,7 @@ class Command(BaseCommand):
             exit()
         elif call_type == "in":
             mark = callin
-            comment = "%s -> %s" % (call_to,call_from)
+            comment = "%s -> %s" % (call_from,call_to)
         elif call_type == "out":
             mark =callout
             comment = "%s -> %s" % (call_from,call_to)

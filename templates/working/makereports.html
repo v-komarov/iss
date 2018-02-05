@@ -91,7 +91,7 @@
                         <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_relax_min }}</a></td>
                         <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.working_log_set.count }}</a></td>
                         <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.user.get_full_name }}</a></td>
-                        <td style="border: solid 1px gray;">{# <img src="data:image/png;base64,{{ row.get_hist }}"  width="100%" height="100%" /> #}</td>
+                        <td style="border: solid 1px gray;"><img src="data:image/png;base64,{{ row.get_hist }}"  width="100%" height="100%" /></td>
                         <td align="center" style="border: solid 1px gray;"><a report title="Включить/выключить в отчет">{% if row.id in include_report %}<span class="glyphicon glyphicon-check"></span>{% else %}<span class="glyphicon glyphicon-unchecked"></span>{% endif %}</a></td>
                     </tr>
 

@@ -118,12 +118,12 @@ class working_time(models.Model):
         ### Определение временного ряда
         ### сессия еще не завершена
         if self.current:
-            work_start = datetime.datetime.now(krsk_tz)
-            work_end = self.datetime_begin
+            work_start = self.datetime_begin
+            work_end = datetime.datetime.now(krsk_tz)
         ### Если смена уже завешена
         else:
-            work_start = self.datetime_end
-            work_end = self.datetime_begin
+            work_start = self.datetime_begin
+            work_end = self.datetime_end
 
         ### временные интервалы перерывов
         relax = []
@@ -140,13 +140,25 @@ class working_time(models.Model):
 
             relax.append(rl)
 
-        #plt.style.use('bmh')
 
-        #plt.hist([1,2,2,2,2,2],bins=4, histtype="stepfilled", color="green")
-        #plt.plot(2,4)
-        plt.bar(1,4,1,color='lightgreen',edgecolor='green', align='center')
-        plt.grid(False)
 
+        current = work_start
+        delta = datetime.timedelta(seconds=60)
+        time_points = []
+        work_points = []
+        while current < work_end:
+            time_points.append(current)
+            val = 1 # первоначально статус - работа
+            for rel in relax:
+                if current >= rel["relax_start"] and current <= rel["relax_end"]:
+                    val = 0
+            work_points.append(val)
+            current += delta
+
+        plt.fill_between(time_points,work_points,color="green", step='mid', interpolate=False)
+        plt.xlim(work_start, work_end)
+        plt.xticks([], [])
+        plt.yticks([], [])
 
         figfile = BytesIO()
         fig = plt.gcf()
