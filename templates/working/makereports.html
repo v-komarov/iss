@@ -67,7 +67,7 @@
                 <th style="border: solid 1px gray;padding-left: 2px;">Перерывы<br>длительность<br>(мин.)</th>
                 <th width="5%" style="border: solid 1px gray;padding-left: 2px;">Событий</th>
                 <th style="border: solid 1px gray;padding-left: 2px;">Сотрудник</th>
-                <th width="25%" style="border: solid 1px gray;padding-left: 2px;">График</th>
+                <th width="25%" style="border: solid 1px gray;padding-left: 2px;">Перерывы (список)</th>
                 <th width="5%" style="border: solid 1px gray;padding-left: 2px;">Включить<br>в отчет</th>
             </tr>
 
@@ -91,7 +91,16 @@
                         <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_relax_min }}</a></td>
                         <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.working_log_set.count }}</a></td>
                         <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.user.get_full_name }}</a></td>
-                        <td style="border: solid 1px gray;"><img src="data:image/png;base64,{{ row.get_hist }}"  width="100%" height="100%" /></td>
+                        <td style="border: solid 1px gray;">
+                            {# <img src="data:image/png;base64,{{ row.get_hist }}"  width="100%" height="100%" /> #}
+                            <ol>
+                                {% timezone tz %}
+                                    {% for r in row.get_relax_list %}
+                                        <li>c {{ r.relax_start|date:"d.m.Y H:i e" }} до {{ r.relax_end|date:"d.m.Y H:i e" }} ({{ r.minut }} мин.)</li>
+                                    {% endfor %}
+                                {% endtimezone %}
+                            </ol>
+                        </td>
                         <td align="center" style="border: solid 1px gray;"><a report title="Включить/выключить в отчет">{% if row.id in include_report %}<span class="glyphicon glyphicon-check"></span>{% else %}<span class="glyphicon glyphicon-unchecked"></span>{% endif %}</a></td>
                     </tr>
 

@@ -21,6 +21,9 @@ tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
 
+plt.switch_backend('agg')
+
+
 
 ### Показатели
 class marks(models.Model):
@@ -109,11 +112,32 @@ class working_time(models.Model):
             return self.datetime_end
 
 
+    ### Список перерывов в работе
+    def get_relax_list(self):
+
+        ### временные интервалы перерывов
+        relax = []
+        for item in self.working_relax_set.all():
+
+            rl = {}
+
+            if item.current:
+                rl['relax_start'] = item.datetime_begin
+                rl['relax_end'] = datetime.datetime.now(krsk_tz)
+            else:
+                rl['relax_start'] = item.datetime_begin
+                rl['relax_end'] = item.datetime_end
+
+            rl["minut"] = int((rl['relax_end'] - rl['relax_start']).total_seconds() / 60)
+
+            relax.append(rl)
+
+        return relax
+
 
 
     ### Создание диаграммы рабочего времени
     def get_hist(self):
-
 
         ### Определение временного ряда
         ### сессия еще не завершена
@@ -155,21 +179,23 @@ class working_time(models.Model):
             work_points.append(val)
             current += delta
 
-        plt.fill_between(time_points,work_points,color="green", step='mid', interpolate=False)
+        plt.fill_between(time_points,work_points,color="green", step='post', interpolate=False)
         plt.xlim(work_start, work_end)
         plt.xticks([], [])
         plt.yticks([], [])
+        #plt.xticks([work_start, work_end], [work_start.strftime("%d.%m.%Y %H:%M"), work_end.strftime("%d.%m.%Y %H:%M")], rotation=30, fontsize=8)
+        #plt.xticks([work_start, work_end], [], rotation=30, fontsize=8)
 
         figfile = BytesIO()
         fig = plt.gcf()
         fig.set_size_inches(5, 1)
+        plt.subplots_adjust(bottom=0.2)
         plt.savefig(figfile, format='png')
         figfile.seek(0)
 
 
 
         return base64.b64encode(figfile.getvalue())
-
 
 
 
