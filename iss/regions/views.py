@@ -398,9 +398,9 @@ class ReestrProjList(ListView):
     def get_queryset(self):
 
         if self.session.has_key("search_text"):
-            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"]).order_by("-id")
+            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=False).order_by("-id")
         else:
-            data = reestr_proj.objects.order_by("-id")
+            data = reestr_proj.objects.filter(process=False).order_by("-id")
 
         return data
 
@@ -472,3 +472,94 @@ class ReestrProjEdit(UpdateView):
     def form_valid(self, form):
         #form.instance.rowsum = form.instance.price * form.instance.count
         return super(ReestrProjEdit, self).form_valid(form)
+
+
+
+
+
+
+
+
+### Подготовка проектов (таблица - список)
+class ProcessProjList(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/processproj/processprojlist.html"
+
+    paginate_by = 100
+
+
+
+    #@method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+        if self.session.has_key("search_text"):
+            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=True).order_by("-id")
+        else:
+            data = reestr_proj.objects.filter(process=True).order_by("-id")
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(ProcessProjList, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        context['form'] = ReestrProjCreateForm()
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        return context
+
+
+
+
+
+
+### Изменение изменение подготавливаемого проекта
+class ProcessProjEdit(UpdateView):
+    model = reestr_proj
+    form_class = ReestrProjUpdateForm
+    template_name = "regions/processproj/processprojedit.html"
+    success_url = '/regions/processproj/processproj/edit/1/'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ProcessProjEdit, self).dispatch(request, *args, **kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        context = super(ProcessProjEdit, self).get_context_data(**kwargs)
+        context["proj"] = self.get_object()
+        context['stages'] = stages.objects.order_by('name')
+        context['task'] = WorkersDatesStagesForm()
+        context['doctypes'] = ProjDocTypes.objects.order_by('name')
+        context['form2'] = ReestrProjCreateForm()
+        context['other_system'] = proj_other_system.objects.order_by("name")
+        context['message_type'] = message_type.objects.order_by("name")
+
+        return context
+
+
+    def form_valid(self, form):
+        #form.instance.rowsum = form.instance.price * form.instance.count
+        return super(ProcessProjEdit, self).form_valid(form)
+

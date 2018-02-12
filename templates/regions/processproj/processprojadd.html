@@ -1,0 +1,22 @@
+<div id="reestr-proj-new" class="row" hidden>
+
+    <div class="row col-md-8 col-md-2-offset">
+
+        <h3>Создание проекта</h3>
+
+        <form id="reestr-proj-add" method="POST">{% csrf_token %}
+
+            <table class="small">
+            <tbody>
+
+                {{ form.as_table }}
+
+
+            </tbody>
+            </table>
+
+        </form>
+
+    </div>
+
+</div>

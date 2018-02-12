@@ -1,0 +1,114 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<link href="{{ MY_STATIC_URL }}regions/processproj/processprojedit.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/processproj/processprojedit.js"></script>
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+
+    <div id="proj-common" class="row col-md-8 col-md-2-offset" reestrproj_id={{ proj.id }}>
+
+        <h3>Карточка проекта <a class="small" href="/regions/processproj/page/1/" title="Вернуться к списку"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a></h3>
+
+            <div class="small col-md-3">
+                    <dl>
+                        <dt>{{ form.proj_kod.label }}</dt>
+                        <dd><projcode>{{ proj.proj_kod }}</projcode></dd>
+                        <dt>{{ form.proj_init.label }}</dt>
+                        <dd>{{ form.proj_init }}</dd>
+                        <dt>{{ form.proj_other.label }}</dt>
+                        <dd>{{ form.proj_other }}</dd>
+                        <dt>{{ form.object_price.label }}</dt>
+                        <dd>{{ form.object_price }}</dd>
+                        <dt>{{ form.smr_price.label }}</dt>
+                        <dd>{{ form.smr_price }}</dd>
+                        <dt>{{ form.other_price.label }}</dt>
+                        <dd>{{ form.other_price }}</dd>
+                        {% if proj.main_proj %}
+                            <dt>Родительский проект</dt>
+                            <dd><a target="_blank" href="/regions/processproj/edit/{{ proj.main_proj.id }}/">{{ proj.proj_kod }}</a></dd>
+                        {% endif %}
+                    </dl>
+            </div>
+            <div class="small col-md-5 col-md-1-offset">
+                    <dl>
+                        <dt>{{ form.proj_name.label }}</dt>
+                        <dd>{{ form.proj_name }}</dd>
+                        <dt>{{ form.comment.label }}</dt>
+                        <dd>{{ form.comment }}</dd>
+                    </dl>
+            </div>
+            <div class="small col-md-3 col-md-1-offset">
+                    <dl>
+                        <dt>{{ form.region.label }}</dt>
+                        <dd>{{ form.region }}</dd>
+                        <dt>Создан</dt>
+                        <dd>{{ proj.date_create|date:"d.m.Y" }}</dd>
+                        <dt>{{ form.author.label }}</dt>
+                        <dd>{{ proj.author.get_full_name }}</dd>
+                        <dt>{{ form.executor.label }}</dt>
+                        <dd>{{ form.executor }}</dd>
+                        <dt>{{ form.business.label }}</dt>
+                        <dd>{{ form.business }}</dd>
+                        <dt>{{ form.date_service.label }}</dt>
+                        <dd>{{ form.date_service }}</dd>
+                    </dl>
+            </div>
+
+        <button id="btn-saving" type="button" class="btn btn-default btn-xs">Сохранить</button>
+
+
+    </div>
+
+
+
+
+    <div class="row col-md-8 col-md-offset-1 small">
+        <ul class="nav nav-tabs">
+          <li id="nav-1" role="presentation" class="active"><a href="#">Общие</a></li>
+          <li id="nav-2" role="presentation"><a href="#">Показатели</a></li>
+          <li id="nav-3" role="presentation"><a href="#">Стадии</a></li>
+          <li id="nav-4" role="presentation"><a href="#">Документы</a></li>
+          <li id="nav-5" role="presentation"><a href="#">Исполнители и даты</a></li>
+          <li id="nav-6" role="presentation"><a href="#">Комментарии</a></li>
+          <li id="nav-7" role="presentation"><a href="#">Дочерние проекты</a></li>
+          <li id="nav-8" role="presentation"><a href="#">Оповещения</a></li>
+          <li id="nav-9" role="presentation"><a href="#">Лог</a></li>
+        </ul>
+    </div>
+
+
+
+</div>
+
+
+
+{% include "regions/processproj/processprojedit1.html" %}
+{% include "regions/processproj/processprojedit2.html" %}
+{% include "regions/processproj/processprojedit3.html" %}
+{% include "regions/processproj/processprojedit4.html" %}
+{% include "regions/processproj/processprojedit5.html" %}
+{% include "regions/processproj/processprojedit6.html" %}
+{% if not proj.main_proj %}
+    {% include "regions/processproj/processprojedit7.html" %}
+{% endif %}
+{% include "regions/processproj/processprojedit8.html" %}
+{% include "regions/processproj/processprojedit9.html" %}
+
+{% include "regions/processproj/processprojadd2.html" %}
+
+{% include "saving.html" %}
+
+<iframe name="uploadframe" hidden></iframe>
+
+{% endblock %}

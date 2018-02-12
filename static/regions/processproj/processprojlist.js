@@ -54,7 +54,7 @@ function Search(e) {
     var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search="+search,
     function(data) {
 
-        if (data["result"] == "ok") { location.href="/regions/reestrproj/page/1/"; }
+        if (data["result"] == "ok") { location.href="/regions/processproj/page/1/"; }
 
     })
 
@@ -70,7 +70,7 @@ function ClearSearch(e) {
     var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search=",
     function(data) {
 
-        if (data["result"] == "ok") { location.href="/regions/reestrproj/page/1/"; }
+        if (data["result"] == "ok") { location.href="/regions/processproj/page/1/"; }
 
     })
 
@@ -89,7 +89,7 @@ function AddProj(e) {
     $("form#reestr-proj-add #id_proj_name").val("");
 
     $("#reestr-proj-new").dialog({
-        title:"Новый элемент реестра проектов",
+        title:"Новый элемент проработки проектов",
         buttons:[{ text:"Сохранить",click: function() {
 
             var csrftoken = getCookie('csrftoken');
@@ -111,8 +111,7 @@ function AddProj(e) {
                     data.name = $("form#reestr-proj-add #id_proj_name").val();
 
                     data.action = "reestrproj-create";
-                    data.process = "no";
-
+                    data.process = "yes";
 
                     $.ajax({
                       url: "/regions/jsondata/",
@@ -120,7 +119,7 @@ function AddProj(e) {
                       dataType: 'json',
                       data:$.toJSON(data),
                         success: function(result) {
-                            if (result["result"] == "ok") { $("#reestr-proj-new").dialog('close'); window.location.href = "/regions/reestrproj/edit/"+result["id"]+"/"; }
+                            if (result["result"] == "ok") { $("#reestr-proj-new").dialog('close'); window.location.href = "/regions/processproj/edit/"+result["id"]+"/"; }
                         }
 
                     });

@@ -1404,7 +1404,8 @@ def get_json(request):
                 proj_init = None,
                 business = None,
                 executor = None,
-                author = request.user
+                author = request.user,
+                process = True if data["process"].strip() == "yes" else False
             )
 
             response_data = {"result": "ok", "id": rp.id}

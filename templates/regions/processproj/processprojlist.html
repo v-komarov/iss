@@ -1,0 +1,180 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/processproj/processprojlist.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/processproj/processprojlist.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+<div class="row">
+    <div id="manager" class="row small col-md-7">
+        <form class="col-md-1">
+            <a id="addproj" title="Создать новый проект">Создать</a>
+        </form>
+        <input id="search-text" value="{{ search_text }}" type="text" class="col-md-5 col-md-offset-1" width="100%"/>
+        <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
+        <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+        <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+        <a id="excel-all-button" title="Выгрузить все показатели" class="btn btn-default btn-xs" href="/regions/reestrproj/excelall/"><span class="glyphicon glyphicon-open-file"></span></a>
+        <a target="_blank" class="col-md-offset-2" id="man" href="{{ MY_STATIC_URL }}regions/reestrproj/help/man.html" title="Документация">Документация</a>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="row">
+</div>
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/processproj/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/processproj/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="proj-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>№пп</th>
+                <th>Регион</th>
+                <th>Код</th>
+                <th>Том</th>
+                <th>Стадия</th>
+                <th>Наименование</th>
+                <th>Города</th>
+                <th>Адреса</th>
+                <th>Исполнители</th>
+                <th>Направление<br>бизнеса</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                {% if row.main_proj == None %}
+                    <tr>
+                        <td><a>{{ row.id }}</a></td>
+                        <td>{% if row.region %}{{ row.region }}{% endif %}</td>
+                        <td><a href="/regions/processproj/edit/{{ row.id }}">{{ row.proj_kod }}</a></td>
+                        <td>{{ row.proj_level }}</td>
+                        <td>{% if row.stage %}<a href="/regions/processproj/edit/{{ row.id }}">{{ row.stage.getfullname }}</a>{% else %}{% endif %}</td>
+                        <td><a href="/regions/processproj/edit/{{ row.id }}">{{ row.proj_name }}</a></td>
+                        <td>
+                            <ul>
+                                {% for addr in row.data.address %}
+                                    <li>{{ addr.city }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                {% for addr in row.data.address %}
+                                    <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                {% for worker in row.reestr_proj_exec_date_set.all %}
+                                    <li>{{ worker.worker.get_full_name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>{% if row.business %}{{ row.business }}{% else %}{% endif %}</td>
+                    </tr>
+
+
+                    {# Отображение дочерних проектов #}
+                    {% for item in row.level.all %}
+                        <tr child>
+                            <td><a>{{ item.id }}</a></td>
+                            <td>{% if item.region %}{{ item.region }}{% endif %}</td>
+                            <td><a href="/regions/processproj/edit/{{ item.id }}">{{ item.proj_kod }}</a></td>
+                            <td>{{ item.proj_level }}</td>
+                            <td>{% if item.stage %}<a href="/regions/processproj/edit/{{ item.id }}">{{ item.stage.getfullname }}</a>{% else %}{% endif %}</td>
+                            <td><a href="/regions/processproj/edit/{{ item.id }}">{{ item.proj_name }}</a></td>
+                            <td>
+                                <ul>
+                                    {% for addr in item.data.address %}
+                                        <li>{{ addr.city }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    {% for addr in item.data.address %}
+                                        <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    {% for worker in item.reestr_proj_exec_date_set.all %}
+                                        <li>{{ worker.worker.get_full_name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>{% if item.business %}{{ item.business }}{% else %}{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+
+                {% endif %}
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/processproj/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/processproj/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+{% include "regions/processproj/processprojadd.html" %}
+
+
+{% endblock %}
+

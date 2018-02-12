@@ -491,7 +491,7 @@ class proj_notes(models.Model):
 
 
 
-#### Реестр проектов
+#### Реестр проектов и проекты в стадии проработки
 class reestr_proj(models.Model):
     proj_kod = models.CharField(max_length=100, default="00/0000000/0000000/00", verbose_name='Код проекта')
     proj_other = models.CharField(max_length=20, default="000000", verbose_name='Код связи с ЕИСУП')
@@ -516,6 +516,7 @@ class reestr_proj(models.Model):
     object_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость объекта (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
     smr_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость СМР (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
     other_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость оборудования, инструментов (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))] )
+    process = models.BooleanField(default=True, verbose_name='Флаг проектов в сотоянии проработки')
 
 
 

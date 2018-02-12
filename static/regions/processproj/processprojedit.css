@@ -1,0 +1,199 @@
+.row {
+    margin: 0;
+}
+
+
+form#reestr-proj-edit > table > tbody > tr > td > input,
+form#reestr-proj-edit > table > tbody > tr > td > select {
+    width: 300px;
+}
+
+/* интерфейс общих данных */
+#proj-common {
+	border-color: brown;
+	border-style: solid;
+	border-width: thin;
+	margin: 7px;
+}
+
+input, select {
+    width: 100%;
+
+}
+
+input#id_proj_name, textarea#id_comment {
+    width: 100%;
+}
+
+/* Отступы */
+#page-1 {
+    margin-top: 20px;
+}
+
+
+/* page-1 */
+input#id_contragent, textarea#id_addresses, textarea#id_links {
+    width: 100%;
+}
+
+#page-1 {
+	border-color: green;
+	border-style: solid;
+	border-width: thin;
+	margin: 7px;
+}
+
+
+table[group=addresses] > thead > tr > th,
+table[group=links] > thead > tr > th,
+table[group=file-list] > thead > tr > th,
+table[group=comment-list] > thead > tr > th,
+table[group=stages-list] > thead > tr > th,
+table[group=exec-list] > thead > tr > th,
+table[group=child-list] > thead > tr > th,
+table[group=systems] > thead > tr > th,
+table[group=messages-list] > thead > tr > th,
+table[group=log-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=addresses] > tbody > tr > td,
+table[group=links] > tbody > tr > td,
+table[group=file-list] > tbody > tr > td,
+table[group=comment-list] > tbody > tr > td,
+table[group=stages-list] > tbody > tr > td,
+table[group=exec-list] > tbody > tr > td,
+table[group=child-list] > tbody > tr > td,
+table[group=systems] > tbody > tr > td,
+table[group=messages-list] > tbody > tr > td,
+table[group=log-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+/* Загрузка файла на закладке 2 */
+#page-2 > form > div.row.col-md-5.col-md-1-offset > input#id_file {
+    width: 80%;
+}
+
+form#uploadfile,
+form#uploadfilehdfs {
+    padding-top: 5px;
+}
+
+#exceltable {
+    overflow-x: scroll; /* Добавляем полосу прокрутки */
+    height: 300px; /* Высота блока */
+    padding: 5px; /* Поля вокруг текста */
+    border: solid 1px green; /* Параметры рамки */
+    white-space: nowrap; /* Запрещаем перенос строк */
+    margin-top: 10px;
+}
+
+div#page-2.row.small > div,
+div#page-4.row.small {
+    margin-left:7px;
+}
+
+table[group=file-list],
+table[group=comment-list],
+table[group=stages-list] {
+    margin-top :5px;
+}
+
+
+div#page-6.row.small > div.row.col-md-8 > form.form-inline > div.form-group > label,
+div#page-6.row.small > div.row.col-md-8 > form.form-inline > button.btn.btn-default.btn-xs {
+    vertical-align: top;
+}
+
+div#page-6.row.small > div.row.col-md-8 > form.form-inline {
+    margin-top: 5px;
+}
+
+
+div#page-6.row.small > div.row.col-md-8 > form.form-inline > div.form-group > textarea#comment.form-control.small {
+    width: 600px;
+}
+
+div#page-3.row.small div.row.col-md-8 form.form-inline {
+    margin-top: 5px;
+}
+
+
+
+/* Курсор */
+a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+a:hover {
+    text-decoration:none;
+}
+
+
+div.col-md-5 > dl > dd > table[group=links],
+div.col-md-5 > dl > dd > table[group=addresses] {
+    margin-top: 5px;
+}
+
+
+select#id_proj_init {
+    border-color: blue;
+    border-width: 2px;
+}
+
+
+input#id_proj_other {
+    border-color: green;
+    border-width: 2px;
+}
+
+
+a#create-child-proj {
+    margin-left:15px;
+}
+
+
+table[group=child-list] {
+    margin-top: 10px;
+}
+
+
+/* Форма создания нового элемента */
+form#reestr-proj-add2 > table > tbody > tr > td > input,
+form#reestr-proj-add2 > table > tbody > tr > td > select {
+    width: 300px;
+}
+
+
+form#reestr-proj-add2 > table > tbody > tr > th > label {
+    width: 250px;
+}
+
+
+/* Первая закладка - второй столбец */
+select#id_rates, select#id_passing, select#other-system {
+    width: 200px;
+}
+
+input#system-code {
+    width: 150px;
+}
+
+table[group=systems], table[group=log-list] {
+    margin-top: 5px;
+}
+
+
+/* Восьмая закладка */
+div#page-8.row.small div.row.col-md-8 form.form-inline {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

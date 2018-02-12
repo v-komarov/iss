@@ -1,0 +1,45 @@
+<div id="page-4" class="row small" hidden>
+
+    <div>
+
+        <form action="/regions/reestrproj/upload-p4/" id="uploadfilehdfs" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="form-group">
+                <input id="fileuploadhdfs" name="fileuploadhdfs" type="file">
+                <input type="hidden" id="reestr_proj_id" name="reestr_proj_id" value={{ proj.id }} />
+            </div>
+
+            <div class="form-group">
+                <select id="filetype" name="filetype">
+                    <option value="">-----</option>
+                    {% for dt in doctypes %}
+                        <option value="{{ dt.id }}">{{ dt.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+
+        </form>
+
+    </div>
+
+    <div class="row col-md-8">
+        <table group="file-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th>Дата загрузки</th>
+                    <th>Название файла</th>
+                    <th>Тип документа</th>
+                    <th>Проверено</th>
+                    <th>Загрузил</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+
+</div>
