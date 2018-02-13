@@ -197,3 +197,9 @@ div#page-8.row.small div.row.col-md-8 form.form-inline {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+
+/* Ширина кнопки сохранить */
+button#btn-saving, button#btn-process {
+    width: 150px;
+}

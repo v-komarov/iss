@@ -35,6 +35,11 @@ $(document).ready(function() {
     // Отображение истории оповещений
     GetListMessageHistory();
 
+
+    // Перевод в реестр
+    $("button#btn-reestr").bind("click", ToReestr);
+
+
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
 
@@ -190,6 +195,32 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
+// Перевод проекта в реестр
+function ToReestr() {
+
+    if (confirm("Перемещение в реестр?")) {
+
+        var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=processproj-to-reestr&reestrproj_id="+reestrproj_id,
+        function(data) {
+
+            if (data["result"] == "ok") { alert("Проект перемещен в реестр!"); }
+
+        })
+
+
+
+    }
+
+}
+
 
 
 

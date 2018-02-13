@@ -1020,6 +1020,46 @@ def get_json(request):
 
 
 
+        ### Реестр проектов: Перевод из проработки проектов в реестр
+        if r.has_key("action") and rg("action") == 'processproj-to-reestr':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            reestr_proj_comment.objects.create(
+                reestr_proj=reestrproj,
+                user=request.user,
+                comment=u"Перемещен в реестр проектов",
+                log=True
+            )
+
+            reestrproj.process = False
+            reestrproj.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Реестр проектов: Перевод из реестра проектов в проработку
+        if r.has_key("action") and rg("action") == 'reestrproj-to-process':
+            reestrproj_id = request.GET["reestrproj_id"]
+            reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
+
+            reestr_proj_comment.objects.create(
+                reestr_proj=reestrproj,
+                user=request.user,
+                comment=u"Перемещен в проработку проектов",
+                log=True
+            )
+
+            reestrproj.process = True
+            reestrproj.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
 
 
     if request.method == "POST":

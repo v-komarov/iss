@@ -12,6 +12,7 @@ $(document).ready(function() {
     $("div#exec-window input#id_date1").datepicker($.datepicker.regional['ru']);
     $("div#exec-window input#id_date2").datepicker($.datepicker.regional['ru']);
 
+
     // Список загруженных файлов
     GetListHdfsFiles();
     // Список коментариев
@@ -34,6 +35,9 @@ $(document).ready(function() {
     GetListOtherSystems();
     // Отображение истории оповещений
     GetListMessageHistory();
+
+    // Перевод в проработку
+    $("button#btn-process").bind("click", ToProcess);
 
     // Удаление загруженного в hdfs файла
     $("#page-4 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteHDFSFile);
@@ -190,6 +194,33 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+// Перевод проекта в проработку
+function ToProcess() {
+
+    if (confirm("Перемещение в проработку?")) {
+
+        var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-to-process&reestrproj_id="+reestrproj_id,
+        function(data) {
+
+            if (data["result"] == "ok") { alert("Проект перемещен в проработку!"); }
+
+        })
+
+
+
+    }
+
+}
+
+
+
 
 
 
