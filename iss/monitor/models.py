@@ -189,3 +189,16 @@ class drp_list(models.Model):
     num_drp = models.IntegerField(default=1)
     author = models.CharField(max_length=100, default="")
 
+
+
+
+
+### Данные по звонкам c avaya
+class avaya_log(models.Model):
+    datetime_call = models.DateTimeField(db_index=True, null=True, auto_now_add=True)
+    duration = models.IntegerField(default=1, db_index=True, verbose_name='Длительность в сек.')
+    in_out = models.CharField(max_length=1, default="", verbose_name='Входящий или исходящий вызов', db_index=True)
+    call_a = models.CharField(max_length=100, default="", verbose_name='A', db_index=True)
+    call_b = models.CharField(max_length=100, default="", verbose_name='B', db_index=True)
+    call_c = models.CharField(max_length=100, default="", verbose_name='C', db_index=True)
+
