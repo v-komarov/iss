@@ -36,13 +36,15 @@ class Command(BaseCommand):
         call_b = st[6]
         call_c = st[5]
         call_in_out = st[4]
+        inner = st[8]
 
         avaya_log.objects.create(
             duration=int(sec,10),
             in_out=call_in_out,
             call_a=call_a,
             call_b=call_b,
-            call_c=call_c
+            call_c=call_c,
+            call_inner = int(inner,10)
         )
 
 
