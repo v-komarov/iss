@@ -1,5 +1,8 @@
 #coding:utf8
 
+import datetime
+
+
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -36,11 +39,18 @@ class Command(BaseCommand):
 
         st = cdr.split(",")
         #print st
-        sec = st[2]
         call_from = st[3]
         call_to = st[6]
         call_type = ""
         comment = ""
+
+        duration_str = st[1].split(":")
+        h = int(duration_str[0],10)
+        m = int(duration_str[1],10)
+        s = int(duration_str[2],10)
+
+        sec = datetime.timedelta(hours=h, minutes=m, seconds=s)
+
 
         user = None
 
@@ -77,7 +87,7 @@ class Command(BaseCommand):
                 mark=mark,
                 working=wt,
                 comment=comment,
-                duration = int(sec)
+                duration = int(sec.total_seconds())
 
             )
 

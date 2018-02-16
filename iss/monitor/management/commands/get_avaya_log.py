@@ -1,5 +1,7 @@
 #coding:utf8
 
+import datetime
+
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -31,7 +33,14 @@ class Command(BaseCommand):
 
         st = cdr.split(",")
 
-        sec = st[2]
+        duration_str = st[1].split(":")
+        h = int(duration_str[0],10)
+        m = int(duration_str[1],10)
+        s = int(duration_str[2],10)
+
+        sec = datetime.timedelta(hours=h, minutes=m, seconds=s)
+
+
         call_a = st[3]
         call_b = st[6]
         call_c = st[5]
@@ -39,7 +48,7 @@ class Command(BaseCommand):
         inner = st[8]
 
         avaya_log.objects.create(
-            duration=int(sec,10),
+            duration=int(sec.total_seconds()),
             in_out=call_in_out,
             call_a=call_a,
             call_b=call_b,
