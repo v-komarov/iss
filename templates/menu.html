@@ -33,6 +33,8 @@
           <li class="divider"></li>
           <li id="menumakereports" {% if request.path|slice:'0:21' == "/working/makereports/" %}class="active"{% endif %}><a href="/working/makereports/1/">Подготовка отчетности</a></li>
           <li id="menureports" {% if request.path|slice:'0:17' == "/working/reports/" %}class="active"{% endif %}><a href="/working/reports/1/">Отчет</a></li>
+          <li class="divider"></li>
+          <li id="menuphone" {% if request.path|slice:'0:15' == "/working/phone/" %}class="active"{% endif %}><a href="/working/phone/">Телефонные звонки</a></li>
         </ul>
       </li>
       {% comment %}

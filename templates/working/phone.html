@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/phone.js"></script>
+<link href="{{ MY_STATIC_URL }}working/phone.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+    <dl id="form" class="dl-horizontal small">
+        <dt>{{ form.phones.label }}</dt>
+        <dd>{{ form.phones }}</dd>
+        <dt>{{ form.date1.label }}</dt>
+        <dd>{{ form.date1 }}</dd>
+        <dt>{{ form.date2.label }}</dt>
+        <dd>{{ form.date2 }}</dd>
+        <dt>{{ form.in_out.label }}</dt>
+        <dd>{{ form.in_out }}</dd>
+        <dt></dt>
+        <dd><button class="btn btn-info btn-xs" type="button">Сформировать</button></dd>
+    </dl>
+</div>
+
+
+{% endblock %}

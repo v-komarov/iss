@@ -12,6 +12,7 @@ from django.views.generic.base import TemplateView,RedirectView
 
 
 from iss.working.models import marks, working_time, working_log, working_reports
+from iss.working.forms  import phonefilter
 
 
 
@@ -256,5 +257,44 @@ class StartDesktop(TemplateView):
         prof.save()
 
         context['ip'] = ip
+
+        return context
+
+
+
+
+
+
+
+
+
+class PhoneHistory(TemplateView):
+
+
+    template_name = "working/phone.html"
+
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+        return super(PhoneHistory, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(PhoneHistory, self).get_context_data(**kwargs)
+
+        context['form'] = phonefilter(initial={})
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
 
         return context
