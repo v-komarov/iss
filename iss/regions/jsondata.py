@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
-from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj
+from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work, send_reestr_proj_work_edit
 
 
 
@@ -1557,7 +1557,7 @@ def get_json(request):
             block_ob = None if data["block"].strip() == "" else blocks.objects.get(pk=int(data["block"],10))
             reestrproj = reestr_proj.objects.get(pk=int(reestrproj_id, 10))
 
-            reestr_proj_exec_date.objects.create(
+            task = reestr_proj_exec_date.objects.create(
                 reestr_proj=reestrproj,
                 user=request.user,
                 date1 = date1,
@@ -1567,7 +1567,8 @@ def get_json(request):
                 block = block_ob
             )
 
-
+            ### Отправка оповещения о назначении исполнителя стадии проекта
+            send_reestr_proj_work(task)
 
             response_data = {"result": "ok"}
 
@@ -1600,6 +1601,8 @@ def get_json(request):
                 log=True
             )
 
+            ### Отправка оповещения о изменении стадии проекта
+            send_reestr_proj_work_edit(task)
 
 
             response_data = {"result": "ok"}

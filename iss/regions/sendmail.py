@@ -144,3 +144,95 @@ def send_reestr_proj(mess,reestrproj,user):
     email.send()
 
     return "ok"
+
+
+
+
+### Отправка оповещения из реестра проектов назначенному исполнителю
+def send_reestr_proj_work(task):
+
+    reestrproj = task.reestr_proj
+
+    if task.worker.email != "":
+        address = task.worker.email
+
+        date1 = task.date1.strftime("%d.%m.%Y") if task.date1 else ""
+        date2 = task.date1.strftime("%d.%m.%Y") if task.date2 else ""
+        stage = task.stage.name if task.stage else ""
+
+        if reestrproj.process == True:
+            url = "<a href='http://10.6.0.22:8000/regions//processproj/edit/{id}/'>http://10.6.0.22:8000/</a>"
+        else:
+            url = "<a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>"
+
+        email = EmailMessage(
+            subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),name=reestrproj.proj_name.encode("utf-8")),
+            body=u"""
+            {url}
+            <p>
+            Оповещение: вы назначены исполнителем этапа {stage} проекта {name} 
+            <br>
+            Начало этапа {date1}
+            <br>
+            Окончание этапа {date2}
+            <br>
+            </p>
+            """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
+            from_email='GAMMA <gamma@sibttk.ru>',
+            to=[address]
+        )
+
+        email.content_subtype = "html"
+        email.send()
+
+        return "ok"
+
+    else:
+        return "error"
+
+
+
+
+### Отправка оповещения из реестра проектов об изменении назначенному исполнителю
+def send_reestr_proj_work_edit(task):
+
+    reestrproj = task.reestr_proj
+
+    if task.worker.email != "":
+        address = task.worker.email
+
+        date1 = task.date1.strftime("%d.%m.%Y") if task.date1 else ""
+        date2 = task.date1.strftime("%d.%m.%Y") if task.date2 else ""
+        stage = task.stage.name if task.stage else ""
+
+        if reestrproj.process == True:
+            url = "<a href='http://10.6.0.22:8000/regions//processproj/edit/{id}/'>http://10.6.0.22:8000/</a>"
+        else:
+            url = "<a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>"
+
+        email = EmailMessage(
+            subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),name=reestrproj.proj_name.encode("utf-8")),
+            body=u"""
+            {url}
+            <p>
+            Оповещение: изменен этап {stage} проекта {name}, по которому вы назначены исполнителем 
+            <br>
+            Начало этапа {date1}
+            <br>
+            Окончание этапа {date2}
+            <br>
+            </p>
+            """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
+            from_email='GAMMA <gamma@sibttk.ru>',
+            to=[address]
+        )
+
+        email.content_subtype = "html"
+        email.send()
+
+        return "ok"
+
+    else:
+        return "error"
+
+
