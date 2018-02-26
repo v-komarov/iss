@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
-from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work, send_reestr_proj_work_edit
+from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
 
 
@@ -1568,7 +1568,7 @@ def get_json(request):
             )
 
             ### Отправка оповещения о назначении исполнителя стадии проекта
-            send_reestr_proj_work(task)
+            send_reestr_proj_work(task,action="new")
 
             response_data = {"result": "ok"}
 
@@ -1602,7 +1602,7 @@ def get_json(request):
             )
 
             ### Отправка оповещения о изменении стадии проекта
-            send_reestr_proj_work_edit(task)
+            send_reestr_proj_work(task,action="edit")
 
 
             response_data = {"result": "ok"}
