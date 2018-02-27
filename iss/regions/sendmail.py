@@ -159,7 +159,7 @@ def send_reestr_proj_work(task, action):
 
 
         date1 = task.date1.strftime("%d.%m.%Y") if task.date1 else ""
-        date2 = task.date1.strftime("%d.%m.%Y") if task.date2 else ""
+        date2 = task.date2.strftime("%d.%m.%Y") if task.date2 else ""
         stage = task.stage.name if task.stage else ""
 
         if reestrproj.process == True:
