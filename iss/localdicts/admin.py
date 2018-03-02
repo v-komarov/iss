@@ -148,8 +148,8 @@ class ProjTempAdmin(admin.ModelAdmin):
 
 
 class BlocksAdmin(admin.ModelAdmin):
-    fields = ('name',)
-    list_display = ('name',)
+    fields = ('name','email',)
+    list_display = ('name','email',)
 
 
 

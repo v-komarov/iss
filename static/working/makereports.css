@@ -38,10 +38,11 @@ table[group=makereports-list] > tbody > tr > td > a:hover {
     color: black;
 }
 
-
+/*
 table[group=makereports-list] > tbody > tr > td {
     background-color: #D8BFD8;
 }
+*/
 
 
 #report-error > h3 {
@@ -51,3 +52,4 @@ table[group=makereports-list] > tbody > tr > td {
 #report-ok > h3 {
     color: green;
 }
+

@@ -493,6 +493,7 @@ class regions(models.Model):
 ### Справочник блоков
 class blocks(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', unique=True)
+    email = models.TextField(default="", verbose_name='email')
 
     def __unicode__(self):
         return self.name

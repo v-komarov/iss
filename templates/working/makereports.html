@@ -76,7 +76,7 @@
         <tbody class="small">
             {% for row in object_list %}
                     <tr row_id={{ row.id }}>
-                        <td style="border: solid 1px gray;padding-left: 2px;">
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}>
                             {% if row.current %}
                                 <a href="/working/events/{{ row.id }}/" target="_blank">Открыто</a>
                             {% else %}
@@ -84,14 +84,14 @@
                             {% endif %}
                         </td>
                         {% timezone tz %}
-                        <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.datetime_begin|date:"d.m.Y H:i e" }}</a></td>
-                        <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.datetime_end|date:"d.m.Y H:i e" }}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.datetime_begin|date:"d.m.Y H:i e" }}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.datetime_end|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_work_hour }}</a></td>
-                        <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_relax_min }}</a></td>
-                        <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.working_log_set.count }}</a></td>
-                        <td style="border: solid 1px gray;padding-left: 2px;"><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.user.get_full_name }}</a></td>
-                        <td style="border: solid 1px gray;">
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_work_hour }}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_relax_min }}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.working_log_set.count }}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.user.get_full_name }}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}>
                             {# <img src="data:image/png;base64,{{ row.get_hist }}"  width="100%" height="100%" /> #}
                             <ol>
                                 {% timezone tz %}
@@ -101,7 +101,7 @@
                                 {% endtimezone %}
                             </ol>
                         </td>
-                        <td align="center" style="border: solid 1px gray;"><a report title="Включить/выключить в отчет">{% if row.id in include_report %}<span class="glyphicon glyphicon-check"></span>{% else %}<span class="glyphicon glyphicon-unchecked"></span>{% endif %}</a></td>
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %} align="center" style="border: solid 1px gray;"><a report title="Включить/выключить в отчет">{% if row.id in include_report %}<span class="glyphicon glyphicon-check"></span>{% else %}<span class="glyphicon glyphicon-unchecked"></span>{% endif %}</a></td>
                     </tr>
 
             {% endfor %}
