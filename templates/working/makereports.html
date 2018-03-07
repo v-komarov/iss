@@ -85,7 +85,11 @@
                         </td>
                         {% timezone tz %}
                         <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.datetime_begin|date:"d.m.Y H:i e" }}</a></td>
+                        {% if row.current %}
+                        <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}></td>
+                        {% else %}
                         <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.datetime_end|date:"d.m.Y H:i e" }}</a></td>
+                        {% endif %}
                         {% endtimezone %}
                         <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_work_hour }}</a></td>
                         <td {% if row.current %}style="border: solid 1px gray;padding-left: 2px; background-color: #7CFC00;"{% else %}style="border: solid 1px gray;padding-left: 2px; background-color: #D8BFD8;"{% endif %}><a href="/working/events/{{ row.id }}/" target="_blank">{{ row.get_relax_min }}</a></td>

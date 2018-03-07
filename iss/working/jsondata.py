@@ -7,6 +7,7 @@ from pytz import timezone
 from pprint import pformat
 
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate, login
 
 from django.db.models import Count
 from django.contrib.auth.models import User
@@ -309,6 +310,46 @@ def get_json(request):
 
 
 
+
+
+        ### Регистрация пользователя и ip адреса
+        if r.has_key("action") and rg("action") == 'auth-desk-ip':
+            ip = get_client_ip(request)
+            username = request.GET["desktop_name"].strip()
+            passwd = request.GET["desktop_passwd"].strip()
+            phone = request.GET["desktop_phone"].strip()
+
+            response_data = {"result": "error"}
+
+            user = authenticate(username=username, password=passwd)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+
+                    #### Регистрация ip адреса рабочей станции, номера телефона
+                    Profile.objects.filter(ip=ip).update(ip=None)
+                    prof = Profile.objects.filter(user=user).first()
+                    prof.ip = ip
+                    prof.phone = phone
+                    prof.save()
+
+                    work = "yes" if user.profile.work_status else "no"
+                    relax = "yes" if user.profile.relax_status else "no"
+
+                    ### Список доступных видов событий (действий)
+                    evt_btn = []
+                    for evt in marks.objects.filter(visible=True):
+                        evt_btn.append(
+                            {"id": evt.id, "name" : evt.name}
+                        )
+
+                    response_data = {"result": "ok", "work": work, "relax": relax, "user": user.get_full_name(), "evt_btn": evt_btn}
+
+
+
+
+
+
         ### Получение статусов пользователя для desktop (по ip адресу)
         if r.has_key("action") and rg("action") == 'get-desk-statuses':
 
@@ -331,6 +372,10 @@ def get_json(request):
             else:
 
                 response_data = {"result": "error"}
+
+
+
+
 
 
 
