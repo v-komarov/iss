@@ -9,6 +9,8 @@ from io import BytesIO
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from matplotlib import rc
+
 
 from pytz import timezone
 from pprint import pformat
@@ -24,6 +26,11 @@ from django.contrib.auth.models import User
 
 from iss.working.models import working_time, working_relax, marks, working_log, working_reports
 from iss.monitor.models import Profile
+
+
+
+
+
 
 
 
@@ -501,18 +508,28 @@ def get_json(request):
         ### Формирование графика активности
         if r.has_key("action") and rg("action") == 'get-data-plot':
 
+            ## Отображение кирилицы
+            font = {'family': 'DejaVu Sans',
+                    'weight': 'normal', 'size': 40}
+            rc('font', **font)
+
             tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
+
+            ### Данные из формы
             events = marks.objects.get(pk=int(request.GET["events"],10)) if request.GET["events"] != "" else None
             users = User.objects.get(pk=int(request.GET["users"],10)) if request.GET["users"] != "" else None
 
             date1 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date1"].strip(), "%d.%m.%Y"))
             date2 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date2"].strip(), "%d.%m.%Y"))
 
-            x = []
-            y = []
-            yl = []
+            date2 = date2 + datetime.timedelta(days=1)
+
+            x = [] # значение по координатам
+            y = [] # значение по координатам
+            xl = [] ### метки
 
             history = {}
+            history2 = {}
 
             if events == None and users == None:
                 wl = working_log.objects.filter(datetime_create__gte=date1, datetime_create__lte=date2, visible=True)
@@ -523,42 +540,64 @@ def get_json(request):
             else:
                 wl = working_log.objects.filter(datetime_create__gte=date1, datetime_create__lte=date2, visible=True, user=users, mark=events)
 
-
+            """
+            Формирование словарей "строковое значение по датам или часам" и количество событий 
+            """
             for a in wl:
                 hour = a.datetime_create.astimezone(timezone(tz)).strftime("%d.%m.%Y %H")
+                day = a.datetime_create.astimezone(timezone(tz)).strftime("%d.%m.%Y")
                 if history.has_key(hour):
                     history[hour] += 1
                 else:
                     history[hour] = 1
+                if history2.has_key(day):
+                    history2[day] += 1
+                else:
+                    history2[day] = 1
 
+            """            
+                Подготовка значений для графика            
+            """
             date0 = date1
             while date0 < date2:
                 x.append(date0)
-                if history.has_key(date0.strftime("%d.%m.%Y %H")):
-                    y.append(history[date0.strftime("%d.%m.%Y %H")])
-                else:
-                    y.append(0)
-                yl.append(date0.strftime("%d.%m.%Y %H"))
-                date0 = date0 + datetime.timedelta(hours=1)
+                if (date2 - date1).days < 6: ### Если переиод 5 дней и меньше
+                    if history.has_key(date0.strftime("%d.%m.%Y %H")):
+                        y.append(history[date0.strftime("%d.%m.%Y %H")])
+                    else:
+                        y.append(0)
+                    xl.append(date0.strftime(u"%d.%m.%Y %H h"))
+                    date0 = date0 + datetime.timedelta(hours=1)
+                else: # Если период более 5 дней
+                    if history2.has_key(date0.strftime("%d.%m.%Y")):
+                        y.append(history2[date0.strftime("%d.%m.%Y")])
+                    else:
+                        y.append(0)
+                    xl.append(date0.strftime(u"%d.%m.%Y"))
+                    date0 = date0 + datetime.timedelta(days=1)
 
 
-            plt.fill(x, y, zorder=10)
-            plt.grid(True, zorder=5)
+            plt.fill(x, y, zorder=10) # Рисование графика
+            plt.grid(True, zorder=5) # Сетка
 
-            plt.xlim(date1, date2)
-            #plt.xticks(x, x)
-            #plt.yticks([], yl)
-            plt.xticks(fontsize=24, rotation=90)
-            plt.yticks(fontsize=24)
+            plt.xlim(date1, date2) # Крайние значения по х
+            plt.xticks(x, xl, ha='left') # Наложение координат и меток по х
+
+            ### Размер меток по координатам
+            plt.xticks(fontsize=34, rotation=90)
+            plt.yticks(fontsize=34)
+
+            plt.ylabel(u'Количество событий') # Подпись координат
 
             figfile = BytesIO()
-            #fig = plt.gcf().autofmt_xdate()
             fig = plt.gcf()
             fig.set_size_inches(60, 20)
             plt.subplots_adjust(bottom=0.2)
             plt.savefig(figfile, format='png')
             figfile.seek(0)
 
+            ### Очистра !!!
+            plt.gcf().clear()
 
             response_data = { "result": "ok" , "data": "data: image/png;base64,"+base64.b64encode(figfile.getvalue())}
 
