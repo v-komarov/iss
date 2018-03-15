@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import pickle
+import datetime
 
 from django.db.models import Q
 from django.shortcuts import render
@@ -9,7 +10,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from iss.mydecorators import group_required,anonymous_required
 from django.views.generic.base import TemplateView,RedirectView
-
+from django.utils.timezone import now
 
 from iss.working.models import marks, working_time, working_log, working_reports
 from iss.working.forms  import phonefilter
@@ -295,6 +296,50 @@ class PhoneHistory(TemplateView):
             context['tz']= self.session['tz']
         else:
             context['tz']= 'UTC'
+
+
+        return context
+
+
+
+
+
+
+#### Отображение графиков
+class GraphHistory(TemplateView):
+
+
+    template_name = "working/graph.html"
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='working', redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+        return super(GraphHistory, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(GraphHistory, self).get_context_data(**kwargs)
+
+
+        context["events"] = marks.objects.filter(visible=True).order_by('order')
+        context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).distinct("user")
+
+
+        if self.session.has_key('tz'):
+            context['tz']= self.session['tz']
+        else:
+            context['tz']= 'UTC'
+
+
+
 
 
         return context

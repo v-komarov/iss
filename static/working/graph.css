@@ -1,0 +1,12 @@
+select#events,
+select#users,
+input#date1,
+input#date2 {
+    width: 200px;
+}
+
+
+#form {
+    padding-top: 30px;
+    padding-left:50px;
+}

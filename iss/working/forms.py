@@ -17,3 +17,5 @@ class phonefilter(forms.Form):
     date2 = forms.CharField(label="Конец периода")
     in_out = forms.ChoiceField(label="Входящие/исходящие", choices=[(0,"Входящие"),(1,"Исходящие")])
 
+
+

@@ -2,6 +2,13 @@
 
 import json
 import pickle
+import datetime
+
+import base64
+from io import BytesIO
+
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 from pytz import timezone
 from pprint import pformat
@@ -485,6 +492,75 @@ def get_json(request):
             else:
 
                 response_data = { "result": "error" }
+
+
+
+
+
+
+        ### Формирование графика активности
+        if r.has_key("action") and rg("action") == 'get-data-plot':
+
+            tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
+            events = marks.objects.get(pk=int(request.GET["events"],10)) if request.GET["events"] != "" else None
+            users = User.objects.get(pk=int(request.GET["users"],10)) if request.GET["users"] != "" else None
+
+            date1 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date1"].strip(), "%d.%m.%Y"))
+            date2 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date2"].strip(), "%d.%m.%Y"))
+
+            x = []
+            y = []
+            yl = []
+
+            history = {}
+
+            if events == None and users == None:
+                wl = working_log.objects.filter(datetime_create__gte=date1, datetime_create__lte=date2, visible=True)
+            elif events != None and users == None:
+                wl = working_log.objects.filter(datetime_create__gte=date1, datetime_create__lte=date2, visible=True, mark=events)
+            elif events == None and users != None:
+                wl = working_log.objects.filter(datetime_create__gte=date1, datetime_create__lte=date2, visible=True, user=users)
+            else:
+                wl = working_log.objects.filter(datetime_create__gte=date1, datetime_create__lte=date2, visible=True, user=users, mark=events)
+
+
+            for a in wl:
+                hour = a.datetime_create.astimezone(timezone(tz)).strftime("%d.%m.%Y %H")
+                if history.has_key(hour):
+                    history[hour] += 1
+                else:
+                    history[hour] = 1
+
+            date0 = date1
+            while date0 < date2:
+                x.append(date0)
+                if history.has_key(date0.strftime("%d.%m.%Y %H")):
+                    y.append(history[date0.strftime("%d.%m.%Y %H")])
+                else:
+                    y.append(0)
+                yl.append(date0.strftime("%d.%m.%Y %H"))
+                date0 = date0 + datetime.timedelta(hours=1)
+
+
+            plt.fill(x, y, zorder=10)
+            plt.grid(True, zorder=5)
+
+            plt.xlim(date1, date2)
+            #plt.xticks(x, x)
+            #plt.yticks([], yl)
+            plt.xticks(fontsize=24, rotation=90)
+            plt.yticks(fontsize=24)
+
+            figfile = BytesIO()
+            #fig = plt.gcf().autofmt_xdate()
+            fig = plt.gcf()
+            fig.set_size_inches(60, 20)
+            plt.subplots_adjust(bottom=0.2)
+            plt.savefig(figfile, format='png')
+            figfile.seek(0)
+
+
+            response_data = { "result": "ok" , "data": "data: image/png;base64,"+base64.b64encode(figfile.getvalue())}
 
 
 

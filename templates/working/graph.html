@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/graph.js"></script>
+<link href="{{ MY_STATIC_URL }}working/graph.css" type="text/css" rel="stylesheet">
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="row">
+    <dl id="form" class="dl-horizontal small">
+        <dt>Вид события:</dt>
+        <dd>
+            <select id="events" class="form-control input-sm">
+                <option value="">Все</option>
+                {% for e in events %}
+                    <option value="{{ e.id }}">{{ e.name }}</option>
+                {% endfor %}
+            </select>
+        </dd>
+        <dt>Пользователи:</dt>
+        <dd>
+            <select id="users" class="form-control input-sm">
+                <option value="">Все</option>
+                {% for u in users %}
+                    <option value="{{ u.user.id }}">{{ u.user.get_full_name }}</option>
+                {% endfor %}
+            </select>
+        </dd>
+        <dt>c:</dt>
+        <dd><input class="form-control input-sm" type="text" id="date1" name="data1" /></dd>
+        <dt>по:</dt>
+        <dd><input class="form-control input-sm" type="text" id="date2" name="date2" /></dd>
+        <dt></dt>
+        <dd></dd>
+        <dt></dt>
+        <dd><button id="button-get" class="btn btn-info btn-sm" type="button">Сформировать</button></dd>
+    </dl>
+</div>
+
+
+
+<img id="plot" src=""  width="100%" height="100%" />
+
+{% endblock %}
