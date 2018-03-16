@@ -4,11 +4,13 @@ dl#form {
     overflow: visible;
 }
 
-dl#form > dd > select, dl#form > dd > input {
-    width: 350px;
+dl#form > dd > input {
+    width: 250px;
 }
 
 
 button {
     margin-top: 4px;
 }
+
+

@@ -21,18 +21,22 @@
 
 <div class="row">
     <dl id="form" class="dl-horizontal small">
-        <dt>{{ form.phones.label }}</dt>
-        <dd>{{ form.phones }}</dd>
-        <dt>{{ form.date1.label }}</dt>
-        <dd>{{ form.date1 }}</dd>
-        <dt>{{ form.date2.label }}</dt>
-        <dd>{{ form.date2 }}</dd>
-        <dt>{{ form.in_out.label }}</dt>
-        <dd>{{ form.in_out }}</dd>
+        <dt>Вн. номера:</dt>
+        <dd><input class="form-control input-sm" type="text" id="phones" name="phones" /></dd>
+        <dt>Фильтр:</dt>
+        <dd><input class="form-control input-sm" type="text" id="filter" name="filter" /></dd>
+        <dt>С даты:</dt>
+        <dd><input class="form-control input-sm" type="text" id="date1" name="data1" /></dd>
+        <dt>По дату:</dt>
+        <dd><input class="form-control input-sm" type="text" id="date2" name="date2" /></dd>
         <dt></dt>
-        <dd><button class="btn btn-info btn-xs" type="button">Сформировать</button></dd>
+        <dd></dd>
+        <dt></dt>
+        <dd><button id="button-get" class="btn btn-info btn-sm" type="button">Сформировать</button></dd>
     </dl>
 </div>
+
+<result></result>
 
 
 {% endblock %}

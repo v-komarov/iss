@@ -203,12 +203,12 @@ class EventList(ListView):
                     pass
 
         if len(q) == 0:
-            data = events.objects.filter(agregation=False).order_by('-first_seen').select_related()[:5000]
+            data = events.objects.filter(agregation=False).order_by('-first_seen').select_related()[:1000]
         else:
             str_q = " & ".join(q)
             str_sql = "events.objects.filter(%s).filter(agregation=False).order_by('-first_seen').select_related()" % str_q
 
-            data = (eval(str_sql))[:5000]
+            data = (eval(str_sql))[:1000]
 
 
         #for i in data:

@@ -18,14 +18,14 @@ from pprint import pformat
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 
-from django.db.models import Count
+from django.db.models import Count, Q, Avg, Sum
 from django.contrib.auth.models import User
 
 
 
 
 from iss.working.models import working_time, working_relax, marks, working_log, working_reports
-from iss.monitor.models import Profile
+from iss.monitor.models import Profile, avaya_log
 
 
 
@@ -566,8 +566,8 @@ def get_json(request):
                         y.append(history[date0.strftime("%d.%m.%Y %H")])
                     else:
                         y.append(0)
-                    xl.append(date0.strftime(u"%d.%m.%Y %H h"))
                     date0 = date0 + datetime.timedelta(hours=1)
+                    xl.append(date0.strftime(u"%d.%m.%Y %H h"))
                 else: # Если период более 5 дней
                     if history2.has_key(date0.strftime("%d.%m.%Y")):
                         y.append(history2[date0.strftime("%d.%m.%Y")])
@@ -577,7 +577,8 @@ def get_json(request):
                     date0 = date0 + datetime.timedelta(days=1)
 
 
-            plt.fill(x, y, zorder=10) # Рисование графика
+            #plt.fill(x, y, zorder=10) # Рисование графика
+            plt.plot(x,y, linewidth=12, color='b')
             plt.grid(True, zorder=5) # Сетка
 
             plt.xlim(date1, date2) # Крайние значения по х
@@ -601,6 +602,62 @@ def get_json(request):
 
             response_data = { "result": "ok" , "data": "data: image/png;base64,"+base64.b64encode(figfile.getvalue())}
 
+
+
+
+        ### Формирование отчета из CDR логов
+        if r.has_key("action") and rg("action") == 'phonequery':
+
+            tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
+
+            phones = request.GET["phones"].strip().split(";")
+            filter = request.GET["filter"].strip()
+            date1 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date1"].strip(), "%d.%m.%Y")).replace(hour=0,minute=0,second=0)
+            date2 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date2"].strip(), "%d.%m.%Y")).replace(hour=23,minute=59,second=59)
+
+            ### Ограничение выборки по дате
+            data = avaya_log.objects.filter(datetime_call__gte=date1, datetime_call__lte=date2)
+
+            ### Ограничение выборки по внутренним телефонам
+            call_ac = []
+            for ph in phones:
+                call_ac.append(" Q(call_a='%s') | Q(call_c='%s') " % (ph,ph))
+
+            data = eval("data.filter(%s)" % (" | ".join(call_ac)))
+
+            ### Ограничение по фильтру , если есть
+            if filter != "":
+                data = data.filter(Q(call_a=filter) | Q(call_c=filter))
+
+            ### Всего звонков
+            calls = data.count()
+            ### Всего входяших
+            calls_in = data.filter(in_out="I").count()
+            ### Всего исходящих
+            calls_out = data.filter(in_out="O").count()
+
+            ### Исходящих принятых
+            calls_out_ok = data.filter(in_out="O",duration__gt=0).count()
+
+            ### Входящих принятых
+            calls_in_ok = data.filter(in_out="I",duration__gt=0).count()
+
+
+            ### Среднее время продолжительности разговора для входящих и исходящих
+            calls_in_avg = data.filter(in_out="I").aggregate(Avg('duration'))
+            calls_out_avg = data.filter(in_out="O").aggregate(Avg('duration'))
+
+            response_data = { "result": "ok",
+                              "calls_total": calls,
+                              "calls_in": calls_in,
+                              "calls_out": calls_out,
+                              "calls_in_ok": calls_in_ok,
+                              "calls_out_ok": calls_out_ok,
+                              "calls_in_avg": calls_in_avg["duration__avg"],
+                              "calls_out_avg": calls_out_avg["duration__avg"],
+                              "calls_in_p": int(calls_in_ok * 100 / calls_in) if calls_in > 0 else 0,
+                              "calls_out_p": int(calls_out_ok * 100 / calls_out) if calls_out > 0 else 0,
+                              }
 
 
 
