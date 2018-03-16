@@ -629,35 +629,39 @@ def get_json(request):
             if filter != "":
                 data = data.filter(Q(call_a=filter) | Q(call_c=filter))
 
+
             ### Всего звонков
             calls = data.count()
-            ### Всего входяших
-            calls_in = data.filter(in_out="I").count()
-            ### Всего исходящих
-            calls_out = data.filter(in_out="O").count()
+            if calls == 0:
+                response_data = {"result" : "zero"}
+            else:
+                ### Всего входяших
+                calls_in = data.filter(in_out="I").count()
+                ### Всего исходящих
+                calls_out = data.filter(in_out="O").count()
 
-            ### Исходящих принятых
-            calls_out_ok = data.filter(in_out="O",duration__gt=0).count()
+                ### Исходящих принятых
+                calls_out_ok = data.filter(in_out="O",duration__gt=0).count()
 
-            ### Входящих принятых
-            calls_in_ok = data.filter(in_out="I",duration__gt=0).count()
+                ### Входящих принятых
+                calls_in_ok = data.filter(in_out="I",duration__gt=0).count()
 
 
-            ### Среднее время продолжительности разговора для входящих и исходящих
-            calls_in_avg = data.filter(in_out="I").aggregate(Avg('duration'))
-            calls_out_avg = data.filter(in_out="O").aggregate(Avg('duration'))
+                ### Среднее время продолжительности разговора для входящих и исходящих
+                calls_in_avg = int(data.filter(in_out="I",duration__gt=0).aggregate(Avg('duration'))["duration__avg"]) if data.filter(in_out="I",duration__gt=0).exists() else None
+                calls_out_avg = int(data.filter(in_out="O",duration__gt=0).aggregate(Avg('duration'))["duration__avg"]) if data.filter(in_out="O",duration__gt=0).exists() else None
 
-            response_data = { "result": "ok",
-                              "calls_total": calls,
-                              "calls_in": calls_in,
-                              "calls_out": calls_out,
-                              "calls_in_ok": calls_in_ok,
-                              "calls_out_ok": calls_out_ok,
-                              "calls_in_avg": calls_in_avg["duration__avg"],
-                              "calls_out_avg": calls_out_avg["duration__avg"],
-                              "calls_in_p": int(calls_in_ok * 100 / calls_in) if calls_in > 0 else 0,
-                              "calls_out_p": int(calls_out_ok * 100 / calls_out) if calls_out > 0 else 0,
-                              }
+                response_data = { "result": "ok",
+                                  "calls_total": calls,
+                                  "calls_in": calls_in,
+                                  "calls_out": calls_out,
+                                  "calls_in_ok": calls_in_ok,
+                                  "calls_out_ok": calls_out_ok,
+                                  "calls_in_avg": calls_in_avg,
+                                  "calls_out_avg": calls_out_avg,
+                                  "calls_in_p": int(calls_in_ok * 100 / calls_in) if calls_in > 0 else 0,
+                                  "calls_out_p": int(calls_out_ok * 100 / calls_out) if calls_out > 0 else 0,
+                                  }
 
 
 

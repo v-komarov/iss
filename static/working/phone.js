@@ -44,7 +44,7 @@ function PhoneQuery(e) {
                 +"<tr><td>Исходящих принятых</td><td>"+data["calls_out_ok"]+"</td></tr>"
                 +"<tr><td>Входящих принятых</td><td>"+data["calls_in_ok"]+"</td></tr>"
                 +"<tr><td>Исходящие средняя продолжительность разговора</td><td>"+data["calls_out_avg"]+" сек.</td></tr>"
-                +"<tr><td>Входящих средняя продолжительность разговора</td><td>"+data["calls_in_avg"]+" сек.</td></tr>"
+                +"<tr><td>Входящие средняя продолжительность разговора</td><td>"+data["calls_in_avg"]+" сек.</td></tr>"
                 +"<tr><td>Отношение исходящих принятых</td><td>"+data["calls_out_p"]+" %</td></tr>"
                 +"<tr><td>Отношение входящих принятых</td><td>"+data["calls_in_p"]+" %</td></tr>"
                 +"</tbody></table></p>";
@@ -52,6 +52,11 @@ function PhoneQuery(e) {
                 $("result").append(t);
                 $("table").css("margin-left","300px").css("width","600px");
 
+            }
+
+            if (data["result"] == "zero") {
+                $("result").empty();
+                $("result").append($("<h3>Пустая выборка данных...</h3>").css("margin-left","300px"));
             }
 
         })
