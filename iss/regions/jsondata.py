@@ -618,16 +618,15 @@ def get_json(request):
             task_list = []
             for row in reestr_proj_exec_date.objects.filter(reestr_proj=reestrproj).order_by("-datetime_edit"):
                 task_list.append({
-                    "id": row.id,
-                    "stage": row.stage.getfullname(),
-                    "user": row.user.get_full_name(),
+                    "id": row.id if row.id else "",
+                    "stage": row.stage.getfullname() if row.stage else "",
+                    "user": row.user.get_full_name() if row.user else "",
                     "date1": row.date1.strftime("%d.%m.%Y") if row.date1 else "",
                     "date2": row.date2.strftime("%d.%m.%Y") if row.date2 else "",
                     "date3": row.datetime_edit.strftime("%d.%m.%Y"),
                     "worker" : row.worker.get_full_name() if row.worker else "",
                     "block": row.block.name if row.block else ""
                 })
-
 
             response_data = {"result": "ok", "data": task_list }
 

@@ -391,6 +391,38 @@ def get_json(request):
 
 
 
+        ### Получение текущих данных пользователя для desktop (по ip адресу)
+        if r.has_key("action") and rg("action") == 'get-desk-events':
+
+            user = get_ip_user(request)
+
+            if user:
+
+                ### Определение активной сессии
+                if working_time.objects.filter(user=user,current=True).exists():
+
+                    ### текущая смена
+                    wt = working_time.objects.filter(user=user,current=True).last()
+
+                    tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
+                    now = timezone(tz).localize(datetime.datetime.now())
+
+                    ### длительность в минутах
+                    dur = int((now - wt.datetime_begin).seconds / 60)
+
+                    events = []
+
+
+
+                    response_data = {"result": "ok", "dur": dur, "events":[]}
+
+                else:
+                    response_data = {"result": "error"}
+
+            else:
+                response_data = {"result": "error"}
+
+
 
 
         ### Начало работы (смены) для desktop (по ip адресу)

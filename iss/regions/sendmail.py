@@ -4,6 +4,12 @@ from django.core.mail import EmailMessage
 
 from iss.regions.models import proj_stages
 
+import logging
+
+#logger = logging.getLogger(__name__)
+#logging.basicConfig(filename='/srv/django/iss/log/projects.log',level=logging.DEBUG)
+
+
 
 
 ### Отправка сообщения очередным исполнитям этапа
@@ -154,58 +160,107 @@ def send_reestr_proj_work(task, action):
 
     reestrproj = task.reestr_proj
 
-    if task.worker.email != "":
-        address = task.worker.email
+    if task.block==None:
+        task.block.email=""
+    if task.worker==None:
+        task.worker.email=""
 
-
+    if task.block.email != "" or task.worker.email != "": # если указали ответвенного или группу, то нужно уведомление
+        worker_address=[]
+        block_address=[]
+ 
         date1 = task.date1.strftime("%d.%m.%Y") if task.date1 else ""
         date2 = task.date2.strftime("%d.%m.%Y") if task.date2 else ""
         stage = task.stage.name if task.stage else ""
 
         if reestrproj.process == True:
-            url = "<a href='http://10.6.0.22:8000/regions//processproj/edit/{id}/'>http://10.6.0.22:8000/</a>"
+            url = "<a href='http://10.6.0.22:8000/regions/processproj/edit/{id}/'>http://10.6.0.22:8000/</a>".format(id=task.reestr_proj_id)
         else:
-            url = "<a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>"
+            url = "<a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>".format(id=task.reestr_proj_id)
+ 
+        if task.block.email != "": # если указана группа, сплим по ;
+            block_address=task.block.email.split(';')
+            if action == "edit":
 
+                email = EmailMessage(
+                    subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),name=reestrproj.proj_name.encode("utf-8")),
+                    body=u"""
+                    {url}
+                    <p>
+                    Оповещение: изменен этап "{stage}" проекта "{name}", по которому вы входите в ответственное подразделение
+                    <br>
+                    Начало этапа {date1}
+                    <br>
+                    Окончание этапа {date2}
+                    <br>
+                    </p>
+                    """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
+                    from_email='GAMMA <gamma@sibttk.ru>',
+                    to=block_address
+                )
 
-        if action == "edit":
+            else:
+                email = EmailMessage(
+                    subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),
+                                                                   name=reestrproj.proj_name.encode("utf-8")),
+                    body=u"""
+                    {url}
+                    <p>
+                    Оповещение: вы входите в ответственное подразделение по реализации этапа "{stage}" проекта "{name}" 
+                    <br>
+                    Начало этапа {date1}
+                    <br>
+                    Окончание этапа {date2}
+                    <br>
+                    </p>
+                    """.format(url=url, id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
+                    from_email='GAMMA <gamma@sibttk.ru>',
+                    to=block_address
+                )
+ 
+            email.content_subtype = "html"
+            email.send()
 
-            email = EmailMessage(
-                subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),name=reestrproj.proj_name.encode("utf-8")),
-                body=u"""
-                {url}
-                <p>
-                Оповещение: изменен этап {stage} проекта {name}, по которому вы назначены исполнителем 
-                <br>
-                Начало этапа {date1}
-                <br>
-                Окончание этапа {date2}
-                <br>
-                </p>
-                """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
-                from_email='GAMMA <gamma@sibttk.ru>',
-                to=[address]
-            )
+        if task.worker.email != "": # если ответственный исполнитель
+            worker_address.append(task.worker.email)
+            if action == "edit":
 
-        else:
-            email = EmailMessage(
-                subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),
-                                                               name=reestrproj.proj_name.encode("utf-8")),
-                body=u"""
-                {url}
-                <p>
-                Оповещение: вы назначены исполнителем этапа {stage} проекта {name} 
-                <br>
-                Начало этапа {date1}
-                <br>
-                Окончание этапа {date2}
-                <br>
-                </p>
-                """.format(url=url, id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
-                from_email='GAMMA <gamma@sibttk.ru>',
-                to=[address]
-            )
+                email = EmailMessage(
+                    subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),name=reestrproj.proj_name.encode("utf-8")),
+                    body=u"""
+                    {url}
+                    <p>
+                    Оповещение: изменен этап "{stage}" проекта "{name}", по которому вы назначены исполнителем 
+                    <br>
+                    Начало этапа {date1}
+                    <br>
+                    Окончание этапа {date2}
+                    <br>
+                    </p>
+                    """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
+                    from_email='GAMMA <gamma@sibttk.ru>',
+                    to=worker_address
+                )
 
+            else:
+                email = EmailMessage(
+                    subject="Реестр проектов {code} {name}".format(code=reestrproj.proj_kod.encode("utf-8"),
+                                                                   name=reestrproj.proj_name.encode("utf-8")),
+                    body=u"""
+                    {url}
+                    <p>
+                    Оповещение: вы назначены исполнителем этапа "{stage}" проекта "{name}" 
+                    <br>
+                    Начало этапа {date1}
+                    <br>
+                    Окончание этапа {date2}
+                    <br>
+                    </p>
+                    """.format(url=url, id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
+                    from_email='GAMMA <gamma@sibttk.ru>',
+                    to=worker_address
+                )
+  
         email.content_subtype = "html"
         email.send()
 
