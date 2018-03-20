@@ -411,17 +411,16 @@ def get_json(request):
                     dur = int((now - wt.datetime_begin).seconds / 60)
 
                     events = []
+                    for s in working_log.objects.filter(working=wt).values('mark').annotate(Count('mark')):
+                        events.append(s)
 
-
-
-                    response_data = {"result": "ok", "dur": dur, "events":[]}
+                    response_data = {"result": "ok", "dur": dur, "events": events}
 
                 else:
                     response_data = {"result": "error"}
 
             else:
                 response_data = {"result": "error"}
-
 
 
 
@@ -642,7 +641,7 @@ def get_json(request):
 
             tz = request.session['tz'] if request.session.has_key('tz') else 'UTC'
 
-            phones = request.GET["phones"].strip().split(";")
+            phones = request.GET["phones"].strip().split(",")
             filter = request.GET["filter"].strip()
             date1 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date1"].strip(), "%d.%m.%Y")).replace(hour=0,minute=0,second=0)
             date2 = timezone(tz).localize(datetime.datetime.strptime(request.GET["date2"].strip(), "%d.%m.%Y")).replace(hour=23,minute=59,second=59)
