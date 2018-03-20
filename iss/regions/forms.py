@@ -79,7 +79,10 @@ class WorkersDatesStagesForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(WorkersDatesStagesForm, self).__init__(*args, **kwargs)
         users = User.objects.order_by("first_name")
-        self.fields['worker'].choices = [(user.pk, user.get_full_name()) for user in users]
+        workers = [("","-------")]
+        workers.extend([(user.pk, user.get_full_name()) for user in users])
+        print workers
+        self.fields['worker'].choices = workers
         stages_choices = [("","-----"),]
         for item in stages.objects.filter(level=None).order_by("name"):
             stages_choices.append((item.id,item.name))

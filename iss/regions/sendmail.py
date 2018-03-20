@@ -161,13 +161,21 @@ def send_reestr_proj_work(task, action):
     reestrproj = task.reestr_proj
 
     if task.block==None:
-        task.block.email=""
+        block_address = []
+    elif task.block.email=="":
+        block_address = []
+    else:
+        block_address = task.block.email.split(";")
     if task.worker==None:
-        task.worker.email=""
-
-    if task.block.email != "" or task.worker.email != "": # если указали ответвенного или группу, то нужно уведомление
         worker_address=[]
-        block_address=[]
+    elif task.worker.email=="":
+        worker_address=[]
+    else:
+        worker_address = [task.worker.email]
+
+
+    if worker_address != [] or block_address != []: # если указали ответвенного или группу, то нужно уведомление
+
  
         date1 = task.date1.strftime("%d.%m.%Y") if task.date1 else ""
         date2 = task.date2.strftime("%d.%m.%Y") if task.date2 else ""
@@ -178,8 +186,7 @@ def send_reestr_proj_work(task, action):
         else:
             url = "<a href='http://10.6.0.22:8000/regions/reestrproj/edit/{id}/'>http://10.6.0.22:8000/</a>".format(id=task.reestr_proj_id)
  
-        if task.block.email != "": # если указана группа, сплим по ;
-            block_address=task.block.email.split(';')
+        if block_address != []: # если указана группа, сплим по ;
             if action == "edit":
 
                 email = EmailMessage(
@@ -221,8 +228,7 @@ def send_reestr_proj_work(task, action):
             email.content_subtype = "html"
             email.send()
 
-        if task.worker.email != "": # если ответственный исполнитель
-            worker_address.append(task.worker.email)
+        if worker_address != []: # если ответственный исполнитель
             if action == "edit":
 
                 email = EmailMessage(
