@@ -19,7 +19,7 @@ from django import template
 from django.contrib.auth.models import User
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -1061,6 +1061,43 @@ def get_json(request):
 
 
 
+
+        ### Склад: фильтр - поиск
+        if r.has_key("action") and rg("action") == 'store-list-filter':
+            search = request.GET["search-text"].strip()
+            region = request.GET["region"].strip()
+            store = request.GET["store"].strip()
+            mol = request.GET["mol"].strip()
+
+            if search == "" and request.session.has_key("search_text"):
+                del request.session["search_text"]
+            else:
+                request.session["search_text"] = search
+
+            if region == "" and request.session.has_key("region"):
+                del request.session["region"]
+            else:
+                request.session["region"] = region
+
+            if store == "" and request.session.has_key("store"):
+                del request.session["store"]
+            else:
+                request.session["store"] = store
+
+            if mol == "" and request.session.has_key("mol"):
+                del request.session["mol"]
+            else:
+                request.session["mol"] = mol
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+
     if request.method == "POST":
 
 
@@ -1638,6 +1675,22 @@ def get_json(request):
 
             reestrproj.data = data
             reestrproj.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+
+        ### Пере-сохранение остатков склада
+        if data.has_key("action") and data["action"] == 'store-resave-rest':
+            pair = data["pair"]
+            for item in pair:
+                srest = store_rest.objects.get(pk=int(item["row_id"]))
+                srest.rest = Decimal(item["rest"])
+                srest.save()
 
             response_data = {"result": "ok"}
 

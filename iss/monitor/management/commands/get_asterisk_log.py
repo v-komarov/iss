@@ -21,12 +21,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        #csv.register_dialect('cdr', delimiter=',',quotechar='"', quoting = csv.QUOTE_MINIMAL, doublequote = 1)
 
         cdr = args[0]
         #print cdr
 
-        #d = list(csv.reader(cdr, dialect='cdr'))
         d = cdr.replace('"','').split(",")
 
         call_a = d[1]

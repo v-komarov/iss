@@ -653,3 +653,34 @@ class reestr_proj_messages_history(models.Model):
     datetime_create = models.DateTimeField(auto_now_add=True)
 
 
+
+
+
+### Склады список
+class store_list(models.Model):
+    name = models.CharField(max_length=100, default="", db_index=True, unique=True)
+    region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
+    comment = models.CharField(max_length=200, default="", blank=True, verbose_name="Коментарий, адрес")
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Склад'
+        verbose_name_plural = 'Склады'
+
+
+
+
+
+### Складские остатки
+class store_rest(models.Model):
+    store = models.ForeignKey(store_list, on_delete=models.PROTECT, verbose_name="Склад")
+    eisup = models.CharField(max_length=100, default="", db_index=True, verbose_name="Код ЕИСУП")
+    name = models.CharField(max_length=200, default="", db_index=True, verbose_name="Наименование номенклатуры")
+    mol = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="МОЛ")
+    rest = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Остаток', default=0.00)
+    datetime_update = models.DateTimeField(auto_now=True)
+

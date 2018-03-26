@@ -2,9 +2,9 @@
 
 
 from django.conf.urls import url
-from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit
+from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit, Store
 from iss.regions.jsondata import get_json
-from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall
+from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall, uploadfile_store
 
 
 urlpatterns = [
@@ -34,4 +34,6 @@ urlpatterns = [
     url(r'proj/excel/(?P<project>\d+)/$', projexcel),
     url(r'proj/gant/(?P<project>\d+)/$', projgant),
     url(r'workertask/(?P<page>\d+)/$', TaskList.as_view()),
+    url(r'store/page/(?P<page>\d+)/$', Store.as_view()),
+    url(r'store/upload-eisup/$', uploadfile_store),
 ]

@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 
 
 from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type
-from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj
+from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest
 from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
 
 from iss.mydecorators import group_required,anonymous_required
@@ -562,4 +562,78 @@ class ProcessProjEdit(UpdateView):
     def form_valid(self, form):
         #form.instance.rowsum = form.instance.price * form.instance.count
         return super(ProcessProjEdit, self).form_valid(form)
+
+
+
+
+
+
+
+
+### Склад
+class Store(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/store/goodslist.html"
+
+    paginate_by = 100
+
+
+
+    #@method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+        data = store_rest.objects.order_by('store','mol','name')
+
+        if self.session.has_key("store") and self.session["store"] !="":
+            data = data.filter(store__id=int(self.session["store"]))
+
+        if self.session.has_key("mol") and self.session["mol"] != "":
+            data = data.filter(mol__id=int(self.session["mol"]))
+
+        if self.session.has_key("region") and self.session["region"] != "":
+            data = data.filter(store__region__id=int(self.session["region"]))
+
+        if self.session.has_key("search_text") and self.session["search_text"] != "":
+            data = data.filter(Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]))
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Store, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        data = store_rest.objects.all()
+        context['store_list'] = data.distinct('store')
+        context['mol_list'] = data.distinct('mol')
+        context['region_list'] = data.distinct('store__region')
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        context['search'] = self.session["search_text"] if self.session.has_key('search_text') else ""
+        context['region'] = self.session["region"] if self.session.has_key('region') else ""
+        context['store'] = self.session["store"] if self.session.has_key('store') else ""
+        context['mol'] = self.session["mol"] if self.session.has_key('mol') else ""
+
+
+
+        return context
+
 
