@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     $("div#buttons button#search-button").bind("click", Search);
     $("div#buttons button#clear-button").bind("click", ClearSearch);
-
+    $("table[group=goods-list] td a").bind("click", EditRest);
 
 
 });
@@ -77,8 +77,6 @@ function ClearSearch(e) {
 
 
 }
-
-
 
 
 
@@ -185,6 +183,95 @@ function DiffUpload(data) {
         height:400
     });
 
+
+
+}
+
+
+
+
+
+
+
+
+// Корректировка остатков
+function EditRest(e) {
+
+
+    var row_id = $(this).parents("tr").attr("row_id");
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=store-rest-record&row_id="+row_id,
+    function(data) {
+
+            if (data["result"] == "ok") {
+                $("input#edit_name").val(data["rec"]["name"]);
+                $("input#edit_eisup").val(data["rec"]["eisup"]);
+                $("input#edit_store").val(data["rec"]["store"]);
+                $("input#edit_rest").val(data["rec"]["rest"]);
+            }
+
+    });
+
+
+
+
+    $("#edit-rest").dialog({
+        title:"Корректировка остатков",
+        buttons:[{ text:"Сохранить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+
+            var data = {};
+            data.row_id = row_id;
+            data.rest = $("input#edit_rest").val();
+            data.action = "store-edit-rest";
+
+
+            $.ajax({
+              url: "/regions/jsondata/",
+              type: "POST",
+              dataType: 'json',
+              data:$.toJSON(data),
+                success: function(result) {
+                    if (result["result"] == "ok") {
+                        $("table[group=goods-list] tr[row_id="+row_id+"]").css("background-color","#F0E68C");
+                        var jqxhr = $.getJSON("/regions/jsondata/?action=store-rest-record&row_id="+row_id,
+                        function(data) {
+                            if (data["result"] == "ok") {
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(2).text(data["rec"]["rest"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(7).text(data["rec"]["mol"]);
+                            }
+                        });
+
+                        $("#edit-rest").dialog("close");
+
+                    }
+                }
+
+            });
+
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            //location.href="/regions/store/page/1/";
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:400,
+        width:500,
+        height:270
+    });
 
 
 }

@@ -451,7 +451,7 @@ def uploadfile_page2(request):
                 rp = reestr_proj.objects.get(pk=int(reestrproj, 10))
 
                 excel_data = ExcelFile(StringIO.StringIO(filedata))
-                df = excel_data.parse(excel_data.sheet_names[-1], header=None)
+                df = excel_data.parse(excel_data.sheet_names[0], header=None)
                 df=df.fillna("")
                 ht = df.to_html(header=False,index=False, float_format=lambda x: '%10.2f' % x, classes="table table-bordered small").encode('utf-8')
 
@@ -750,7 +750,6 @@ def reestrprojexcelall(request):
 ### Загрузка файла (остатки по складам)
 def uploadfile_store(request):
 
-
     if request.method == 'POST':
 
         filename = request.FILES['fileupload'].name
@@ -769,9 +768,9 @@ def uploadfile_store(request):
 
         else:
 
-
             excel_data = ExcelFile(StringIO.StringIO(filedata))
-            df = excel_data.parse(excel_data.sheet_names[-1],skiprows=9,header=None, na_values="", dtype={2:str,16:str})
+            df = excel_data.parse(excel_data.sheet_names[0],skiprows=9,header=None, na_values="", dtype={2:str,16:str})
+
             df=df.fillna("")
             df[1] = df[1].replace("nan","")
             df[2] = df[2].replace("nan","")
@@ -825,5 +824,4 @@ def uploadfile_store(request):
             </script></head></html>
             """ % json.dumps(data))
 
-            #window.top.location.reload();
 

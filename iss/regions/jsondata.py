@@ -1096,6 +1096,29 @@ def get_json(request):
 
 
 
+        ### Склад: возвращает запись остатков
+        if r.has_key("action") and rg("action") == 'store-rest-record':
+            tz = request.session['tz']
+            r = store_rest.objects.get(pk=int(request.GET["row_id"],10))
+
+            rec = {
+                "datetime": r.datetime_update.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
+                "eisup": r.eisup,
+                "name": r.name,
+                "region": r.store.region.name if r.store.region else "",
+                "store": r.store.name,
+                "comment": r.store.comment,
+                "mol": r.mol.get_full_name(),
+                "rest":str(r.rest)
+
+            }
+
+            response_data = {"result": "ok", "rec": rec}
+
+
+
+
+
 
 
     if request.method == "POST":
@@ -1691,6 +1714,18 @@ def get_json(request):
                 srest = store_rest.objects.get(pk=int(item["row_id"]))
                 srest.rest = Decimal(item["rest"])
                 srest.save()
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Исправление остатков склада
+        if data.has_key("action") and data["action"] == 'store-edit-rest':
+            srest = store_rest.objects.get(pk=int(data["row_id"]))
+            srest.rest = Decimal(data["rest"])
+            srest.mol = request.user
+            srest.save()
 
             response_data = {"result": "ok"}
 
