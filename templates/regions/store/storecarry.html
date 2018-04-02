@@ -1,0 +1,131 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/store/storecarry.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/store/storecarry.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+<div id="local-menu" class="row small">
+    <ul class="nav nav-tabs">
+      <li><a href="/regions/store/page/1/">Остатки</a></li>
+      <li><a href="/regions/storeout/page/1/">Расход</a></li>
+      <li><a href="/regions/storein/page/1/">Поступления</a></li>
+      <li class="active"><a href="#">Перемещения</a></li>
+      <li><a href="/regions/storehistory/page/1/">История</a></li>
+    </ul>
+</div>
+
+
+
+{% include "regions/store/filter.html" %}
+
+
+
+
+<div id="gcreate" class="row col-sm-2 small">
+            <button id="create-button" type="submit" title="Создать" class="btn btn-default btn-xs">Создать</button>
+</div>
+
+
+
+
+
+
+<div class="row">
+
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/storecarry/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/storecarry/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="storecarry-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Код ЕИСУП</th>
+                <th>Наименование</th>
+                <th>Кол-во</th>
+                <th>Дата</th>
+                <th>Со склада</th>
+                <th>Регион</th>
+                <th>МОЛ передавший</th>
+                <th>На склад</th>
+                <th>МОЛ принявший</th>
+                <th>Комментарий</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+        {% comment %}
+            {% for row in object_list %}
+                <tr row_id={{ row.id }}>
+                    <td><a>{{ row.eisup }}</a></td>
+                    <td><a>{{ row.name }}</a></td>
+                    <td><a>{{ row.q }}</a></td>
+                    {% timezone tz %}
+                    <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
+                    {% endtimezone %}
+                    <td><a>{{ row.store.region }}</a></td>
+                    <td><a>{{ row.store.name }}</a></td>
+                    <td><a>{{ row.store.comment }}</a></td>
+                    <td><a>{{ row.mol.get_full_name }}</a></td>
+                </tr>
+            {% endfor %}
+        {% endcomment %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/storecarry/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/storecarry/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+{% include "regions/store/store_out_form.html" %}
+
+{% endblock %}
+

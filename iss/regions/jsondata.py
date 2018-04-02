@@ -17,9 +17,10 @@ from snakebite.client import Client
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -1099,21 +1100,102 @@ def get_json(request):
         ### Склад: возвращает запись остатков
         if r.has_key("action") and rg("action") == 'store-rest-record':
             tz = request.session['tz']
-            r = store_rest.objects.get(pk=int(request.GET["row_id"],10))
+            rr = store_rest.objects.get(pk=int(request.GET["row_id"],10))
 
             rec = {
-                "datetime": r.datetime_update.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
-                "eisup": r.eisup,
-                "name": r.name,
-                "region": r.store.region.name if r.store.region else "",
-                "store": r.store.name,
-                "comment": r.store.comment,
-                "mol": r.mol.get_full_name(),
-                "rest":str(r.rest)
+                "datetime": rr.datetime_update.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
+                "eisup": rr.eisup,
+                "name": rr.name,
+                "region": rr.store.region.name if rr.store.region else "",
+                "store": rr.store.name,
+                "comment": rr.store.comment,
+                "mol": rr.mol.get_full_name(),
+                "rest":str(rr.rest),
+                "serial": rr.serial
 
             }
 
             response_data = {"result": "ok", "rec": rec}
+
+
+
+
+
+        ### Склад: возвращает запись расхода со склада
+        if r.has_key("action") and rg("action") == 'store-out-rec':
+            rr = store_out.objects.get(pk=int(request.GET["row_id"],10))
+
+            rec = {
+                "eisup": rr.store_rest.eisup,
+                "name": rr.store_rest.name,
+                "region": rr.store_rest.store.region.name if rr.store_rest.store.region else "",
+                "store": rr.store_rest.store.name,
+                "comment": rr.store_rest.store.comment,
+                "q":str(rr.q),
+                "serial": rr.store_rest.serial,
+                "proj": rr.proj_kod
+
+            }
+
+            response_data = {"result": "ok", "rec": rec}
+
+
+
+
+
+        ### Склад: удаление записи расхода со склада
+        if r.has_key("action") and rg("action") == 'store-out-del':
+            sout = store_out.objects.get(pk=int(request.GET["row_id"],10))
+            srest = sout.store_rest
+
+            if srest.mol == request.user:
+
+                srest.rest += sout.q
+                srest.save()
+
+                sout.delete()
+
+
+                ### Регистрация в логе
+                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Расход со склада удален")
+
+
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+
+
+
+
+
+        #### Поиск остатков на складе
+        if r.has_key("term") and rg("term") != "":
+            filter = request.GET["filter"]
+            term = request.GET["term"]
+            obj = []
+
+            if filter == "user":
+                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).filter(mol=request.user).order_by("name","store__name")
+            else:
+                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).order_by("name","store__name")
+
+            for item in data1000:
+
+                label =  u"{name} с/н:{serial} склад:{store} МОЛ:{mol} остаток:{rest}".format(name=item.name[:20], serial=item.serial, store=item.store.name, mol=item.mol.get_full_name(), rest=str(item.rest))
+                obj.append(
+                    {
+                        "label": label,
+                        "value": item.id
+                    }
+                )
+
+            response_data = obj
+
 
 
 
@@ -1715,6 +1797,9 @@ def get_json(request):
                 srest.rest = Decimal(item["rest"])
                 srest.save()
 
+                ### Регистрация в логе
+                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Перезапись остатков из файла")
+
             response_data = {"result": "ok"}
 
 
@@ -1723,11 +1808,102 @@ def get_json(request):
         ### Исправление остатков склада
         if data.has_key("action") and data["action"] == 'store-edit-rest':
             srest = store_rest.objects.get(pk=int(data["row_id"]))
-            srest.rest = Decimal(data["rest"])
-            srest.mol = request.user
-            srest.save()
 
-            response_data = {"result": "ok"}
+            if srest.mol == request.user:
+
+                srest.rest = Decimal(data["rest"])
+                srest.name = data["name"].strip()
+                srest.serial = data["serial"].strip()
+                srest.save()
+
+                ### Регистрация в логе
+                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Установка остатка")
+
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+
+
+
+
+
+        ### Создание остатка склада
+        if data.has_key("action") and data["action"] == 'store-create-rest':
+
+            storelist = store_list.objects.get(pk=int(data["store"]))
+
+            srest = store_rest.objects.create(
+                name = data["name"].strip(),
+                rest = Decimal(data["rest"]),
+                store = storelist,
+                mol = request.user,
+                serial = data["serial"].strip()
+            )
+
+            ### Регистрация в логе
+            store_rest_log.objects.create(store_rest=srest,user=request.user,action="Создание остатка")
+
+            rec = {
+                "id": srest.id,
+                "datetime": srest.datetime_update.astimezone(timezone(tz)).strftime("%d.%m.%Y %H:%M %Z"),
+                "eisup": srest.eisup,
+                "name": srest.name,
+                "region": srest.store.region.name if srest.store.region else "",
+                "store": srest.store.name,
+                "comment": srest.store.comment,
+                "mol": srest.mol.get_full_name(),
+                "rest":str(srest.rest),
+                "serial": srest.serial
+
+            }
+
+
+            response_data = {"result": "ok", "rec": rec}
+
+
+
+
+
+
+
+        ### расход со склада
+        if data.has_key("action") and data["action"] == 'store-out-q':
+
+            srest = store_rest.objects.get(pk=int(data["id"]))
+            q = Decimal(data["q"])
+            comment = data["comment"].strip()
+            projkod = data["proj"].strip()
+
+            if srest.rest >= q and srest.mol == request.user:
+
+                srest.rest -= q
+                srest.save()
+
+
+                store_out.objects.create(
+                    store_rest = srest,
+                    q = q,
+                    user = request.user,
+                    comment = comment,
+                    proj_kod = projkod
+                )
+
+                ### Регистрация в логе
+                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Расход со склада")
+
+
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
 
 
 

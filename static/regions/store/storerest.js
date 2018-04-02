@@ -1,8 +1,7 @@
 $(document).ready(function() {
 
-    $("div#buttons button#search-button").bind("click", Search);
-    $("div#buttons button#clear-button").bind("click", ClearSearch);
     $("table[group=goods-list] td a").bind("click", EditRest);
+    $("button#create-button").bind("click", CreateRest);
 
 
 });
@@ -39,44 +38,6 @@ function getCookie(name) {
 
 
 
-
-
-// Поиск / фильтр
-function Search(e) {
-
-    var search = $("input#search-text").val();
-    var region = $("select#region").val();
-    var store = $("select#store").val();
-    var mol = $("select#mol").val();
-
-    var jqxhr = $.getJSON("/regions/jsondata/?action=store-list-filter&search-text="+search+"&region="+region+"&store="+store+"&mol="+mol,
-    function(data) {
-
-        if (data["result"] == "ok") { location.href="/regions/store/page/1/"; }
-
-    })
-
-}
-
-
-
-// Отмена поиска /
-function ClearSearch(e) {
-
-    $("input#search-text").val("");
-    $("select#region").val("");
-    $("select#store").val("");
-    $("select#mol").val("");
-
-    var jqxhr = $.getJSON("/regions/jsondata/?action=store-list-filter&search-text=&store=&region=&mol=",
-    function(data) {
-
-        if (data["result"] == "ok") { location.href="/regions/store/page/1/"; }
-
-    })
-
-
-}
 
 
 
@@ -208,6 +169,11 @@ function EditRest(e) {
                 $("input#edit_eisup").val(data["rec"]["eisup"]);
                 $("input#edit_store").val(data["rec"]["store"]);
                 $("input#edit_rest").val(data["rec"]["rest"]);
+                $("input#edit_serial").val(data["rec"]["serial"]);
+
+                if (data["rec"]["eisup"] == "") { $("input#edit_name").prop("readonly",false); }
+                else { $("input#edit_name").prop("readonly",true); }
+
             }
 
     });
@@ -233,7 +199,10 @@ function EditRest(e) {
             var data = {};
             data.row_id = row_id;
             data.rest = $("input#edit_rest").val();
+            data.serial = $("input#edit_serial").val();
+            data.name = $("input#edit_name").val();
             data.action = "store-edit-rest";
+
 
 
             $.ajax({
@@ -247,13 +216,21 @@ function EditRest(e) {
                         var jqxhr = $.getJSON("/regions/jsondata/?action=store-rest-record&row_id="+row_id,
                         function(data) {
                             if (data["result"] == "ok") {
-                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(2).text(data["rec"]["rest"]);
-                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(7).text(data["rec"]["mol"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(1).text(data["rec"]["name"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(2).text(data["rec"]["serial"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(3).text(data["rec"]["rest"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(8).text(data["rec"]["mol"]);
                             }
                         });
 
                         $("#edit-rest").dialog("close");
 
+                    }
+                    else {
+                        $("#edit-rest").dialog("close");
+
+                        $("#notaccess").dialog({show: { effect: "blind", duration: 500 }, hide: { effect: "explode", duration: 1000 }});
+                        $("#notaccess").dialog("close");
                     }
                 }
 
@@ -265,6 +242,89 @@ function EditRest(e) {
 
             {text:"Закрыть",click: function() {
             //location.href="/regions/store/page/1/";
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:400,
+        width:500,
+        height:300
+    });
+
+
+}
+
+
+
+
+
+
+// Создание нового остатка
+function CreateRest(e) {
+
+    $("input#create-name").val("");
+    $("input#createrest").val("");
+
+
+
+    $("#create-rest").dialog({
+        title:"Создание нового остатка",
+        buttons:[{ text:"Сохранить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            if ($("input#create-name").val() != "" && $("input#createrest").val() != "") {
+
+                var data = {};
+                data.name = $("input#create-name").val();
+                data.serial = $("input#create-serial").val();
+                data.store = $("select#create-store").val();
+                data.rest = $("input#createrest").val();
+                data.action = "store-create-rest";
+
+
+                $.ajax({
+                  url: "/regions/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok") {
+                            var t = "<tr rec_id="+result["rec"]["id"]+" style=\"background-color:#F0E68C;\">"
+                            + "<td></td>"
+                            + "<td>"+result["rec"]["name"]+"</td>"
+                            + "<td>"+result["rec"]["serial"]+"</td>"
+                            + "<td>"+result["rec"]["rest"]+"</td>"
+                            + "<td>"+result["rec"]["datetime"]+"</td>"
+                            + "<td>"+result["rec"]["region"]+"</td>"
+                            + "<td>"+result["rec"]["store"]+"</td>"
+                            + "<td>"+result["rec"]["comment"]+"</td>"
+                            + "<td>"+result["rec"]["mol"]+"</td>"
+                            + "</tr>"
+
+                            $("table[group=goods-list] tbody").prepend(t);
+
+                            $("#create-rest").dialog("close");
+
+                        }
+                    }
+
+                });
+
+            }
+            else { alert("Необходимо заполнить поля!");}
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
             $(this).dialog("close")}}
         ],
         modal:true,

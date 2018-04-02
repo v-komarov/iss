@@ -1,0 +1,20 @@
+<div id="create-rest" hidden>
+
+    <dl class="dl-horizontal small">
+        <dt>Наименование</dt>
+        <dd><input id="create-name" class="form-control input-sm" type="text" /></dd>
+        <dt>Склад</dt>
+        <dd>
+            <select class="form-control input-sm" id="create-store">
+                {% for s in store_list %}
+                    <option value="{{ s.store.id }}">{{ s.store.name }}</option>
+                {% endfor %}
+            </select>
+        </dd>
+        <dt>Остаток</dt>
+        <dd><input id="createrest" class="form-control input-sm" type="text" /></dd>
+        <dt>Серийный номер</dt>
+        <dd><input id="create-serial" class="form-control input-sm" type="text" /></dd>
+    </dl>
+
+</div>

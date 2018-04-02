@@ -1,0 +1,66 @@
+<div id="manager" class="row col-sm-5 small">
+
+    <dl class="dl-horizontal">
+        <dt><label for="search-text">Поиск</label></dt>
+        <dd>
+            <input class="form-control input-sm" type="text" id="search-text" placeholder="" value="{{ search }}" >
+        </dd>
+        <dt><label for="region">Регион</label></dt>
+        <dd>
+            <select class="form-control input-sm" id="region">
+                {% if region == "" %}
+                    <option value="" selected>Все</option>
+                {% else %}
+                    <option value="">Все</option>
+                {% endif %}
+                {% for r in region_list %}
+                    {% if region == r.store.region.id|stringformat:"i" %}
+                        <option value="{{ r.store.region.id }}" selected>{{ r.store.region.name }}</option>
+                    {% else %}
+                        <option value="{{ r.store.region.id }}">{{ r.store.region.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+        <dt><label for="store">Склад</label></dt>
+        <dd>
+            <select class="form-control input-sm" id="store">
+                {% if store == "" %}
+                    <option value="" selected>Все</option>
+                {% else %}
+                    <option value="">Все</option>
+                {% endif %}
+                {% for s in store_list %}
+                    {% if store == s.store.id|stringformat:"i" %}
+                        <option value="{{ s.store.id }}" selected>{{ s.store.name }}</option>
+                    {% else %}
+                        <option value="{{ s.store.id }}">{{ s.store.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+        <dt><label for="mol">МОЛ</label></dt>
+        <dd>
+            <select class="form-control input-sm" id="mol">
+                {% if mol == "" %}
+                    <option value="" selected>Все</option>
+                {% else %}
+                    <option value="">Все</option>
+                {% endif %}
+                {% for m in mol_list %}
+                    {% if mol == m.mol.id|stringformat:"i" %}
+                        <option value="{{ m.mol.id }}" selected>{{ m.mol.get_full_name }}</option>
+                    {% else %}
+                        <option value="{{ m.mol.id }}">{{ m.mol.get_full_name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+    </dl>
+</div>
+
+
+<div id="buttons" class="row col-sm-2 small">
+    <button id="search-button" title="Применить" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh"></span></button>
+    <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+</div>

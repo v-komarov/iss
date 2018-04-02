@@ -31,7 +31,7 @@ import numpy as np
 
 from snakebite.client import Client
 
-from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment, store_list, store_rest
+from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment, store_list, store_rest, store_rest_log
 from iss.localdicts.models import regions, ProjDocTypes
 
 
@@ -793,7 +793,7 @@ def uploadfile_store(request):
                         st = store_list.objects.create(name=store)
 
                     ### Поиск записей остатков
-                    if store_rest.objects.filter(eisup=eisup,store=st,mol=user).exists():
+                    if store_rest.objects.filter(eisup=eisup,store=st,mol=user,serial="").exists():
                         st_rest = store_rest.objects.filter(eisup=eisup,store=st,mol=user).first()
                         data.append({
                             'id': st_rest.id,
@@ -805,7 +805,7 @@ def uploadfile_store(request):
                         })
 
                     else:
-                        store_rest.objects.create(eisup=eisup,store=st,mol=user,name=name,rest=Decimal(rest))
+                        st_rest = store_rest.objects.create(eisup=eisup,store=st,mol=user,name=name,rest=Decimal(rest))
                         data.append({
                             'id': "",
                             'name': name,
@@ -814,7 +814,12 @@ def uploadfile_store(request):
                             'rest': rest,
                             'load': "yes"
                         })
-
+                        ### Регистрация в логе
+                        store_rest_log.objects.create(
+                            store_rest = st_rest,
+                            user = user,
+                            action = "Загрузка из файла"
+                        )
 
 
             return HttpResponse("""

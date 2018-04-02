@@ -1,0 +1,121 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/store/storehistory.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/store/storehistory.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+<div id="local-menu" class="row small">
+    <ul class="nav nav-tabs">
+      <li><a href="/regions/store/page/1/">Остатки</a></li>
+      <li><a href="/regions/storeout/page/1/">Расход</a></li>
+      <li><a href="/regions/storein/page/1/">Поступления</a></li>
+      <li><a href="/regions/storecarry/page/1/">Перемещения</a></li>
+      <li class="active"><a href="#">История</a></li>
+    </ul>
+</div>
+
+
+
+{% include "regions/store/filter.html" %}
+
+
+
+
+<div class="row">
+
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/storehistory/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/storehistory/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="storehistory-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Код ЕИСУП</th>
+                <th>Наименование</th>
+                <th>Серийный<br>номер</th>
+                <th>Дата</th>
+                <th>Действие</th>
+                <th>Пользователь</th>
+                <th>Регион</th>
+                <th>Склад</th>
+                <th>Адрес</th>
+                <th>МОЛ</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                <tr row_id={{ row.id }}>
+                    <td>{{ row.store_rest.eisup }}</td>
+                    <td>{{ row.store_rest.name }}</td>
+                    <td>{{ row.store_rest.serial }}</td>
+                    {% timezone tz %}
+                    <td>{{ row.datetime_update|date:"d.m.Y H:i e" }}</td>
+                    {% endtimezone %}
+                    <td>{{ row.action }}</td>
+                    <td>{{ row.user.get_full_name }}</td>
+                    <td>{{ row.store_rest.store.region }}</td>
+                    <td>{{ row.store_rest.store }}</td>
+                    <td>{{ row.store_rest.comment }}</td>
+                    <td>{{ row.store_rest.mol.get_full_name }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/storehistory/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/storehistory/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+

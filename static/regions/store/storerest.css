@@ -18,7 +18,7 @@ table[group=upload-list] > tbody > tr > td {
 }
 
 
-#manager, #buttons, #uploadform {
+#manager, #buttons, #uploadform, #gcreate {
     margin-top: 20px;
 }
 
@@ -43,3 +43,9 @@ table[group=upload-list] > thead > tr > th {
     text-align: left;
     vertical-align: top;
 }
+
+
+#local-menu {
+    margin-left:10px;
+}
+

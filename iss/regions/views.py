@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 
 
 from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type
-from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest
+from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log
 from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
 
 from iss.mydecorators import group_required,anonymous_required
@@ -383,7 +383,7 @@ class ReestrProjList(ListView):
 
 
 
-    #@method_decorator(login_required(login_url='/'))
+    @method_decorator(login_required(login_url='/'))
     #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
@@ -492,7 +492,7 @@ class ProcessProjList(ListView):
 
 
 
-    #@method_decorator(login_required(login_url='/'))
+    @method_decorator(login_required(login_url='/'))
     #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
@@ -576,13 +576,13 @@ class Store(ListView):
 
 
     model = reestr_proj
-    template_name = "regions/store/goodslist.html"
+    template_name = "regions/store/storerest.html"
 
     paginate_by = 100
 
 
 
-    #@method_decorator(login_required(login_url='/'))
+    @method_decorator(login_required(login_url='/'))
     #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
@@ -609,7 +609,7 @@ class Store(ListView):
             data = data.filter(store__region__id=int(self.session["region"]))
 
         if self.session.has_key("search_text") and self.session["search_text"] != "":
-            data = data.filter(Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]))
+            data = data.filter(Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]) | Q(serial__icontains=self.session["search_text"]))
 
         return data
 
@@ -620,6 +620,276 @@ class Store(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(Store, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        data = store_rest.objects.all()
+        context['store_list'] = data.distinct('store')
+        context['mol_list'] = data.distinct('mol')
+        context['region_list'] = data.distinct('store__region')
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        context['search'] = self.session["search_text"] if self.session.has_key('search_text') else ""
+        context['region'] = self.session["region"] if self.session.has_key('region') else ""
+        context['store'] = self.session["store"] if self.session.has_key('store') else ""
+        context['mol'] = self.session["mol"] if self.session.has_key('mol') else ""
+
+
+
+        return context
+
+
+
+
+### Склад - расход
+class StoreOut(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/store/storeout.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+        data = store_out.objects.order_by('-datetime_update')
+
+        if self.session.has_key("store") and self.session["store"] !="":
+            data = data.filter(store_rest__store__id=int(self.session["store"]))
+
+        if self.session.has_key("mol") and self.session["mol"] != "":
+            data = data.filter(store_rest__mol__id=int(self.session["mol"]))
+
+        if self.session.has_key("region") and self.session["region"] != "":
+            data = data.filter(store_rest__store__region__id=int(self.session["region"]))
+
+        if self.session.has_key("search_text") and self.session["search_text"] != "":
+            data = data.filter(Q(store_rest__name__icontains=self.session["search_text"]) | Q(store_rest__eisup__icontains=self.session["search_text"]))
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(StoreOut, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        data = store_rest.objects.all()
+        context['store_list'] = data.distinct('store')
+        context['mol_list'] = data.distinct('mol')
+        context['region_list'] = data.distinct('store__region')
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        context['search'] = self.session["search_text"] if self.session.has_key('search_text') else ""
+        context['region'] = self.session["region"] if self.session.has_key('region') else ""
+        context['store'] = self.session["store"] if self.session.has_key('store') else ""
+        context['mol'] = self.session["mol"] if self.session.has_key('mol') else ""
+
+
+
+        return context
+
+
+
+
+
+
+
+### Склад - перемещение
+class StoreCarry(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/store/storecarry.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+        data = store_in.objects.order_by('store','mol','name')
+
+        if self.session.has_key("store") and self.session["store"] !="":
+            data = data.filter(store__id=int(self.session["store"]))
+
+        if self.session.has_key("mol") and self.session["mol"] != "":
+            data = data.filter(mol__id=int(self.session["mol"]))
+
+        if self.session.has_key("region") and self.session["region"] != "":
+            data = data.filter(store__region__id=int(self.session["region"]))
+
+        if self.session.has_key("search_text") and self.session["search_text"] != "":
+            data = data.filter(Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]))
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(StoreCarry, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        data = store_rest.objects.all()
+        context['store_list'] = data.distinct('store')
+        context['mol_list'] = data.distinct('mol')
+        context['region_list'] = data.distinct('store__region')
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        context['search'] = self.session["search_text"] if self.session.has_key('search_text') else ""
+        context['region'] = self.session["region"] if self.session.has_key('region') else ""
+        context['store'] = self.session["store"] if self.session.has_key('store') else ""
+        context['mol'] = self.session["mol"] if self.session.has_key('mol') else ""
+
+
+
+        return context
+
+
+
+
+
+
+
+
+### Склад - поступление
+class StoreIn(ListView):
+
+    model = reestr_proj
+    template_name = "regions/store/storein.html"
+
+    paginate_by = 100
+
+    @method_decorator(login_required(login_url='/'))
+    # @method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+
+        data = store_in.objects.order_by('store', 'mol', 'name')
+
+        if self.session.has_key("store") and self.session["store"] != "":
+            data = data.filter(store__id=int(self.session["store"]))
+
+        if self.session.has_key("mol") and self.session["mol"] != "":
+            data = data.filter(mol__id=int(self.session["mol"]))
+
+        if self.session.has_key("region") and self.session["region"] != "":
+            data = data.filter(store__region__id=int(self.session["region"]))
+
+        if self.session.has_key("search_text") and self.session["search_text"] != "":
+            data = data.filter(
+                Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]))
+
+        return data
+
+    def get_context_data(self, **kwargs):
+        context = super(StoreIn, self).get_context_data(**kwargs)
+        context['tz'] = self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        data = store_rest.objects.all()
+        context['store_list'] = data.distinct('store')
+        context['mol_list'] = data.distinct('mol')
+        context['region_list'] = data.distinct('store__region')
+        context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        context['search'] = self.session["search_text"] if self.session.has_key('search_text') else ""
+        context['region'] = self.session["region"] if self.session.has_key('region') else ""
+        context['store'] = self.session["store"] if self.session.has_key('store') else ""
+        context['mol'] = self.session["mol"] if self.session.has_key('mol') else ""
+
+        return context
+
+
+
+
+
+
+### Склад - история изменений
+class StoreHistory(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/store/storehistory.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+        data = store_rest_log.objects.order_by('-datetime_update')
+
+        if self.session.has_key("store") and self.session["store"] !="":
+            data = data.filter(store_rest__store__id=int(self.session["store"]))
+
+        if self.session.has_key("mol") and self.session["mol"] != "":
+            data = data.filter(store_rest__mol__id=int(self.session["mol"]))
+
+        if self.session.has_key("region") and self.session["region"] != "":
+            data = data.filter(store_rest__store__region__id=int(self.session["region"]))
+
+        if self.session.has_key("search_text") and self.session["search_text"] != "":
+            data = data.filter(Q(store_rest__name__icontains=self.session["search_text"]) | Q(store_rest__eisup__icontains=self.session["search_text"]) | Q(store_rest__serial__icontains=self.session["search_text"]))
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(StoreHistory, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         data = store_rest.objects.all()
         context['store_list'] = data.distinct('store')

@@ -1,0 +1,42 @@
+table[group=storein-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=storein-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+#manager, #buttons, #gcreate {
+    margin-top: 20px;
+}
+
+
+
+/* Курсор */
+table[group=storein-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=storeoin-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+#local-menu {
+    margin-left:10px;
+}
+

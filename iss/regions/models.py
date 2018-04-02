@@ -683,4 +683,42 @@ class store_rest(models.Model):
     mol = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="МОЛ")
     rest = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Остаток', default=0.00)
     datetime_update = models.DateTimeField(auto_now=True)
+    serial = models.CharField(max_length=100, default="", db_index=True, verbose_name="Серийный номер")
+
+
+
+
+
+### Расход со склада
+class store_out(models.Model):
+    datetime_update = models.DateTimeField(auto_now_add=True, db_index=True)
+    store_rest = models.ForeignKey(store_rest, on_delete=models.PROTECT, verbose_name="ссылка на остаток")
+    q = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Количество', default=0.00)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
+    comment = models.CharField(max_length=200, default="", verbose_name="Комментарий")
+    proj_kod = models.CharField(max_length=100, default="", db_index=True, verbose_name="Код проекта")
+
+
+
+
+
+### Поступление на склад
+class store_in(models.Model):
+    datetime_update = models.DateTimeField(auto_now_add=True, db_index=True)
+    store_rest = models.ForeignKey(store_rest, on_delete=models.PROTECT, verbose_name="ссылка на остаток")
+    q = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Количество', default=0.00)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
+    comment = models.CharField(max_length=200, default="", verbose_name="Комментарий")
+    kis_kod = models.CharField(max_length=10, default="", db_index=True, verbose_name="Код КИС ТМЦ")
+
+
+
+
+
+### Логи действий по остаткам
+class store_rest_log(models.Model):
+    datetime_update = models.DateTimeField(auto_now_add=True, db_index=True)
+    store_rest = models.ForeignKey(store_rest, on_delete=models.PROTECT, verbose_name="ссылка на остаток")
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
+    action = models.CharField(max_length=100, default="", verbose_name="Действие")
 

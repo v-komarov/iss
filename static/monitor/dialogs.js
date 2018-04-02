@@ -337,7 +337,7 @@ $(document).ready(function() {
         minLength: 1,
         delay: 1000,
         appendTo: '#accidentdata',
-        position: 'top',
+        position: { my : "right top", at: "right bottom", collision: 'fit' },
         select: function (event,ui) {
             $("#accidentaddress").val(ui.item.label);
             window.address_id = ui.item.value;
