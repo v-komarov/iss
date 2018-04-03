@@ -2073,55 +2073,58 @@ def get_json(request):
 
 
 
-            ### Перемещение по складу
-            if data.has_key("action") and data["action"] == 'store-carry':
-                srest = store_rest.objects.get(pk=int(data["id"]))
-                storelist = store_list.objects.get(pk=int(data["store"]))
-                q = Decimal(data["q"])
 
-                if q > srest.rest:
-                    response_data = {"result": "error"}
+        ### Перемещение по складу
+        if data.has_key("action") and data["action"] == 'store-carry':
+
+
+            srest = store_rest.objects.get(pk=int(data["id"]))
+            storelist = store_list.objects.get(pk=int(data["store"]))
+            q = Decimal(data["q"])
+
+            if q > srest.rest:
+                response_data = {"result": "error"}
+            else:
+
+                srest.rest -= q
+                srest.save()
+
+                if store_rest.objects.filter(mol=request.user,store=storelist,name=srest.name,eisup=srest.eisup,serial="").exists():
+                    srest2 = store_rest.objects.filter(store=storelist, name=srest.name, eisup=srest.eisup, serial="").first()
+                    srest2.rest += q
+                    srest2.save()
+
+                elif store_rest.objects.filter(mol=request.user,store=storelist,name=srest.name,eisup=srest.eisup,rest=0).exclude(serial="").exists() and q == 1.00:
+                    srest2 = store_rest.objects.filter(mol=request.user, store=storelist, name=srest.name, eisup=srest.eisup,rest=0).exclude(serial="").first()
+                    srest2.rest += q
+                    srest2.save()
+
                 else:
-
-                    srest.rest -= q
-                    srest.save()
-
-                    if store_rest.objects.filter(mol=request.user,store=storelist,name=srest.name,eisup=srest.eisup,serial="").exists():
-                        srest2 = store_rest.objects.filter(store=storelist, name=srest.name, eisup=srest.eisup, serial="").first()
-                        srest2.rest += q
-                        srest2.save()
-
-                    elif store_rest.objects.filter(mol=request.user,store=storelist,name=srest.name,eisup=srest.eisup,rest=0).exclude(serial="").excists() and q == 1.00:
-                        srest2 = store_rest.objects.filter(mol=request.user, store=storelist, name=srest.name, eisup=srest.eisup,rest=0).exclude(serial="").first()
-                        srest2.rest += q
-                        srest2.save()
-
-                    else:
-                        store_rest.create(
-                            store = storelist,
-                            eisup = srest.eisup,
-                            mol = request.user,
-                            rest = q,
-                            name = srest.name,
-                            serial = srest.serial
-                        )
-
-
-                    store_carry.objects.create(
-                        store_rest = srest,
-                        q = q,
-                        user = request.user,
-                        comment = data["comment"],
-                        store_to = storelist
+                    store_rest.objects.create(
+                        store = storelist,
+                        eisup = srest.eisup,
+                        mol = request.user,
+                        rest = q,
+                        name = srest.name,
+                        serial = srest.serial
                     )
 
 
+                store_carry.objects.create(
+                    store_rest = srest,
+                    q = q,
+                    user = request.user,
+                    comment = data["comment"],
+                    store_to = storelist
+                )
 
-                    ### Регистрация в логе
-                    store_rest_log.objects.create(store_rest=srest, user=request.user, q=q, action="Перемещение со склада")
 
 
-                    response_data = {"result": "ok"}
+                ### Регистрация в логе
+                store_rest_log.objects.create(store_rest=srest, user=request.user, q=q, action="Перемещение со склада")
+
+
+                response_data = {"result": "ok"}
 
 
 

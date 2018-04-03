@@ -166,8 +166,8 @@ function StoreCarry(e) {
 
             var data = {};
             data.id = window.storerest_id;
-            data.q = $("input#in_q").val();
-            data.comment =$("input#in_comment").val();
+            data.q = $("input#carry_q").val();
+            data.comment =$("input#carry_comment").val();
             data.store = $("select#carry_in_store").val();
             data.action = "store-carry";
 
