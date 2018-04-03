@@ -86,22 +86,22 @@
         </thead>
 
         <tbody class="small">
-        {% comment %}
             {% for row in object_list %}
                 <tr row_id={{ row.id }}>
-                    <td><a>{{ row.eisup }}</a></td>
-                    <td><a>{{ row.name }}</a></td>
-                    <td><a>{{ row.q }}</a></td>
+                    <td>{{ row.store_rest.eisup }}</td>
+                    <td>{{ row.store_rest.name }}</td>
+                    <td>{{ row.q }}</td>
                     {% timezone tz %}
-                    <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
+                    <td>{{ row.datetime_update|date:"d.m.Y H:i e" }}</td>
                     {% endtimezone %}
-                    <td><a>{{ row.store.region }}</a></td>
-                    <td><a>{{ row.store.name }}</a></td>
-                    <td><a>{{ row.store.comment }}</a></td>
-                    <td><a>{{ row.mol.get_full_name }}</a></td>
+                    <td>{{ row.store_rest.store.name }}</td>
+                    <td>{{ row.store_rest.store.region }}</td>
+                    <td>{{ row.store_rest.mol.get_full_name }}</td>
+                    <td>{{ row.store_to.name }}</td>
+                    <td>{{ row.user.get_full_name }}</td>
+                    <td>{{ row.comment }}</td>
                 </tr>
             {% endfor %}
-        {% endcomment %}
         </tbody>
 
 
@@ -125,7 +125,7 @@
 </div>
 
 
-{% include "regions/store/store_out_form.html" %}
+{% include "regions/store/store_carry_form.html" %}
 
 {% endblock %}
 

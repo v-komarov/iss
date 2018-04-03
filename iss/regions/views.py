@@ -28,7 +28,7 @@ from django.core.urlresolvers import reverse
 
 
 from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type
-from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log
+from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log, store_carry
 from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
 
 from iss.mydecorators import group_required,anonymous_required
@@ -738,19 +738,19 @@ class StoreCarry(ListView):
     def get_queryset(self):
 
 
-        data = store_in.objects.order_by('store','mol','name')
+        data = store_carry.objects.order_by('-datetime_update')
 
         if self.session.has_key("store") and self.session["store"] !="":
-            data = data.filter(store__id=int(self.session["store"]))
+            data = data.filter(store_rest__store__id=int(self.session["store"]))
 
         if self.session.has_key("mol") and self.session["mol"] != "":
-            data = data.filter(mol__id=int(self.session["mol"]))
+            data = data.filter(store_rest__mol__id=int(self.session["mol"]))
 
         if self.session.has_key("region") and self.session["region"] != "":
-            data = data.filter(store__region__id=int(self.session["region"]))
+            data = data.filter(store_rest__store__region__id=int(self.session["region"]))
 
         if self.session.has_key("search_text") and self.session["search_text"] != "":
-            data = data.filter(Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]))
+            data = data.filter(Q(store_rest__name__icontains=self.session["search_text"]) | Q(store_rest__eisup__icontains=self.session["search_text"]))
 
         return data
 
@@ -802,22 +802,25 @@ class StoreIn(ListView):
 
     def get_queryset(self):
 
-        data = store_in.objects.order_by('store', 'mol', 'name')
+        data = store_in.objects.order_by('-datetime_update')
 
         if self.session.has_key("store") and self.session["store"] != "":
-            data = data.filter(store__id=int(self.session["store"]))
+            data = data.filter(store_rest__store__id=int(self.session["store"]))
 
         if self.session.has_key("mol") and self.session["mol"] != "":
-            data = data.filter(mol__id=int(self.session["mol"]))
+            data = data.filter(store_rest__mol__id=int(self.session["mol"]))
 
         if self.session.has_key("region") and self.session["region"] != "":
-            data = data.filter(store__region__id=int(self.session["region"]))
+            data = data.filter(store_rest__store__region__id=int(self.session["region"]))
 
         if self.session.has_key("search_text") and self.session["search_text"] != "":
             data = data.filter(
-                Q(name__icontains=self.session["search_text"]) | Q(eisup__icontains=self.session["search_text"]))
+                Q(store_rest__name__icontains=self.session["search_text"]) | Q(store_rest__eisup__icontains=self.session["search_text"]))
 
         return data
+
+
+
 
     def get_context_data(self, **kwargs):
         context = super(StoreIn, self).get_context_data(**kwargs)

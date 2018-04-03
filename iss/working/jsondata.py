@@ -322,6 +322,13 @@ def get_json(request):
 
 
 
+        ### Удаление отчета
+        if r.has_key("action") and rg("action") == 'delete-report':
+            report_id = request.GET["report_id"].strip()
+            working_reports.objects.get(pk=int(report_id)).delete()
+
+
+            response_data = {"result": "ok"}
 
 
 
@@ -447,6 +454,8 @@ def get_json(request):
 
             user = get_ip_user(request)
             user.profile.work_status = False
+            user.profile.phone = ""
+            user.profile.ip = ""
             user.save()
 
             if working_time.objects.filter(user=user,current=True).exists():

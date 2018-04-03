@@ -91,7 +91,7 @@
           <li class="divider"></li>
           <li><a target="_blank" href="http://10.6.0.22:10000/tpl-doc/">Шаблоны документов</a></li>
           <li class="divider"></li>
-          <li id="menustore" {% if request.path|slice:'0:15' == "/regions/store/" %}class="active"{% endif %}><a href="/regions/store/page/1/">Склад</a></li>
+          <li id="menustore" {% if request.path|slice:'0:14' == "/regions/store" %}class="active"{% endif %}><a href="/regions/store/page/1/">Склад</a></li>
         </ul>
       </li>
       <li class="dropdown">

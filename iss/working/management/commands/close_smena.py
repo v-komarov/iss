@@ -32,6 +32,8 @@ class Command(BaseCommand):
 
         for s in working_time.objects.filter(current=True, datetime_begin__lte=(now() - datetime.timedelta(hours=12))):
             prof = s.user.profile
+            prof.phone = ""
+            prof.ip = ""
             prof.work_status = False
             prof.relax_status = False
             prof.save()

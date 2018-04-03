@@ -20,7 +20,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -1153,12 +1153,81 @@ def get_json(request):
                 srest.rest += sout.q
                 srest.save()
 
+                ### Регистрация в логе
+                store_rest_log.objects.create(store_rest=srest,user=request.user, q=sout.q, action="Расход со склада удален")
+
                 sout.delete()
 
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+
+
+        ### Склад: возвращает запись расхода со склада
+        if r.has_key("action") and rg("action") == 'store-into-rec':
+            rr = store_in.objects.get(pk=int(request.GET["row_id"],10))
+
+            rec = {
+                "eisup": rr.store_rest.eisup,
+                "name": rr.store_rest.name,
+                "region": rr.store_rest.store.region.name if rr.store_rest.store.region else "",
+                "store": rr.store_rest.store.name,
+                "comment": rr.store_rest.store.comment,
+                "q":str(rr.q),
+                "serial": rr.store_rest.serial,
+                "kis": rr.kis_kod
+
+            }
+
+            response_data = {"result": "ok", "rec": rec}
+
+
+
+
+
+
+        ### Склад: возвращает запись поступления на склад
+        if r.has_key("action") and rg("action") == 'store-in-rec':
+            rr = store_in.objects.get(pk=int(request.GET["row_id"], 10))
+
+            rec = {
+                "eisup": rr.store_rest.eisup,
+                "name": rr.store_rest.name,
+                "region": rr.store_rest.store.region.name if rr.store_rest.store.region else "",
+                "store": rr.store_rest.store.name,
+                "comment": rr.store_rest.store.comment,
+                "q": str(rr.q),
+                "serial": rr.store_rest.serial,
+                "kis": rr.kis_kod
+
+            }
+
+            response_data = {"result": "ok", "rec": rec}
+
+
+
+
+
+
+        ### Склад: удаление записи поступления на склад
+        if r.has_key("action") and rg("action") == 'store-in-del':
+            sin = store_in.objects.get(pk=int(request.GET["row_id"],10))
+            srest = sin.store_rest
+
+            if srest.mol == request.user and srest.rest >= sin.q:
+
+                srest.rest -= sin.q
+                srest.save()
 
                 ### Регистрация в логе
-                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Расход со склада удален")
+                store_rest_log.objects.create(store_rest=srest,user=request.user, q=sin.q, action="Поступление на склад удален")
 
+                sin.delete()
 
                 response_data = {"result": "ok"}
 
@@ -1180,19 +1249,43 @@ def get_json(request):
             obj = []
 
             if filter == "user":
-                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).filter(mol=request.user).order_by("name","store__name")
+                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).filter(mol=request.user,rest__gt=0).order_by("name","store__name")
+                for item in data1000:
+
+                    label =  u"{name} с/н:{serial} склад:{store} МОЛ:{mol} остаток:{rest}".format(name=item.name[:20], serial=item.serial, store=item.store.name, mol=item.mol.get_full_name(), rest=str(item.rest))
+                    obj.append(
+                        {
+                            "label": label,
+                            "value": item.id
+                        }
+                    )
+
+            elif filter == "all":
+                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).distinct("eisup","name").order_by("name")
+
+                for item in data1000:
+
+                    label =  u"{name} с/н:{serial}".format(name=item.name[:20], serial=item.serial)
+                    obj.append(
+                        {
+                            "label": label,
+                            "value": item.id
+                        }
+                    )
+
+
             else:
-                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).order_by("name","store__name")
+                data1000 = store_rest.objects.filter(Q(name__icontains=term) | Q(serial__icontains=term) | Q(eisup__icontains=term)).filter(rest__gt=0).order_by("name","store__name")
+                for item in data1000:
 
-            for item in data1000:
+                    label =  u"{name} с/н:{serial} склад:{store} МОЛ:{mol} остаток:{rest}".format(name=item.name[:20], serial=item.serial, store=item.store.name, mol=item.mol.get_full_name(), rest=str(item.rest))
+                    obj.append(
+                        {
+                            "label": label,
+                            "value": item.id
+                        }
+                    )
 
-                label =  u"{name} с/н:{serial} склад:{store} МОЛ:{mol} остаток:{rest}".format(name=item.name[:20], serial=item.serial, store=item.store.name, mol=item.mol.get_full_name(), rest=str(item.rest))
-                obj.append(
-                    {
-                        "label": label,
-                        "value": item.id
-                    }
-                )
 
             response_data = obj
 
@@ -1798,7 +1891,7 @@ def get_json(request):
                 srest.save()
 
                 ### Регистрация в логе
-                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Перезапись остатков из файла")
+                store_rest_log.objects.create(store_rest=srest,user=request.user, q=Decimal(item["rest"]), action="Перезапись остатков из файла")
 
             response_data = {"result": "ok"}
 
@@ -1817,7 +1910,7 @@ def get_json(request):
                 srest.save()
 
                 ### Регистрация в логе
-                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Установка остатка")
+                store_rest_log.objects.create(store_rest=srest,user=request.user, q=Decimal(data["rest"]), action="Установка остатка")
 
                 response_data = {"result": "ok"}
 
@@ -1846,7 +1939,7 @@ def get_json(request):
             )
 
             ### Регистрация в логе
-            store_rest_log.objects.create(store_rest=srest,user=request.user,action="Создание остатка")
+            store_rest_log.objects.create(store_rest=srest,user=request.user, q=Decimal(data["rest"]), action="Создание остатка")
 
             rec = {
                 "id": srest.id,
@@ -1894,7 +1987,7 @@ def get_json(request):
                 )
 
                 ### Регистрация в логе
-                store_rest_log.objects.create(store_rest=srest,user=request.user,action="Расход со склада")
+                store_rest_log.objects.create(store_rest=srest,user=request.user, q=q, action="Расход со склада")
 
 
                 response_data = {"result": "ok"}
@@ -1906,6 +1999,129 @@ def get_json(request):
 
 
 
+
+
+
+        ### поступление на склад
+        if data.has_key("action") and data["action"] == 'store-in-q':
+
+            srest = store_rest.objects.get(pk=int(data["id"]))
+            storelist = store_list.objects.get(pk=int(data["store"]))
+            q = Decimal(data["q"])
+
+            if q > 0:
+
+                ### Проверка есть ли серийный номер
+                if store_rest.objects.filter(store=storelist,mol=request.user,serial="").exists():
+
+                    srest3 = store_rest.objects.filter(store=storelist, mol=request.user, serial="").first()
+                    srest3.rest += q
+                    srest3.save()
+
+                    store_in.objects.create(
+                        store_rest = srest3,
+                        q = q,
+                        user = request.user,
+                        comment = data["comment"],
+                        kis_kod = data["kis"]
+                    )
+
+                    ### Регистрация в логе
+                    store_rest_log.objects.create(store_rest=srest3, user=request.user, q=q, action="Поступление на склад")
+
+                elif store_rest.objects.filter(store=storelist,rest=0,mol=request.user,serial=data["serial"]).exists():
+
+                    srest3 = store_rest.objects.filter(store=storelist,rest=0,mol=request.user,serial=data["serial"]).first()
+                    srest3.rest += q
+                    srest3.save()
+
+                    store_in.objects.create(
+                        store_rest = srest3,
+                        q = q,
+                        user = request.user,
+                        comment = data["comment"],
+                        kis_kod = data["kis"]
+                    )
+                    ### Регистрация в логе
+                    store_rest_log.objects.create(store_rest=srest3, user=request.user, q=q, action="Поступление на склад")
+
+                else:
+                    srest2 = store_rest.objects.create(
+                        name = srest.name,
+                        eisup = srest.eisup,
+                        rest = q,
+                        mol = request.user,
+                        serial = data["serial"]
+                    )
+
+                    store_in.objects.create(
+                        store_rest = srest2,
+                        q = q,
+                        user = request.user,
+                        comment = data["comment"],
+                        kis_kod = data["kis"]
+                    )
+
+                    ### Регистрация в логе
+                    store_rest_log.objects.create(store_rest=srest2, user=request.user, q=q, action="Поступление на склад")
+
+
+                response_data = {"result": "ok"}
+            else:
+                response_data = {"result": "error"}
+
+
+
+
+            ### Перемещение по складу
+            if data.has_key("action") and data["action"] == 'store-carry':
+                srest = store_rest.objects.get(pk=int(data["id"]))
+                storelist = store_list.objects.get(pk=int(data["store"]))
+                q = Decimal(data["q"])
+
+                if q > srest.rest:
+                    response_data = {"result": "error"}
+                else:
+
+                    srest.rest -= q
+                    srest.save()
+
+                    if store_rest.objects.filter(mol=request.user,store=storelist,name=srest.name,eisup=srest.eisup,serial="").exists():
+                        srest2 = store_rest.objects.filter(store=storelist, name=srest.name, eisup=srest.eisup, serial="").first()
+                        srest2.rest += q
+                        srest2.save()
+
+                    elif store_rest.objects.filter(mol=request.user,store=storelist,name=srest.name,eisup=srest.eisup,rest=0).exclude(serial="").excists() and q == 1.00:
+                        srest2 = store_rest.objects.filter(mol=request.user, store=storelist, name=srest.name, eisup=srest.eisup,rest=0).exclude(serial="").first()
+                        srest2.rest += q
+                        srest2.save()
+
+                    else:
+                        store_rest.create(
+                            store = storelist,
+                            eisup = srest.eisup,
+                            mol = request.user,
+                            rest = q,
+                            name = srest.name,
+                            serial = srest.serial
+                        )
+
+
+                    store_carry.objects.create(
+                        store_rest = srest,
+                        q = q,
+                        user = request.user,
+                        comment = data["comment"],
+                        store_to = storelist
+                    )
+
+
+
+                    ### Регистрация в логе
+                    store_rest_log.objects.create(store_rest=srest, user=request.user, q=q, action="Перемещение со склада")
+
+
+                    response_data = {"result": "ok"}
 
 
 

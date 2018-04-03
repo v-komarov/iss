@@ -47,7 +47,7 @@
 
         <thead class="small">
 
-            <tr style="background-color:gainsboro;">
+            <tr style="background-color:gainsboro;" row_id="{{ row.id }}">
                 <th style="border: solid 1px gray;padding-left: 2px;">Период<br>начало</th>
                 <th style="border: solid 1px gray;padding-left: 2px;">Период<br>окончание</th>
                 <th style="border: solid 1px gray;padding-left: 2px;">Название<br>отчета</th>
@@ -58,6 +58,7 @@
                 <th style="border: solid 1px gray;padding-left: 2px;">Показатели</th>
                 <th style="border: solid 1px gray;padding-left: 2px;">Создал</th>
                 <th style="border: solid 1px gray;padding-left: 2px;">Дата создания</th>
+                <th style="border: solid 1px gray;padding-left: 2px;"></th>
             </tr>
 
         </thead>
@@ -85,6 +86,7 @@
                         {% timezone tz %}
                         <td style="border: solid 1px gray;padding-left: 2px;">{{ row.datetime_create|date:"d.m.Y H:i e" }}</td>
                         {% endtimezone %}
+                        <td style="border: solid 1px gray;padding-left: 2px;"><a title="Удалить отчет"><span class="glyphicon glyphicon-trash" aria-hidden="true"></a></td>
                     </tr>
 
             {% endfor %}

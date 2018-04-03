@@ -714,11 +714,23 @@ class store_in(models.Model):
 
 
 
+### Перемещение
+class store_carry(models.Model):
+    datetime_update = models.DateTimeField(auto_now_add=True, db_index=True)
+    store_rest = models.ForeignKey(store_rest, on_delete=models.PROTECT, verbose_name="ссылка на остаток")
+    q = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Количество', default=0.00)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
+    comment = models.CharField(max_length=200, default="", verbose_name="Комментарий")
+    store_to = models.ForeignKey(store_list, on_delete=models.PROTECT, verbose_name="Склад")
+
+
+
 
 ### Логи действий по остаткам
 class store_rest_log(models.Model):
     datetime_update = models.DateTimeField(auto_now_add=True, db_index=True)
     store_rest = models.ForeignKey(store_rest, on_delete=models.PROTECT, verbose_name="ссылка на остаток")
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
+    q = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Количество', default=0.00)
     action = models.CharField(max_length=100, default="", verbose_name="Действие")
 

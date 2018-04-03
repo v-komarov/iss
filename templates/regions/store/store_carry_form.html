@@ -1,0 +1,27 @@
+<div id="store-carry" hidden>
+
+    <dl id="dlcarry" class="dl-horizontal small">
+        <dt>Поиск</dt>
+        <dd><input id="carry_search" class="form-control input-sm" type="text" /></dd>
+        <dt>Код ЕИСУП</dt>
+        <dd><input id="carry_eisup" class="form-control input-sm" type="text" readonly /></dd>
+        <dt>Со склада</dt>
+        <dd><input id="carry_out_store" class="form-control input-sm" type="text" readonly /></dd>
+        <dt>МОЛ</dt>
+        <dd><input id="carry_out_mol" class="form-control input-sm" type="text" readonly /></dd>
+        <dt>Количество</dt>
+        <dd><input id="carry_q" class="form-control input-sm" type="text" /></dd>
+        <dt>На склад</dt>
+        <dd>
+            <select class="form-control input-sm" id="carry_in_store">
+                {% for s in store_list %}
+                    <option value="{{ s.store.id }}">{{ s.store.name }}</option>
+                {% endfor %}
+            </select>
+
+        </dd>
+        <dt>Комментарий</dt>
+        <dd><input id="carry_comment" class="form-control input-sm" type="text" /></dd>
+    </dl>
+
+</div>
