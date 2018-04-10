@@ -665,7 +665,7 @@ def reestrprojexcel(request):
         ### Исполнители
         worker_list = ""
         for w in row.reestr_proj_exec_date_set.all():
-            worker_list = worker_list + u"{worker} ({stage} {date1} - {date2}); ".format(worker=w.worker.get_full_name(), stage=w.stage.name if w.stage else "", date1=w.date1.strftime("%d.%m.%Y") if w.date1 else "", date2=w.date2.strftime("%d.%m.%Y") if w.date2 else "")
+            worker_list = worker_list + u"{worker} ({stage} {date1} - {date2}); ".format(worker=w.worker.get_full_name() if w.worker != None else "", stage=w.stage.name if w.stage else "", date1=w.date1.strftime("%d.%m.%Y") if w.date1 else "", date2=w.date2.strftime("%d.%m.%Y") if w.date2 else "")
 
         sh.write(n, 14, worker_list, style=style_normal)
 
