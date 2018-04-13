@@ -57,8 +57,9 @@ class Command(BaseCommand):
 
 
         ### Для групповых номеров
-        if call_type == "I" and call_b == "4888" and call_c == "2160410":
-            call_c = st[11][1:]
+        #if call_type == "I" and call_b == "4888" and call_c == "2160410":
+        if call_type == "I" and (call_b == "4888" or call_b == "4666" or call_b == "4664" or call_b == "3773"):
+                call_c = st[11][1:]
 
 
         duration_str = st[1].split(":")
