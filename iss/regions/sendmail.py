@@ -35,7 +35,7 @@ def send_proj_worker(stages, worker):
                 </p>
                 """.format(proj=stage.proj.name, name=stage.name, begin=stage.begin.strftime('%d.%m.%Y'),
                            end=stage.end.strftime('%d.%m.%Y'), proj_id=stage.proj.id, last_worker=worker.get_full_name()),
-                from_email='GAMMA <gamma@sibttk.ru>',
+                from_email='GAMMA <gamma@baikal-ttk.ru>',
                 to=[worker.email, ]
             )
 
@@ -82,7 +82,7 @@ def send_proj_worker2(row_id,worker):
             Срок выполнения: <b>{begin} - {end}</b>                
             </p>
             """.format(proj=proj.name, name=name, begin=row.begin.strftime('%d.%m.%Y'), end=row.end.strftime('%d.%m.%Y'), proj_id=proj.id),
-            from_email='GAMMA <gamma@sibttk.ru>',
+            from_email='GAMMA <gamma@baikal-ttk.ru>',
             to=[worker.email,]
         )
 
@@ -115,7 +115,7 @@ def send_problem(stage):
             Срок выполнения: <b>{begin} - {end}</b>                
             </p>
             """.format(act=act, proj=p.name, name=stage.name, begin=stage.begin.strftime('%d.%m.%Y'), end=stage.end.strftime('%d.%m.%Y'), proj_id=p.id),
-            from_email='GAMMA <gamma@sibttk.ru>',
+            from_email='GAMMA <gamma@baikal-ttk.ru>',
             to=[p.author.email,]
         )
 
@@ -142,7 +142,7 @@ def send_reestr_proj(mess,reestrproj,user):
         Оповещение отправил: {user}<br>
         </p>
         """.format(id=reestrproj.id, name=reestrproj.proj_name, mess_type=mess.name, user=user.get_full_name()),
-        from_email='GAMMA <gamma@sibttk.ru>',
+        from_email='GAMMA <gamma@baikal-ttk.ru>',
         to=mess.email.split(";")
     )
 
@@ -202,7 +202,7 @@ def send_reestr_proj_work(task, action):
                     <br>
                     </p>
                     """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
-                    from_email='GAMMA <gamma@sibttk.ru>',
+                    from_email='GAMMA <gamma@baikal-ttk.ru>',
                     to=block_address
                 )
 
@@ -221,7 +221,7 @@ def send_reestr_proj_work(task, action):
                     <br>
                     </p>
                     """.format(url=url, id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
-                    from_email='GAMMA <gamma@sibttk.ru>',
+                    from_email='GAMMA <gamma@baikal-ttk.ru>',
                     to=block_address
                 )
  
@@ -244,7 +244,7 @@ def send_reestr_proj_work(task, action):
                     <br>
                     </p>
                     """.format(url=url,id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
-                    from_email='GAMMA <gamma@sibttk.ru>',
+                    from_email='GAMMA <gamma@baikal-ttk.ru>',
                     to=worker_address
                 )
 
@@ -263,7 +263,7 @@ def send_reestr_proj_work(task, action):
                     <br>
                     </p>
                     """.format(url=url, id=reestrproj.id, name=reestrproj.proj_name, stage=stage, date1=date1, date2=date2),
-                    from_email='GAMMA <gamma@sibttk.ru>',
+                    from_email='GAMMA <gamma@baikal-ttk.ru>',
                     to=worker_address
                 )
   

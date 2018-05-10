@@ -36,13 +36,13 @@ class Command(BaseCommand):
         now = datetime.datetime.now(timezone('UTC'))
 
         """
-            gamma@sibttk.ru
+            gamma@baikal-ttk.ru
 
         """
 
-        M = poplib.POP3('10.6.0.115')
-        M.user("gamma@sibttk.ru")
-        M.pass_("Qwerty123")
+        M = poplib.POP3('10.6.0.7')
+        M.user("gamma@baikal-ttk.ru")
+        M.pass_("qwerty123")
         M.set_debuglevel(1)
         numMessages = len(M.list()[1])
         for i in range(numMessages):
@@ -140,7 +140,7 @@ class Command(BaseCommand):
                     update_time=now,
                     last_seen=now,
                     severity_id=Severity.objects.get(pk=3),
-                    manager="gamma@sibttk.ru",
+                    manager="gamma@baikal-ttk.ru",
                     status_id=Status.objects.get(pk=0),
                     bymail = True,
                     data = unicode(d)

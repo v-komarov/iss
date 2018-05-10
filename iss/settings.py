@@ -31,15 +31,14 @@ ALLOWED_HOSTS = []
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = '10.6.0.115'
-#EMAIL_HOST = '10.6.0.3'
+
 EMAIL_PORT = 25
-EMAIL_HOST_USER = 'gamma@sibttk.ru'
-EMAIL_HOST_PASSWORD = 'Qwerty123'
+EMAIL_HOST = '10.6.0.7'
+EMAIL_HOST_USER = 'gamma@baikal-ttk.ru'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
-
-
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 

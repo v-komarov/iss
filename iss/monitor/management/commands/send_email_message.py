@@ -114,7 +114,7 @@ class Command(BaseCommand):
                 email = EmailMessage(
                     subject=sbj,
                     body=body+signature+issid,
-                    from_email='GAMMA <gamma@sibttk.ru>',
+                    from_email='GAMMA <gamma@baikal-ttk.ru>',
                     to=mto,
                     reply_to=['ds@sibir.ttk.ru',]
                 )
@@ -172,7 +172,7 @@ class Command(BaseCommand):
                 email = EmailMessage(
                     subject=sbj,
                     body=body + signature + issid,
-                    from_email='GAMMA <gamma@sibttk.ru>',
+                    from_email='GAMMA <gamma@baikal-ttk.ru>',
                     to=mto,
                     reply_to=['ds@sibir.ttk.ru', ]
                 )
