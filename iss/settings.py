@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'iss.maps',
     'iss.regions',
     'iss.exams',
+    'iss.blocks',
 
 ]
 
