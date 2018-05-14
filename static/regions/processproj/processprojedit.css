@@ -193,10 +193,10 @@ table[group=systems], table[group=log-list] {
 
 
 /* Восьмая закладка */
-div#page-8.row.small div.row.col-md-8 form.form-inline {
-    margin-top: 5px;
-    margin-bottom: 5px;
+table[group=messages-list] {
+    margin-top:10px;
 }
+
 
 
 /* Ширина кнопки сохранить */

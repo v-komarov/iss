@@ -11,7 +11,7 @@ import random
 import networkx as nx
 from decimal import Decimal
 
-
+from django.utils import timezone
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -517,7 +517,8 @@ class reestr_proj(models.Model):
     smr_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость СМР (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
     other_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость оборудования, инструментов (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))] )
     process = models.BooleanField(default=True, verbose_name='Флаг проектов в сотоянии проработки')
-
+    comment_last = models.TextField(verbose_name='Последний коментарий', default="", null=True)
+    comment_last_datetime = models.DateTimeField(null=True)
 
 
     def __unicode__(self):
@@ -574,7 +575,23 @@ class reestr_proj(models.Model):
         self.save()
 
 
+
+
         return "ok"
+
+
+
+    ### Определение новый коментарий или нет
+    def check_new_comment(self):
+
+        if self.comment_last == "":
+            return False
+
+        if (timezone.now() - self.comment_last_datetime).total_seconds()//3600 <= 24:
+            return True
+        else:
+            return False
+
 
 
 

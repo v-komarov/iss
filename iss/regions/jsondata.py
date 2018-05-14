@@ -14,6 +14,8 @@ from pytz import timezone
 
 from snakebite.client import Client
 
+
+from django.utils import timezone as dj_timezone
 from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
@@ -974,6 +976,7 @@ def get_json(request):
 
 
 
+        """
         ### Реестр проектов: Отправка оповещения
         if r.has_key("action") and rg("action") == 'reestrproj-message-send':
             reestrproj_id = request.GET["reestrproj_id"]
@@ -996,7 +999,7 @@ def get_json(request):
 
                 response_data = {"result": "error"}
 
-
+        """
 
 
 
@@ -1773,6 +1776,26 @@ def get_json(request):
                     user = request.user,
                     comment = comment
                 )
+
+                ### Фиксирование последнего коментария и даты
+                reestrproj.comment_last = comment
+                reestrproj.comment_last_datetime = dj_timezone.now()
+                reestrproj.save()
+
+
+            ### Отправка оповещения
+            if data["message_type"] != "":
+                mess = message_type.objects.get(pk=int(data["message_type"],10))
+
+                if send_reestr_proj(mess,reestrproj,request.user) == "ok":
+
+                    reestr_proj_messages_history.objects.create(
+                        message_type=mess,
+                        reestr_proj=reestrproj,
+                        user=request.user,
+                        emails=mess.email
+                    )
+
 
             response_data = {"result": "ok"}
 

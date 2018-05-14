@@ -16,9 +16,9 @@
         <ul class="dropdown-menu">
           <li id="menumonitor" {% if request.path|slice:'0:16' == "/monitor/events/" %}class="active"{% endif %}><a href="/monitor/events/page/1/">Оперативный журнал</a></li>
           <li class="divider"></li>
-          <li id="menuaccidents" {% if request.path|slice:'0:19' == "/monitor/accidents/" %}class="active"{% endif %}><a href="/monitor/accidents/page/1/">Аварии</a></li>
-          <li id="menuemailaccidents" {% if request.path|slice:'0:18' == "/monitor/messages/" %}class="active"{% endif %}><a href="/monitor/messages/page/1/">Оповещения</a></li>
-          <li class="divider"></li>
+          {# <li id="menuaccidents" {% if request.path|slice:'0:19' == "/monitor/accidents/" %}class="active"{% endif %}><a href="/monitor/accidents/page/1/">Аварии</a></li> #}
+          {# <li id="menuemailaccidents" {% if request.path|slice:'0:18' == "/monitor/messages/" %}class="active"{% endif %}><a href="/monitor/messages/page/1/">Оповещения</a></li> #}
+          {# <li class="divider"></li> #}
           <li id="menuzkl" {% if request.path|slice:'0:13' == "/monitor/zkl/" %}class="active"{% endif %}><a href="/monitor/zkl/">ЗКЛ</a></li>
         </ul>
       </li>
@@ -64,6 +64,7 @@
           {# <li id="mapports" {% if request.path|slice:'0:12' == "/maps/ports/" %}class="active"{% endif %}><a href="/maps/ports/">Активность портов</a></li> #}
         </ul>
       </li>
+      {% comment %}
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Дома
@@ -73,6 +74,7 @@
           <li><a href="#">УК ТСЖ ТСН ...</a></li>
         </ul>
       </li>
+      {% endcomment %}
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
           Регионы

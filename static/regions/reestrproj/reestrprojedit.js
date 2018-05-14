@@ -84,7 +84,7 @@ $(document).ready(function() {
     $("#page-1 button#append-system-code").bind("click", AddOtherSystem);
 
     // Отправка оповещения
-    $("#page-8 button#message-send").bind("click", MessageSend);
+    //$("#page-8 button#message-send").bind("click", MessageSend);
 
 
 
@@ -423,11 +423,14 @@ function AddComment(e) {
     // Коментарий
     var comment = $("div#page-6 textarea#comment").val();
     var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
+    // Оповещение
+    var message_type = $("#page-8 select#message-type").val();
 
 
     var data = {};
     data.comment = comment;
     data.reestrproj_id = reestrproj_id;
+    data.message_type = message_type;
 
     data.action = "reestrproj-comment-add";
 
@@ -456,6 +459,7 @@ function AddComment(e) {
                 // Очистка поля ввода
                 $("div#page-6 textarea#comment").val("");
                 GetListComments();
+                GetListMessageHistory();
 
             }
         }
@@ -791,7 +795,7 @@ function AddOtherSystem(e) {
 
 
 
-
+/*
 // Отправка оповещения
 function MessageSend(e) {
 
@@ -815,7 +819,7 @@ function MessageSend(e) {
 
 
 }
-
+*/
 
 
 

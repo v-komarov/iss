@@ -72,7 +72,7 @@
                 <th>Стадия</th>
                 <th>Наименование</th>
                 <th>Города</th>
-                <th>Адреса</th>
+                <th>Комментарии</th>
                 <th>Исполнители</th>
                 <th>Направление<br>бизнеса</th>
             </tr>
@@ -96,13 +96,9 @@
                                 {% endfor %}
                             </ul>
                         </td>
-                        <td>
-                            <ul>
-                                {% for addr in row.data.address %}
-                                    <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
+
+                        <td {% if row.check_new_comment %}style="color:red;"{% endif %}>{{ row.comment_last|truncatechars:30 }}</td>
+
                         <td>
                             <ul>
                                 {% for worker in row.reestr_proj_exec_date_set.all %}
@@ -130,13 +126,9 @@
                                     {% endfor %}
                                 </ul>
                             </td>
-                            <td>
-                                <ul>
-                                    {% for addr in item.data.address %}
-                                        <li>{{ addr.city }} {{ addr.street }} {{ addr.house }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
+
+                            <td {% if row.check_new_comment %}style="color:red;"{% endif %}>{{ item.comment_last|truncatechars:30  }}</td>
+
                             <td>
                                 <ul>
                                     {% for worker in item.reestr_proj_exec_date_set.all %}
