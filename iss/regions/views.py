@@ -27,7 +27,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 
-from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type
+from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type, init_reestr_proj, blocks, address_companies
 from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log, store_carry
 from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
 
@@ -398,9 +398,9 @@ class ReestrProjList(ListView):
     def get_queryset(self):
 
         if self.session.has_key("search_text"):
-            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=False).order_by("-id")
+            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=False).order_by("-comment_last_datetime")
         else:
-            data = reestr_proj.objects.filter(process=False).order_by("-id")
+            data = reestr_proj.objects.filter(process=False).order_by("-comment_last_datetime")
 
         return data
 
@@ -414,6 +414,19 @@ class ReestrProjList(ListView):
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['form'] = ReestrProjCreateForm()
         context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        context['stages'] = stages.objects.order_by('name')
+        context['init'] = init_reestr_proj.objects.order_by('name')
+
+        users = User.objects.order_by("first_name")
+        workers = [("","---")]
+        workers.extend([(user.pk, user.get_full_name()) for user in users])
+        context['users'] = workers
+
+        context['blocks'] = blocks.objects.order_by('name')
+        context['real'] = address_companies.objects.order_by('name')
+
+        context['filter_dict'] = pickle.loads(self.session['filter_dict']) if self.session.has_key('filter_dict') else {'search_text':'','systems':'','initiator':'','real':'','stage':'','stage_date1':'','stage_date2':'','stage_run_date1':'','stage_run_date2':'', 'executor':'', 'executor_date1':'','executor_date2':'','department':'','create_date1':'','create_date2':''}
 
         return context
 
@@ -507,9 +520,9 @@ class ProcessProjList(ListView):
     def get_queryset(self):
 
         if self.session.has_key("search_text"):
-            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=True).order_by("-id")
+            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=True).order_by("-comment_last_datetime")
         else:
-            data = reestr_proj.objects.filter(process=True).order_by("-id")
+            data = reestr_proj.objects.filter(process=True).order_by("-comment_last_datetime")
 
         return data
 

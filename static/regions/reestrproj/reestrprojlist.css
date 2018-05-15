@@ -19,6 +19,9 @@ table[group=stages-list] > tbody > tr > td {
 }
 
 
+input, select {
+    width: 150px;
+}
 
 
 /* Курсор */

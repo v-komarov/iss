@@ -18,21 +18,103 @@
 
 </div>
 
+<div id="manager" class="row small">
+    <a id="addproj" title="Создать новый проект">Создать</a>
+    <a target="_blank" class="col-md-offset-2" id="man" href="{{ MY_STATIC_URL }}regions/reestrproj/help/man.html" title="Документация">Документация</a>
+</div>
 
+<div id="filter" class="row">
+    <div class="small col-md-3">
+        <dl class="dl-horizontal">
+            <dt>Поиск текст:</dt>
+            <dd><input class="form-control input-sm" id="search-text" value="{{ filter_dict.search_text }}" type="text" width="100%"/></dd>
+            <dt>Другие сис.:</dt>
+            <dd><input class="form-control input-sm" id="systems" value="{{ filter_dict.systems }}" type="text" width="100%"/></dd>
+            <dt>Инициатор:</dt>
+            <dd>
+                <select class="form-control input-sm" id="initiator" width="100%">
+                    <option value="">---</option>
+                    {% for item in init %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>Реализатор:</dt>
+            <dd>
+                <select class="form-control input-sm" id="real" >
+                    <option value="">---</option>
+                    {% for item in real %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+        </dl>
+    </div>
 
+    <div class="small col-md-3">
+        <dl class="dl-horizontal">
+            <dt>Стадия:</dt>
+            <dd>
+                <select class="form-control input-sm" id="stage" >
+                    <option value="">---</option>
+                    {% for st in stages %}
+                    <option value="{{ st.id }}">{{ st.name }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>Стадия дата с:</dt>
+            <dd><input class="form-control input-sm" id="stage-date1" value="{{ filter_dict.stage_date1 }}" type="text" width="100%"/></dd>
+            <dt>Стадия дата по:</dt>
+            <dd><input class="form-control input-sm" id="stage-date2" value="{{ filter_dict.stage_date2 }}" type="text" width="100%"/></dd>
+            <dt>Стадия назначена с:</dt>
+            <dd><input class="form-control input-sm" id="stage-run-date1" value="{{ filter_dict.stage_run_date1 }}" type="text" width="100%"/></dd>
+            <dt>Стадия назначена по:</dt>
+            <dd><input class="form-control input-sm" id="stage-run-date2" value="{{ filter_dict.stage_run_date2 }}" type="text" width="100%"/></dd>
+            <dt>Стадия назначил:</dt>
+            <dd>
+                <select class="form-control input-sm" id="stage-chif" >
+                    {% for u in users %}
+                    <option value="{{ u.0 }}">{{ u.1 }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+        </dl>
+    </div>
 
-<div class="row">
-    <div id="manager" class="row small col-md-7">
-        <form class="col-md-1">
-            <a id="addproj" title="Создать новый проект">Создать</a>
-        </form>
-        <input id="search-text" value="{{ search_text }}" type="text" class="col-md-5 col-md-offset-1" width="100%"/>
+    <div class="small col-md-3">
+        <dl class="dl-horizontal">
+            <dt>Исполнитель:</dt>
+            <dd>
+                <select class="form-control input-sm" id="executor" >
+                    {% for u in users %}
+                    <option value="{{ u.0 }}">{{ u.1 }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>Исполнитель дата с:</dt>
+            <dd><input class="form-control input-sm" id="executor-date1" value="{{ filter_dict.executor_date1 }}" type="text" width="100%"/></dd>
+            <dt>Исполнитель дата по:</dt>
+            <dd><input class="form-control input-sm" id="executor-date2" value="{{ filter_dict.executor_date2 }}" type="text" width="100%"/></dd>
+            <dt>Подразделение:</dt>
+            <dd>
+                <select class="form-control input-sm" id="department" >
+                    <option value="">---</option>
+                    {% for item in blocks %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>Создан дата с:</dt>
+            <dd><input class="form-control input-sm" id="create-date1" value="{{ filter_dict.create_date1 }}" type="text" width="100%"/></dd>
+            <dt>Создан дата по:</dt>
+            <dd><input class="form-control input-sm" id="create-date2" value="{{ filter_dict.create_date2 }}" type="text" width="100%"/></dd>
+        </dl>
+    </div>
+    <div class="small col-md-2">
         <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
         <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
         <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
         <a id="excel-all-button" title="Выгрузить все показатели" class="btn btn-default btn-xs" href="/regions/reestrproj/excelall/"><span class="glyphicon glyphicon-open-file"></span></a>
-        <a target="_blank" class="col-md-offset-2" id="man" href="{{ MY_STATIC_URL }}regions/reestrproj/help/man.html" title="Документация">Документация</a>
-        </form>
     </div>
 </div>
 

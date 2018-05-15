@@ -518,7 +518,7 @@ class reestr_proj(models.Model):
     other_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость оборудования, инструментов (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))] )
     process = models.BooleanField(default=True, verbose_name='Флаг проектов в сотоянии проработки')
     comment_last = models.TextField(verbose_name='Последний коментарий', default="", null=True)
-    comment_last_datetime = models.DateTimeField(null=True)
+    comment_last_datetime = models.DateTimeField(auto_now_add=True, null=True)
 
 
     def __unicode__(self):

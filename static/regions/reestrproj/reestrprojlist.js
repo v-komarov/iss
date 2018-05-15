@@ -10,6 +10,16 @@ $(document).ready(function() {
     // Отмена поиска
     $("button#clear-button").bind("click", ClearSearch);
 
+    // Поля дат
+    $("input#stage-date1").datepicker($.datepicker.regional['ru']);
+    $("input#stage-date2").datepicker($.datepicker.regional['ru']);
+    $("input#stage-run-date1").datepicker($.datepicker.regional['ru']);
+    $("input#stage-run-date2").datepicker($.datepicker.regional['ru']);
+    $("input#executor-date1").datepicker($.datepicker.regional['ru']);
+    $("input#executor-date2").datepicker($.datepicker.regional['ru']);
+    $("input#create-date1").datepicker($.datepicker.regional['ru']);
+    $("input#create-date2").datepicker($.datepicker.regional['ru']);
+
 
 });
 
