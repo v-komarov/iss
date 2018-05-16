@@ -426,7 +426,7 @@ class ReestrProjList(ListView):
         context['blocks'] = blocks.objects.order_by('name')
         context['real'] = address_companies.objects.order_by('name')
 
-        context['filter_dict'] = pickle.loads(self.session['filter_dict']) if self.session.has_key('filter_dict') else {'search_text':'','systems':'','initiator':'','real':'','stage':'','stage_date1':'','stage_date2':'','stage_run_date1':'','stage_run_date2':'', 'executor':'', 'executor_date1':'','executor_date2':'','department':'','create_date1':'','create_date2':''}
+        context['filter_dict'] = pickle.loads(self.session['filter_dict']) if self.session.has_key('filter_dict') else {'search_text':'','systems':'','initiator':'','real':'','stage':'','stage_date1':'','stage_date2':'','stage_run_date1':'','stage_run_date2':'', 'stage_chif':'','executor':'', 'executor_date1':'','executor_date2':'','department':'','create_date1':'','create_date2':''}
 
         return context
 

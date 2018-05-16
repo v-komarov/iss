@@ -7,6 +7,7 @@ import random
 import logging
 import time
 import uuid
+import pickle
 
 from decimal import Decimal
 
@@ -896,6 +897,17 @@ def get_json(request):
             else:
                 request.session["search_text"] = search
 
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Реестр проектов: удаление фильтра
+        if r.has_key("action") and rg("action") == 'reestrproj-filter-delete':
+
+            if request.session.has_key("filter_dict"):
+                del request.session["filter_dict"]
 
             response_data = {"result": "ok"}
 
@@ -1900,6 +1912,37 @@ def get_json(request):
             response_data = {"result": "ok"}
 
 
+
+
+
+
+        ### Создание фильтра для реестра проектов
+        if data.has_key("action") and data["action"] == 'reestrproj-filter-create':
+
+            filter_dict = {
+                "search_text": data["search_text"],
+                "systems": data["systems"],
+                "initiator": data["initiator"],
+                "real": data["real"],
+                "stage": data["stage"],
+                "stage_date1": data["stage_date1"],
+                "stage_date2": data["stage_date2"],
+                "stage_run_date1": data["stage_run_date1"],
+                "stage_run_date2": data["stage_run_date2"],
+                "stage_chif": data["stage_chif"],
+                "executor": data["executor"],
+                "executor_date1": data["executor_date1"],
+                "executor_date2": data["executor_date2"],
+                "department": data["department"],
+                "create_date1": data["create_date1"],
+                "create_date2": data["create_date2"]
+
+            }
+
+            request.session["filter_dict"] = pickle.dumps(filter_dict)
+
+
+            response_data = {"result": "ok"}
 
 
 
