@@ -581,6 +581,7 @@ def get_json(request):
                 response_data = {"result": "error"}
             else:
                 reestrproj.stage = stage
+                reestrproj.stage_user = request.user
                 reestrproj.save()
 
                 stages_history.objects.create(
@@ -932,7 +933,8 @@ def get_json(request):
             reestr_proj_comment.objects.create(
                 reestr_proj = reestrproj,
                 user = request.user,
-                comment = u"Добавлена связь с другой системой {system} {code}".format(system=other_system.name,code=other_code)
+                comment = u"Добавлена связь с другой системой {system} {code}".format(system=other_system.name,code=other_code),
+                log=True
             )
 
 
@@ -1927,8 +1929,6 @@ def get_json(request):
                 "stage": data["stage"],
                 "stage_date1": data["stage_date1"],
                 "stage_date2": data["stage_date2"],
-                "stage_run_date1": data["stage_run_date1"],
-                "stage_run_date2": data["stage_run_date2"],
                 "stage_chif": data["stage_chif"],
                 "executor": data["executor"],
                 "executor_date1": data["executor_date1"],
@@ -1938,7 +1938,7 @@ def get_json(request):
                 "create_date2": data["create_date2"]
 
             }
-
+            print filter_dict
             request.session["filter_dict"] = pickle.dumps(filter_dict)
 
 

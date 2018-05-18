@@ -21,18 +21,20 @@
 
 
 
-<div class="row">
-    <div id="manager" class="row small col-md-7">
-        <form class="col-md-1">
-            <a id="addproj" title="Создать новый проект">Создать</a>
-        </form>
-        <input id="search-text" value="{{ search_text }}" type="text" class="col-md-5 col-md-offset-1" width="100%"/>
+<div id="manager" class="row small">
+    <a id="addproj" title="Создать новый проект">Создать</a>
+    <a target="_blank" class="col-md-offset-2" id="man" href="{{ MY_STATIC_URL }}regions/reestrproj/help/man.html" title="Документация">Документация</a>
+</div>
+
+<div id="filter" class="row">
+
+    {% include "regions/reestr_proj_filter.html" %}
+
+    <div class="small col-md-2">
         <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
         <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-        <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-        <a id="excel-all-button" title="Выгрузить все показатели" class="btn btn-default btn-xs" href="/regions/reestrproj/excelall/"><span class="glyphicon glyphicon-open-file"></span></a>
-        <a target="_blank" class="col-md-offset-2" id="man" href="{{ MY_STATIC_URL }}regions/reestrproj/help/man.html" title="Документация">Документация</a>
-        </form>
+        <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/process/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+        <a id="excel-all-button" title="Выгрузить все показатели" class="btn btn-default btn-xs" href="/regions/reestrproj/excelall/process/"><span class="glyphicon glyphicon-open-file"></span></a>
     </div>
 </div>
 

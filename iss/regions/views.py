@@ -2,6 +2,9 @@
 
 import pickle
 import operator
+from natsort import natsorted
+from operator import itemgetter
+
 
 from importlib import import_module
 from django.conf import settings
@@ -33,7 +36,7 @@ from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateFo
 
 from iss.mydecorators import group_required,anonymous_required
 
-
+from iss.regions.filters import reestr_proj_filter
 
 #message_type_first = MessageType.objects.get(pk=1)
 #message_status_first = MessageStatus.objects.get(pk=1)
@@ -397,10 +400,11 @@ class ReestrProjList(ListView):
 
     def get_queryset(self):
 
-        if self.session.has_key("search_text"):
-            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=False).order_by("-comment_last_datetime")
-        else:
-            data = reestr_proj.objects.filter(process=False).order_by("-comment_last_datetime")
+        data = reestr_proj.objects.filter(process=False).order_by("-comment_last_datetime")
+        try:
+            data = reestr_proj_filter(data,pickle.loads(self.session["filter_dict"])) if self.session.has_key("filter_dict") else data
+        except:
+            pass
 
         return data
 
@@ -415,7 +419,11 @@ class ReestrProjList(ListView):
         context['form'] = ReestrProjCreateForm()
         context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
 
-        context['stages'] = stages.objects.order_by('name')
+        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
+        for x in stages_dict:
+            dep = len(x.name.split("."))
+            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*dep+x.name if dep > 2 else x.name
+        context['stages'] = stages_dict
         context['init'] = init_reestr_proj.objects.order_by('name')
 
         users = User.objects.order_by("first_name")
@@ -426,7 +434,7 @@ class ReestrProjList(ListView):
         context['blocks'] = blocks.objects.order_by('name')
         context['real'] = address_companies.objects.order_by('name')
 
-        context['filter_dict'] = pickle.loads(self.session['filter_dict']) if self.session.has_key('filter_dict') else {'search_text':'','systems':'','initiator':'','real':'','stage':'','stage_date1':'','stage_date2':'','stage_run_date1':'','stage_run_date2':'', 'stage_chif':'','executor':'', 'executor_date1':'','executor_date2':'','department':'','create_date1':'','create_date2':''}
+        context['filter_dict'] = pickle.loads(self.session['filter_dict']) if self.session.has_key('filter_dict') else {'search_text':'','systems':'','initiator':'','real':'','stage':'','stage_date1':'','stage_date2':'', 'stage_chif':'','executor':'', 'executor_date1':'','executor_date2':'','department':'','create_date1':'','create_date2':''}
 
         return context
 
@@ -472,7 +480,11 @@ class ReestrProjEdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ReestrProjEdit, self).get_context_data(**kwargs)
         context["proj"] = self.get_object()
-        context['stages'] = stages.objects.order_by('name')
+        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
+        for x in stages_dict:
+            dep = len(x.name.split("."))
+            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*dep+x.name if dep > 2 else x.name
+        context['stages'] = stages_dict
         context['task'] = WorkersDatesStagesForm()
         context['doctypes'] = ProjDocTypes.objects.order_by('name')
         context['form2'] = ReestrProjCreateForm()
@@ -519,10 +531,13 @@ class ProcessProjList(ListView):
 
     def get_queryset(self):
 
-        if self.session.has_key("search_text"):
-            data = reestr_proj.objects.filter(search_index__icontains=self.session["search_text"], process=True).order_by("-comment_last_datetime")
-        else:
-            data = reestr_proj.objects.filter(process=True).order_by("-comment_last_datetime")
+
+        data = reestr_proj.objects.filter(process=True).order_by("-comment_last_datetime")
+        try:
+            data = reestr_proj_filter(data,pickle.loads(self.session["filter_dict"])) if self.session.has_key("filter_dict") else data
+        except:
+            pass
+
 
         return data
 
@@ -536,6 +551,22 @@ class ProcessProjList(ListView):
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['form'] = ReestrProjCreateForm()
         context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
+
+        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
+        for x in stages_dict:
+            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*len(x.name.split("."))+x.name
+        context['stages'] = stages_dict
+        context['init'] = init_reestr_proj.objects.order_by('name')
+
+        users = User.objects.order_by("first_name")
+        workers = [("","---")]
+        workers.extend([(user.pk, user.get_full_name()) for user in users])
+        context['users'] = workers
+
+        context['blocks'] = blocks.objects.order_by('name')
+        context['real'] = address_companies.objects.order_by('name')
+
+        context['filter_dict'] = pickle.loads(self.session['filter_dict']) if self.session.has_key('filter_dict') else {'search_text':'','systems':'','initiator':'','real':'','stage':'','stage_date1':'','stage_date2':'', 'stage_chif':'','executor':'', 'executor_date1':'','executor_date2':'','department':'','create_date1':'','create_date2':''}
 
         return context
 
@@ -562,7 +593,11 @@ class ProcessProjEdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProcessProjEdit, self).get_context_data(**kwargs)
         context["proj"] = self.get_object()
-        context['stages'] = stages.objects.order_by('name')
+        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
+        for x in stages_dict:
+            dep = len(x.name.split("."))
+            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*dep+x.name if dep > 2 else x.name
+        context['stages'] = stages_dict
         context['task'] = WorkersDatesStagesForm()
         context['doctypes'] = ProjDocTypes.objects.order_by('name')
         context['form2'] = ReestrProjCreateForm()

@@ -424,7 +424,7 @@ function AddComment(e) {
     var comment = $("div#page-6 textarea#comment").val();
     var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
     // Оповещение
-    var message_type = $("#page-8 select#message-type").val();
+    var message_type = $("#page-6 select#message-type").val();
 
 
     var data = {};

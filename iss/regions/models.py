@@ -504,6 +504,8 @@ class reestr_proj(models.Model):
     executor = models.ForeignKey(address_companies, on_delete=models.PROTECT, verbose_name='Реализатор проекта', null=True, related_name="executor_company")
     business = models.ForeignKey(business, on_delete=models.PROTECT, verbose_name='Направление бизнеса', null=True)
     stage = models.ForeignKey(stages, on_delete=models.PROTECT, verbose_name='Стадия проекта', null=True)
+    stage_date = models.DateField(auto_now=True, null=True, verbose_name='Дата установки стадии')
+    stage_user = models.ForeignKey(User, related_name='stage_author', on_delete=models.PROTECT, verbose_name='Стадию установил', default=None, null=True)
     comment = models.TextField(verbose_name='Описание проекта', default="", null=True)
     contragent = models.CharField(max_length=100, default="", verbose_name='Контрагент')
     passing = models.ForeignKey(passing, on_delete=models.PROTECT, verbose_name='Признак переходящего проекта', null=True)

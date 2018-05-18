@@ -24,140 +24,14 @@
 </div>
 
 <div id="filter" class="row">
-    <div class="small col-md-3">
-        <mark>в разработке</mark>
-        <dl class="dl-horizontal">
-            <dt>Поиск текст:</dt>
-            <dd><input class="form-control input-sm" id="search-text" value="{{ filter_dict.search_text }}" type="text" width="100%"/></dd>
-            <dt>Другие сис.:</dt>
-            <dd><input class="form-control input-sm" id="systems" value="{{ filter_dict.systems }}" type="text" width="100%"/></dd>
-            <dt>Инициатор:</dt>
-            <dd>
-                <select class="form-control input-sm" id="initiator" width="100%">
-                    {% if filter_dict.initiator|slugify == "" %}
-                    <option value="" selected>---</option>
-                    {% else %}
-                    <option value="">---</option>
-                    {% endif %}
-                    {% for item in init %}
-                    {% if item.id|slugify == filter_dict.initiator|slugify %}
-                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
-                    {% else %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </dd>
-            <dt>Реализатор:</dt>
-            <dd>
-                <select class="form-control input-sm" id="real" >
-                    {% if filter_dict.real|slugify == "" %}
-                    <option value="" selected>---</option>
-                    {% else %}
-                    <option value="">---</option>
-                    {% endif %}
-                    {% for item in real %}
-                    {% if item.id|slugify == filter_dict.real|slugify %}
-                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
-                    {% else %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </dd>
-        </dl>
-    </div>
 
-    <div class="small col-md-3">
-        <mark>в разработке</mark>
-        <dl class="dl-horizontal">
-            <dt>Стадия:</dt>
-            <dd>
-                <select class="form-control input-sm" id="stage" >
-                    {% if filter_dict.stage|slugify == "" %}
-                    <option value="" selected>---</option>
-                    {% else %}
-                    <option value="">---</option>
-                    {% endif %}
-                    {% for st in stages %}
-                    {% if st.id|slugify == filter_dict.stage|slugify %}
-                    <option value="{{ st.id }}" selected>{{ st.name }}</option>
-                    {% else %}
-                    <option value="{{ st.id }}">{{ st.name }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </dd>
-            <dt>Стадия дата с:</dt>
-            <dd><input class="form-control input-sm" id="stage-date1" value="{{ filter_dict.stage_date1 }}" type="text" width="100%"/></dd>
-            <dt>Стадия дата по:</dt>
-            <dd><input class="form-control input-sm" id="stage-date2" value="{{ filter_dict.stage_date2 }}" type="text" width="100%"/></dd>
-            <dt>Стадия назначена с:</dt>
-            <dd><input class="form-control input-sm" id="stage-run-date1" value="{{ filter_dict.stage_run_date1 }}" type="text" width="100%"/></dd>
-            <dt>Стадия назначена по:</dt>
-            <dd><input class="form-control input-sm" id="stage-run-date2" value="{{ filter_dict.stage_run_date2 }}" type="text" width="100%"/></dd>
-            <dt>Стадия назначил:</dt>
-            <dd>
-                <select class="form-control input-sm" id="stage-chif" >
-                    {% for u in users %}
-                    {% if filter_dict.stage_chif|slugify == u.0|slugify %}
-                    <option value="{{ u.0 }}" selected>{{ u.1 }}</option>
-                    {% else %}
-                    <option value="{{ u.0 }}">{{ u.1 }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </dd>
-        </dl>
-    </div>
+    {% include "regions/reestr_proj_filter.html" %}
 
-    <div class="small col-md-3">
-        <mark>в разработке</mark>
-        <dl class="dl-horizontal">
-            <dt>Исполнитель:</dt>
-            <dd>
-                <select class="form-control input-sm" id="executor" >
-                    {% for u in users %}
-                    {% if filter_dict.executor|slugify == u.0|slugify %}
-                    <option value="{{ u.0 }}" selected>{{ u.1 }}</option>
-                    {% else %}
-                    <option value="{{ u.0 }}">{{ u.1 }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </dd>
-            <dt>Исполнитель дата с:</dt>
-            <dd><input class="form-control input-sm" id="executor-date1" value="{{ filter_dict.executor_date1 }}" type="text" width="100%"/></dd>
-            <dt>Исполнитель дата по:</dt>
-            <dd><input class="form-control input-sm" id="executor-date2" value="{{ filter_dict.executor_date2 }}" type="text" width="100%"/></dd>
-            <dt>Подразделение:</dt>
-            <dd>
-                <select class="form-control input-sm" id="department" >
-                    {% if filter_dict.blocks == "" %}
-                    <option value="" selected>---</option>
-                    {% else %}
-                    <option value="">---</option>
-                    {% endif %}
-                    {% for item in blocks %}
-                    {% if filter_dict.department|slugify == item.id|slugify %}
-                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
-                    {% else %}
-                    <option value="{{ item.id }}">{{ item.name }}</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </dd>
-            <dt>Создан дата с:</dt>
-            <dd><input class="form-control input-sm" id="create-date1" value="{{ filter_dict.create_date1 }}" type="text" width="100%"/></dd>
-            <dt>Создан дата по:</dt>
-            <dd><input class="form-control input-sm" id="create-date2" value="{{ filter_dict.create_date2 }}" type="text" width="100%"/></dd>
-        </dl>
-    </div>
     <div class="small col-md-2">
         <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
         <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
-        <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-        <a id="excel-all-button" title="Выгрузить все показатели" class="btn btn-default btn-xs" href="/regions/reestrproj/excelall/"><span class="glyphicon glyphicon-open-file"></span></a>
+        <a id="excel-button" title="Выгрузить в excel" class="btn btn-default btn-xs" href="/regions/reestrproj/excel/reestr/"><span class="glyphicon glyphicon-floppy-disk"></span></a>
+        <a id="excel-all-button" title="Выгрузить все показатели" class="btn btn-default btn-xs" href="/regions/reestrproj/excelall/reestr/"><span class="glyphicon glyphicon-open-file"></span></a>
     </div>
 </div>
 

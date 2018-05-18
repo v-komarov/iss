@@ -49,16 +49,53 @@ function getCookie(name) {
 // Поиск
 function Search(e) {
 
-    var search = $("input#search-text").val();
 
-    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search="+search,
-    function(data) {
+    var csrftoken = getCookie('csrftoken');
 
-        if (data["result"] == "ok") { location.href="/regions/processproj/page/1/"; }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
 
-    })
+
+    var data = {};
+    data.search_text = $("input#search-text").val();
+    data.systems = $("input#systems").val();
+    data.initiator = $("select#initiator").val();
+    data.real = $("select#real").val();
+    data.stage = $("select#stage").val();
+    data.stage_date1 = $("input#stage-date1").val();
+    data.stage_date2 = $("input#stage-date2").val();
+    data.stage_chif = $("select#stage-chif").val();
+    data.executor = $("select#executor").val();
+    data.executor_date1 = $("input#executor-date1").val();
+    data.executor_date2 = $("input#executor-date2").val();
+    data.department = $("select#department").val();
+    data.create_date1 = $("input#create-date1").val();
+    data.create_date2 = $("input#create-date2").val();
+
+    data.action = "reestrproj-filter-create";
+
+
+    $.ajax({
+      url: "/regions/jsondata/",
+      type: "POST",
+      dataType: 'json',
+      data:$.toJSON(data),
+        success: function(result) {
+            if (result["result"] == "ok") { window.location.href = "/regions/processproj/page/1/"; }
+        }
+
+    });
+
+
 
 }
+
+
 
 
 
@@ -66,8 +103,21 @@ function Search(e) {
 function ClearSearch(e) {
 
     $("input#search-text").val("");
+    $("input#systems").val("");
+    $("select#initiator").val("");
+    $("select#real").val("");
+    $("select#stage").val("");
+    $("input#stage-date1").val("");
+    $("input#stage-date2").val("");
+    $("select#stage-chif").val("");
+    $("select#executor").val("");
+    $("input#executor-date1").val("");
+    $("input#executor-date2").val("");
+    $("select#department").val("");
+    $("input#create-date1").val("");
+    $("input#create-date2").val("");
 
-    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-list-search&search=",
+    var jqxhr = $.getJSON("/regions/jsondata/?action=reestrproj-filter-delete",
     function(data) {
 
         if (data["result"] == "ok") { location.href="/regions/processproj/page/1/"; }
@@ -76,6 +126,7 @@ function ClearSearch(e) {
 
 
 }
+
 
 
 

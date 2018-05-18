@@ -13,8 +13,6 @@ $(document).ready(function() {
     // Поля дат
     $("input#stage-date1").datepicker($.datepicker.regional['ru']);
     $("input#stage-date2").datepicker($.datepicker.regional['ru']);
-    $("input#stage-run-date1").datepicker($.datepicker.regional['ru']);
-    $("input#stage-run-date2").datepicker($.datepicker.regional['ru']);
     $("input#executor-date1").datepicker($.datepicker.regional['ru']);
     $("input#executor-date2").datepicker($.datepicker.regional['ru']);
     $("input#create-date1").datepicker($.datepicker.regional['ru']);
@@ -79,8 +77,6 @@ function Search(e) {
     data.stage = $("select#stage").val();
     data.stage_date1 = $("input#stage-date1").val();
     data.stage_date2 = $("input#stage-date2").val();
-    data.stage_run_date1 = $("input#stage-run-date1").val();
-    data.stage_run_date2 = $("input#stage-run-date2").val();
     data.stage_chif = $("select#stage-chif").val();
     data.executor = $("select#executor").val();
     data.executor_date1 = $("input#executor-date1").val();
@@ -124,8 +120,6 @@ function ClearSearch(e) {
     $("select#stage").val("");
     $("input#stage-date1").val("");
     $("input#stage-date2").val("");
-    $("input#stage-run-date1").val("");
-    $("input#stage-run-date2").val("");
     $("select#stage-chif").val("");
     $("select#executor").val("");
     $("input#executor-date1").val("");

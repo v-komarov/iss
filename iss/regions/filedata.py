@@ -13,6 +13,7 @@ import datetime
 import mimetypes
 import json
 from decimal import Decimal
+import pickle
 
 from operator import itemgetter
 
@@ -33,7 +34,7 @@ from snakebite.client import Client
 
 from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment, store_list, store_rest, store_rest_log
 from iss.localdicts.models import regions, ProjDocTypes
-
+from iss.regions.filters import reestr_proj_filter
 
 
 
@@ -585,7 +586,7 @@ def getfile2(request):
 
 
 ### Вывод реестра проектов в excel файл
-def reestrprojexcel(request):
+def reestrprojexcel(request,typeproj):
 
 
     book = xlwt.Workbook()
@@ -632,10 +633,18 @@ def reestrprojexcel(request):
 
 
     ### Получение данных
-    if request.session.has_key("search_text"):
-        data = reestr_proj.objects.filter(search_index__icontains=request.session["search_text"]).order_by("-id")
+    if typeproj == "reestr":
+        data = reestr_proj.objects.filter(process=False).order_by("-comment_last_datetime")
+        try:
+            data = reestr_proj_filter(data, pickle.loads(request.session["filter_dict"])) if request.session.has_key("filter_dict") else data
+        except:
+            pass
     else:
-        data = reestr_proj.objects.order_by("-id")
+        data = reestr_proj.objects.filter(process=True).order_by("-comment_last_datetime")
+        try:
+            data = reestr_proj_filter(data, pickle.loads(request.session["filter_dict"])) if request.session.has_key("filter_dict") else data
+        except:
+            pass
 
 
     n = 1 ## Строка в листе
@@ -696,7 +705,7 @@ def reestrprojexcel(request):
 
 
 ### Вывод всех  показателей реестра проектов в excel файл
-def reestrprojexcelall(request):
+def reestrprojexcelall(request,typeproj):
 
 
     book = xlwt.Workbook()
@@ -707,11 +716,21 @@ def reestrprojexcelall(request):
     style_wrap = xlwt.easyxf('align: wrap yes')
 
 
+
     ### Получение данных
-    if request.session.has_key("search_text"):
-        data = reestr_proj.objects.filter(search_index__icontains=request.session["search_text"]).order_by("-id")
+    if typeproj == "reestr":
+        data = reestr_proj.objects.filter(process=False).order_by("-comment_last_datetime")
+        try:
+            data = reestr_proj_filter(data, pickle.loads(request.session["filter_dict"])) if request.session.has_key("filter_dict") else data
+        except:
+            pass
     else:
-        data = reestr_proj.objects.order_by("-id")
+        data = reestr_proj.objects.filter(process=True).order_by("-comment_last_datetime")
+        try:
+            data = reestr_proj_filter(data, pickle.loads(request.session["filter_dict"])) if request.session.has_key("filter_dict") else data
+        except:
+            pass
+
 
 
     for page in data:
