@@ -55,7 +55,7 @@ class AddressHouseAdmin(admin.ModelAdmin):
     list_display = ('city','street','house','iss_address_id')
     search_fields = ['street','city','house']
     list_filter = ('city','street')
-
+    ordering = ('city','street','house')
 
 
 class AddressCompaniesAdmin(admin.ModelAdmin):

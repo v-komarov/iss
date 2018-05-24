@@ -43,6 +43,23 @@ from iss.regions.filters import reestr_proj_filter
 
 
 
+
+
+
+
+### Формирование уровень ориентированного списка стадий
+def stages_pretty():
+    stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
+    for x in stages_dict:
+        dep = len(x.name.split("."))
+        x.name = '&nbsp;&nbsp;&nbsp;&nbsp;' * dep + x.name if dep > 2 else x.name
+    return stages_dict
+
+
+
+
+
+
 ### Заказы
 class Orders(ListView):
 
@@ -419,11 +436,7 @@ class ReestrProjList(ListView):
         context['form'] = ReestrProjCreateForm()
         context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
 
-        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
-        for x in stages_dict:
-            dep = len(x.name.split("."))
-            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*dep+x.name if dep > 2 else x.name
-        context['stages'] = stages_dict
+        context['stages'] = stages_pretty()
         context['init'] = init_reestr_proj.objects.order_by('name')
 
         users = User.objects.order_by("first_name")
@@ -480,11 +493,7 @@ class ReestrProjEdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ReestrProjEdit, self).get_context_data(**kwargs)
         context["proj"] = self.get_object()
-        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
-        for x in stages_dict:
-            dep = len(x.name.split("."))
-            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*dep+x.name if dep > 2 else x.name
-        context['stages'] = stages_dict
+        context['stages'] = stages_pretty()
         context['task'] = WorkersDatesStagesForm()
         context['doctypes'] = ProjDocTypes.objects.order_by('name')
         context['form2'] = ReestrProjCreateForm()
@@ -552,10 +561,7 @@ class ProcessProjList(ListView):
         context['form'] = ReestrProjCreateForm()
         context['search_text'] = self.session['search_text'] if self.session.has_key('search_text') else ""
 
-        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
-        for x in stages_dict:
-            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*len(x.name.split("."))+x.name
-        context['stages'] = stages_dict
+        context['stages'] = stages_pretty()
         context['init'] = init_reestr_proj.objects.order_by('name')
 
         users = User.objects.order_by("first_name")
@@ -593,11 +599,7 @@ class ProcessProjEdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProcessProjEdit, self).get_context_data(**kwargs)
         context["proj"] = self.get_object()
-        stages_dict = natsorted(stages.objects.all(), key=lambda x: x.name.split('.')[:-1])
-        for x in stages_dict:
-            dep = len(x.name.split("."))
-            x.name = '&nbsp;&nbsp;&nbsp;&nbsp;'*dep+x.name if dep > 2 else x.name
-        context['stages'] = stages_dict
+        context['stages'] = stages_pretty()
         context['task'] = WorkersDatesStagesForm()
         context['doctypes'] = ProjDocTypes.objects.order_by('name')
         context['form2'] = ReestrProjCreateForm()

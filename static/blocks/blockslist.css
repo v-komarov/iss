@@ -1,0 +1,40 @@
+table[group=blocks-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=blocks-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+
+/* Курсор */
+table[group=blocks-list] > tbody > tr > td > a,
+a#addbuilding, a#addmanager {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=blocks-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+/* Отступить от меню */
+#filter {
+    margin-top:30px;
+    margin-bottom:20px;
+}
+

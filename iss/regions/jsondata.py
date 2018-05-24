@@ -990,7 +990,7 @@ def get_json(request):
 
 
 
-        """
+
         ### Реестр проектов: Отправка оповещения
         if r.has_key("action") and rg("action") == 'reestrproj-message-send':
             reestrproj_id = request.GET["reestrproj_id"]
@@ -1013,7 +1013,7 @@ def get_json(request):
 
                 response_data = {"result": "error"}
 
-        """
+
 
 
 

@@ -1,5 +1,21 @@
 <div id="page-8" class="row small" hidden>
 
+    <div class="row col-md-8">
+
+        <form class="form-inline">
+          <div class="form-group">
+              <label for="message-type2">Вид оповещения</label>
+              <select class="form-control input-sm" id="message-type2" placeholder="">
+                  <option value="">---</option>
+                  {% for m in message_type %}
+                    <option value={{ m.id }}>{{ m.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <button type="button" id="message-send2" class="btn btn-default btn-xs">Отправить</button>
+        </form>
+
+    </div>
 
     <div class="row col-md-8">
 

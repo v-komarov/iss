@@ -270,8 +270,8 @@ class address_house(models.Model):
 
 
     class Meta:
-        verbose_name = 'Дом'
-        verbose_name_plural = 'Дома'
+        verbose_name = 'Адрес дома'
+        verbose_name_plural = 'Адреса домов'
 
         unique_together = ('iss_address_id', 'city','street','house')
 

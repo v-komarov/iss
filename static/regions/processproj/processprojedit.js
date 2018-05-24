@@ -85,7 +85,7 @@ $(document).ready(function() {
     $("#page-1 button#append-system-code").bind("click", AddOtherSystem);
 
     // Отправка оповещения
-    //$("#page-8 button#message-send").bind("click", MessageSend);
+    $("#page-8 button#message-send2").bind("click", MessageSend);
 
 
 
@@ -795,12 +795,12 @@ function AddOtherSystem(e) {
 
 
 
-/*
+
 // Отправка оповещения
 function MessageSend(e) {
 
     var reestrproj_id = $("div#proj-common").attr("reestrproj_id");
-    var message_type = $("#page-8 select#message-type").val();
+    var message_type = $("#page-8 select#message-type2").val();
 
         if (message_type != "") {
 
@@ -808,7 +808,7 @@ function MessageSend(e) {
             function(data) {
 
                 if (data["result"] == "ok") {
-                    $("#page-8 select#message-type").val("");
+                    $("#page-8 select#message-type2").val("");
                     GetListMessageHistory();
                 }
 
@@ -819,7 +819,7 @@ function MessageSend(e) {
 
 
 }
-*/
+
 
 
 
