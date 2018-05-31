@@ -53,3 +53,11 @@ table[group=makereports-list] > tbody > tr > td {
     color: green;
 }
 
+
+input#create-text, select#employee {
+    width: 300px;
+}
+
+select#employee {
+    margin-top: 10px;
+}

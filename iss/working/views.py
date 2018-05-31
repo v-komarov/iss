@@ -110,6 +110,7 @@ class MakeReports(ListView):
         context = super(MakeReports, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['include_report'] = pickle.loads(self.session["include_report"]) if self.session.has_key("include_report") else []
+        context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).distinct("user")
 
         return context
 

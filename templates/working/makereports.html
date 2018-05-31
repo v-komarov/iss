@@ -23,14 +23,37 @@
 
 
     <div class="row">
+        <dl  class="dl-horizontal">
         <div class="form-inline">
             <div id="manager" class="form-group">
+                <dt>
                 <label for="create-text">Название отчета</label>
+                </dt>
+                <dd>
                 <input id="create-text" value="{{ search_text }}" width="100%" type="text" />
                 <button id="create-button" title="Создать отчет" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-saved"></span></button>
                 <button id="clear-button" title="Очистить" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                </dd>
             </div>
         </div>
+        <div class="form-inline">
+            <div id="manager2" class="form-group">
+                <dt>
+                <label for="employee">Фильтр по сотруднику</label>
+                </dt>
+                <dd>
+                <select id="employee" class="form-control input-sm">
+                    <option value="">Все</option>
+                    {% for u in users %}
+                    <option value="{{ u.user.id }}">{{ u.user.get_full_name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button id="employee-search" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button> <mark>в разработке</mark>
+                </dd>
+            </div>
+        </div>
+        </dl>
     </div>
 
 
