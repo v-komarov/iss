@@ -22,7 +22,7 @@ class buildings(models.Model):
     numentrances = models.IntegerField(default=0, verbose_name="Кол-во поъездов")
     numfloars = models.IntegerField(default=0, verbose_name="Число квартир")
 
-    www_id = models.IntegerField(default=0, verbose_name="Идентификатов с сайта")
+    www_id = models.IntegerField(default=0, verbose_name="Идентификатор с сайта")
 
     def __unicode__(self):
         return self.address
@@ -46,7 +46,7 @@ class block_managers(models.Model):
     email = models.TextField(default="")
     inn = models.CharField(max_length=10, verbose_name='ИНН', default="", db_index=True)
 
-    www_id = models.IntegerField(default=0, verbose_name="Идентификатов с сайта")
+    www_id = models.IntegerField(default=0, verbose_name="Идентификатор с сайта")
 
 
     def __unicode__(self):

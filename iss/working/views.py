@@ -99,6 +99,10 @@ class MakeReports(ListView):
 
         data = working_time.objects.order_by('-datetime_begin')
 
+        if self.session.has_key("worker"):
+            worker_id = self.session["worker"]
+            data = data.filter(user_id=worker_id)
+
         return data
 
 
@@ -111,6 +115,8 @@ class MakeReports(ListView):
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['include_report'] = pickle.loads(self.session["include_report"]) if self.session.has_key("include_report") else []
         context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).distinct("user")
+        context["worker"] = self.session["worker"] if self.session.has_key("worker") else ""
+
 
         return context
 

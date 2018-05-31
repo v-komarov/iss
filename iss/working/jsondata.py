@@ -707,6 +707,27 @@ def get_json(request):
 
 
 
+        ### Фильтр по сотруднику - формирование отчета
+        if r.has_key("action") and rg("action") == 'makereports-filter':
+
+            worker = request.GET["worker"].strip()
+
+            if worker == "" and request.session.has_key("worker"):
+                del request.session["worker"]
+            elif worker == "" and request.session.has_key("worker") == False:
+                pass
+            else:
+                request.session["worker"] = worker
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+
+
     if request.method == "POST":
 
 

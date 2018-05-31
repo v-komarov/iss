@@ -9,8 +9,44 @@ $(document).ready(function() {
     // Создать отчет
     $("button#create-button").bind("click", CreateReport);
 
+    // Фильтр по сотруднику
+    $("button#employee-search").bind("click", EmployeeFilter);
+
+
 
 });
+
+
+
+
+
+
+// Фильтр по сотруднику
+function EmployeeFilter(e) {
+
+        var worker = $("select#employee").val();
+
+        var jqxhr = $.getJSON("/working/jsondata/?action=makereports-filter&worker="+worker,
+        function(data) {
+
+            if (data["result"] == "ok") {
+
+                if (data["result"] == "ok") { location.href="/working/makereports/1/"; }
+
+            }
+
+        })
+
+
+}
+
+
+
+
+
+
+
+
 
 
 

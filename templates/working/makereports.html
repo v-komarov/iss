@@ -30,7 +30,7 @@
                 <label for="create-text">Название отчета</label>
                 </dt>
                 <dd>
-                <input id="create-text" value="{{ search_text }}" width="100%" type="text" />
+                <input id="create-text" class="form-control input-sm" value="{{ search_text }}" width="100%" type="text" />
                 <button id="create-button" title="Создать отчет" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-saved"></span></button>
                 <button id="clear-button" title="Очистить" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
                 </dd>
@@ -43,9 +43,17 @@
                 </dt>
                 <dd>
                 <select id="employee" class="form-control input-sm">
-                    <option value="">Все</option>
+                    {% if worker|slugify == ""|slugify %}
+                        <option value="" selected>Все</option>
+                    {% else %}
+                        <option value="">Все</option>
+                    {% endif %}
                     {% for u in users %}
+                    {% if worker|slugify == u.user.id|slugify %}
+                    <option value="{{ u.user.id }}" selected>{{ u.user.get_full_name }}</option>
+                    {% else %}
                     <option value="{{ u.user.id }}">{{ u.user.get_full_name }}</option>
+                    {% endif %}
                     {% endfor %}
                 </select>
 
