@@ -114,7 +114,7 @@ class MakeReports(ListView):
         context = super(MakeReports, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['include_report'] = pickle.loads(self.session["include_report"]) if self.session.has_key("include_report") else []
-        context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).distinct("user")
+        context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).order_by("user__first_name").distinct("user__first_name","user__last_name")
         context["worker"] = self.session["worker"] if self.session.has_key("worker") else ""
 
 
@@ -337,7 +337,7 @@ class GraphHistory(TemplateView):
 
 
         context["events"] = marks.objects.filter(visible=True).order_by('order')
-        context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).distinct("user")
+        context["users"] = working_log.objects.filter(datetime_create__gte=(now() - datetime.timedelta(days=90))).order_by("user__first_name").distinct("user__first_name","user__last_name")
 
 
         if self.session.has_key('tz'):
