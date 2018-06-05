@@ -9,6 +9,7 @@ from math import sin, cos, sqrt, atan2, radians
 from django.db import models
 from django import template
 from django.contrib.postgres.fields import JSONField
+from django.db.models import Q
 
 
 
@@ -226,7 +227,6 @@ class address_house(models.Model):
             })
 
 
-
         return result
 
 
@@ -266,6 +266,34 @@ class address_house(models.Model):
             return False
         else:
             return True
+
+
+
+
+    ### Определение использование элемента адреса в некоторых моделях
+    def check_model_use(self):
+        result = []
+        ### Для устройств инвентори
+        for item in self.devices_set.all().filter(address=self):
+            result.append({ "model":item.__class__.__name__,"element":item.serial})
+
+        ### Для домов
+
+        ### Для управляющих компаний, тсж и пр. Юридический адрес
+        for item in self.addr_law.all():
+            result.append({ "model":item.__class__.__name__,"element":item.name })
+
+        ### Для управляющих компаний, тсж и пр. Физический адрес
+        for item in self.addr_real.all():
+            addr = { "model":item.__class__.__name__,"element":item.name }
+            if addr not in result:
+                result.append(addr)
+
+
+
+
+        return result
+
 
 
 

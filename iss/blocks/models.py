@@ -38,7 +38,7 @@ class buildings(models.Model):
 ### Управляющие компании , тсж, пр...
 class block_managers(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название', default="", db_index=True)
-    address = models.ForeignKey(address_house, verbose_name="Адрес фактический", null=True, default=None)
+    address = models.ForeignKey(address_house, verbose_name="Адрес фактический", null=True, default=None, related_name="addr_real")
     address_law = models.ForeignKey(address_house, verbose_name="Адрес юридический", null=True, related_name="addr_law", default=None)
     builging = models.ManyToManyField(buildings)
     phone = models.TextField(default="")

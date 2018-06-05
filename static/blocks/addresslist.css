@@ -1,0 +1,39 @@
+table[group=address-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=address-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+
+/* Курсор */
+table[group=address-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=address-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+/* Отступить от меню */
+#filter {
+    margin-top:30px;
+    margin-bottom:20px;
+}
+

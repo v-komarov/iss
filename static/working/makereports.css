@@ -61,3 +61,13 @@ input#create-text, select#employee {
 select#employee {
     margin-top: 10px;
 }
+
+
+button#employee-search {
+	margin-top: 8px;
+}
+
+
+div.container div.row dl.dl-horizontal div.form-inline div#manager2.form-group dt label {
+	margin-top: 10px;
+}

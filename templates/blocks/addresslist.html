@@ -1,0 +1,151 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}blocks/addresslist.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}blocks/addresslist.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div id="filter" class="row">
+
+
+    <div class="small col-md-3">
+        <dl class="dl-horizontal">
+            <dt>Город:</dt>
+            <dd>
+
+                <select class="form-control input-sm" id="search-city" >
+                    {% if filter.city|slugify == "" %}
+                    <option value="" selected>---</option>
+                    {% else %}
+                    <option value="">---</option>
+                    {% endif %}
+                    {% for item in city %}
+                    {% if item.id|slugify == filter.city|slugify %}
+                        <option value="{{ item.id }}" selected>{{ item.name }}</option>
+                    {% else %}
+                        <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>Поиск по улице:</dt>
+            <dd><input class="form-control input-sm" id="search-street" value="{{ filter.street }}" type="text" width="100%"/></dd>
+            <dt>Поиск по дому:</dt>
+            <dd><input class="form-control input-sm" id="search-house" value="{{ filter.house }}" type="text" width="100%"/></dd>
+        </dl>
+    </div>
+
+
+    <div class="small col-md-2">
+        <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
+        <button id="search-clear" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
+</div>
+
+
+
+<div class="row">
+</div>
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/blocks/addresslist/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/blocks/addresslist/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="address-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>ID</th>
+                <th>Город</th>
+                <th>id города</th>
+                <th>Улица</th>
+                <th>id улицы</th>
+                <th>Дом</th>
+                <th>Адрес используется в...</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.city.name }}</td>
+                <td>{{ row.city.id }}</td>
+                <td>{{ row.street.name }}</td>
+                <td>{{ row.street.id }}</td>
+                <td>{{ row.house }}</td>
+                <td>
+                    {% regroup row.check_model_use by model as models_list %}
+
+                    <ul>
+                    {% for model in models_list %}
+                        <li>{{ model.grouper }}
+                        <ul>
+                            {% for item in model.list %}
+                              <li>{{ item.element }}</li>
+                            {% endfor %}
+                        </ul>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/blocks/addresslist/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/blocks/addresslist/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+
