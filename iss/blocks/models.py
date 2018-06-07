@@ -17,15 +17,17 @@ from iss.localdicts.models import address_house
 
 ### Дома, стоения
 class buildings(models.Model):
-    address = models.ForeignKey(address_house, verbose_name="Адрес")
+    address = models.ForeignKey(address_house, verbose_name="Адрес", null=True)
     numstoreys = models.IntegerField(default=0, verbose_name="Этажность")
     numentrances = models.IntegerField(default=0, verbose_name="Кол-во поъездов")
     numfloars = models.IntegerField(default=0, verbose_name="Число квартир")
 
     www_id = models.IntegerField(default=0, verbose_name="Идентификатор с сайта")
 
+    block_manager = models.ForeignKey('block_managers', verbose_name="Управляющая компания", null=True)
+
     def __unicode__(self):
-        return self.address
+        return self.address.getaddress()
 
 
     class Meta:

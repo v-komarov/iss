@@ -65,10 +65,12 @@
 
         <thead class="small">
 
-            <tr style="background-color:gainsboro;">
+            <tr>
                 <th>ID</th>
                 <th>ИНН</th>
                 <th>Название компании</th>
+                <th>Телефон</th>
+                <th>Контакты</th>
                 <th>Город</th>
                 <th>Улица</th>
                 <th>Дом</th>
@@ -82,18 +84,34 @@
 
         <tbody class="small">
             {% for row in object_list %}
-            <tr>
-                <td>{{ row.www_id }}</td>
-                <td>{{ row.inn }}</td>
-                <td>{{ row.name }}</td>
-                <td>{{ row.address_law.city }}</td>
-                <td>{{ row.address_law.street }}</td>
-                <td>{{ row.address_law.house }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+                <tr class="company">
+                    <td style="background-color:#98FB98;">{{ row.www_id }}</td>
+                    <td style="background-color:#98FB98;">{{ row.inn }}</td>
+                    <td style="background-color:#98FB98;">{{ row.name }}</td>
+                    <td style="background-color:#98FB98;">{{ row.phone }}</td>
+                    <td style="background-color:#98FB98;">{{ row.contact }}</td>
+                    <td style="background-color:#98FB98;">{{ row.address.city }}</td>
+                    <td style="background-color:#98FB98;">{{ row.address.street }}</td>
+                    <td style="background-color:#98FB98;">{{ row.address.house }}</td>
+                    <td style="background-color:#98FB98;"></td>
+                    <td style="background-color:#98FB98;"></td>
+                    <td style="background-color:#98FB98;"></td>
+                    <td style="background-color:#98FB98;"></td>
+                </tr>
+
+
+            {% for house in row.buildings_set.all %}
+                <tr>
+                    <td colspan="5" style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;">{{ house.address.city }}</td>
+                    <td style="background-color:#FDF5E6;">{{ house.address.street }}</td>
+                    <td style="background-color:#FDF5E6;">{{ house.address.house }}</td>
+                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                </tr>
+            {% endfor %}
             {% endfor %}
         </tbody>
 

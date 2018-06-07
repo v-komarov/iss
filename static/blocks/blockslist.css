@@ -13,6 +13,8 @@ table[group=blocks-list] > thead > tr > th {
 
 table[group=blocks-list] > tbody > tr > td {
     padding: 0;
+    padding-left: 2px;
+    padding-right: 2px;
     vertical-align: top;
 }
 
@@ -37,4 +39,5 @@ table[group=blocks-list] > tbody > tr > td > a:hover {
     margin-top:30px;
     margin-bottom:20px;
 }
+
 
