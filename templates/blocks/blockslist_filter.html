@@ -2,17 +2,28 @@
         <dl class="dl-horizontal">
             <dt>Город:</dt>
             <dd>
-                <select class="form-control input-sm" id="city" >
+
+                <select class="form-control input-sm" id="search-city" >
+                    {% if filter_company.city|slugify == "" %}
+                    <option value="" selected>---</option>
+                    {% else %}
                     <option value="">---</option>
+                    {% endif %}
                     {% for item in city %}
+                    {% if item.id|slugify == filter_company.city|slugify %}
+                        <option value="{{ item.id }}" selected>{{ item.name }}</option>
+                    {% else %}
                         <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endif %}
                     {% endfor %}
                 </select>
             </dd>
-            <dt>Поиск по адресу:</dt>
-            <dd><input class="form-control input-sm" id="search-text" value="{{ filter_dict.search_text }}" type="text" width="100%"/></dd>
+            <dt>Поиск по улице:</dt>
+            <dd><input class="form-control input-sm" id="search-street" value="{{ filter_company.street }}" type="text" width="100%"/></dd>
+            <dt>Поиск по дому:</dt>
+            <dd><input class="form-control input-sm" id="search-house" value="{{ filter_company.house }}" type="text" width="100%"/></dd>
             <dt>Поиск по компании:</dt>
-            <dd><input class="form-control input-sm" id="systems" value="{{ filter_dict.systems }}" type="text" width="100%"/></dd>
+            <dd><input class="form-control input-sm" id="search-company" value="{{ filter_company.company }}" type="text" width="100%"/></dd>
         </dl>
     </div>
 

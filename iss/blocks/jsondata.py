@@ -76,6 +76,40 @@ def get_json(request):
 
 
 
+        ### Фильтр по городу улице дому по компании
+        if r.has_key("action") and rg("action") == 'filter-company':
+
+            city = request.GET["city"].strip()
+            street = request.GET["street"].strip()
+            house = request.GET["house"].strip()
+            company = request.GET["company"].strip()
+
+
+            request.session["filter_company"] = pickle.dumps({ 'city': city, 'street': street, 'house': house, 'company': company })
+
+            if city == "" and street == "" and house == "" and company == "":
+                if request.session.has_key("filter_company"):
+                    del request.session["filter_company"]
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Очистка фильтр по городу улице дому по компании
+        if r.has_key("action") and rg("action") == 'filter-company-clear':
+
+
+            if request.session.has_key("filter_company"):
+                del request.session["filter_company"]
+
+            response_data = {"result": "ok"}
+
+
+
+
 
 
 

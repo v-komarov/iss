@@ -61,7 +61,62 @@ class BlocksList(ListView):
 
     def get_queryset(self):
 
-        data = block_managers.objects.order_by("name")
+
+        if self.session.has_key("filter_company"):
+            filter = pickle.loads(self.session["filter_company"])
+
+
+            if filter["company"] == "":
+                data = block_managers.objects.order_by("name")
+            else:
+                data = block_managers.objects.filter(name__icontains=filter["company"]).order_by("name")
+
+            data1 = []
+
+
+            if not filter["city"] == "" and not filter["street"] == "" and not filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__city_id = int(filter["city"])).exists() and item.buildings_set.filter(address__street__name__icontains = filter["street"]).exists() and item.buildings_set.filter(address__house__icontains = filter["house"]).exists():
+                        data1.append(item)
+
+            elif filter["city"] == "" and not filter["street"] == "" and not filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__street__name__icontains = filter["street"]).exists() and item.buildings_set.filter(address__house__icontains = filter["house"]).exists():
+                        data1.append(item)
+
+            elif not filter["city"] == "" and filter["street"] == "" and not filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__city_id = int(filter["city"])).exists() and item.buildings_set.filter(address__house__icontains = filter["house"]).exists():
+                        data1.append(item)
+
+            elif not filter["city"] == "" and not filter["street"] == "" and filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__city_id = int(filter["city"])).exists() and item.buildings_set.filter(address__street__name__icontains = filter["street"]).exists():
+                        data1.append(item)
+
+            elif not filter["city"] == "" and filter["street"] == "" and filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__city_id = int(filter["city"])).exists():
+                        data1.append(item)
+
+            elif filter["city"] == "" and not filter["street"] == "" and filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__street__name__icontains = filter["street"]).exists():
+                        data1.append(item)
+
+            if filter["city"] == "" and filter["street"] == "" and not filter["house"] == "":
+                for item in list(data):
+                    if item.buildings_set.filter(address__house__icontains = filter["house"]).exists():
+                        data1.append(item)
+
+
+            data = data1
+
+
+
+        else:
+
+            data = []
 
         return data
 
@@ -70,6 +125,7 @@ class BlocksList(ListView):
     def get_context_data(self, **kwargs):
         context = super(BlocksList, self).get_context_data(**kwargs)
         context["city"] = address_city.objects.order_by("name")
+        context["filter_company"] = pickle.loads(self.session["filter_company"]) if self.session.has_key("filter_company") else {'city': "", 'street': "", "house": "", "company": ""}
 
 
         return context
