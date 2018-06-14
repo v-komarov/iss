@@ -11,6 +11,7 @@
 <script type="text/javascript" src="{{ MY_STATIC_URL }}blocks/company_edit.js"></script>
 
 
+
 <div class="container">
 
     {% include "menu.html" %}
@@ -44,12 +45,41 @@
         </div>
 
         <div class="col-md-3">
-            Реформа ЖКХ
+            <div>
+                <a href="https://www.reformagkh.ru/mymanager/profile/{{ comp.www_id }}/" target="_blank">Реформа ЖКХ</a>
+            </div>
+            <div>
+                <button id="button-save" class="btn btn-default btn-xs">Сохранить</button>
+            </div>
         </div>
 
     </div>
 
+
+    <div class="row col-md-8 small">
+        <ul class="nav nav-tabs">
+          <li id="nav-1" role="presentation" class="active"><a href="#">Договоры</a></li>
+          <li id="nav-2" role="presentation"><a href="#">Документы</a></li>
+          <li id="nav-3" role="presentation"><a href="#">Комментарии</a></li>
+          <li id="nav-4" role="presentation"><a href="#">Лог</a></li>
+        </ul>
+    </div>
+
+
+
 </div>
+
+
+<div class="container">
+
+    {% include "blocks/company_pages/page1.html" %}
+    {% include "blocks/company_pages/page2.html" %}
+    {% include "blocks/company_pages/page3.html" %}
+    {% include "blocks/company_pages/page4.html" %}
+
+</div>
+
+
 
 
 {% endblock %}

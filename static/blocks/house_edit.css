@@ -1,0 +1,67 @@
+
+/* Курсор */
+a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+a:hover {
+    text-decoration:none;
+}
+
+
+
+
+/* Отступ закладок */
+.nav-tabs {
+    margin-top:10px;
+}
+
+
+/* Отступ кнопки сохранить */
+#button-save {
+    margin-top: 20px;
+}
+
+
+
+/* оформление таблиц */
+table[group=comment-list] > thead > tr > th,
+table[group=file-list] > thead > tr > th,
+table[group=device-list] > thead > tr > th,
+table[group=log-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=file-list] > tbody > tr > td,
+table[group=comment-list] > tbody > tr > td,
+table[group=device-list] > tbody > tr > td,
+table[group=log-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+#addcomment {
+    margin-bottom: 10px;
+}
+
+div.container div#page-1.row.small div,
+div.container div#page-2.row.small div,
+div.container div#page-3.row.small div,
+div.container div#page-4.row.small div {
+    margin-top: 10px;
+}
+
+
+form#uploadfilehdfs.form-inline div.form-group input#fileuploadhdfs {
+    margin-top: 0;
+}
+
+form#uploadfilehdfs.form-inline button.btn.btn-default.btn-xs {
+    margin-top: 10px;
+}

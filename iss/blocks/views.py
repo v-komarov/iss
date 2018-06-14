@@ -29,7 +29,7 @@ from iss.mydecorators import group_required,anonymous_required
 from iss.localdicts.models import address_city, address_house
 from iss.blocks.models import buildings, block_managers
 
-from iss.blocks.forms import CompanyEditForm
+from iss.blocks.forms import CompanyEditForm, HouseEditForm
 
 
 
@@ -214,7 +214,7 @@ class CompanyEdit(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyEdit, self).get_context_data(**kwargs)
-        context["proj"] = self.get_object()
+        context["comp"] = self.get_object()
 
         return context
 
@@ -223,6 +223,41 @@ class CompanyEdit(UpdateView):
     def form_valid(self, form):
         form.instance.rowsum = form.instance.price * form.instance.count
         return super(CompanyEdit, self).form_valid(form)
+
+
+
+
+
+
+### Основная форма редактирования данных дома
+class HouseEdit(UpdateView):
+
+    model = buildings
+    form_class = HouseEditForm
+    template_name = "blocks/house_edit.html"
+    success_url = '/blocks/house_edit/edit/1/'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(HouseEdit, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(HouseEdit, self).get_context_data(**kwargs)
+        context["house"] = self.get_object()
+
+        return context
+
+
+
+    def form_valid(self, form):
+        form.instance.rowsum = form.instance.price * form.instance.count
+        return super(HouseEdit, self).form_valid(form)
 
 
 

@@ -1,0 +1,59 @@
+
+/* Курсор */
+a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+a:hover {
+    text-decoration:none;
+}
+
+
+/* Отступ закладок */
+.nav-tabs {
+    margin-top:10px;
+}
+
+
+/* Отступ кнопки сохранить */
+#button-save {
+    margin-top: 20px;
+}
+
+
+/* оформление таблиц */
+table[group=comment-list] > thead > tr > th,
+table[group=contract-list] > thead > tr > th,
+table[group=file-list] > thead > tr > th,
+table[group=log-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=file-list] > tbody > tr > td,
+table[group=comment-list] > tbody > tr > td,
+table[group=contract-list] > tbody > tr > td,
+table[group=log-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+#page-1 > div:nth-child(1),
+#page-2 > div:nth-child(1),
+#page-3 > div:nth-child(1),
+#page-4 > div:nth-child(1) {
+	padding-top: 10px;
+}
+
+#uploadfilehdfs {
+    margin-bottom: 10px;
+}
+
+#addcomment {
+    margin-bottom: 10px;
+}

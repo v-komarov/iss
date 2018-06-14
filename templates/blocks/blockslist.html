@@ -68,12 +68,13 @@
             <tr>
                 <th>ID</th>
                 <th>ИНН</th>
-                <th>Название компании</th>
+                <th>Название<br>компании</th>
                 <th>Телефон</th>
                 <th>Контакты</th>
                 <th>Город</th>
                 <th>Улица</th>
                 <th>Дом</th>
+                <th>Условия<br>доступа</th>
                 <th>Число ТКД</th>
                 <th>Абонентов</th>
                 <th>Сумма</th>
@@ -97,15 +98,17 @@
                     <td style="background-color:#98FB98;"></td>
                     <td style="background-color:#98FB98;"></td>
                     <td style="background-color:#98FB98;"></td>
+                    <td style="background-color:#98FB98;"></td>
                 </tr>
 
 
             {% for house in row.buildings_set.all %}
                 <tr>
                     <td colspan="5" style="background-color:#FDF5E6;"></td>
-                    <td style="background-color:#FDF5E6;">{{ house.address.city }}</td>
-                    <td style="background-color:#FDF5E6;">{{ house.address.street }}</td>
-                    <td style="background-color:#FDF5E6;">{{ house.address.house }}</td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.address.city }}</a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.address.street }}</a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.address.house }}</a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.access }}</a></td>
                     <td style="background-color:#FDF5E6;"></td>
                     <td style="background-color:#FDF5E6;"></td>
                     <td style="background-color:#FDF5E6;"></td>

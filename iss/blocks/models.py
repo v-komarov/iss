@@ -24,6 +24,7 @@ class buildings(models.Model):
     numstoreys = models.IntegerField(default=0, verbose_name="Этажность")
     numentrances = models.IntegerField(default=0, verbose_name="Кол-во поъездов")
     numfloars = models.IntegerField(default=0, verbose_name="Число квартир")
+    access = models.CharField(max_length=250, verbose_name='Условие доступа', default="")
 
     www_id = models.IntegerField(default=0, verbose_name="Идентификатор с сайта")
 

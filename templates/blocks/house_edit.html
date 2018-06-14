@@ -1,0 +1,83 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}blocks/house_edit.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}blocks/house_edit.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+    <div class="row small">
+
+        <div class="col-md-8">
+
+            <h4>Дом</h4>
+
+            <dl class="dl-horizontal">
+                <div class="col-md-4">
+                    <dt>{{ form.numstoreys.label }}</dt>
+                    <dd>{{ form.numstoreys }}</dd>
+                    <dt>{{ form.numentrances.label }}</dt>
+                    <dd>{{ form.numentrances }}</dd>
+                    <dt>{{ form.numfloars.label }}</dt>
+                    <dd>{{ form.numfloars }}</dd>
+                    <dt>{{ form.access.label }}</dt>
+                    <dd>{{ form.access }}</dd>
+                    <dt>{{ form.address2.label }}</dt>
+                    <dd>{{ form.address2 }}</dd>
+                    <dt>{{ form.manager.label }}</dt>
+                    <dd>{{ form.manager }}</dd>
+                </div>
+            </dl>
+
+        </div>
+
+        <div class="col-md-3">
+            <div>
+                <a href="https://www.reformagkh.ru/myhouse/profile/view/{{ house.www_id }}/" target="_blank">Реформа ЖКХ</a>
+            </div>
+            <div>
+                <button id="button-save" class="btn btn-default btn-xs">Сохранить</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row col-md-8 small">
+        <ul class="nav nav-tabs">
+          <li id="nav-1" class="active"><a href="#">Документы</a></li>
+          <li id="nav-2"><a href="#">Комментарии</a></li>
+          <li id="nav-3"><a href="#">Оборудование</a></li>
+          <li id="nav-4"><a href="#">Лог</a></li>
+        </ul>
+    </div>
+
+
+
+</div>
+
+
+<div class="container">
+
+    {% include "blocks/house_pages/page1.html" %}
+    {% include "blocks/house_pages/page2.html" %}
+    {% include "blocks/house_pages/page3.html" %}
+    {% include "blocks/house_pages/page4.html" %}
+
+</div>
+
+
+
+
+{% endblock %}
