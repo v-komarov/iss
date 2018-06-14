@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}blocks/company_edit.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}blocks/company_edit.js"></script>
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+    <div class="row small">
+
+        <div class="col-md-8">
+
+            <h4>Компания</h4>
+
+            <dl class="dl-horizontal">
+                <div class="col-md-4">
+                    <dt>{{ form.name.label }}</dt>
+                    <dd>{{ form.name }}</dd>
+                    <dt>{{ form.inn.label }}</dt>
+                    <dd>{{ form.inn }}</dd>
+                    <dt>{{ form.phone.label }}</dt>
+                    <dd>{{ form.phone }}</dd>
+                    <dt>{{ form.email.label }}</dt>
+                    <dd>{{ form.email }}</dd>
+                    <dt>{{ form.contact.label }}</dt>
+                    <dd>{{ form.contact }}</dd>
+                    <dt>{{ form.address2.label }}</dt>
+                    <dd>{{ form.address2 }}</dd>
+                    <dt>{{ form.address_law2.label }}</dt>
+                    <dd>{{ form.address_law2 }}</dd>
+                </div>
+            </dl>
+
+        </div>
+
+        <div class="col-md-3">
+            Реформа ЖКХ
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

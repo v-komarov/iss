@@ -21,6 +21,7 @@ from django.views.generic import ListView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic.base import TemplateView,RedirectView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
 from iss.mydecorators import group_required,anonymous_required
@@ -28,7 +29,7 @@ from iss.mydecorators import group_required,anonymous_required
 from iss.localdicts.models import address_city, address_house
 from iss.blocks.models import buildings, block_managers
 
-
+from iss.blocks.forms import CompanyEditForm
 
 
 
@@ -186,6 +187,42 @@ class AddressList(ListView):
 
         return context
 
+
+
+
+
+
+
+
+### Основная форма редактирования данных компании
+class CompanyEdit(UpdateView):
+
+    model = block_managers
+    form_class = CompanyEditForm
+    template_name = "blocks/company_edit.html"
+    success_url = '/blocks/company_edit/edit/1/'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(CompanyEdit, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyEdit, self).get_context_data(**kwargs)
+        context["proj"] = self.get_object()
+
+        return context
+
+
+
+    def form_valid(self, form):
+        form.instance.rowsum = form.instance.price * form.instance.count
+        return super(CompanyEdit, self).form_valid(form)
 
 
 

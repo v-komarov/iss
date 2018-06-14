@@ -85,14 +85,14 @@
         <tbody class="small">
             {% for row in object_list %}
                 <tr class="company">
-                    <td style="background-color:#98FB98;">{{ row.www_id }}</td>
-                    <td style="background-color:#98FB98;">{{ row.inn }}</td>
-                    <td style="background-color:#98FB98;">{{ row.name }}</td>
-                    <td style="background-color:#98FB98;">{{ row.phone }}</td>
-                    <td style="background-color:#98FB98;">{{ row.contact }}</td>
-                    <td style="background-color:#98FB98;">{{ row.address.city }}</td>
-                    <td style="background-color:#98FB98;">{{ row.address.street }}</td>
-                    <td style="background-color:#98FB98;">{{ row.address.house }}</td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.www_id }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.inn }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.name }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.phone }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.contact }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.address.city }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.address.street }}</a></td>
+                    <td style="background-color:#98FB98;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: brown;">{{ row.address.house }}</a></td>
                     <td style="background-color:#98FB98;"></td>
                     <td style="background-color:#98FB98;"></td>
                     <td style="background-color:#98FB98;"></td>
