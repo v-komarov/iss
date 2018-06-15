@@ -192,6 +192,58 @@ class AddressList(ListView):
 
 
 
+### Список домов
+class HouseList(ListView):
+
+    model = buildings
+    template_name = "blocks/houselist.html"
+
+    paginate_by = 100
+
+    @method_decorator(login_required(login_url='/'))
+    # @method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+    def get_queryset(self):
+
+
+        data = buildings.objects.order_by('address__city__name','address__street__name','address__house')
+
+
+        if self.session.has_key("filter_company"):
+            filter = pickle.loads(self.session["filter_company"])
+
+            if not filter["company"] == "":
+                data = data.exclude(block_manager=None).filter(block_manager__name__icontains=filter["company"])
+
+            if not filter["city"] == "":
+                data = data.filter(address__city_id = int(filter["city"]))
+
+            if not filter["street"] == "":
+                data = data.filter(address__street__name__icontains = filter["street"])
+
+
+
+        return data
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(HouseList, self).get_context_data(**kwargs)
+        context["city"] = address_city.objects.order_by("name")
+        context["filter_company"] = pickle.loads(self.session["filter_company"]) if self.session.has_key("filter_company") else {'city': "", 'street': "", "house": "", "company": ""}
+
+        return context
+
+
+
+
 
 
 ### Основная форма редактирования данных компании

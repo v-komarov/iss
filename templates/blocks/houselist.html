@@ -1,0 +1,124 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}blocks/houselist.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}blocks/houselist.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div id="filter" class="row">
+
+    <div class="small col-md-1">
+        <a id="addbuilding" title="Создать дом">Создать дом</a>
+    </div>
+
+    {% include "blocks/blockslist_filter.html" %}
+
+    <div class="small col-md-2">
+        <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
+        <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
+</div>
+
+
+
+<div class="row">
+</div>
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/blocks/houselist/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/blocks/houselist/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="house-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr>
+                <th>ID</th>
+                <th>Название<br>компании</th>
+                <th>Город</th>
+                <th>Улица</th>
+                <th>Дом</th>
+                <th>Условия<br>доступа</th>
+                <th>Число ТКД</th>
+                <th>Абонентов</th>
+                <th>Сумма</th>
+                <th>Стоимость/мес.</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                <tr>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.www_id }}</a></td>
+                    <td style="background-color:#FDF5E6;">
+                        {% if row.block_manager %}
+                        <a href="/blocks/companyedit/{{ row.block_manager.id }}/" target="_blank" style="color: brown;">{{ row.block_manager }}</a>
+                        {% endif %}
+                    </td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.address.city }}</a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.address.street }}</a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.address.house }}</a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.access }}</a></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/blocks/houselist/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/blocks/houselist/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+

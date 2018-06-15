@@ -55,8 +55,12 @@ class HouseEditForm(ModelForm):
         super(HouseEditForm, self).__init__(*args, **kwargs)
         self.fields['address2'].initial = self.instance.address.getaddress()
         self.fields['address2'].widget.attrs = {'address_id': self.instance.address.id, 'class':'input-xm', 'size':60}
-        self.fields['manager'].initial = self.instance.block_manager.name
-        self.fields['manager'].widget.attrs = {'class':'input-xm', 'size':60, 'readonly':'readonly'}
+        if self.instance.block_manager:
+            self.fields['manager'].initial = self.instance.block_manager.name
+            self.fields['manager'].widget.attrs = {'class':'input-xm', 'size':60, 'manager_id':self.instance.block_manager.id}
+        else:
+            self.fields['manager'].initial = ""
+            self.fields['manager'].widget.attrs = {'class':'input-xm', 'size':60}
 
 
     class Meta:

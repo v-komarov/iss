@@ -1,4 +1,4 @@
-table[group=blocks-list] > thead > tr > th {
+table[group=house-list] > thead > tr > th {
     background-color:#DCDCDC;
     padding: 0;
     text-align: left;
@@ -11,26 +11,27 @@ table[group=blocks-list] > thead > tr > th {
 }
 
 
-table[group=blocks-list] > tbody > tr > td {
+table[group=house-list] > tbody > tr > td {
     padding: 0;
-    padding-left: 2px;
-    padding-right: 2px;
     vertical-align: top;
 }
 
 
 
 /* Курсор */
-table[group=blocks-list] > tbody > tr > td > a,
-a#addmanager {
+table[group=house-list] > tbody > tr > td > a,
+a#addbuilding {
     cursor:pointer;
     text-decoration:none;
 }
 
 
-table[group=blocks-list] > tbody > tr > td > a:hover {
+table[group=house-list] > tbody > tr > td > a:hover,
+a#addbuilding {
     text-decoration:none;
 }
+
+
 
 
 
@@ -39,5 +40,4 @@ table[group=blocks-list] > tbody > tr > td > a:hover {
     margin-top:30px;
     margin-bottom:20px;
 }
-
 
