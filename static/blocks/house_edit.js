@@ -4,8 +4,32 @@ $(document).ready(function() {
     // Управление закладками
     $("ul.nav-tabs li a").bind("click",ChangeNav);
 
+    // Переход к данным устройства
+    $("div#page-3 a[devices]").bind("click",DeviceData);
+
 
 });
+
+
+
+
+// Переход к интерфейсу устройства
+function DeviceData(e) {
+
+    var device_id = $(this).attr("device_id");
+    var jqxhr = $.getJSON("/inventory/jsondata?dev_id="+device_id+"&action=savedevid",
+    function(data) {
+        if (data["result"] == "ok")
+
+        win = window.open("/inventory/devicedata/","device");
+
+    });
+
+
+}
+
+
+
 
 
 // Переключение закладок

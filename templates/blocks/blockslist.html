@@ -72,7 +72,7 @@
                 <th>Улица</th>
                 <th>Дом</th>
                 <th>Условия<br>доступа</th>
-                <th>Число ТКД</th>
+                <th>ТКД</th>
                 <th>Абонентов</th>
                 <th>Сумма</th>
                 <th>Стоимость/мес.</th>
@@ -106,8 +106,18 @@
                     <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.address.street }}</a></td>
                     <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.address.house }}</a></td>
                     <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">{{ house.access }}</a></td>
-                    <td style="background-color:#FDF5E6;"></td>
-                    <td style="background-color:#FDF5E6;"></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">
+                        {% for device in house.address.devices_set.all %}
+                            {% for net in device.netelems_set.all %}
+                                {{ net }},
+                            {% endfor %}
+                        {% endfor %}
+                    </a></td>
+                    <td style="background-color:#FDF5E6;"><a href="/blocks/houseedit/{{ house.id }}/" target="_blank" style="color: black;">
+                        {% for device in house.address.devices_set.all %}
+                        {{ device.get_use_ports }}
+                        {% endfor %}
+                    </a></td>
                     <td style="background-color:#FDF5E6;"></td>
                     <td style="background-color:#FDF5E6;"></td>
                 </tr>

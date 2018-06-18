@@ -23,6 +23,8 @@
 
             <h4>Компания</h4>
 
+            <div id="common" company_id={{ comp.id }}></div>
+
             <dl class="dl-horizontal">
                 <div class="col-md-4">
                     <dt>{{ form.name.label }}</dt>
@@ -80,6 +82,7 @@
 </div>
 
 
+{% include "saving.html" %}
 
 
 {% endblock %}

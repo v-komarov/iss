@@ -28,6 +28,7 @@ from iss.mydecorators import group_required,anonymous_required
 
 from iss.localdicts.models import address_city, address_house
 from iss.blocks.models import buildings, block_managers
+from iss.inventory.models import devices
 
 from iss.blocks.forms import CompanyEditForm, HouseEditForm
 
@@ -301,7 +302,12 @@ class HouseEdit(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(HouseEdit, self).get_context_data(**kwargs)
-        context["house"] = self.get_object()
+        house = self.get_object()
+        context["house"] = house
+        if house.address:
+            context["devices"] = devices.objects.filter(address=house.address)
+        else:
+            context["devices"] = []
 
         return context
 

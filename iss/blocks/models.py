@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django import template
 from django.contrib.postgres.fields import JSONField
-
+from django.contrib.auth.models import User
 
 from iss.localdicts.models import address_house
 
@@ -62,3 +62,20 @@ class block_managers(models.Model):
         verbose_name = 'Управляющая компания'
         verbose_name_plural = 'Управляющие компании'
 
+
+
+
+
+
+### Коментарии и логи
+class comments_logs(models.Model):
+    comment = models.TextField(verbose_name='Коментарий', default="", null=True)
+    manager = models.ForeignKey(block_managers, null=True, on_delete=models.PROTECT, verbose_name='Связь с компанией')
+    house = models.ForeignKey(buildings, null=True, on_delete=models.PROTECT, verbose_name='Связь с домом')
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_create = models.DateTimeField(auto_now_add=True)
+    log = models.BooleanField(default=False) # Лог или сообщение
+
+
+    def __unicode__(self):
+        return self.comment

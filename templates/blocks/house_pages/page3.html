@@ -12,7 +12,17 @@
                     <th>Используется портов</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                {% for item in devices %}
+                <tr>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.device_scheme.name }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.serial }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.status }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.get_ports_count }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.get_use_ports }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
 
     </div>

@@ -12,8 +12,12 @@ table[group=address-list] > thead > tr > th {
 
 
 table[group=address-list] > tbody > tr > td {
-    padding: 0;
+    padding-left: 3px;
+    padding-right: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
     vertical-align: top;
+    background-color: #FFF0F5;
 }
 
 
