@@ -2,27 +2,15 @@
 
     <div class="row col-md-8">
 
-        <table group="device-list" class="table table-bordered table-striped draggable" width="100%">
+        <table group="log-list" class="table table-bordered table-striped draggable" width="100%">
             <thead>
                 <tr>
-                    <th>Модель</th>
-                    <th>Серийный номер</th>
-                    <th>Статус</th>
-                    <th>Количество портов</th>
-                    <th>Используется портов</th>
+                    <th width="10%">Дата</th>
+                    <th>Действие</th>
+                    <th width="20%">Автор действия</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for item in devices %}
-                <tr>
-                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.device_scheme.name }}</a></td>
-                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.serial }}</a></td>
-                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.status }}</a></td>
-                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.get_ports_count }}</a></td>
-                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.get_use_ports }}</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            <tbody></tbody>
         </table>
 
     </div>

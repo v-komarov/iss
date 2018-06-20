@@ -5,10 +5,10 @@
 
 from django.forms import ModelForm
 from django import forms
+from django.contrib.auth.models import User
 
 
-
-from iss.blocks.models import block_managers
+from iss.blocks.models import block_managers, contracts
 
 
 
@@ -66,3 +66,35 @@ class HouseEditForm(ModelForm):
     class Meta:
         model = block_managers
         fields = [ 'address2','numstoreys', 'numentrances', 'numfloars', 'access', 'manager' ]
+
+
+
+### Форма ввода и редактирования договоров
+class ContractForm(ModelForm):
+
+
+    def __init__(self, *args, **kwargs):
+        super(ContractForm, self).__init__(*args, **kwargs)
+        self.fields['num'].widget.attrs = {'class':'input-xm'}
+        self.fields['num'].widget.attrs['style'] = 'width: 170px;'
+        self.fields['date_begin'].widget.attrs = {'class':'input-xm'}
+        self.fields['date_begin'].widget.attrs['style'] = 'width: 170px;'
+        self.fields['date_end'].widget.attrs = {'class':'input-xm'}
+        self.fields['date_end'].widget.attrs['style'] = 'width: 170px;'
+        self.fields['money'].widget.attrs = {'class':'input-xm'}
+        self.fields['money'].widget.attrs['style'] = 'width: 170px;'
+        self.fields['period'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['period'].widget.attrs['style'] = 'width: 170px;'
+        self.fields['manager'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['manager'].widget.attrs['style'] = 'width: 170px;'
+
+        users = User.objects.order_by("first_name")
+        user_list = [("","-------")]
+        user_list.extend([(user.pk, user.get_full_name()) for user in users])
+
+        self.fields['manager'].choices = user_list
+
+    class Meta:
+        model = contracts
+        fields = ['num', 'date_begin', 'date_end', 'goon', 'manager', 'money', 'period',]
+

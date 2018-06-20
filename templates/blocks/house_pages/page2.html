@@ -2,29 +2,31 @@
 
     <div class="row col-md-8">
 
-          <div class="form-group">
-              <label for="comment">Комментарий</label>
-              <textarea class="form-control input-sm" id="comment" placeholder=""></textarea>
-          </div>
-
-          <button type="button" id="addcomment" class="btn btn-default btn-xs">Добавить</button>
-
-    </div>
-
-    <div class="row col-md-8">
-
-        <table group="comment-list" class="table table-bordered table-striped draggable" width="100%">
+        <table group="device-list" class="table table-bordered table-striped draggable" width="100%">
             <thead>
                 <tr>
-                    <th width="10%">Дата</th>
-                    <th>Комментарий</th>
-                    <th width="20%">Комментарий оставил</th>
+                    <th>Модель</th>
+                    <th>Серийный номер</th>
+                    <th>Статус</th>
+                    <th>Количество портов</th>
+                    <th>Используется портов</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                {% for item in devices %}
+                <tr>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.device_scheme.name }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.serial }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.status }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.get_ports_count }}</a></td>
+                    <td><a device_id={{ item.id }} devices target="_blank">{{ item.get_use_ports }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
 
     </div>
+
 
 
 </div>

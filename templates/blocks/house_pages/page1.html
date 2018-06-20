@@ -1,32 +1,28 @@
 <div id="page-1" class="row small">
 
-    <div>
+    <div class="row col-md-8">
 
-        <form action="#" id="uploadfilehdfs" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+          <div class="form-group">
+              <label for="comment">Комментарий</label>
+              <textarea class="form-control input-sm" id="comment" placeholder=""></textarea>
+          </div>
 
-            <div class="form-group">
-                <input id="fileuploadhdfs" name="fileuploadhdfs" type="file">
-                <input type="hidden" id="reestr_proj_id" name="reestr_proj_id" value={{ aaa.id }} />
-            </div>
-
-            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
-
-        </form>
+          <button type="button" id="addcomment" class="btn btn-default btn-xs">Добавить</button>
 
     </div>
 
     <div class="row col-md-8">
-            <table group="file-list" class="table table-bordered table-striped draggable" width="100%">
-                <thead>
-                    <tr>
-                        <th>Дата загрузки</th>
-                        <th>Название файла</th>
-                        <th>Загрузил</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+
+        <table group="comment-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th width="10%">Дата</th>
+                    <th>Комментарий</th>
+                    <th width="20%">Комментарий оставил</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
     </div>
 

@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 
-
+from decimal import Decimal
 
 
 from django.db import models
@@ -79,3 +79,39 @@ class comments_logs(models.Model):
 
     def __unicode__(self):
         return self.comment
+
+
+
+
+### Договоры с компаниями
+class contracts(models.Model):
+    company = models.ForeignKey(block_managers, on_delete=models.PROTECT, verbose_name='Связь с компанией')
+    num = models.CharField(max_length=30, verbose_name="Номер договора", db_index=True)
+    date_begin = models.DateField(verbose_name="Начало договора", db_index=True)
+    date_end = models.DateField(verbose_name="Завершение договора", db_index=True)
+    goon = models.BooleanField(default=False, verbose_name="Возможность продления")
+    money = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Сумма договора', default=0.00)
+    period = models.ForeignKey('pay_period', on_delete=models.PROTECT, verbose_name="Периодичность оплаты")
+    datetime_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время создания")
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Создал договор")
+    manager = models.ForeignKey(User, related_name="contract_manager", on_delete=models.PROTECT, verbose_name="Ответственный", db_index=True)
+
+
+    def __unicode__(self):
+        return self.num
+
+
+
+### Периодичность оплаты
+class pay_period(models.Model):
+    name = models.CharField(max_length=50, verbose_name="Название периодичности")
+
+
+    def __unicode__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Периодичность оплаты'
+        verbose_name_plural = 'Периодичность оплат'
+

@@ -5,7 +5,7 @@ $(document).ready(function() {
     $("ul.nav-tabs li a").bind("click",ChangeNav);
 
     // Переход к данным устройства
-    $("div#page-3 a[devices]").bind("click",DeviceData);
+    $("div#page-2 a[devices]").bind("click",DeviceData);
 
 
 });
@@ -40,14 +40,12 @@ function ChangeNav(e) {
     $("#nav-1").toggleClass("active",false);
     $("#nav-2").toggleClass("active",false);
     $("#nav-3").toggleClass("active",false);
-    $("#nav-4").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
     $("#page-1").hide();
     $("#page-2").hide();
     $("#page-3").hide();
-    $("#page-4").hide();
 
 
     // Название отображаемой страницы (на закладке)

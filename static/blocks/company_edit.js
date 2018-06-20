@@ -10,11 +10,28 @@ $(document).ready(function() {
     // Сохранение коментария
     $("div#page-3 button#addcomment").bind("click",AddComment);
 
+    // Создание договора
+    $("div#page-1 a#addcontract").bind("click", CreateContract);
+
+    // Редактирование договора
+    $("#page-1 table[group=contract-list] tbody").on("click", "a[contract]", EditContract);
+
+    // Удаление договора
+    $("#page-1 table[group=contract-list] tbody").on("click", "a[delete-contract]", DeleteContract);
+
+
+    // Виджет для даты
+    $("div#contract-window input#id_date_begin").datepicker($.datepicker.regional['ru']);
+    $("div#contract-window input#id_date_end").datepicker($.datepicker.regional['ru']);
+
+
+
     // Отображение таблицы логов
     GetListLogs();
     // Отображение списка коментариев
     GetListComments();
-
+    // Отображение списка договоров
+    GetListContracts()
 
 
     // Поиск фактического адреса
@@ -224,6 +241,161 @@ function AddComment(e) {
 
 
 
+// Создание договора
+function CreateContract(e) {
+
+    // Очистка полей ввода
+    $("#contract-window input#id_num").val("");
+    $("#contract-window input#id_date_begin").val("");
+    $("#contract-window input#id_date_end").val("");
+    $("#contract-window input#id_goon").prop("checked", false);
+    $("#contract-window input#id_money").val("0");
+    $("#contract-window select#id_period").val("");
+    $("#contract-window select#id_manager").val("");
+
+    ContractData(action="contract-create");
+
+}
+
+
+
+
+// Редактирование договора
+function EditContract(e) {
+
+    var contract_id = $(this).parents("tr").attr("contract_id");
+    var jqxhr = $.getJSON("/blocks/jsondata/?action=get-company-contract-one&contract-id="+contract_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            $("#contract-window input#id_num").val(data["rec"]["num"]);
+            $("#contract-window input#id_date_begin").val(data["rec"]["date_begin"]);
+            $("#contract-window input#id_date_end").val(data["rec"]["date_end"]);
+            if (data["rec"]["goon"] == "yes") { $("#contract-window input#id_goon").prop("checked", true); } else { $("#contract-window input#id_goon").prop("checked", false); }
+            $("#contract-window input#id_money").val(data["rec"]["money"]);
+            $("#contract-window select#id_period").val(data["rec"]["period"]);
+            $("#contract-window select#id_manager").val(data["rec"]["manager"]);
+
+            $("#contract-window").attr("contract-id",data["rec"]["contract_id"]);
+
+        }
+
+    })
+
+
+    ContractData(action="contract-edit");
+
+}
+
+
+
+
+
+
+// Создание и редактирование договора
+function ContractData(action) {
+
+
+
+    $("#contract-window").dialog({
+        title:"Договор",
+        buttons:[{ text:"Сохранить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+
+
+                var data = {};
+                data.num = $("#contract-window input#id_num").val();
+                data.date_begin = $("#contract-window input#id_date_begin").val();
+                data.date_end = $("#contract-window input#id_date_end").val();
+                data.date_end = $("#contract-window input#id_date_end").val();
+                if ($("#contract-window input#id_goon").is(':checked')) {data.goon = "yes";} else {data.goon = "no";}
+                data.money = $("#contract-window input#id_money").val();
+                data.period = $("#contract-window select#id_period").val();
+                data.manager = $("#contract-window select#id_manager").val();
+                data.company = $("div#common").attr("company_id");
+                data.action = action;
+
+                if (action == "contract-edit") { data.contract_id = $("#contract-window").attr("contract-id"); }
+
+                if ( (data.num != "") && (data.date_begin != "") && (data.date_end != "") && (data.money != 0) && (data.period != "") && (data.manager != "")) {
+
+                    $.ajax({
+                      url: "/blocks/jsondata/",
+                      type: "POST",
+                      dataType: 'json',
+                      data:$.toJSON(data),
+                        success: function(result) {
+                            if (result["result"] == "ok") { $("#contract-window").dialog('close');  GetListContracts(); GetListLogs();}
+                        }
+
+                    });
+
+                }
+                else { alert("Необходимо заполнить все поля!");}
+
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        open: function() {
+        },
+        modal:true,
+        minWidth:100,
+        width:400
+
+    });
+
+
+}
+
+
+
+
+
+
+
+// Удаление договора
+function DeleteContract(e) {
+
+    var contract_id = $(this).parents("tr").attr("contract_id");
+    var contract = $(this).parents("tr").children("td").eq(0).text();
+    var deletecontract = confirm("Удаляем договор "+contract+" ?");
+    var company = $("div#common").attr("company_id");
+
+    if (deletecontract) {
+
+        var jqxhr = $.getJSON("/blocks/jsondata/?action=contract-delete&contract_id="+contract_id+"&company="+company,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListContracts(); GetListLogs(); }
+
+        })
+
+    }
+
+
+}
+
+
+
+
+
+
+
 // Список логов
 function GetListLogs() {
 
@@ -296,6 +468,49 @@ function GetListComments() {
 
 }
 
+
+
+
+
+// Список договоров
+function GetListContracts() {
+
+    var company_id = $("div#common").attr("company_id");
+
+    var jqxhr = $.getJSON("/blocks/jsondata/?action=get-company-list-contracts&company="+company_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            $("table[group=contract-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr contract_id="+value["contract_id"]+" >"
+                +"<td><a contract>"+value['num']+"</a></td>"
+                +"<td><a contract>"+value['date_begin']+"</a></td>"
+                +"<td><a contract>"+value['date_end']+"</a></td>"
+                +"<td><a contract>"+value['goon']+"</a></td>"
+                +"<td><a contract>"+value['money']+"</a></td>"
+                +"<td><a contract>"+value['period']+"</a></td>"
+                +"<td><a contract>"+value['create']+"</a></td>"
+                +"<td><a contract>"+value['manager']+"</a></td>"
+                +"<td><a contract>"+value['author']+"</a></td>"
+                +"<td><a delete-contract><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=contract-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
 
 
 

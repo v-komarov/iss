@@ -30,7 +30,7 @@ from iss.localdicts.models import address_city, address_house
 from iss.blocks.models import buildings, block_managers
 from iss.inventory.models import devices
 
-from iss.blocks.forms import CompanyEditForm, HouseEditForm
+from iss.blocks.forms import CompanyEditForm, HouseEditForm, ContractForm
 
 
 
@@ -268,6 +268,7 @@ class CompanyEdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(CompanyEdit, self).get_context_data(**kwargs)
         context["comp"] = self.get_object()
+        context["contract"] = ContractForm()
 
         return context
 

@@ -7,6 +7,7 @@ import datetime
 import base64
 from io import BytesIO
 
+from decimal import Decimal
 
 from pytz import timezone
 from pprint import pformat
@@ -17,7 +18,7 @@ from django.contrib.auth import authenticate, login
 from django.db.models import Count, Q, Avg, Sum
 from django.contrib.auth.models import User
 
-from iss.blocks.models import block_managers, buildings, comments_logs
+from iss.blocks.models import block_managers, buildings, comments_logs, contracts, pay_period
 from iss.localdicts.models import address_house
 
 
@@ -128,7 +129,7 @@ def get_json(request):
 
 
 
-        ### Реестр проектов: список коментариев
+        ### Карточка компании: список коментариев
         if r.has_key("action") and rg("action") == 'get-company-list-comments':
             company_id = request.GET["company"]
             company = block_managers.objects.get(pk=int(company_id, 10))
@@ -142,6 +143,78 @@ def get_json(request):
 
 
             response_data = {"result": "ok", "data": comment_list }
+
+
+
+
+
+
+        ### Карточка компании: список договоров
+        if r.has_key("action") and rg("action") == 'get-company-list-contracts':
+            company_id = request.GET["company"]
+            company = block_managers.objects.get(pk=int(company_id, 10))
+            contract_list = []
+            for row in contracts.objects.filter(company=company).order_by("-datetime_create"):
+                contract_list.append({
+                    "contract_id": row.id,
+                    "num": row.num,
+                    "date_begin": row.date_begin.strftime("%d.%m.%Y"),
+                    "date_end": row.date_end.strftime("%d.%m.%Y"),
+                    "goon": u"Да" if row.goon else u"Нет",
+                    "money": "%.2f" % row.money,
+                    "period": row.period.name,
+                    "manager": row.manager.get_full_name(),
+                    "author": row.user.get_full_name(),
+                    "create": row.datetime_create.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": contract_list }
+
+
+
+
+
+        ### Карточка компании: данные по одному договору
+        if r.has_key("action") and rg("action") == 'get-company-contract-one':
+            contract_id = request.GET["contract-id"]
+            contract = contracts.objects.get(pk=int(contract_id,10))
+
+            rec = {
+                    "contract_id": contract.id,
+                    "num": contract.num,
+                    "date_begin": contract.date_begin.strftime("%d.%m.%Y"),
+                    "date_end": contract.date_end.strftime("%d.%m.%Y"),
+                    "goon": "yes" if contract.goon else "no",
+                    "money": "%.2f" % contract.money,
+                    "period": contract.period.id,
+                    "manager": contract.manager.id
+            }
+
+
+            response_data = {"result": "ok", "rec": rec }
+
+
+
+
+
+        ### Удаление договора
+        if r.has_key("action") and rg("action") == 'contract-delete':
+            contract_id = request.GET["contract_id"]
+            contract = contracts.objects.get(pk=int(contract_id,10))
+            company_id = request.GET["company"]
+            company = block_managers.objects.get(pk=int(company_id, 10))
+            comments_logs.objects.create(
+                manager = company,
+                user = request.user,
+                comment = u"Удален договор {num} ({author} {create})".format(num=contract.num, author=contract.user.get_full_name(), create=contract.datetime_create.strftime("%d.%m.%Y")) ,
+                log=True
+            )
+            contract.delete()
+
+
+
+            response_data = {"result": "ok"}
 
 
 
@@ -224,6 +297,61 @@ def get_json(request):
             response_data = {"result": "ok"}
 
 
+
+
+        ### Добавление договора компании
+        if data.has_key("action") and data["action"] == 'contract-create':
+
+            company_id = data["company"]
+            company = block_managers.objects.get(pk=int(company_id, 10))
+
+            contracts.objects.create(
+                company = company,
+                num = data["num"].strip(),
+                date_begin = datetime.datetime.strptime(data["date_begin"],"%d.%m.%Y"),
+                date_end=datetime.datetime.strptime(data["date_end"], "%d.%m.%Y"),
+                goon = True if data["goon"] == "yes" else False,
+                money = Decimal(data["money"]),
+                period = pay_period.objects.get(pk=int(data["period"],10)),
+                manager = User.objects.get(pk=int(data["manager"],10)),
+                user = request.user
+            )
+
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Сохранение договора компании
+        if data.has_key("action") and data["action"] == 'contract-edit':
+
+            company_id = data["company"]
+            company = block_managers.objects.get(pk=int(company_id, 10))
+
+            contract_id = data["contract_id"]
+            contract = contracts.objects.get(pk=int(contract_id, 10))
+
+            contract.num = data["num"].strip()
+            contract.date_begin = datetime.datetime.strptime(data["date_begin"],"%d.%m.%Y")
+            contract.date_end=datetime.datetime.strptime(data["date_end"], "%d.%m.%Y")
+            contract.goon = True if data["goon"] == "yes" else False
+            contract.money = Decimal(data["money"])
+            contract.period = pay_period.objects.get(pk=int(data["period"],10))
+            contract.manager = User.objects.get(pk=int(data["manager"],10))
+            contract.save()
+
+            comments_logs.objects.create(
+                manager = company,
+                user = request.user,
+                comment = u"Сохранены данные договора {num} ({author} {create})".format(num=contract.num, author=contract.user.get_full_name(), create=contract.datetime_create.strftime("%d.%m.%Y")) ,
+                log=True
+            )
+
+
+            response_data = {"result": "ok"}
 
 
 
