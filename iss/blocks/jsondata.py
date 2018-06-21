@@ -12,13 +12,16 @@ from decimal import Decimal
 from pytz import timezone
 from pprint import pformat
 
+from snakebite.client import Client
+
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 
 from django.db.models import Count, Q, Avg, Sum
 from django.contrib.auth.models import User
 
-from iss.blocks.models import block_managers, buildings, comments_logs, contracts, pay_period
+from iss.blocks.models import block_managers, buildings, comments_logs, contracts, pay_period, files
 from iss.localdicts.models import address_house
 
 
@@ -215,6 +218,60 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Карточка компании: список загруженных файлов
+        if r.has_key("action") and rg("action") == 'get-company-list-hdfs-files':
+            company_id = request.GET["company"]
+            company = block_managers.objects.get(pk=int(company_id, 10))
+            file_list = []
+            for row in files.objects.filter(company=company).order_by("-datetime_load"):
+                file_list.append({
+                    "file_id": row.id,
+                    "filename": row.filename,
+                    "author": row.user.get_full_name(),
+                    "create": row.datetime_load.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": file_list }
+
+
+
+
+
+
+        ### Карточка компании: удаление загруженного файла
+        if r.has_key("action") and rg("action") == 'company-file-delete':
+            file_id = request.GET["file_id"]
+            company_id = request.GET["company"]
+            company = block_managers.objects.get(pk=int(company_id, 10))
+
+
+            fob = files.objects.get(pk=file_id)
+
+
+            comments_logs.objects.create(
+                manager=company,
+                user=request.user,
+                comment=u"Удален файл {filename}".format(filename=fob.filename),
+                log=True
+            )
+
+            fob.delete()
+
+            client = Client('10.6.0.135', 9000)
+            for x in client.delete(['/blocks/%s' % file_id,], recurse=True):
+                print x
+
+
+            response_data = { "result": "ok" }
+
+
+
 
 
 

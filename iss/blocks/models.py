@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 
 
+import uuid
+
 from decimal import Decimal
 
 
@@ -114,4 +116,18 @@ class pay_period(models.Model):
     class Meta:
         verbose_name = 'Периодичность оплаты'
         verbose_name_plural = 'Периодичность оплат'
+
+
+
+
+### Файлы в hdfs хранилище
+class files(models.Model):
+    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
+    company = models.ForeignKey(block_managers, null=True, on_delete=models.PROTECT, verbose_name='Связь c компанией')
+    filename = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_load = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.filename
 

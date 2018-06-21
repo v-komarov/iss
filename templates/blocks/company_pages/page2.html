@@ -2,11 +2,11 @@
 
     <div>
 
-        <form action="#" id="uploadfilehdfs" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+        <form action="/blocks/upload-company/" id="uploadfilehdfs" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
 
             <div class="form-group">
                 <input id="fileuploadhdfs" name="fileuploadhdfs" type="file">
-                <input type="hidden" id="reestr_proj_id" name="reestr_proj_id" value={{ aaa.id }} />
+                <input type="hidden" id="company_id" name="company_id" value={{ comp.id }} />
             </div>
 
             <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>

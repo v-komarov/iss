@@ -19,6 +19,10 @@ $(document).ready(function() {
     // Удаление договора
     $("#page-1 table[group=contract-list] tbody").on("click", "a[delete-contract]", DeleteContract);
 
+    // Удаление файла
+    $("#page-2 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteFile);
+
+
 
     // Виджет для даты
     $("div#contract-window input#id_date_begin").datepicker($.datepicker.regional['ru']);
@@ -31,7 +35,9 @@ $(document).ready(function() {
     // Отображение списка коментариев
     GetListComments();
     // Отображение списка договоров
-    GetListContracts()
+    GetListContracts();
+    // Отображение загруженных файлов
+    GetListHdfsFiles();
 
 
     // Поиск фактического адреса
@@ -313,22 +319,27 @@ function ContractData(action) {
             });
 
 
+                var num = $("#contract-window input#id_num").val();
+                var date_begin = $("#contract-window input#id_date_begin").val();
+                var date_end = $("#contract-window input#id_date_end").val();
+                var money = $("#contract-window input#id_money").val();
+                var period = $("#contract-window select#id_period").val();
+                var manager = $("#contract-window select#id_manager").val();
 
                 var data = {};
-                data.num = $("#contract-window input#id_num").val();
-                data.date_begin = $("#contract-window input#id_date_begin").val();
-                data.date_end = $("#contract-window input#id_date_end").val();
-                data.date_end = $("#contract-window input#id_date_end").val();
+                data.num = num;
+                data.date_begin = date_begin;
+                data.date_end = date_end;
                 if ($("#contract-window input#id_goon").is(':checked')) {data.goon = "yes";} else {data.goon = "no";}
-                data.money = $("#contract-window input#id_money").val();
-                data.period = $("#contract-window select#id_period").val();
-                data.manager = $("#contract-window select#id_manager").val();
+                data.money = money;
+                data.period = period;
+                data.manager = manager;
                 data.company = $("div#common").attr("company_id");
                 data.action = action;
 
                 if (action == "contract-edit") { data.contract_id = $("#contract-window").attr("contract-id"); }
 
-                if ( (data.num != "") && (data.date_begin != "") && (data.date_end != "") && (data.money != 0) && (data.period != "") && (data.manager != "")) {
+                if (num != "" && date_begin != "" && date_end != "" && money != 0 && period != "" && manager != "") {
 
                     $.ajax({
                       url: "/blocks/jsondata/",
@@ -390,6 +401,32 @@ function DeleteContract(e) {
 
 }
 
+
+
+
+
+
+// Удаление загруженного файла
+function DeleteFile(e) {
+
+    var file_id = $(this).parents("tr").attr("file_id");
+    var filename = $(this).parents("tr").children("td").eq(1).text();
+    var deletefile = confirm("Удаляем файл "+filename+" ?");
+    var company = $("div#common").attr("company_id");
+
+    if (deletefile) {
+
+        var jqxhr = $.getJSON("/blocks/jsondata/?action=company-file-delete&file_id="+file_id+"&company="+company,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListHdfsFiles(); GetListLogs(); }
+
+        })
+
+    }
+
+
+}
 
 
 
@@ -513,6 +550,51 @@ function GetListContracts() {
 }
 
 
+
+
+// Список загруженных файлов
+function GetListHdfsFiles() {
+
+
+    var company_id = $("div#common").attr("company_id");
+
+    var jqxhr = $.getJSON("/blocks/jsondata/?action=get-company-list-hdfs-files&company="+company_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            $("table[group=file-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr file_id="+value["file_id"]+" >"
+                +"<td>"+value['create']+"</td>"
+                +"<td><a href=\"/blocks/readfilecompany?file_id="+value["file_id"]+"&file_name="+value["filename"]+"\" >"+value['filename']+"</a></td>"
+                +"<td>"+value['author']+"</td>"
+                +"<td><a delete-file><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=file-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Очистка поля ввода
+function ClearUpload() {
+    $("#page-2 input#fileuploadhdfs").val("");
+}
 
 
 
