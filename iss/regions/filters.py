@@ -91,14 +91,7 @@ def reestr_proj_filter(data,filter_dict):
 
     ### Связь с другими системами
     if filter_dict["systems"] != "":
-        for row in data:
-            if row.data.has_key("other_system"):
-                for item in row.data["other_system"]:
-                    print item["other_code"],filter_dict["systems"]
-                    if filter_dict["systems"] == item["other_code"]:
-                        break
-                else:
-                    data = data.exclude(pk=row.id)
+        data = data.filter(data__icontains=filter_dict["systems"])
 
 
 
