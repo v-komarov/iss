@@ -247,7 +247,7 @@ function EditRest(e) {
         modal:true,
         minWidth:400,
         width:500,
-        height:300
+        height:350
     });
 
 
@@ -287,6 +287,8 @@ function CreateRest(e) {
                 data.serial = $("input#create-serial").val();
                 data.store = $("select#create-store").val();
                 data.rest = $("input#createrest").val();
+                data.dimansion = $("input#dimansion").val();
+                data.accounting_code = $("input#accounting-code").val();
                 data.action = "store-create-rest";
 
 
@@ -330,7 +332,7 @@ function CreateRest(e) {
         modal:true,
         minWidth:400,
         width:500,
-        height:270
+        height:320
     });
 
 

@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/store/loadstore.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/store/loadstore.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+<div id="uploadform" class="row col-sm-2 small">
+        <form action="/regions/store/upload-eisup/" id="uploadfileeisup" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="form-group">
+                <input id="fileupload" name="fileupload" type="file">
+            </div>
+
+            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+
+        </form>
+</div>
+
+
+
+
+
+<div class="row">
+
+
+
+
+
+
+</div>
+
+
+
+<iframe name="uploadframe" hidden></iframe>
+
+
+
+{% endblock %}
+

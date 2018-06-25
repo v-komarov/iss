@@ -703,7 +703,8 @@ class store_rest(models.Model):
     rest = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Остаток', default=0.00)
     datetime_update = models.DateTimeField(auto_now=True)
     serial = models.CharField(max_length=100, default="", db_index=True, verbose_name="Серийный номер")
-
+    dimension = models.CharField(max_length=20, default="", verbose_name="Ед. из.")
+    accounting_code = models.CharField(max_length=20, default="", db_index=True, verbose_name="Счет учета")
 
 
 

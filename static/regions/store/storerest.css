@@ -18,20 +18,22 @@ table[group=upload-list] > tbody > tr > td {
 }
 
 
-#manager, #buttons, #uploadform, #gcreate {
+#manager, #buttons, #loadstore, #gcreate {
     margin-top: 20px;
 }
 
 
 
 /* Курсор */
-table[group=goods-list] > tbody > tr > td > a {
+table[group=goods-list] > tbody > tr > td > a,
+#loadstore a {
     cursor:pointer;
     text-decoration:none;
 }
 
 
-table[group=goods-list] > tbody > tr > td > a:hover {
+table[group=goods-list] > tbody > tr > td > a:hover,
+#loadstore a {
     text-decoration:none;
 }
 

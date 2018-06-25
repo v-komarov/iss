@@ -581,7 +581,7 @@ class ProcessProjList(ListView):
 
 
 
-### Изменение изменение подготавливаемого проекта
+### Изменение подготавливаемого проекта
 class ProcessProjEdit(UpdateView):
     model = reestr_proj
     form_class = ReestrProjUpdateForm
@@ -959,4 +959,51 @@ class StoreHistory(ListView):
 
         return context
 
+
+
+
+
+
+
+### Загрузка складских остатков отдельным интерфейсом
+class LoadStore(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/store/loadstore.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+
+
+        return []
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(LoadStore, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+
+
+        return context
 

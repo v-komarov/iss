@@ -2,7 +2,7 @@
 
 
 from django.conf.urls import url
-from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit, Store, StoreOut, StoreIn, StoreHistory, StoreCarry
+from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit, Store, StoreOut, StoreIn, StoreHistory, StoreCarry, LoadStore
 from iss.regions.jsondata import get_json
 from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall, uploadfile_store
 
@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'storecarry/page/(?P<page>\d+)/$', StoreCarry.as_view()),
     url(r'storehistory/page/(?P<page>\d+)/$', StoreHistory.as_view()),
     url(r'store/upload-eisup/$', uploadfile_store),
+    url(r'store/loadstore/$', LoadStore.as_view()),
 ]

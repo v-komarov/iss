@@ -64,6 +64,7 @@
                 <th>Код ЕИСУП</th>
                 <th>Наименование</th>
                 <th>Кол-во</th>
+                <th>Ед. из.</th>
                 <th>Серийный<br>номер</th>
                 <th>Дата</th>
                 <th>Действие</th>
@@ -82,6 +83,7 @@
                     <td>{{ row.store_rest.eisup }}</td>
                     <td>{{ row.store_rest.name }}</td>
                     <td>{{ row.q }}</td>
+                    <td>{{ row.dimansion }}</td>
                     <td>{{ row.store_rest.serial }}</td>
                     {% timezone tz %}
                     <td>{{ row.datetime_update|date:"d.m.Y H:i e" }}</td>

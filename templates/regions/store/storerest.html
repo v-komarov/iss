@@ -39,25 +39,17 @@
 
 
 
-<div id="uploadform" class="row col-sm-2 small">
-        <form action="/regions/store/upload-eisup/" id="uploadfileeisup" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
-
-            <div class="form-group">
-                <input id="fileupload" name="fileupload" type="file">
-            </div>
-
-            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
-
-        </form>
-</div>
-
-
-
 
 <div id="gcreate" class="row col-sm-2 small">
-            <button id="create-button" type="submit" title="Создать" class="btn btn-default btn-xs">Создать</button>
+            <button id="create-button" type="submit" title="Создать элемент остатка" class="btn btn-default btn-xs">Создать</button>
 </div>
 
+
+
+
+<div id="loadstore" class="row col-sm-2 small">
+            <a href="/regions/store/loadstore" target="_blank">Загрузка остатков из excel</a>
+</div>
 
 
 
@@ -90,11 +82,13 @@
                 <th>Наименование</th>
                 <th>Серийный<br>номер</th>
                 <th>Кол-во</th>
+                <th>Ед.из.</th>
                 <th>Дата<br>актуальности</th>
                 <th>Регион</th>
                 <th>Склад</th>
                 <th>Адрес</th>
                 <th>МОЛ</th>
+                <th>Счет учета</th>
             </tr>
 
         </thead>
@@ -106,6 +100,7 @@
                     <td><a>{{ row.name }}</a></td>
                     <td><a>{{ row.serial }}</a></td>
                     <td><a>{{ row.rest }}</a></td>
+                    <td><a>{{ row.dimension }}</a></td>
                     {% timezone tz %}
                     <td><a>{{ row.datetime_update|date:"d.m.Y H:i e" }}</a></td>
                     {% endtimezone %}
@@ -113,6 +108,7 @@
                     <td><a>{{ row.store.name }}</a></td>
                     <td><a>{{ row.store.comment }}</a></td>
                     <td><a>{{ row.mol.get_full_name }}</a></td>
+                    <td><a>{{ row.accounting_code }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>

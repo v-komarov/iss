@@ -1999,9 +1999,11 @@ def get_json(request):
             srest = store_rest.objects.create(
                 name = data["name"].strip(),
                 rest = Decimal(data["rest"]),
+                dimansion = data["dimansion"],
                 store = storelist,
                 mol = request.user,
-                serial = data["serial"].strip()
+                serial = data["serial"].strip(),
+                accounting_code = data["accounting_code"]
             )
 
             ### Регистрация в логе
@@ -2017,6 +2019,7 @@ def get_json(request):
                 "comment": srest.store.comment,
                 "mol": srest.mol.get_full_name(),
                 "rest":str(srest.rest),
+                "dimansion":srest.dimansion,
                 "serial": srest.serial
 
             }
