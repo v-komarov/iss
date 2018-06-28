@@ -20,16 +20,98 @@
 
 
 
-<div id="uploadform" class="row col-sm-2 small">
-        <form action="/regions/store/upload-eisup/" id="uploadfileeisup" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+<div id="uploadform" class="row col-sm-8 small">
+    <form action="/regions/store/upload-eisup/" id="uploadfileeisup" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
 
-            <div class="form-group">
-                <input id="fileupload" name="fileupload" type="file">
-            </div>
+        <div class="form-group">
+            <input id="fileupload" name="fileupload" type="file">
+        </div>
 
-            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+        <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
 
-        </form>
+    </form>
+</div>
+
+
+
+<div id="param" class="row col-sm-3 small" hidden>
+
+
+
+    <dl class="dl-horizontal small">
+
+        <dt></dt>
+
+        <dd>Задание соответсвия столбцов</dd>
+
+    </dl>
+
+    <dl class="dl-horizontal small">
+
+            <dt>Наименование</dt>
+            <dd><input id="col-name" class="form-control input-sm" type="text" /></dd>
+            <dt>Склад</dt>
+            <dd><input id="col-store" class="form-control input-sm" type="text" /></dd>
+            <dt>Остаток</dt>
+            <dd><input id="col-rest" class="form-control input-sm" type="text" /></dd>
+            <dt>Ед. из.</dt>
+            <dd><input id="col-dimansion" class="form-control input-sm" type="text" /></dd>
+            <dt>Серийный номер</dt>
+            <dd><input id="col-serial" class="form-control input-sm" type="text" /></dd>
+
+    </dl>
+
+
+
+</div>
+
+
+
+
+<div id="param2" class="row col-sm-3 small" hidden>
+
+
+    <dl class="dl-horizontal small">
+
+        <dt></dt>
+
+        <dd>и задание диапазона загрузки строк</dd>
+
+    </dl>
+
+
+
+    <dl class="dl-horizontal small">
+
+            <dt>Код ЕИСУП</dt>
+            <dd><input id="col-eisup" class="form-control input-sm" type="text" /></dd>
+            <dt>Счет учета</dt>
+            <dd><input id="col-accounting-code" class="form-control input-sm" type="text" /></dd>
+            <dt>МОЛ:</dt>
+            <dd>
+                <select class="form-control input-sm" id="staff" >
+                    {% for u in staff %}
+                    <option value="{{ u.0 }}">{{ u.1 }}</option>
+                    {% endfor %}
+                </select>
+            </dd>
+            <dt>Загрузка нач. стр.</dt>
+            <dd><input id="col-str-begin" class="form-control input-sm" type="text" /></dd>
+            <dt>Загрузка окон. стр.</dt>
+            <dd><input id="col-str-end" class="form-control input-sm" type="text" /></dd>
+    </dl>
+
+
+
+    <dl class="dl-horizontal small">
+
+        <dt></dt>
+
+        <dd><button title="Загрузить данные" class="btn btn-default btn-xs">Загрузить</button></dd>
+
+    </dl>
+
+
 </div>
 
 
@@ -39,15 +121,10 @@
 <div class="row">
 
 
-
-
+    <iframe id="uploadframe" name="uploadframe"></iframe>
 
 
 </div>
-
-
-
-<iframe name="uploadframe" hidden></iframe>
 
 
 

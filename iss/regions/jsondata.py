@@ -1128,7 +1128,9 @@ def get_json(request):
                 "comment": rr.store.comment,
                 "mol": rr.mol.get_full_name(),
                 "rest":str(rr.rest),
-                "serial": rr.serial
+                "serial": rr.serial,
+                "dimension": rr.dimension,
+                "accounting_code": rr.accounting_code
 
             }
 
@@ -1973,6 +1975,8 @@ def get_json(request):
                 srest.rest = Decimal(data["rest"])
                 srest.name = data["name"].strip()
                 srest.serial = data["serial"].strip()
+                srest.dimension = data["dimension"].strip()
+                srest.accounting_code = data["accounting_code"].strip()
                 srest.save()
 
                 ### Регистрация в логе
@@ -1999,7 +2003,7 @@ def get_json(request):
             srest = store_rest.objects.create(
                 name = data["name"].strip(),
                 rest = Decimal(data["rest"]),
-                dimansion = data["dimansion"],
+                dimension = data["dimension"],
                 store = storelist,
                 mol = request.user,
                 serial = data["serial"].strip(),
@@ -2019,7 +2023,8 @@ def get_json(request):
                 "comment": srest.store.comment,
                 "mol": srest.mol.get_full_name(),
                 "rest":str(srest.rest),
-                "dimansion":srest.dimansion,
+                "dimension":srest.dimension,
+                "accounting_code":srest.accounting_code,
                 "serial": srest.serial
 
             }

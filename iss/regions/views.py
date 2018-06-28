@@ -1004,6 +1004,8 @@ class LoadStore(ListView):
         context = super(LoadStore, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
 
+        users = User.objects.order_by("first_name")
+        context['staff'] = [(user.pk, user.get_full_name()) for user in users]
 
         return context
 

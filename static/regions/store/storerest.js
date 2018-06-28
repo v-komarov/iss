@@ -45,14 +45,6 @@ function getCookie(name) {
 
 
 
-// Очистка поля ввода загружаемого файла
-function ClearUploadEisup() {
-
-    $("form#uploadfileeisup input#fileupload").val("");
-
-}
-
-
 
 
 
@@ -170,6 +162,8 @@ function EditRest(e) {
                 $("input#edit_store").val(data["rec"]["store"]);
                 $("input#edit_rest").val(data["rec"]["rest"]);
                 $("input#edit_serial").val(data["rec"]["serial"]);
+                $("input#edit_dimension").val(data["rec"]["dimension"]);
+                $("input#edit_accounting_code").val(data["rec"]["accounting_code"]);
 
                 if (data["rec"]["eisup"] == "") { $("input#edit_name").prop("readonly",false); }
                 else { $("input#edit_name").prop("readonly",true); }
@@ -201,6 +195,8 @@ function EditRest(e) {
             data.rest = $("input#edit_rest").val();
             data.serial = $("input#edit_serial").val();
             data.name = $("input#edit_name").val();
+            data.dimension = $("input#edit_dimension").val();
+            data.accounting_code =$("input#edit_accounting_code").val()
             data.action = "store-edit-rest";
 
 
@@ -219,7 +215,9 @@ function EditRest(e) {
                                 $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(1).text(data["rec"]["name"]);
                                 $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(2).text(data["rec"]["serial"]);
                                 $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(3).text(data["rec"]["rest"]);
-                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(8).text(data["rec"]["mol"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(4).text(data["rec"]["dimension"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(9).text(data["rec"]["mol"]);
+                                $("table[group=goods-list] tr[row_id="+row_id+"]").children("td").eq(10).text(data["rec"]["accounting_code"]);
                             }
                         });
 
@@ -263,7 +261,9 @@ function CreateRest(e) {
 
     $("input#create-name").val("");
     $("input#createrest").val("");
-
+    $("input#create-dimension").val("");
+    $("input#create-accounting-code").val("")
+    $("input#create-serial").val("")
 
 
     $("#create-rest").dialog({
@@ -287,8 +287,8 @@ function CreateRest(e) {
                 data.serial = $("input#create-serial").val();
                 data.store = $("select#create-store").val();
                 data.rest = $("input#createrest").val();
-                data.dimansion = $("input#dimansion").val();
-                data.accounting_code = $("input#accounting-code").val();
+                data.dimension = $("input#create-dimension").val();
+                data.accounting_code = $("input#create-accounting-code").val();
                 data.action = "store-create-rest";
 
 
@@ -304,11 +304,13 @@ function CreateRest(e) {
                             + "<td>"+result["rec"]["name"]+"</td>"
                             + "<td>"+result["rec"]["serial"]+"</td>"
                             + "<td>"+result["rec"]["rest"]+"</td>"
+                            + "<td>"+result["rec"]["dimention"]+"</td>"
                             + "<td>"+result["rec"]["datetime"]+"</td>"
                             + "<td>"+result["rec"]["region"]+"</td>"
                             + "<td>"+result["rec"]["store"]+"</td>"
                             + "<td>"+result["rec"]["comment"]+"</td>"
                             + "<td>"+result["rec"]["mol"]+"</td>"
+                            + "<td>"+result["rec"]["accounting_code"]+"</td>"
                             + "</tr>"
 
                             $("table[group=goods-list] tbody").prepend(t);
