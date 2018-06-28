@@ -1006,6 +1006,8 @@ class LoadStore(ListView):
 
         users = User.objects.order_by("first_name")
         context['staff'] = [(user.pk, user.get_full_name()) for user in users]
+        context['regions'] = regions.objects.order_by("name")
+
 
         return context
 
