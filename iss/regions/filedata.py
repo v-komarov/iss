@@ -764,105 +764,93 @@ def uploadfile_store(request):
 
     if request.method == 'POST':
 
-        filename = request.FILES['fileupload'].name
-        filedata = request.FILES['fileupload'].read()
+        try:
 
-        file_extension = os.path.splitext(filename)[-1]
+            filename = request.FILES['fileupload'].name
+            filedata = request.FILES['fileupload'].read()
 
-
-
-        if file_extension == ".xls" or file_extension == ".xlsx":
-
-            excel_data = ExcelFile(StringIO.StringIO(filedata))
-            df = excel_data.parse(excel_data.sheet_names[0],header=None, index_col=None, na_values="")
-            df=df.fillna("")
-            ht = df.to_html(header=True, index=True, float_format=lambda x: '%10.2f' % x, classes="table table-bordered table-striped draggable").encode('utf-8')
-
-            #df[1] = df[1].replace("nan","")
-            #df[2] = df[2].replace("nan","")
-            #df[4] = df[4].replace("nan","")
-            #df[16] = df[16].replace("nan","")
-            #data = []
-            #for index, row in df.iterrows():
-                #name = row[1].strip()
-                #eisup = row[2].strip()
-                #store = row[4].strip()
-                #rest = row[16].strip()
-                #if name != "" and eisup != "" and store != "" and rest != "":
-
-                    #user = request.user
-
-                    ### Поиск среди складов
-                    #if store_list.objects.filter(name=store).exists():
-                    #    st = store_list.objects.get(name=store)
-                    #else:
-                    #    st = store_list.objects.create(name=store)
-
-                    ### Поиск записей остатков
-                    #if store_rest.objects.filter(eisup=eisup,store=st,mol=user,serial="").exists():
-                    #    st_rest = store_rest.objects.filter(eisup=eisup,store=st,mol=user).first()
-                    #    data.append({
-                    #        'id': st_rest.id,
-                    #        'name': name,
-                    #        'eisup': eisup,
-                    #        'store': store,
-                    #        'rest': rest,
-                    #        'load': "no"
-                    #    })
-
-                    #else:
-                    #    st_rest = store_rest.objects.create(eisup=eisup,store=st,mol=user,name=name,rest=Decimal(rest))
-                    #    data.append({
-                    #        'id': "",
-                    #        'name': name,
-                    #        'eisup': eisup,
-                    #        'store': store,
-                    #        'rest': rest,
-                    #        'load': "yes"
-                    #    })
-                        ### Регистрация в логе
-                    #    store_rest_log.objects.create(
-                    #        store_rest = st_rest,
-                    #        user = user,
-                    #        action = "Загрузка из файла"
-                    #    )
-
-
-            #return HttpResponse("""
-            #<html><head><script type="text/javascript">
-            #
-            #window.top.DiffUpload(%s);
-            #</script></head></html>
-            #""" % json.dumps(data))
-            return HttpResponse("""
-            <html><head><script type="text/javascript">
-            window.top.ClearUploadEisup();            
-            </script>
-            <style>
-            table {
-                    border-collapse: collapse;
-                    margin-left: 30px;
-            }
-
-            table, th, td {
-                    border: 1px solid black;
-                    font-family: Verdana, Arial, Helvetica, sans-serif; 
-                    font-size: 8pt;  
-            }
-            </style>
-            </head>%s</html>
-            """ % ht)
-
-
-        else:
+            file_extension = os.path.splitext(filename)[-1]
 
 
 
+            if file_extension == ".xls" or file_extension == ".xlsx":
+
+                excel_data = ExcelFile(StringIO.StringIO(filedata))
+                df = excel_data.parse(excel_data.sheet_names[0],header=None, index_col=None, na_values="")
+                df=df.fillna("")
+                ht = df.to_html(header=True, index=True, float_format=lambda x: '%10.2f' % x, classes="table table-bordered table-striped draggable").encode('utf-8')
+
+
+                        ### Поиск среди складов
+                        #if store_list.objects.filter(name=store).exists():
+                        #    st = store_list.objects.get(name=store)
+                        #else:
+                        #    st = store_list.objects.create(name=store)
+
+                        ### Поиск записей остатков
+                        #if store_rest.objects.filter(eisup=eisup,store=st,mol=user,serial="").exists():
+                        #    st_rest = store_rest.objects.filter(eisup=eisup,store=st,mol=user).first()
+                        #    data.append({
+                        #        'id': st_rest.id,
+                        #        'name': name,
+                        #        'eisup': eisup,
+                        #        'store': store,
+                        #        'rest': rest,
+                        #        'load': "no"
+                        #    })
+
+                        #else:
+                        #    st_rest = store_rest.objects.create(eisup=eisup,store=st,mol=user,name=name,rest=Decimal(rest))
+                        #    data.append({
+                        #        'id': "",
+                        #        'name': name,
+                        #        'eisup': eisup,
+                        #        'store': store,
+                        #        'rest': rest,
+                        #        'load': "yes"
+                        #    })
+                            ### Регистрация в логе
+                        #    store_rest_log.objects.create(
+                        #        store_rest = st_rest,
+                        #        user = user,
+                        #        action = "Загрузка из файла"
+                        #    )
+
+
+                return HttpResponse("""
+                <html><head><script type="text/javascript">
+                window.top.ClearUploadEisup();            
+                </script>
+                <style>
+                table {
+                        border-collapse: collapse;
+                        margin-left: 30px;
+                }
+    
+                table, th, td {
+                        border: 1px solid black;
+                        font-family: Verdana, Arial, Helvetica, sans-serif; 
+                        font-size: 8pt;  
+                }
+                </style>
+                </head>%s</html>
+                """ % ht)
+
+
+            else:
+
+
+
+                return HttpResponse("""
+                <html><head><script type="text/javascript">                
+                    window.top.ClearUploadEisup();            
+                    alert("Формат файла не поддерживается!");
+                </script></head></html>
+                """)
+
+
+        except:
             return HttpResponse("""
             <html><head><script type="text/javascript">                
-                window.top.ClearUploadEisup();            
-                alert("Формат файла не поддерживается!");
             </script></head></html>
             """)
-
-

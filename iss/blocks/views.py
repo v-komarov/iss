@@ -309,6 +309,7 @@ class HouseEdit(UpdateView):
             context["devices"] = devices.objects.filter(address=house.address)
         else:
             context["devices"] = []
+        context["house"] = self.get_object()
 
         return context
 

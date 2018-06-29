@@ -275,6 +275,65 @@ def get_json(request):
 
 
 
+        #### Поиск по компании
+        if r.has_key("term") and rg("term") != "":
+            term = request.GET["term"]
+            obj = []
+
+            data = block_managers.objects.filter(Q(name__icontains=term) | Q(inn__icontains=term))
+
+            for row in data:
+
+                obj.append(
+                    {
+                        "label": u"{name} (ИНН {inn})".format(name=row.name, inn=row.inn),
+                        "value": row.id
+                    }
+                )
+
+            response_data = obj
+
+
+
+
+
+
+        ### Cписок логов карточки дома
+        if r.has_key("action") and rg("action") == 'get-house-list-logs':
+            house_id = request.GET["house"]
+            house = buildings.objects.get(pk=int(house_id, 10))
+            log_list = []
+            for row in comments_logs.objects.filter(house=house,log=True).order_by("-datetime_create"):
+                log_list.append({
+                    "comment": row.comment,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_create.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": log_list }
+
+
+
+
+
+        ### Карточка дома: список коментариев
+        if r.has_key("action") and rg("action") == 'get-house-list-comments':
+            house_id = request.GET["house"]
+            house = buildings.objects.get(pk=int(house_id, 10))
+            comment_list = []
+            for row in comments_logs.objects.filter(house=house,log=False).order_by("-datetime_create"):
+                comment_list.append({
+                    "comment": row.comment,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_create.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": comment_list }
+
+
+
 
 
 
@@ -409,6 +468,76 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+
+
+
+
+        ### Сохранение карточки дома
+        if data.has_key("action") and data["action"] == 'house-common-save':
+
+
+            house_id = data["house"]
+            house = buildings.objects.get(pk=int(house_id, 10))
+
+            address_id = data["address"]
+            address = address_house.objects.get(pk=int(address_id,10))
+
+            company_id = data["manager"]
+            company = block_managers.objects.get(pk=int(company_id,10))
+
+            numstoreys = data["numstoreys"].strip()
+            numentrances = data["numentrances"].strip()
+            numfloars = data["numfloars"].strip()
+            access = data["access"].strip()
+
+
+            house.numstoreys = numstoreys
+            house.numentrances = numentrances
+            house.numfloars = numfloars
+            house.access = access
+            house.address = address
+            house.block_manager = company
+
+            house.save()
+
+            comments_logs.objects.create(
+                house = house,
+                user = request.user,
+                comment = u"Сохранены данные карточки компании",
+                log=True
+            )
+
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Добавление коментария дома
+        if data.has_key("action") and data["action"] == 'house-comment-add':
+
+            house_id = data["house"]
+            house = buildings.objects.get(pk=int(house_id, 10))
+
+            comment = data["comment"].strip()
+
+            if comment != "":
+
+
+                comments_logs.objects.create(
+                    house = house,
+                    user = request.user,
+                    comment = comment
+                )
+
+
+
+
+            response_data = {"result": "ok"}
+
+
 
 
 
