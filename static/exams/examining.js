@@ -48,6 +48,7 @@ function TestBegin(e) {
         var job = $("input#id_job").val();
         var department = $("input#id_department").val();
 
+
         // Проверка заполненности полей ФИО и должность
         if ( fio != "" && job != "" ) {
 
@@ -136,6 +137,8 @@ function TestNext(e) {
 
                 // результат
                 $("#result").show();
+                // Формирование ссылки на список вопросов
+                $("#result-list-questions a").attr("href","/exams/questionsexam/"+result_id);
 
                 // Информация о тестировании
                 if (data["passed"] == "yes") { $("#result-name").text("Тест сдан!"); $("#result-name").css("color","green"); }
