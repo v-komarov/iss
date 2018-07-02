@@ -27,7 +27,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from iss.mydecorators import group_required,anonymous_required
 
 from iss.localdicts.models import address_city, address_house
-from iss.blocks.models import buildings, block_managers
+from iss.blocks.models import buildings, block_managers, contracts
 from iss.inventory.models import devices
 
 from iss.blocks.forms import CompanyEditForm, HouseEditForm, ContractForm
@@ -319,5 +319,54 @@ class HouseEdit(UpdateView):
         form.instance.rowsum = form.instance.price * form.instance.count
         return super(HouseEdit, self).form_valid(form)
 
+
+
+
+
+
+### Список договоров
+class ContractList(ListView):
+
+    model = buildings
+    template_name = "blocks/contractlist.html"
+
+    paginate_by = 100
+
+    @method_decorator(login_required(login_url='/'))
+    # @method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+    def get_queryset(self):
+
+        data = contracts.objects.order_by("company__name")
+
+
+        if self.session.has_key("filter_contract"):
+            filter = pickle.loads(self.session["filter_contract"])
+            if not filter["inn"] == "":
+                data = data.filter(company__inn=filter["inn"])
+            if not filter["company"] == "":
+                data = data.filter(company__name__icontains=filter["company"])
+            if not filter["manager"] == "":
+                data = data.filter(manager__id=int(filter["manager"],10))
+
+
+        return data
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(ContractList, self).get_context_data(**kwargs)
+
+        context["filter_contract"] = pickle.loads(self.session["filter_contract"]) if self.session.has_key("filter_contract") else {'manager': "", 'inn': "", "company": ""}
+        context["manager"] = contracts.objects.order_by("manager").distinct("manager")
+
+        return context
 
 

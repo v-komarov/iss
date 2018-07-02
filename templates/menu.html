@@ -73,7 +73,7 @@
         <ul class="dropdown-menu">
           <li id="blocks-list" {% if request.path|slice:'0:18' == "/blocks/blocklist/" %}class="active"{% endif %}><a href="/blocks/blocklist/1/">УК ТСЖ ТСН ...</a></li>
           <li id="houses-list" {% if request.path|slice:'0:18' == "/blocks/houselist/" %}class="active"{% endif %}><a href="/blocks/houselist/1/">Список домов</a></li>
-          <li id="contracts-list"><a>Договоры</a></li>
+          <li id="contracts-list" {% if request.path|slice:'0:21' == "/blocks/contractlist/" %}class="active"{% endif %}><a href="/blocks/contractlist/1/">Договоры</a></li>
           <li class="divider"></li>
           <li id="address-list" {% if request.path|slice:'0:20' == "/blocks/addresslist/" %}class="active"{% endif %}><a href="/blocks/addresslist/1/">Списки адресов</a></li>
         </ul>

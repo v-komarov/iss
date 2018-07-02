@@ -1,0 +1,44 @@
+table[group=contract-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=contract-list] > tbody > tr > td {
+    padding-left: 3px;
+    padding-right: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
+    vertical-align: top;
+}
+
+
+
+/* Курсор */
+table[group=contract-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=contract-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
+
+
+
+/* Отступить от меню */
+#filter {
+    margin-top:30px;
+    margin-bottom:20px;
+}
+

@@ -1,0 +1,140 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}blocks/contractlist.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}blocks/contractlist.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div id="filter" class="row">
+
+
+    <div class="small col-md-3">
+        <dl class="dl-horizontal">
+            <dt>Поиск по ИНН:</dt>
+            <dd><input class="form-control input-sm" id="search-inn" value="{{ filter_contract.inn }}" type="text" width="100%"/></dd>
+            <dt>Поиск по компании:</dt>
+            <dd><input class="form-control input-sm" id="search-company" value="{{ filter_contract.company }}" type="text" width="100%"/></dd>
+            <dt>Поиск по отвественному:</dt>
+            <dd>
+                <select class="form-control input-sm" id="search-manager" >
+                    {% if filter_contract.manager|slugify == "" %}
+                    <option value="" selected>---</option>
+                    {% else %}
+                    <option value="">---</option>
+                    {% endif %}
+                    {% for item in manager %}
+                    {% if item.manager.id|slugify == filter_contract.manager|slugify %}
+                        <option value="{{ item.manager.id }}" selected>{{ item.manager.get_full_name }}</option>
+                    {% else %}
+                        <option value="{{ item.manager.id }}">{{ item.manager.get_full_name }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </dd>
+        </dl>
+    </div>
+
+
+    <div class="small col-md-2">
+        <button id="search-button" title="Искать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
+        <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
+</div>
+
+
+
+<div class="row">
+</div>
+
+
+
+<div class="row">
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/blocks/contractlist/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/blocks/contractlist/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="contract-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr>
+                <th>ИНН</th>
+                <th>Сомпания</th>
+                <th>Номер<br>договора</th>
+                <th>Начало<br>договора</th>
+                <th>Завершение<br>договора</th>
+                <th>Возможность<br>продления</th>
+                <th>Сумма (руб.)</th>
+                <th>Периодичность<br>оплаты</th>
+                <th>Ответственный</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+                <tr>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.company.inn }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.company.name }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.num }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.date_begin|date:"d.m.Y" }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.date_end|date:"d.m.Y" }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{% if row.goon %}Да{% endif %}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.money }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.period }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.manager.get_full_name }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/blocks/contractlist/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/blocks/contractlist/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+
+
+{% endblock %}
+

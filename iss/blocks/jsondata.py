@@ -114,6 +114,44 @@ def get_json(request):
 
 
 
+
+
+
+
+        ### Фильтр по договорам
+        if r.has_key("action") and rg("action") == 'filter-contract':
+
+            inn = request.GET["inn"].strip()
+            manager = request.GET["manager"].strip()
+            company = request.GET["company"].strip()
+
+
+            request.session["filter_contract"] = pickle.dumps({ 'manager': manager, 'inn': inn, 'company': company })
+
+            if inn == "" and company == "" and manager == "":
+                if request.session.has_key("filter_contract"):
+                    del request.session["filter_contract"]
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Очистка фильтр по договорам
+        if r.has_key("action") and rg("action") == 'filter-contract-clear':
+
+
+            if request.session.has_key("filter_contract"):
+                del request.session["filter_contract"]
+
+            response_data = {"result": "ok"}
+
+
+
+
+
         ### Cписок логов карточки компании
         if r.has_key("action") and rg("action") == 'get-company-list-logs':
             company_id = request.GET["company"]
