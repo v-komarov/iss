@@ -17,6 +17,7 @@ from	reportlab.platypus		import	Frame,Spacer
 from	reportlab.platypus		import	Image
 
 
+from iss.exams.models import questions
 
 
 ### --- Печатная протокола ---
@@ -100,6 +101,8 @@ def	ProtocolPDF(buff, res):
 ### --- Печатная форма списка вопросов ---
 def QuestionsList(buff, res):
 
+
+
     Font1 = ttfonts.TTFont('PT', 'fonts/PTC55F.ttf')
     Font2 = ttfonts.TTFont('PTB', 'fonts/PTC75F.ttf')
     Font3 = ttfonts.TTFont('PTI', 'fonts/PTS56F.ttf')
@@ -120,6 +123,8 @@ def QuestionsList(buff, res):
                              spaceBefore=1 * mm, alignment=0))
     style.add(ParagraphStyle(name='MyStyle3', wordWrap=True, fontName='PT', fontSize=8, spaceAfter=1 * mm,
                              spaceBefore=1 * mm, alignment=0))
+    style.add(ParagraphStyle(name='MyStyle4', wordWrap=True, fontName='PTI', fontSize=8, spaceAfter=1 * mm,
+                             spaceBefore=1 * mm, alignment=0))
 
     doc = SimpleDocTemplate(buff, topMargin=10 * mm, bottomMargin=10 * mm, leftMargin=20 * mm, rightMargin=10 * mm)
 
@@ -137,7 +142,9 @@ def QuestionsList(buff, res):
 
             n = 1
             for item in res.data["questions_dict"]:
-                data.append([n, u'Ошибка' if int(item.keys()[0], 10) in res.data["mistakes"] else u'Верно', Paragraph(item.values()[0], style["MyStyle3"]), ])
+                ### Текст правильного варианта ответа для ошибочных ответов
+                ans_true = questions.objects.get(pk=int(item.keys()[0], 10)).get_truth_str() if int(item.keys()[0], 10) in res.data["mistakes"] else ""
+                data.append([n, u'Ошибка' if int(item.keys()[0], 10) in res.data["mistakes"] else u'Верно', [Paragraph(item.values()[0], style["MyStyle3"]),Paragraph(u"Правильный ответ: %s" % ans_true, style["MyStyle4"])] if int(item.keys()[0], 10) in res.data["mistakes"] else Paragraph(item.values()[0], style["MyStyle3"]), ])
                 n = n + 1
 
             t = Table(data, colWidths=[10 * mm, 20 * mm, 160 * mm])

@@ -61,6 +61,16 @@ class questions(models.Model):
         return result
 
 
+    ### Возвращает список пунктов правильных ответов в виде строки
+    def get_truth_str(self):
+
+        result = []
+        for i in self.answers_set.all().filter(truth=True):
+            result.append(i.name)
+
+        return ", ".join(result)
+
+
 
 
 

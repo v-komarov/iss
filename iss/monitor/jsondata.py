@@ -1553,6 +1553,9 @@ def get_json(request):
 
 
 
+
+
+
         ### Добавление нового ДРП
         if data.has_key("action") and data["action"] == 'adding-drp':
             data = eval(str(data))
