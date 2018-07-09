@@ -5,6 +5,8 @@ $(document).ready(function() {
     $( "button#search-button" ).bind('click', SearchAddress);
     $( "button#clear-button" ).bind('click', SearchClear);
 
+    // Создание дома
+    $("a#addbuilding").bind("click",CreateHouse);
 
 });
 
@@ -36,6 +38,92 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
+
+// Создание дома
+function CreateHouse() {
+
+    $("input#id_id_www").val("");
+    $("input#id_numstoreys").val("");
+    $("input#id_numentrances").val("");
+    $("input#id_numfloars").val("");
+    $("input#id_access").val("");
+    $("input#id_address2").attr("address_id",0);
+    $("input#id_manager").attr("manager_id",0);
+    $("input#id_address2").val("");
+    $("input#id_manager").val("");
+
+
+
+    $("#create-house").dialog({
+        title:"Создание дома",
+        buttons:[{ text:"Сохранить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+
+
+                var data = {};
+                data.numstoreys = $("input#id_numstoreys").val();
+                data.numentrances = $("input#id_numentrances").val();
+                data.numfloars = $("input#id_numfloars").val();
+                data.access = $("input#id_access").val();
+                data.address = $("input#id_address2").attr("address_id");
+                data.manager = $("input#id_manager").attr("manager_id");
+
+                data.action == "house-common-create";
+
+                if (false) {
+
+                    $.ajax({
+                      url: "/blocks/jsondata/",
+                      type: "POST",
+                      dataType: 'json',
+                      data:$.toJSON(data),
+                        success: function(result) {
+                            if (result["result"] == "ok") { $("#create-house").dialog('close');}
+                        }
+
+                    });
+
+                }
+                else { alert("Необходимо заполнить все поля!");}
+
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        open: function() {
+        },
+        modal:true,
+        minWidth:100,
+        width:550
+
+    });
+
+
+}
+
+
+
+
+
 
 
 

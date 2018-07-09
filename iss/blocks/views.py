@@ -30,7 +30,7 @@ from iss.localdicts.models import address_city, address_house
 from iss.blocks.models import buildings, block_managers, contracts
 from iss.inventory.models import devices
 
-from iss.blocks.forms import CompanyEditForm, HouseEditForm, ContractForm
+from iss.blocks.forms import CompanyEditForm, HouseEditForm, ContractForm, HouseCreateForm, CompanyCreateForm
 
 
 
@@ -128,6 +128,7 @@ class BlocksList(ListView):
         context = super(BlocksList, self).get_context_data(**kwargs)
         context["city"] = address_city.objects.order_by("name")
         context["filter_company"] = pickle.loads(self.session["filter_company"]) if self.session.has_key("filter_company") else {'city': "", 'street': "", "house": "", "company": ""}
+        context["form"] = CompanyCreateForm()
 
 
         return context
@@ -239,6 +240,7 @@ class HouseList(ListView):
         context = super(HouseList, self).get_context_data(**kwargs)
         context["city"] = address_city.objects.order_by("name")
         context["filter_company"] = pickle.loads(self.session["filter_company"]) if self.session.has_key("filter_company") else {'city': "", 'street': "", "house": "", "company": ""}
+        context["form"] = HouseCreateForm()
 
         return context
 

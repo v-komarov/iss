@@ -35,7 +35,7 @@ class CompanyEditForm(ModelForm):
 
     class Meta:
         model = block_managers
-        fields = ['name', 'address2', 'address_law2', 'inn', 'contact', 'phone', 'email', ]
+        fields = ['name', 'address2', 'address_law2', 'inn', 'contact', 'phone', 'email']
 
 
 
@@ -65,7 +65,10 @@ class HouseEditForm(ModelForm):
 
     class Meta:
         model = block_managers
-        fields = [ 'address2','numstoreys', 'numentrances', 'numfloars', 'access', 'manager' ]
+        fields = [ 'address2','numstoreys', 'numentrances', 'numfloars', 'access', 'manager',]
+
+
+
 
 
 
@@ -97,4 +100,59 @@ class ContractForm(ModelForm):
     class Meta:
         model = contracts
         fields = ['num', 'date_begin', 'date_end', 'goon', 'manager', 'money', 'period',]
+
+
+
+
+
+
+### Форма создания компании
+class CompanyCreateForm(ModelForm):
+    www_id = forms.CharField(label="Код сайта", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    name = forms.CharField(label="Название", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    inn = forms.CharField(label="ИНН", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    phone = forms.CharField(label="Телефон", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    email = forms.CharField(label="email", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    contact = forms.CharField(label="Контакт", widget=forms.Textarea(attrs={'class':'input-xm', 'rows':4, 'cols':38}))
+    address2 = forms.CharField(label="Фактический адрес")
+    address_law2 = forms.CharField(label="Юридический адрес")
+
+
+
+
+    def __init__(self, *args, **kwargs):
+        super(CompanyCreateForm, self).__init__(*args, **kwargs)
+        self.fields['address2'].initial = ""
+        self.fields['address_law2'].initial = ""
+        self.fields['address2'].widget.attrs = {'address_id': 0, 'class':'input-xm', 'size':40}
+        self.fields['address_law2'].widget.attrs = {'address_id': 0, 'class':'input-xm', 'size':40}
+
+    class Meta:
+        model = block_managers
+        fields = ['name', 'address2', 'address_law2', 'inn', 'contact', 'phone', 'email', 'www_id']
+
+
+
+
+### Форма создания дома
+class HouseCreateForm(ModelForm):
+    www_id = forms.CharField(label="Код сайта", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    numstoreys = forms.IntegerField(label="Этажность", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    numentrances = forms.IntegerField(label="Количество подъездов", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    numfloars = forms.CharField(label="Количество квартир", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    address2 = forms.CharField(label="Адрес")
+    access = forms.CharField(label="Условие доступа", widget=forms.TextInput(attrs={'class':'input-xm', 'size':40}))
+    manager = forms.CharField(label="Управление")
+
+    def __init__(self, *args, **kwargs):
+        super(HouseCreateForm, self).__init__(*args, **kwargs)
+        self.fields['address2'].initial = ""
+        self.fields['address2'].widget.attrs = {'address_id': 0, 'class':'input-xm', 'size':40}
+        self.fields['manager'].initial = ""
+        self.fields['manager'].widget.attrs = {'class':'input-xm', 'size':40, 'manager_id':0}
+
+
+    class Meta:
+        model = block_managers
+        fields = [ 'address2','numstoreys', 'numentrances', 'numfloars', 'access', 'manager', 'www_id']
 
