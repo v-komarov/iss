@@ -7,7 +7,7 @@
 
 
 .. figure:: _static/net_stru.png
-       :scale: 30 %
+       :scale: 50
        :align: center
        :alt: Сетевая структура
 

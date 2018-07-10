@@ -10,6 +10,7 @@
    inventory
    working
    events
+   commands
    api
    zkl
    other_systems
