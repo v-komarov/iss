@@ -8,6 +8,63 @@ $(document).ready(function() {
     // Создание дома
     $("a#addbuilding").bind("click",CreateHouse);
 
+
+
+    // Поиск адреса
+    $("input#id_address2").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#create-house',
+        position: 'top',
+        select: function (event,ui) {
+            $("input#id_address2").val(ui.item.label);
+            $("input#id_address2").attr("address_id",ui.item.value);
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("input#id_address2").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    });
+
+
+
+
+    // Поиск компании
+    $("input#id_manager").autocomplete({
+        source: "/blocks/jsondata",
+        minLength: 3,
+        delay: 1000,
+        appendTo: '#create-house',
+        position: 'top',
+        select: function (event,ui) {
+            $("input#id_manager").val(ui.item.label);
+            $("input#id_manager").attr("manager_id",ui.item.value);
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("input#id_manager").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    });
+
+
+
+
+
 });
 
 

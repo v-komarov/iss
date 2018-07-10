@@ -8,6 +8,64 @@ $(document).ready(function() {
     // Создание компании
     $("a#addmanager").bind("click", CreateCompany);
 
+
+
+    // Поиск фактического адреса
+    $("input#id_address2").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#create-company',
+        position: 'top',
+        select: function (event,ui) {
+            $("input#id_address2").val(ui.item.label);
+            $("input#id_address2").attr("address_id",ui.item.value);
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("input#id_address2").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    });
+
+
+
+
+    // Поиск юридического адреса
+    $("input#id_address_law2").autocomplete({
+        source: "/monitor/events/jsondata",
+        minLength: 1,
+        delay: 1000,
+        appendTo: '#create-company',
+        position: 'top',
+        select: function (event,ui) {
+            $("input#id_address_law2").val(ui.item.label);
+            $("input#id_address_law2").attr("address_id",ui.item.value);
+
+            return false;
+        },
+        focus: function (event,ui) {
+            $("input#id_address_law2").val(ui.item.label);
+            return false;
+        },
+        change: function (event,ui) {
+            return false;
+        }
+
+
+    });
+
+
+
+
+
+
 });
 
 
