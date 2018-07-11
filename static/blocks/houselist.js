@@ -105,7 +105,7 @@ function getCookie(name) {
 // Создание дома
 function CreateHouse() {
 
-    $("input#id_id_www").val("");
+    $("input#id_www_id").val("");
     $("input#id_numstoreys").val("");
     $("input#id_numentrances").val("");
     $("input#id_numfloars").val("");
@@ -134,16 +134,18 @@ function CreateHouse() {
 
 
                 var data = {};
+                data.id_www = $("input#id_www_id").val();
                 data.numstoreys = $("input#id_numstoreys").val();
                 data.numentrances = $("input#id_numentrances").val();
                 data.numfloars = $("input#id_numfloars").val();
                 data.access = $("input#id_access").val();
                 data.address = $("input#id_address2").attr("address_id");
                 data.manager = $("input#id_manager").attr("manager_id");
+                data.action = "house-common-create";
 
-                data.action == "house-common-create";
 
-                if (false) {
+
+                if (data.id_www !="" && data.numstoreys != "" && data.numentrances != "" && data.numfloars != "" && data.access != "" && data.address != "" && data.manager != "") {
 
                     $.ajax({
                       url: "/blocks/jsondata/",
@@ -151,7 +153,7 @@ function CreateHouse() {
                       dataType: 'json',
                       data:$.toJSON(data),
                         success: function(result) {
-                            if (result["result"] == "ok") { $("#create-house").dialog('close');}
+                            if (result["result"] == "ok") { $("#create-house").dialog('close'); window.open("/blocks/houseedit/"+result["id"]+"/"); }
                         }
 
                     });

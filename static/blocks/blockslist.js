@@ -106,7 +106,7 @@ function getCookie(name) {
 // Создание компании
 function CreateCompany() {
 
-    $("input#id_id_www").val("");
+    $("input#id_www_id").val("");
     $("input#id_name").val("");
     $("input#id_inn").val("");
     $("input#id_phone").val("");
@@ -135,7 +135,7 @@ function CreateCompany() {
 
 
             var data = {};
-            data.id_www = $("input#id_id_www").val();
+            data.id_www = $("input#id_www_id").val();
             data.name = $("input#id_name").val();
             data.inn = $("input#id_inn").val();
             data.phone = $("input#id_phone").val();
@@ -143,11 +143,9 @@ function CreateCompany() {
             data.contact = $("textarea#id_contact").val();
             data.address = $("input#id_address2").attr("address_id");
             data.address_law = $("input#id_address_law2").attr("address_id");
+            data.action = "company-common-create";
 
-
-                data.action == "company-common-create";
-
-                if (false) {
+                if (data.id_www != "" && data.name != "" && data.inn != "" && data.phone != "" && data.email != "" && data.contact != "" && data.address != 0 && data.address_law != 0) {
 
                     $.ajax({
                       url: "/blocks/jsondata/",
@@ -155,7 +153,7 @@ function CreateCompany() {
                       dataType: 'json',
                       data:$.toJSON(data),
                         success: function(result) {
-                            if (result["result"] == "ok") { $("#create-house").dialog('close');}
+                            if (result["result"] == "ok") { $("#create-company").dialog('close'); window.open("/blocks/companyedit/"+result["id"]+"/"); }
                         }
 
                     });

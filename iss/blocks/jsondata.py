@@ -382,7 +382,6 @@ def get_json(request):
 
 
 
-
         ### Сохранение карточки компании
         if data.has_key("action") and data["action"] == 'company-common-save':
 
@@ -424,6 +423,55 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Добавление компании
+        if data.has_key("action") and data["action"] == 'company-common-create':
+
+            id_www = int(data["id_www"].strip(),10)
+
+            address_id = data["address"]
+            address_law_id = data["address_law"]
+
+            address = address_house.objects.get(pk=int(address_id,10))
+            address_law = address_house.objects.get(pk=int(address_law_id,10))
+
+            name = data["name"].strip()
+            inn = data["inn"].strip()
+            phone = data["phone"].strip()
+            email = data["email"].strip()
+            contact = data["contact"].strip()
+
+            ### Проверка есть ли уже такой id_www
+            if not block_managers.objects.filter(www_id=id_www).exists() and not block_managers.objects.filter(inn=inn).exists():
+
+                new = block_managers.objects.create(
+                    www_id=id_www,
+                    name=name,
+                    inn=inn,
+                    phone=phone,
+                    email=email,
+                    contact=contact,
+                    address=address,
+                    address_law=address_law
+                )
+
+
+                comments_logs.objects.create(
+                    manager = new,
+                    user = request.user,
+                    comment = u"Создана карточка компании",
+                    log=True
+                )
+
+                response_data = {"result": "ok", "id": new.id}
+
+            else:
+
+                response_data = {"result": "error"}
 
 
 
@@ -541,13 +589,62 @@ def get_json(request):
             comments_logs.objects.create(
                 house = house,
                 user = request.user,
-                comment = u"Сохранены данные карточки компании",
+                comment = u"Сохранены данные карточки дома",
                 log=True
             )
 
 
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Создание карточки дома
+        if data.has_key("action") and data["action"] == 'house-common-create':
+
+            id_www = int(data["id_www"].strip(),10)
+
+            address_id = data["address"]
+            address = address_house.objects.get(pk=int(address_id,10))
+
+            company_id = data["manager"]
+            company = block_managers.objects.get(pk=int(company_id,10))
+
+            numstoreys = int(data["numstoreys"].strip(),10)
+            numentrances = int(data["numentrances"].strip(),10)
+            numfloars = int(data["numfloars"].strip(),10)
+            access = data["access"].strip()
+
+
+            ### Проверка уникальности www_id
+            if not block_managers.objects.filter(www_id=id_www).exists():
+
+                new = buildings.objects.create(
+                    www_id=id_www,
+                    numstoreys=numstoreys,
+                    numentrances=numentrances,
+                    numfloars=numfloars,
+                    access=access,
+                    address=address,
+                    block_manager=company
+                )
+
+
+                comments_logs.objects.create(
+                    house = new,
+                    user = request.user,
+                    comment = u"Создана карточка дома",
+                    log=True
+                )
+
+
+
+                response_data = {"result": "ok", "id": new.id}
+
+            else:
+                response_data = {"result": "error"}
 
 
 

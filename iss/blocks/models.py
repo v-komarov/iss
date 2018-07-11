@@ -32,6 +32,7 @@ class buildings(models.Model):
 
     block_manager = models.ForeignKey('block_managers', verbose_name="Управляющая компания", null=True)
 
+
     def __unicode__(self):
         return self.address.getaddress()
 
@@ -54,6 +55,7 @@ class block_managers(models.Model):
     inn = models.CharField(max_length=10, verbose_name='ИНН', default="", db_index=True)
 
     www_id = models.IntegerField(default=0, verbose_name="Идентификатор с сайта")
+
 
 
     def __unicode__(self):
