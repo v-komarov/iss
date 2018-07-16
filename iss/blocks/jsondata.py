@@ -206,7 +206,8 @@ def get_json(request):
                     "period": row.period.name,
                     "manager": row.manager.get_full_name(),
                     "author": row.user.get_full_name(),
-                    "create": row.datetime_create.strftime("%d.%m.%Y")
+                    "create": row.datetime_create.strftime("%d.%m.%Y"),
+                    "comment": row.comment
                 })
 
 
@@ -229,7 +230,8 @@ def get_json(request):
                     "goon": "yes" if contract.goon else "no",
                     "money": "%.2f" % contract.money,
                     "period": contract.period.id,
-                    "manager": contract.manager.id
+                    "manager": contract.manager.id,
+                    "comment": contract.comment
             }
 
 
@@ -516,7 +518,8 @@ def get_json(request):
                 money = Decimal(data["money"]),
                 period = pay_period.objects.get(pk=int(data["period"],10)),
                 manager = User.objects.get(pk=int(data["manager"],10)),
-                user = request.user
+                user = request.user,
+                comment = data["comment"].strip()
             )
 
 
@@ -543,6 +546,7 @@ def get_json(request):
             contract.money = Decimal(data["money"])
             contract.period = pay_period.objects.get(pk=int(data["period"],10))
             contract.manager = User.objects.get(pk=int(data["manager"],10))
+            contract.comment = data["comment"].strip()
             contract.save()
 
             comments_logs.objects.create(

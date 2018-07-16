@@ -99,7 +99,7 @@ class contracts(models.Model):
     datetime_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время создания")
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Создал договор")
     manager = models.ForeignKey(User, related_name="contract_manager", on_delete=models.PROTECT, verbose_name="Ответственный", db_index=True)
-
+    comment = models.TextField(default="", verbose_name="Коментарий договора")
 
     def __unicode__(self):
         return self.num

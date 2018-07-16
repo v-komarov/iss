@@ -74,6 +74,7 @@ class HouseEditForm(ModelForm):
 
 ### Форма ввода и редактирования договоров
 class ContractForm(ModelForm):
+    comment = forms.CharField(label="Комментарий", widget=forms.Textarea(attrs={'class':'input-xm', 'rows':2, 'cols':20}))
 
 
     def __init__(self, *args, **kwargs):
@@ -99,7 +100,7 @@ class ContractForm(ModelForm):
 
     class Meta:
         model = contracts
-        fields = ['num', 'date_begin', 'date_end', 'goon', 'manager', 'money', 'period',]
+        fields = ['num', 'date_begin', 'date_end', 'goon', 'manager', 'money', 'period', 'comment',]
 
 
 

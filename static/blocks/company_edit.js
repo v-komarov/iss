@@ -258,6 +258,7 @@ function CreateContract(e) {
     $("#contract-window input#id_money").val("0");
     $("#contract-window select#id_period").val("");
     $("#contract-window select#id_manager").val("");
+    $("#contract-window textarea#id_comment").val("");
 
     ContractData(action="contract-create");
 
@@ -282,6 +283,7 @@ function EditContract(e) {
             $("#contract-window input#id_money").val(data["rec"]["money"]);
             $("#contract-window select#id_period").val(data["rec"]["period"]);
             $("#contract-window select#id_manager").val(data["rec"]["manager"]);
+            $("#contract-window textarea#id_comment").val(data["rec"]["comment"]);
 
             $("#contract-window").attr("contract-id",data["rec"]["contract_id"]);
 
@@ -325,6 +327,7 @@ function ContractData(action) {
                 var money = $("#contract-window input#id_money").val();
                 var period = $("#contract-window select#id_period").val();
                 var manager = $("#contract-window select#id_manager").val();
+                var comment = $("#contract-window textarea#id_comment").val();
 
                 var data = {};
                 data.num = num;
@@ -334,6 +337,7 @@ function ContractData(action) {
                 data.money = money;
                 data.period = period;
                 data.manager = manager;
+                data.comment = comment;
                 data.company = $("div#common").attr("company_id");
                 data.action = action;
 
@@ -533,6 +537,7 @@ function GetListContracts() {
                 +"<td><a contract>"+value['create']+"</a></td>"
                 +"<td><a contract>"+value['manager']+"</a></td>"
                 +"<td><a contract>"+value['author']+"</a></td>"
+                +"<td><a contract>"+value['comment']+"</a></td>"
                 +"<td><a delete-contract><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
                 +"</tr>";
 

@@ -100,15 +100,15 @@
         <tbody class="small">
             {% for row in object_list %}
                 <tr>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.company.inn }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.company.name }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.num }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.date_begin|date:"d.m.Y" }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.date_end|date:"d.m.Y" }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{% if row.goon %}Да{% endif %}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.money }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.period }}</a></td>
-                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.id }}/" target="_blank" style="color: black;">{{ row.manager.get_full_name }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.company.inn }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.company.name }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.num }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.date_begin|date:"d.m.Y" }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.date_end|date:"d.m.Y" }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{% if row.goon %}Да{% endif %}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.money }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.period }}</a></td>
+                    <td style="background-color:#7FFFD4;"><a href="/blocks/companyedit/{{ row.company.id }}/" target="_blank" style="color: black;">{{ row.manager.get_full_name }}</a></td>
                 </tr>
             {% endfor %}
         </tbody>
