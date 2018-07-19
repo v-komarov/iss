@@ -34,30 +34,27 @@
 
 
 
+<div id="param3" hidden>
+    <h4 class="text-center">Задание соответсвия столбцов и задание диапазона загрузки строк</h4>
+</div>
+
+
+
 <div id="param" class="row col-sm-3 small" hidden>
 
-
-
-    <dl class="dl-horizontal small">
-
-        <dt></dt>
-
-        <dd>Задание соответсвия столбцов</dd>
-
-    </dl>
 
     <dl class="dl-horizontal small">
 
             <dt>Наименование</dt>
-            <dd><input id="col-name" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-name" class="form-control input-sm" type="number" /></dd>
             <dt>Склад</dt>
-            <dd><input id="col-store" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-store" class="form-control input-sm" type="number" /></dd>
             <dt>Остаток</dt>
-            <dd><input id="col-rest" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-rest" class="form-control input-sm" type="number" /></dd>
             <dt>Ед. из.</dt>
-            <dd><input id="col-dimansion" class="form-control input-sm" type="text" /></dd>
-            <dt>Серийный номер</dt>
-            <dd><input id="col-serial" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-dimansion" class="form-control input-sm" type="number" /></dd>
+            <dt>Код ЕИСУП</dt>
+            <dd><input id="col-eisup" class="form-control input-sm" type="number" /></dd>
 
     </dl>
 
@@ -73,20 +70,8 @@
 
     <dl class="dl-horizontal small">
 
-        <dt></dt>
-
-        <dd>и задание диапазона загрузки строк</dd>
-
-    </dl>
-
-
-
-    <dl class="dl-horizontal small">
-
-            <dt>Код ЕИСУП</dt>
-            <dd><input id="col-eisup" class="form-control input-sm" type="text" /></dd>
             <dt>Счет учета</dt>
-            <dd><input id="col-accounting-code" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-accounting-code" class="form-control input-sm" type="number" /></dd>
             <dt>МОЛ:</dt>
             <dd>
                 <select class="form-control input-sm" id="staff" >
@@ -106,9 +91,9 @@
                 </select>
             </dd>
             <dt>Загрузка нач. стр.</dt>
-            <dd><input id="col-str-begin" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-str-begin" class="form-control input-sm" type="number" /></dd>
             <dt>Загрузка окон. стр.</dt>
-            <dd><input id="col-str-end" class="form-control input-sm" type="text" /></dd>
+            <dd><input id="col-str-end" class="form-control input-sm" type="number" /></dd>
     </dl>
 
 
@@ -117,7 +102,7 @@
 
         <dt></dt>
 
-        <dd><button title="Загрузить данные" class="btn btn-default btn-xs">Загрузить</button></dd>
+        <dd><button id="btn-load-rest" title="Загрузить данные" class="btn btn-default btn-xs">Загрузить</button></dd>
 
     </dl>
 
@@ -137,6 +122,7 @@
 </div>
 
 
+{% include "regions/store/upload-eisup.html" %}
 
 {% endblock %}
 

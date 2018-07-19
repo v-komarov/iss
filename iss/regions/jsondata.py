@@ -1966,6 +1966,74 @@ def get_json(request):
 
 
 
+
+        ### Загрузка остатков склада из файла
+        if data.has_key("action") and data["action"] == 'store-load-rest':
+
+            ###
+            region_id = int(data["region"],10)
+            staff_id = int(data["staff"],10)
+            table_data = data["table"]
+
+            region_obj = regions.objects.get(pk=region_id)
+            staff_obj = User.objects.get(pk=staff_id)
+
+            ### Отдаваемые данные
+            data_send = []
+
+
+            for row in table_data:
+
+                ### Поиск среди складов
+                if store_list.objects.filter(name=row["store"], region=region_obj).exists():
+                    st = store_list.objects.get(name=row["store"], region=region_obj)
+                else:
+                    st = store_list.objects.create(name=row["store"], region=region_obj)
+
+                ### Поиск записей остатков
+                if store_rest.objects.filter(eisup=row["eisup"],store=st,mol=staff_obj,serial="", dimension=row["dimension"]).exists():
+                    st_rest = store_rest.objects.filter(eisup=row["eisup"],store=st,mol=staff_obj, serial="", dimension=row["dimension"]).first()
+                    data_send.append({
+                        'id': st_rest.id,
+                        'name': row["name"],
+                        'eisup': row["eisup"],
+                        'store': row["store"],
+                        'rest': row["rest"],
+                        'dimension': row["dimension"],
+                        'load': "no"
+                    })
+
+                else:
+                    st_rest = store_rest.objects.create(eisup=row["eisup"],store=st,mol=staff_obj,name=row["name"],rest=Decimal(row["rest"]), dimension=row["dimension"])
+                    data_send.append({
+                        'id': st_rest.id,
+                        'name': row["name"],
+                        'eisup': row["eisup"],
+                        'store': row["store"],
+                        'rest': row["rest"],
+                        'dimension': row["dimension"],
+                        'load': "yes"
+                    })
+
+
+                ### Регистрация в логе
+                store_rest_log.objects.create(
+                    store_rest = st_rest,
+                    user = request.user,
+                    action = "Загрузка из файла"
+                )
+
+
+
+
+
+            response_data = {"result": "ok", "data": data_send}
+
+
+
+
+
+
         ### Исправление остатков склада
         if data.has_key("action") and data["action"] == 'store-edit-rest':
             srest = store_rest.objects.get(pk=int(data["row_id"]))

@@ -677,7 +677,7 @@ class reestr_proj_messages_history(models.Model):
 
 ### Склады список
 class store_list(models.Model):
-    name = models.CharField(max_length=100, default="", db_index=True, unique=True)
+    name = models.CharField(max_length=100, default="", db_index=True)
     region = models.ForeignKey(regions, on_delete=models.PROTECT, verbose_name='Регион', null=True)
     comment = models.CharField(max_length=200, default="", blank=True, verbose_name="Коментарий, адрес")
 
@@ -690,7 +690,7 @@ class store_list(models.Model):
         verbose_name = 'Склад'
         verbose_name_plural = 'Склады'
 
-
+        unique_together = (("name", "region"),)
 
 
 

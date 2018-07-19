@@ -781,40 +781,6 @@ def uploadfile_store(request):
                 ht = df.to_html(header=True, index=True, float_format=lambda x: '%10.2f' % x, classes="table table-bordered table-striped draggable").encode('utf-8')
 
 
-                        ### Поиск среди складов
-                        #if store_list.objects.filter(name=store).exists():
-                        #    st = store_list.objects.get(name=store)
-                        #else:
-                        #    st = store_list.objects.create(name=store)
-
-                        ### Поиск записей остатков
-                        #if store_rest.objects.filter(eisup=eisup,store=st,mol=user,serial="").exists():
-                        #    st_rest = store_rest.objects.filter(eisup=eisup,store=st,mol=user).first()
-                        #    data.append({
-                        #        'id': st_rest.id,
-                        #        'name': name,
-                        #        'eisup': eisup,
-                        #        'store': store,
-                        #        'rest': rest,
-                        #        'load': "no"
-                        #    })
-
-                        #else:
-                        #    st_rest = store_rest.objects.create(eisup=eisup,store=st,mol=user,name=name,rest=Decimal(rest))
-                        #    data.append({
-                        #        'id': "",
-                        #        'name': name,
-                        #        'eisup': eisup,
-                        #        'store': store,
-                        #        'rest': rest,
-                        #        'load': "yes"
-                        #    })
-                            ### Регистрация в логе
-                        #    store_rest_log.objects.create(
-                        #        store_rest = st_rest,
-                        #        user = user,
-                        #        action = "Загрузка из файла"
-                        #    )
 
 
                 return HttpResponse("""

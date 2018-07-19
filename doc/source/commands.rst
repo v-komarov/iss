@@ -145,3 +145,14 @@ mail_sibttk_ru
 
     */10 *	* * * cd /srv/django/iss;/usr/bin/python manage.py mail_sibttk_ru
 
+
+Приложение regions
+------------------
+
+.. index:: clear_stores
+
+clear_stores
+~~~~~~~~~~~~
+
+Удаляет записи по скадам, а именно из моделей  : store_rest, store_in, store_out, store_rest_log, store_carry, store_list
+

@@ -14,3 +14,17 @@ html body div.row iframe {
     margin-top: 50px;
     margin-left: 100px;
 }
+
+
+table[group=upload-list] > thead > tr > th {
+    background-color:#87CEFA;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+table[group=upload-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}

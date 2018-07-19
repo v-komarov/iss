@@ -39,13 +39,6 @@ table[group=goods-list] > tbody > tr > td > a:hover,
 
 
 
-table[group=upload-list] > thead > tr > th {
-    background-color:#87CEFA;
-    padding: 0;
-    text-align: left;
-    vertical-align: top;
-}
-
 
 #local-menu {
     margin-left:10px;
