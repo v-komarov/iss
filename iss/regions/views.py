@@ -31,15 +31,13 @@ from django.core.urlresolvers import reverse
 
 
 from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type, init_reestr_proj, blocks, address_companies
-from iss.regions.models import orders, reestr, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log, store_carry
-from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm
+from iss.regions.models import orders, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log, store_carry, avr
+from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm, NewAVRForm, EditAVRForm
 
 from iss.mydecorators import group_required,anonymous_required
 
 from iss.regions.filters import reestr_proj_filter
 
-#message_type_first = MessageType.objects.get(pk=1)
-#message_status_first = MessageStatus.objects.get(pk=1)
 
 
 
@@ -104,104 +102,6 @@ class Orders(ListView):
         return context
 
 
-
-
-
-### Реестр
-class Reestr(ListView):
-
-    model = reestr
-    template_name = "regions/reestr.html"
-
-    paginate_by = 100
-
-
-
-    #@method_decorator(login_required(login_url='/'))
-    #@method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
-    def dispatch(self, request, *args, **kwargs):
-        self.request = request
-        self.session = request.session
-        self.user = request.user
-        return super(ListView, self).dispatch(request, *args, **kwargs)
-
-
-
-
-
-    def get_queryset(self):
-
-        if self.session.has_key("filter-city-reestr") and self.session.has_key("filter-region-reestr"):
-            region = regions.objects.get(pk=int(self.session["filter-region-reestr"], 10))
-            city = address_city.objects.get(pk=int(self.session["filter-city-reestr"], 10))
-            return reestr.objects.filter(region=region,city=city).order_by('invnum', 'name')
-
-        elif self.session.has_key("filter-city-reestr") == False and self.session.has_key("filter-region-reestr"):
-            region = regions.objects.get(pk=int(self.session["filter-region-reestr"], 10))
-            return reestr.objects.filter(region=region).order_by('city__name', 'invnum', 'name')
-
-        elif self.session.has_key("filter-city-reestr") and self.session.has_key("filter-region-reestr") == False :
-            city = address_city.objects.get(pk=int(self.session["filter-city-reestr"], 10))
-            return reestr.objects.filter(city=city).order_by('region__name', 'invnum', 'name')
-
-        else:
-
-            return reestr.objects.order_by('region__name', 'city__name', 'invnum', 'name')
-
-
-
-
-
-
-
-    def get_context_data(self, **kwargs):
-        context = super(Reestr, self).get_context_data(**kwargs)
-
-        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
-        context['regions_list'] = regions.objects.order_by('name')
-        context['cities_list'] = address_city.objects.order_by('name')
-
-        context['region'] = self.session["filter-region-reestr"] if self.session.has_key("filter-region-reestr") else "0"
-        context['city'] = self.session["filter-city-reestr"] if self.session.has_key("filter-city-reestr") else "0"
-
-
-        return context
-
-
-
-
-### Редактировать строку реестра
-@method_decorator(login_required(login_url='/'), name='dispatch')
-@method_decorator(group_required(group='reestr', redirect_url='/regions/reestr/page/1/'), name='dispatch')
-class ReestrUpdate(UpdateView):
-    model = reestr
-    fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os', 'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address', 'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs', 'res_count', 'res_serial', 'res_invnum']
-    success_url = '/regions/reestr/page/1/'
-    template_name = "regions/edit_reestr.html"
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user.get_username() + " (" + self.request.user.get_full_name() + ")"
-        form.instance.rowsum = form.instance.price * form.instance.count
-        return super(ReestrUpdate, self).form_valid(form)
-
-
-
-
-### Добавить позицию реестра
-@method_decorator(login_required(login_url='/'), name='dispatch')
-@method_decorator(group_required(group='reestr', redirect_url='/regions/reestr/page/1/'), name='dispatch')
-class ReestrCreate(CreateView):
-    model = reestr
-    fields = ['region', 'god_balans', 'original', 'net', 'city', 'project_code', 'invnum', 'start_date', 'ed_os',
-              'name', 'comcode', 'serial', 'nomen', 'ed', 'count', 'price', 'actos1', 'group', 'age', 'address',
-              'dwdm', 'tdm', 'sdh', 'ip', 'atm', 'emcs', 'res_count', 'res_serial', 'res_invnum']
-    success_url = '/regions/reestr/page/1/'
-    template_name = "regions/edit_reestr.html"
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user.get_username() + " (" + self.request.user.get_full_name() + ")"
-        form.instance.rowsum = form.instance.price * form.instance.count
-        return super(ReestrCreate, self).form_valid(form)
 
 
 
@@ -456,21 +356,6 @@ class ReestrProjList(ListView):
 
 
 
-"""
-### Добавление реестра проекта
-class ReestrProjAdd(CreateView):
-    model = reestr_proj
-    fields = ['proj_kod','region','proj_name']
-    success_url = '/regions/reestrproj/page/1/'
-    template_name = "regions/reestrproj/reestrprojadd.html"
-
-
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        #form.instance.rowsum = form.instance.price * form.instance.count
-        return super(ReestrProjAdd, self).form_valid(form)
-"""
 
 
 
@@ -1010,4 +895,84 @@ class LoadStore(ListView):
 
 
         return context
+
+
+
+
+
+
+
+
+### Список АВР
+class AvrList(ListView):
+
+
+
+    model = reestr_proj
+    template_name = "regions/avr/avrlist.html"
+
+    paginate_by = 100
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='project',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+        data = avr.objects.order_by("-datetime_avr")
+
+        return data
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AvrList, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+
+        context["form"] = NewAVRForm()
+
+
+        return context
+
+
+
+
+
+
+### Карточка АВР
+class AVREdit(UpdateView):
+    model = avr
+    form_class = EditAVRForm
+    template_name = "regions/avr/avredit.html"
+    success_url = '/regions/avr/avr/edit/1/'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(AVREdit, self).dispatch(request, *args, **kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AVREdit, self).get_context_data(**kwargs)
+
+        return context
+
+
+    def form_valid(self, form):
+        #form.instance.rowsum = form.instance.price * form.instance.count
+        return super(AVREdit, self).form_valid(form)
+
 

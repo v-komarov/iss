@@ -1,0 +1,171 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/avr/avrlist.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/avr/avrlist.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+<div id="manager" class="row col-sm-5 small">
+
+    <dl class="dl-horizontal">
+        <dt><label for="search-text">Поиск</label></dt>
+        <dd>
+            <input class="form-control input-sm" type="text" id="search-text" placeholder="" value="{{ search }}" >
+        </dd>
+        <dt><label for="region">Регион</label></dt>
+        <dd>
+            <select class="form-control input-sm" id="region">
+                {% if region == "" %}
+                    <option value="" selected>Все</option>
+                {% else %}
+                    <option value="">Все</option>
+                {% endif %}
+                {% for r in region_list %}
+                    {% if region == r.store.region.id|stringformat:"i" %}
+                        <option value="{{ r.store.region.id }}" selected>{{ r.store.region.name }}</option>
+                    {% else %}
+                        <option value="{{ r.store.region.id }}">{{ r.store.region.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+        <dt><label for="mol">МОЛ</label></dt>
+        <dd>
+            <select class="form-control input-sm" id="mol">
+                {% if mol == "" %}
+                    <option value="" selected>Все</option>
+                {% else %}
+                    <option value="">Все</option>
+                {% endif %}
+                {% for m in mol_list %}
+                    {% if mol == m.mol.id|stringformat:"i" %}
+                        <option value="{{ m.mol.id }}" selected>{{ m.mol.get_full_name }}</option>
+                    {% else %}
+                        <option value="{{ m.mol.id }}">{{ m.mol.get_full_name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </dd>
+    </dl>
+</div>
+
+
+<div id="buttons" class="row col-sm-2 small">
+    <button id="search-button" title="Применить" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh"></span></button>
+    <button id="clear-button" title="Отменить поиск" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+</div>
+
+
+
+
+
+
+<div id="gcreate" class="row col-sm-2 small">
+            <button id="create-button" type="submit" title="Создать новый АВР" class="btn btn-default btn-xs">Создать</button>
+</div>
+
+
+
+
+
+
+<div class="row">
+
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/avr/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/avr/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+
+    <table group="avr-list" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;">
+                <th>Номер</th>
+                <th>Регион</th>
+                <th>Город</th>
+                <th>Статус</th>
+                <th>Объект сети</th>
+                <th>Адрес</th>
+                <th>Дата</th>
+                <th>Дата выезда</th>
+                <th>МОЛ</th>
+                <th>Создан</th>
+                <th>Создал</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+            {% for row in object_list %}
+            <tr>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.id }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.region }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.city }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{% if row.status %}{{ row.status }}{% endif %}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.objnet }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.address }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.datetime_avr|date:"d.m.Y" }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{% if row.datetime_work %}{{ row.datetime_work|date:"d.m.Y" }}{% endif %}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.staff.get_full_name }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.datetime_create|date:"d.m.Y" }}</a></td>
+                <td><a href="/regions/avr/{{ row.id }}/">{{ row.author.get_full_name }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+    {% if paginator.num_pages > 1 %}
+        {% if page_obj.has_previous %}
+            <a href="/regions/avr/page/{{ page_obj.previous_page_number }}/"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></a>
+        {% endif %}
+        <span class="current_page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="/regions/avr/page/{{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></a>
+        {% endif %}
+    {% endif %}
+
+
+
+</div>
+
+
+{% include "regions/avr/newavr_form.html" %}
+
+
+
+
+{% endblock %}
+

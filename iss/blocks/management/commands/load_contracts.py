@@ -74,7 +74,7 @@ class Command(BaseCommand):
                         break
 
                 p = pay_period.objects.get(pk=per_id) ### Переодичность
-                num = row[2] ## Номер договора
+                num = row[14] ## Номер договора
                 goon = False if pd.isnull(row[32]) else True ## Пролонгация договора
 
                 comment = "" if pd.isnull(row[33]) else row[33] ### Комментарий

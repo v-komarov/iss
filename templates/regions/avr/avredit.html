@@ -1,0 +1,81 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}regions/avr/avredit.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}regions/avr/avredit.js"></script>
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+<div class="container">
+
+
+
+    <div class="row">
+        <h3>Карточка АВР <a class="small" href="/regions/avr/page/1/" title="Вернуться к списку"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a></h3>
+    </div>
+
+    <div class="row col-sm-6">
+
+        <dl class="dl-horizontal small">
+            {{ form.avr_id }}
+            <dt>{{ form.region.label }}</dt>
+            <dd>{{ form.region }}</dd>
+            <dt>{{ form.city.label }}</dt>
+            <dd>{{ form.city }}</dd>
+            <dt>{{ form.address.label }}</dt>
+            <dd>{{ form.address }}</dd>
+            <dt>{{ form.objnet.label }}</dt>
+            <dd>{{ form.objnet }}</dd>
+            <dt>{{ form.datetime_avr.label }}</dt>
+            <dd>{{ form.datetime_avr }}</dd>
+            <dt>{{ form.datetime_work.label }}</dt>
+            <dd>{{ form.datetime_work }}</dd>
+            <dt>{{ form.staff.label }}</dt>
+            <dd>{{ form.staff }}</dd>
+        </dl>
+
+    </div>
+
+    <div>
+        <button class="btn btn-default btn-xs">Сохранить</button>
+    </div>
+
+
+
+    <div class="row col-md-8 small">
+        <ul class="nav nav-tabs">
+          <li id="nav-1" class="active"><a href="#">Материалы</a></li>
+          <li id="nav-2"><a href="#">Статус</a></li>
+          <li id="nav-3"><a href="#">Документы</a></li>
+          <li id="nav-4"><a href="#">Комментарии</a></li>
+          <li id="nav-5"><a href="#">Лог</a></li>
+        </ul>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+<iframe name="uploadframe" hidden></iframe>
+
+
+
+
+{% endblock %}

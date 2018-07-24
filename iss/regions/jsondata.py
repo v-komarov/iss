@@ -23,8 +23,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry
-from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry, avr, avr_logs
+from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type, address_city
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
 
@@ -150,7 +150,7 @@ def get_json(request):
 
 
 
-
+        """
         ### Фильтр по региону для интерфейса Реестр
         if r.has_key("action") and rg("action") == 'filter-region-reestr':
             region = request.GET["region_id"]
@@ -173,7 +173,7 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
-
+        """
 
 
 
@@ -2267,6 +2267,44 @@ def get_json(request):
 
 
                 response_data = {"result": "ok"}
+
+
+
+
+
+        ### Создание АВР
+        if data.has_key("action") and data["action"] == 'avr-create':
+
+
+
+            region_obj = regions.objects.get(pk=int(data["region"],10))
+            city_obj = address_city.objects.get(pk=int(data["city"],10))
+            staff_obj = User.objects.get(pk=int(data["staff"],10))
+
+            avr_obj = avr.objects.create(
+                region = region_obj,
+                city = city_obj,
+                staff = staff_obj,
+                objnet = data["objnet"].strip(),
+                address = data["address"].strip(),
+                author = request.user,
+                datetime_avr = datetime.datetime.strptime(data["datetime_avr"], "%d.%m.%Y"),
+                datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y")
+
+            )
+
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr = avr_obj,
+                user = request.user,
+                action = u"Создан АВР"
+            )
+
+
+            response_data = {"result": "ok", "id": avr_obj.id}
+
+
 
 
 

@@ -2,7 +2,7 @@
 
 
 from django.conf.urls import url
-from iss.regions.views import Orders, Reestr, ReestrUpdate, ReestrCreate, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit, Store, StoreOut, StoreIn, StoreHistory, StoreCarry, LoadStore
+from iss.regions.views import Orders, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit, Store, StoreOut, StoreIn, StoreHistory, StoreCarry, LoadStore, AvrList, AVREdit
 from iss.regions.jsondata import get_json
 from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall, uploadfile_store
 
@@ -18,12 +18,6 @@ urlpatterns = [
     url(r'reestrproj/excel/(?P<typeproj>\w+)/$', reestrprojexcel),
     url(r'reestrproj/excelall/(?P<typeproj>\w+)/$', reestrprojexcelall),
     url(r'orders/$', Orders.as_view()),
-    url(r'reestr/page/(?P<page>\d+)/$', Reestr.as_view()),
-    url(r'reestr/edit/(?P<pk>\d+)/$', ReestrUpdate.as_view(), name='edit-reestr'),
-    url(r'reestr/edit/add/$', ReestrCreate.as_view(), name='add-reestr'),
-#    url(r'docs/$', DocsList.as_view()),
-#    url(r'docs/edit/add/$', DocsUpdate.as_view(action='create')),
-#    url(r'docs/edit/update/$', DocsUpdate.as_view(action='update')),
     url(r'jsondata/$', get_json),
     url(r'filedata/$', get_orders_region),
     url(r'proj/page/(?P<page>\d+)/$', ProjList.as_view()),
@@ -41,4 +35,6 @@ urlpatterns = [
     url(r'storehistory/page/(?P<page>\d+)/$', StoreHistory.as_view()),
     url(r'store/upload-eisup/$', uploadfile_store),
     url(r'store/loadstore/$', LoadStore.as_view()),
+    url(r'avr/page/(?P<page>\d+)/$', AvrList.as_view()),
+    url(r'avr/(?P<pk>\d+)/$', AVREdit.as_view()),
 ]

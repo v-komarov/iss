@@ -1,0 +1,49 @@
+table[group=avr-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+
+.row {
+    margin: 0;
+}
+
+
+table[group=avr-list] > tbody > tr > td {
+    padding: 0;
+    vertical-align: top;
+}
+
+
+#manager, #buttons, #create-button {
+    margin-top: 20px;
+}
+
+
+
+/* Курсор */
+table[group=avr-list] > tbody > tr > td > a,
+#loadstore a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=avr-list] > tbody > tr > td > a:hover,
+#loadstore a {
+    text-decoration:none;
+}
+
+
+.class100 {
+    width: 100%;
+}
+
+
+#avr input,
+#avr select {
+    width: 300px;
+}
+
