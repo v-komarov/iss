@@ -98,6 +98,7 @@ function CreateAVR(e) {
                     success: function(result) {
                         if (result["result"] == "ok") {
                             $("#avr").dialog('close');
+                            location.href = "/regions/avr/page/1/";
                         }
                     }
 

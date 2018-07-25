@@ -1,0 +1,35 @@
+<div id="page-3" class="row small" hidden>
+
+    <div class="row col-md-8">
+
+            <form action="/regions/avr/upload-file/" id="uploadfilehdfs" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
+
+            <div class="form-group">
+                <input id="fileuploadhdfs" name="fileuploadhdfs" type="file">
+                <input type="hidden" id="arv_id" name="avr_id" value={{ avr.id }} />
+            </div>
+
+            <button type="submit" title="Загрузить файл" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span></button>
+
+        </form>
+
+    </div>
+
+    <div class="row col-md-8">
+
+        <table group="file-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th>Дата загрузки</th>
+                    <th>Название файла</th>
+                    <th>Загрузил</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+
+</div>

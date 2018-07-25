@@ -1314,6 +1314,47 @@ def get_json(request):
 
 
 
+        ### АВР: список логов
+        if r.has_key("action") and rg("action") == 'get-avr-list-logs':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            log_list = []
+            for row in avr_logs.objects.filter(avr=avr_obj,log=True).order_by("-datetime_update"):
+                log_list.append({
+                    "comment": row.action,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_update.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": log_list }
+
+
+
+
+
+
+        ### АВР: список комментариев
+        if r.has_key("action") and rg("action") == 'get-avr-list-comments':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            comments_list = []
+            for row in avr_logs.objects.filter(avr=avr_obj,log=False).order_by("-datetime_update"):
+                comments_list.append({
+                    "comment": row.action,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_update.strftime("%d.%m.%Y")
+                })
+
+
+            response_data = {"result": "ok", "data": comments_list}
+
+
+
+
+
+
+
 
     if request.method == "POST":
 
@@ -2304,6 +2345,61 @@ def get_json(request):
 
             response_data = {"result": "ok", "id": avr_obj.id}
 
+
+
+
+
+
+        ### Сохранение карточки АВР
+        if data.has_key("action") and data["action"] == 'avr-save':
+
+
+
+            region_obj = regions.objects.get(pk=int(data["region"],10))
+            city_obj = address_city.objects.get(pk=int(data["city"],10))
+            staff_obj = User.objects.get(pk=int(data["staff"],10))
+
+            avr_obj = avr.objects.get(pk=int(data["avr_id"],10))
+
+            avr_obj.region = region_obj
+            avr_obj.city = city_obj
+            avr_obj.staff = staff_obj
+            avr_obj.objnet = data["objnet"].strip()
+            avr_obj.address = data["address"].strip()
+            avr_obj.author = request.user
+            avr_obj.datetime_avr = datetime.datetime.strptime(data["datetime_avr"], "%d.%m.%Y")
+            avr_obj.datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y")
+            avr_obj.save()
+
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr = avr_obj,
+                user = request.user,
+                action = u"Сохранена карточка АВР"
+            )
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Добавление комментария АВР
+        if data.has_key("action") and data["action"] == 'avr-comment-add':
+
+            avr_obj = avr.objects.get(pk=int(data["avr_id"],10))
+
+            avr_logs.objects.create(
+                avr = avr_obj,
+                user = request.user,
+                action = data["comment"].strip(),
+                log = False
+            )
+
+
+            response_data = {"result": "ok"}
 
 
 

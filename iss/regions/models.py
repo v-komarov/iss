@@ -740,4 +740,4 @@ class avr_logs(models.Model):
     datetime_update = models.DateTimeField(auto_now_add=True, db_index=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
     action = models.CharField(max_length=100, default="", verbose_name="Действие")
-
+    log = models.BooleanField(default=True)

@@ -168,7 +168,7 @@ class EditAVRForm(AVRForm):
         super(EditAVRForm, self).__init__(*args, **kwargs)
         self.fields['region'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
         self.fields['city'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
-        self.fields['staff'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
+        self.fields['staff'].widget.attrs = {'class':'form-control input-sm col-sm-2', 'disabled':'disabled'}
 
         users = User.objects.order_by("first_name")
         user_list = [("","-------")]
