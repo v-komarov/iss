@@ -14,11 +14,17 @@ $(document).ready(function() {
     // Добавление комментария
     $("#page-4 button#addcomment").bind("click", AddComment);
 
+    // Удаление файла
+    $("#page-3 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteFile);
+
+
+
     // Отображение списко логов
     GetListLogs();
     // Отображение списка комментариев
     GetListComments();
-
+    // Отображение списка загруженных файлов
+    GetListFiles();
 
 
 });
@@ -49,6 +55,12 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+
+
+
+
+
 
 
 
@@ -116,6 +128,45 @@ function GetListComments() {
                 +"</tr>";
 
                 $("table[group=comment-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Список файлов, загруженных в hdfs
+function GetListFiles() {
+
+    var avr_id = $("input#id_avr_id").val();
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-hdfs-files&avr_id="+avr_id,
+    function(data) {
+
+
+        if (data["result"] == "ok") {
+
+            $("table[group=file-list] tbody").empty();
+            $.each(data["files"], function(key,value) {
+
+
+                var t = "<tr file_id="+value["file_id"]+" >"
+                +"<td>"+value['date']+"</td>"
+                +"<td><a href=\"/regions/readfileavr?file_id="+value["file_id"]+"&file_name="+value["filename"]+"\" >"+value['filename']+"</a></td>"
+                +"<td>"+value['user']+"</td>"
+                +"<td><a delete-file><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=file-list] tbody").append(t);
 
             });
 
@@ -252,6 +303,44 @@ function EditAVR(e) {
 
     }
     else { alert("Необходимо заполнить поля!");}
+
+
+}
+
+
+
+// Очистка поля ввода имени файла
+function ClearUploadFile() {
+
+    $("#page-3 input#fileuploadhdfs").val("");
+
+}
+
+
+
+
+
+
+
+
+// Удаление загруженного файла
+function DeleteFile(e) {
+
+    var file_id = $(this).parents("tr").attr("file_id");
+    var filename = $(this).parents("tr").children("td").eq(1).text();
+    var deletefile = confirm("Удаляем файл "+filename+" ?");
+    var avr_id = $("input#id_avr_id").val();
+
+    if (deletefile) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=avr-file-delete&file_id="+file_id+"&avr_id="+avr_id,
+        function(data) {
+
+            if (data["result"] == "ok") { GetListFiles(); GetListLogs(); }
+
+        })
+
+    }
 
 
 }

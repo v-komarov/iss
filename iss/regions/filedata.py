@@ -33,7 +33,7 @@ import numpy as np
 
 from snakebite.client import Client
 
-from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment, store_list, store_rest, store_rest_log
+from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment, store_list, store_rest, store_rest_log, avr, avr_logs, avr_files
 from iss.localdicts.models import regions, ProjDocTypes
 from iss.regions.filters import reestr_proj_filter
 
@@ -820,3 +820,90 @@ def uploadfile_store(request):
             <html><head><script type="text/javascript">                
             </script></head></html>
             """)
+
+
+
+
+
+### Загрузка файлов АВР
+def uploadfile_avr(request):
+
+    avr_id = request.POST["avr_id"]
+
+    avr_obj = avr.objects.get(pk=int(avr_id, 10))
+
+
+    filename = request.FILES['fileuploadhdfs'].name
+    filedata = request.FILES['fileuploadhdfs'].read()
+
+
+    rec = avr_files.objects.create(
+        avr = avr_obj,
+        filename = filename,
+        user = request.user
+    )
+
+    ### Запись во временный файл
+    tf = tempfile.NamedTemporaryFile(delete=False)
+    f = open(tf.name, 'w')
+    f.write(filedata)
+    f.close()
+
+
+    run = 'curl -i -X PUT -T %s -L "http://10.6.0.135:50070/webhdfs/v1/avr/%s?user.name=root&op=CREATE&overwrite=true&replication=2"' % (tf.name, rec.id)
+
+    os.system(run)
+
+
+    ### Удаление временного файла
+    os.remove(tf.name)
+
+    ### Регистрация в логе
+    avr_logs.objects.create(
+        avr=avr_obj,
+        user=request.user,
+        action=u"Загружен файл: %s" % filename
+    )
+
+    return HttpResponse("""
+    <html><head><script type="text/javascript">
+        window.top.ClearUploadFile();
+        window.top.GetListFiles();
+        window.top.GetListLogs();
+    </script></head></html>
+    """)
+
+
+
+
+
+### Получение файла АВР
+def get_avr_file(request):
+
+    if request.method == "GET":
+        file_id = request.GET["file_id"]
+        file_name = request.GET["file_name"]
+
+        file_name = urllib.unquote(file_name).encode("utf-8")
+
+        ### временный файл
+        tfile = "/tmp/{file_id}".format(file_id=file_id)
+
+
+        client = Client('10.6.0.135', 9000)
+        for x in client.copyToLocal(['/avr/%s' % file_id], tfile):
+            print x
+
+        f = open(tfile, 'r')
+        data = f.read()
+        f.close()
+
+        ### Удаление временного файла
+        os.remove(tfile)
+
+        content_type =  mimetypes.types_map[".%s" % file_name.split('.')[-1]]
+
+        response = HttpResponse(data, content_type=content_type)
+        response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
+        return response
+

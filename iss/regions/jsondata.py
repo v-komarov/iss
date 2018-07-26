@@ -23,7 +23,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
-from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry, avr, avr_logs
+from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry
+from iss.regions.models import avr, avr_logs, avr_files
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type, address_city
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -1350,6 +1351,52 @@ def get_json(request):
             response_data = {"result": "ok", "data": comments_list}
 
 
+
+
+
+        ### АВР: Список загруженных файлов
+        if r.has_key("action") and rg("action") == 'get-avr-list-hdfs-files':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            files = []
+            for row in avr_files.objects.filter(avr=avr_obj).order_by("-datetime_load"):
+                files.append({
+                    "file_id": row.id,
+                    "filename": row.filename,
+                    "user": row.user.get_full_name(),
+                    "date": row.datetime_load.strftime("%d.%m.%Y")
+
+                })
+
+
+            response_data = {"result": "ok", "files": files}
+
+
+
+        ### АВР Удаление загруженного
+        if r.has_key("action") and rg("action") == 'avr-file-delete':
+
+            file_id = request.GET["file_id"]
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+
+            rpf = avr_files.objects.get(pk=file_id)
+            filename = rpf.filename
+            rpf.delete()
+
+            client = Client('10.6.0.135', 9000)
+            for x in client.delete(['/avr/%s' % file_id,], recurse=True):
+                print x
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=avr_obj,
+                user=request.user,
+                action=u"Удален файл: %s" % filename
+            )
+
+
+            response_data = {"result": "ok"}
 
 
 

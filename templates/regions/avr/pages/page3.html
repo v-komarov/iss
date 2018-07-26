@@ -4,8 +4,12 @@
 
             <form action="/regions/avr/upload-file/" id="uploadfilehdfs" class="form-inline" method="post" target="uploadframe" enctype="multipart/form-data">{% csrf_token %}
 
+
             <div class="form-group">
-                <input id="fileuploadhdfs" name="fileuploadhdfs" type="file">
+                <label class="btn btn-default" for="fileuploadhdfs">
+                    <input id="fileuploadhdfs" name="fileuploadhdfs" type="file">
+
+                </label>
                 <input type="hidden" id="arv_id" name="avr_id" value={{ avr.id }} />
             </div>
 

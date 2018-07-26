@@ -713,6 +713,11 @@ class store_rest_log(models.Model):
 ### Статусы АВР
 class status_avr(models.Model):
     name = models.CharField(max_length=100, default="", verbose_name="Название")
+    emails = models.TextField(default="", verbose_name="Адреса email рассылки")
+
+
+    def __unicode__(self):
+        return self.name
 
 
 
@@ -741,3 +746,18 @@ class avr_logs(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
     action = models.CharField(max_length=100, default="", verbose_name="Действие")
     log = models.BooleanField(default=True)
+
+
+
+
+### Файлы АВР
+class avr_files(models.Model):
+    id = models.CharField(max_length=255, primary_key=True, default=uuid.uuid4, editable=False)
+    avr = models.ForeignKey(avr, null=True, on_delete=models.PROTECT, verbose_name='Связь с АВР')
+    filename = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    datetime_load = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.filename
+

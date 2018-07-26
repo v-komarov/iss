@@ -4,7 +4,7 @@
 from django.conf.urls import url
 from iss.regions.views import Orders, ProjList, ProjStagesList, TaskList, ReestrProjList, ReestrProjEdit, ProcessProjList, ProcessProjEdit, Store, StoreOut, StoreIn, StoreHistory, StoreCarry, LoadStore, AvrList, AVREdit
 from iss.regions.jsondata import get_json
-from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall, uploadfile_store
+from iss.regions.filedata import get_orders_region, upload, getfile, projexcel, projgant, projtemp, uploadfile_page2, uploadfile_page4, getfile2, reestrprojexcel, reestrprojexcelall, uploadfile_store, uploadfile_avr, get_avr_file
 
 
 urlpatterns = [
@@ -37,4 +37,6 @@ urlpatterns = [
     url(r'store/loadstore/$', LoadStore.as_view()),
     url(r'avr/page/(?P<page>\d+)/$', AvrList.as_view()),
     url(r'avr/(?P<pk>\d+)/$', AVREdit.as_view()),
+    url(r'avr/upload-file/$', uploadfile_avr),
+    url(r'readfileavr/$', get_avr_file),
 ]
