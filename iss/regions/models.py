@@ -667,10 +667,9 @@ class store_out(models.Model):
     q = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Количество', default=0.00)
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор изменений")
     comment = models.CharField(max_length=200, default="", verbose_name="Комментарий")
+    avr = models.ForeignKey("avr", on_delete=models.PROTECT, verbose_name="Связь с АВР", null=True)
     proj_kod = models.CharField(max_length=100, default="", db_index=True, verbose_name="Код проекта")
-
-
-
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', default=0.00)
 
 
 ### Поступление на склад
@@ -712,12 +711,21 @@ class store_rest_log(models.Model):
 
 ### Статусы АВР
 class status_avr(models.Model):
-    name = models.CharField(max_length=100, default="", verbose_name="Название")
-    emails = models.TextField(default="", verbose_name="Адреса email рассылки")
+    name = models.CharField(max_length=100, default="", verbose_name="Название статуса")
+    emails = models.TextField(default="", verbose_name="Адреса email рассылки", blank=True)
+    allow = models.CharField(max_length=100, default="", verbose_name="Список id разрешенных статустов через запятую", blank=True)
+    stuff = models.BooleanField(default=False, verbose_name="Разрешено добавлять материал")
+    price = models.BooleanField(default=False, verbose_name="Разрешено устанавливать цену")
 
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Статус АВР'
+        verbose_name_plural = 'Статусы АВР'
+
+
 
 
 
@@ -730,7 +738,7 @@ class avr(models.Model):
     address = models.CharField(max_length=200, default="", verbose_name="Адрес")
     datetime_avr = models.DateTimeField(null=True, verbose_name="Дата АВР")
     datetime_work = models.DateTimeField(null=True, verbose_name="Дата выезда")
-    status = models.ForeignKey(status_avr, on_delete=models.PROTECT, verbose_name='Статус', null=True)
+    status = models.ForeignKey(status_avr, on_delete=models.PROTECT, verbose_name='Статус')
     staff = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="МОЛ", related_name="mol")
 
     datetime_create = models.DateTimeField(auto_now_add=True)
@@ -760,4 +768,15 @@ class avr_files(models.Model):
 
     def __unicode__(self):
         return self.filename
+
+
+
+
+### АВР история статусов
+class avr_status_history(models.Model):
+    avr = models.ForeignKey(avr, on_delete=models.PROTECT, verbose_name='АВР')
+    datetime_create = models.DateTimeField(auto_now_add=True, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор")
+    status = models.ForeignKey(status_avr, on_delete=models.PROTECT, verbose_name='Статус')
+
 

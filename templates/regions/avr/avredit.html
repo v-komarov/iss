@@ -31,6 +31,9 @@
 
         <dl class="dl-horizontal small">
             {{ form.avr_id }}
+            {{ form.status }}
+            {{ form.stuff_allow }}
+            {{ form.price_allow }}
             <dt>{{ form.region.label }}</dt>
             <dd>{{ form.region }}</dd>
             <dt>{{ form.city.label }}</dt>
@@ -87,5 +90,6 @@
 
 
 {% include "saving.html" %}
+{% include "regions/avr/upload_stuff.html" %}
 
 {% endblock %}

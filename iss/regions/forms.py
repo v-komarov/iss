@@ -163,6 +163,9 @@ class NewAVRForm(AVRForm):
 class EditAVRForm(AVRForm):
 
     avr_id = forms.CharField(label="id", widget=forms.TextInput(attrs={'hidden': 'hidden'}))
+    status = forms.IntegerField(label="status", widget=forms.TextInput(attrs={'hidden': 'hidden'}))
+    stuff_allow = forms.CharField(label="stuff_allow", widget=forms.TextInput(attrs={'hidden': 'hidden'}))
+    price_allow = forms.CharField(label="price_allow", widget=forms.TextInput(attrs={'hidden': 'hidden'}))
 
     def __init__(self, *args, **kwargs):
         super(EditAVRForm, self).__init__(*args, **kwargs)
@@ -189,10 +192,13 @@ class EditAVRForm(AVRForm):
         self.fields['city'].choices = city_list
 
         self.fields["avr_id"].initial = self.instance.id
+        self.fields["status"].initial = self.instance.status.id
+        self.fields["stuff_allow"].initial = "yes" if self.instance.status.stuff else "no"
+        self.fields["price_allow"].initial = "yes" if self.instance.status.price else "no"
 
     class Meta:
 
         model = avr
-        fields = ['avr_id', 'region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'status', 'staff']
+        fields = ['avr_id', 'region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'staff']
 
 

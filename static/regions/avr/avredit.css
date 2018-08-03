@@ -14,7 +14,10 @@ h3 {
 
 
 /* оформление таблиц */
+table[group=upload-list] > thead > tr > th,
+table[group=stuff-list] > thead > tr > th,
 table[group=comment-list] > thead > tr > th,
+table[group=status-list] > thead > tr > th,
 table[group=file-list] > thead > tr > th,
 table[group=log-list] > thead > tr > th {
     background-color:#DCDCDC;
@@ -23,8 +26,10 @@ table[group=log-list] > thead > tr > th {
     vertical-align: top;
 }
 
-
+table[group=upload-list] > tbody > tr > td,
+table[group=stuff-list] > tbody > tr > td,
 table[group=file-list] > tbody > tr > td,
+table[group=status-list] > tbody > tr > td,
 table[group=comment-list] > tbody > tr > td,
 table[group=log-list] > tbody > tr > td {
     padding: 0;
@@ -49,5 +54,35 @@ button#addcomment {
 /* Закладка Документы */
 form#uploadfilehdfs {
     margin-bottom: 20px;
+}
+
+
+/* Закладка статус */
+#page-2 table {
+    margin-top: 20px;
+}
+
+/* закладка Материалы */
+#page-1 table {
+    margin-top: 20px;
+}
+
+/* Длинна поля ввода количества */
+.class10 {
+   width: 50px;
+}
+
+
+/* Курсор */
+table[group=file-list] > tbody > tr > td > a,
+table[group=stuff-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=file-list] > tbody > tr > td > a:hover,
+table[group=stuff-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
 }
 

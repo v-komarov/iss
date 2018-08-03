@@ -1,0 +1,36 @@
+<div id="page-2" class="row small" hidden>
+
+    <div class="row col-md-8">
+
+        <form class="form-inline">
+          <div class="form-group">
+              <label for="status">Статус</label>
+              <select class="form-control input-sm" id="status" placeholder="">
+                  <option value="">---</option>
+                  {% for st in statuses %}
+                        <option value={{ st.id }}>{{ st.name|safe }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+          <button type="button" id="setstatus" class="btn btn-default btn-xs">Установить</button>
+        </form>
+
+    </div>
+
+
+    <div class="row col-md-8">
+
+        <table group="status-list" class="table table-bordered table-striped draggable" width="100%">
+            <thead>
+                <tr>
+                    <th width="10%">Дата</th>
+                    <th>Статус</th>
+                    <th width="20%">Установил</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+</div>

@@ -24,7 +24,7 @@ from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry
-from iss.regions.models import avr, avr_logs, avr_files
+from iss.regions.models import avr, avr_logs, avr_files, status_avr, avr_status_history
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type, address_city
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -1402,6 +1402,89 @@ def get_json(request):
 
 
 
+        ### АВР Получение списка возможных статусов
+        if r.has_key("action") and rg("action") == 'avr-get-status-list':
+
+            status_id = request.GET["status_id"]
+
+            status_obj = status_avr.objects.get(pk=int(status_id,10))
+
+            status_list = []
+
+            for st in status_avr.objects.order_by("name"):
+                if "%s" % st.id in status_obj.allow.split(","):
+                    status_list.append({
+
+                        "id":st.id,
+                        "name":st.name
+
+                    })
+
+
+            response_data = {"result": "ok", "status-list": status_list, "stuff": "yes" if status_obj.stuff else "no", "price": "yes" if status_obj.price else "no"}
+
+
+
+
+
+
+        ### Остатки по конеретному МОЛ-у для заполнения материалов АВР
+        if r.has_key("action") and rg("action") == 'avr-get-staff-rest':
+
+            staff_id = request.GET["staff_id"]
+            staff_obj = User.objects.get(pk=int(staff_id,10))
+
+            rest_list = []
+
+            for rest in store_rest.objects.filter(mol=staff_obj, rest__gt=Decimal('0')).order_by("name"):
+                rest_list.append({
+
+                    "id":rest.id,
+                    "name":rest.name,
+                    "eisup": rest.eisup,
+                    "rest": "%.2f" % rest.rest,
+                    "dim": rest.dimension,
+                    "store": rest.store.name,
+                    "accounting_code": rest.accounting_code
+
+                })
+
+
+
+            response_data = {"result": "ok", "rest-list": rest_list}
+
+
+
+
+
+
+        ### АВР: список материалов
+        if r.has_key("action") and rg("action") == 'get-avr-list-stuff':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            stuff_list = []
+            for row in store_out.objects.filter(avr=avr_obj).order_by("-datetime_update"):
+                stuff_list.append({
+                    "row_id": row.id,
+                    "eisup": row.store_rest.eisup,
+                    "accounting_code": row.store_rest.accounting_code,
+                    "name": row.store_rest.name,
+                    "q": "%.2f" % row.q,
+                    "dimension": row.store_rest.dimension,
+                    "price": "%.2f" % row.price,
+                    "store": row.store_rest.store.name
+                })
+
+
+            response_data = {"result": "ok", "data": stuff_list}
+
+
+
+
+
+
+
+
 
     if request.method == "POST":
 
@@ -2363,7 +2446,7 @@ def get_json(request):
         ### Создание АВР
         if data.has_key("action") and data["action"] == 'avr-create':
 
-
+            status = status_avr.objects.get(pk=1)
 
             region_obj = regions.objects.get(pk=int(data["region"],10))
             city_obj = address_city.objects.get(pk=int(data["city"],10))
@@ -2377,7 +2460,8 @@ def get_json(request):
                 address = data["address"].strip(),
                 author = request.user,
                 datetime_avr = datetime.datetime.strptime(data["datetime_avr"], "%d.%m.%Y"),
-                datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y")
+                datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y"),
+                status = status
 
             )
 
@@ -2447,6 +2531,51 @@ def get_json(request):
 
 
             response_data = {"result": "ok"}
+
+
+
+
+
+        ### Добавление материалов АВР
+        if data.has_key("action") and data["action"] == 'avr-upload-stuff':
+
+            avr_obj = avr.objects.get(pk=int(data["avr_id"],10))
+
+            for row in data["rest"]:
+
+                srest = store_rest.objects.get(pk=int(row["stuff_id"]))
+                q = Decimal(row["rest"])
+                comment = "АВР : %s" % avr_obj.id
+
+                if srest.rest >= q and srest.mol == avr_obj.staff:
+                    srest.rest -= q
+                    srest.save()
+
+                    store_out.objects.create(
+                        store_rest=srest,
+                        q=q,
+                        user=avr_obj.staff,
+                        avr = avr_obj,
+                        comment=comment
+                    )
+
+                    ### Регистрация в логе Склада
+                    store_rest_log.objects.create(store_rest=srest, user=avr_obj.staff, q=q, action="Расход со склада АВР : %s" % avr_obj.id)
+
+
+                    ### Регистрация в логе
+                    avr_logs.objects.create(
+                        avr = avr_obj,
+                        user = request.user,
+                        action = u"Добаление материала {} {}".format(srest.eisup, srest.name),
+                        log = True
+                    )
+
+
+
+
+            response_data = {"result": "ok"}
+
 
 
 
