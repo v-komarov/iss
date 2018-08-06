@@ -1483,6 +1483,37 @@ def get_json(request):
 
 
 
+        ### АВР: Удаление материала
+        if r.has_key("action") and rg("action") == 'avr-delete-stuff':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            stuff_id = request.GET["stuff_id"]
+            stuff_obj = store_out.objects.get(pk=int(stuff_id,10))
+
+            srest = stuff_obj.store_rest
+
+            srest.rest += stuff_obj.q
+            srest.save()
+
+            ### Регистрация в логе склада
+            store_rest_log.objects.create(store_rest=srest, user=request.user, q=stuff_obj.q, action="Расход со склада удален АВР : %s" % avr_obj.id)
+
+            stuff_obj.delete()
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=avr_obj,
+                user=request.user,
+                action=u"Удаление материала {} {}".format(srest.eisup, srest.name),
+                log=True
+            )
+
+            response_data = {"result": "ok"}
+
+
+
+
+
 
 
 
@@ -2560,7 +2591,7 @@ def get_json(request):
                     )
 
                     ### Регистрация в логе Склада
-                    store_rest_log.objects.create(store_rest=srest, user=avr_obj.staff, q=q, action="Расход со склада АВР : %s" % avr_obj.id)
+                    store_rest_log.objects.create(store_rest=srest, user=request.user, q=q, action="Расход со склада АВР : %s" % avr_obj.id)
 
 
                     ### Регистрация в логе

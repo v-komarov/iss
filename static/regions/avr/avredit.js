@@ -585,19 +585,22 @@ function DeleteStuff(e) {
     var deletestuff = confirm("Удаляем "+stuffname+" ?");
     var avr_id = $("input#id_avr_id").val();
 
-    /*
+
     if (deletestuff) {
 
-        var jqxhr = $.getJSON("/regions/jsondata/?action=avr-file-delete&file_id="+file_id+"&avr_id="+avr_id,
+        var jqxhr = $.getJSON("/regions/jsondata/?action=avr-delete-stuff&stuff_id="+stuff_id+"&avr_id="+avr_id,
         function(data) {
 
-            if (data["result"] == "ok") { GetListFiles(); GetListLogs(); }
+            if (data["result"] == "ok") {
+
+                GetListLogs();
+                GetListStuff();
+            }
 
         })
 
     }
 
-    */
 
 }
 
