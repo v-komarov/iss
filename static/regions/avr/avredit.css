@@ -14,6 +14,8 @@ h3 {
 
 
 /* оформление таблиц */
+table[group=staff-list] > thead > tr > th,
+table[group=gsm-list] > thead > tr > th,
 table[group=upload-list] > thead > tr > th,
 table[group=stuff-list] > thead > tr > th,
 table[group=comment-list] > thead > tr > th,
@@ -26,6 +28,9 @@ table[group=log-list] > thead > tr > th {
     vertical-align: top;
 }
 
+
+table[group=staff-list] > tbody > tr > td,
+table[group=gsm-list] > tbody > tr > td,
 table[group=upload-list] > tbody > tr > td,
 table[group=stuff-list] > tbody > tr > td,
 table[group=file-list] > tbody > tr > td,
@@ -41,7 +46,9 @@ table[group=log-list] > tbody > tr > td {
 #page-2 > div:nth-child(1),
 #page-3 > div:nth-child(1),
 #page-4 > div:nth-child(1),
-#page-5 > div:nth-child(1) {
+#page-5 > div:nth-child(1),
+#page-6 > div:nth-child(1),
+#page-7 > div:nth-child(1) {
 	padding-top: 10px;
 }
 
@@ -73,7 +80,22 @@ form#uploadfilehdfs {
 }
 
 
+/* Закладка ГСМ */
+#page-5 table {
+    margin-top: 20px;
+}
+
+
+/* Закладка Трудозатраты */
+#page-6 table {
+    margin-top: 20px;
+}
+
+
+
 /* Курсор */
+table[group=staff-list] > tbody > tr > td > a,
+table[group=gsm-list] > tbody > tr > td > a,
 table[group=file-list] > tbody > tr > td > a,
 table[group=stuff-list] > tbody > tr > td > a {
     cursor:pointer;
@@ -81,8 +103,21 @@ table[group=stuff-list] > tbody > tr > td > a {
 }
 
 
+table[group=staff-list] > tbody > tr > td > a:hover,
+table[group=gsm-list] > tbody > tr > td > a:hover,
 table[group=file-list] > tbody > tr > td > a:hover,
 table[group=stuff-list] > tbody > tr > td > a:hover {
     text-decoration:none;
 }
 
+
+/* Форма добавления записи ГСМ */
+#gsm input {
+    width: 100%;
+}
+
+
+/* Форма добавления записи трудозатрат */
+#worker input {
+    width: 100%;
+}

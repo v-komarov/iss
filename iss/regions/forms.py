@@ -9,7 +9,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 
-from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date, avr
+from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date, avr, avr_gsm, avr_workers
 from iss.localdicts.models import stages, regions, address_city
 
 
@@ -201,4 +201,40 @@ class EditAVRForm(AVRForm):
         model = avr
         fields = ['avr_id', 'region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'staff']
 
+
+
+
+
+
+### Форма ГСМ
+class GSMForm(ModelForm):
+
+
+
+    class Meta:
+        model = avr_gsm
+        fields = ['consumer', 'km', 'h', 'petrol', 'kg', 'comment',]
+
+
+
+
+### Форма трудозатрат
+class WorkerForm(ModelForm):
+
+    staff = forms.ChoiceField(label="Исполнитель")
+
+    def __init__(self, *args, **kwargs):
+        super(WorkerForm, self).__init__(*args, **kwargs)
+        self.fields['staff'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
+
+        users = User.objects.order_by("first_name")
+        user_list = [("","-------")]
+        user_list.extend([(user.pk, user.get_full_name()) for user in users])
+
+        self.fields['staff'].choices = user_list
+
+
+    class Meta:
+        model = avr_workers
+        fields = ['staff', 'h', 'h_day', 'h_night', 'comment']
 

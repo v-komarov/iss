@@ -32,7 +32,7 @@ from django.core.urlresolvers import reverse
 
 from iss.localdicts.models import regions, address_city, stages, ProjDocTypes, proj_other_system, message_type, init_reestr_proj, blocks, address_companies
 from iss.regions.models import orders, proj, proj_stages, reestr_proj, store_rest, store_out, store_in, store_rest_log, store_carry, avr
-from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm, NewAVRForm, EditAVRForm
+from iss.regions.forms import ProjForm, ProjForm2, StageForm, ReestrProjCreateForm, ReestrProjUpdateForm, WorkersDatesStagesForm, NewAVRForm, EditAVRForm, GSMForm, WorkerForm
 
 from iss.mydecorators import group_required,anonymous_required
 
@@ -968,6 +968,8 @@ class AVREdit(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(AVREdit, self).get_context_data(**kwargs)
         context["avr"] = self.get_object()
+        context["formgsm"] = GSMForm()
+        context["formworker"] = WorkerForm()
         return context
 
 

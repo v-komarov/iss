@@ -16,6 +16,7 @@ from decimal import Decimal
 import pickle
 import urllib
 
+
 from operator import itemgetter
 
 import pandas as pd
@@ -29,6 +30,7 @@ from matplotlib.dates import WEEKLY, MONTHLY, DateFormatter, rrulewrapper, RRule
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np
+from docx import Document
 
 
 from snakebite.client import Client
@@ -907,3 +909,28 @@ def get_avr_file(request):
         response['Content-Disposition'] = 'attachment; filename="%s"' % file_name
         return response
 
+
+
+
+
+
+### АВР печатная форма
+def get_avr_print(request,avr_id):
+
+
+    avr_obj = avr.objects.get(pk=avr_id)
+
+    f = StringIO.StringIO()
+
+    document = Document()
+    document.add_heading(u'Акт АВР № %s' % avr_id, level=2)
+    document.add_paragraph(u'Проверка')
+
+
+    document.save(f)
+
+    data = f.getvalue()
+
+    response = HttpResponse(data, content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    response['Content-Disposition'] = u'attachment; filename="akt_avr_%s.docx"' % avr_id
+    return response

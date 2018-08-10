@@ -780,3 +780,31 @@ class avr_status_history(models.Model):
     status = models.ForeignKey(status_avr, on_delete=models.PROTECT, verbose_name='Статус')
 
 
+
+
+### АВР затраты ГСМ
+class avr_gsm(models.Model):
+    avr = models.ForeignKey(avr, on_delete=models.PROTECT, verbose_name='АВР')
+    consumer = models.CharField(max_length=100, default="", verbose_name="Потребитель")
+    km = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Кол-во км пробега', default=0.00)
+    h = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Кол-во мото часов', default=0.00)
+    petrol = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='ГСМ, л.', default=0.00)
+    kg = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Полная масса груза в кг.', default=0.00)
+    morma = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='либо л./100км либо л./час', default=0.00)
+    summa = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Итоговая сумма в руб.', default=0.00)
+    comment = models.CharField(max_length=100, default="", verbose_name="Комментарий")
+    datetime_create = models.DateTimeField(auto_now_add=True, db_index=True)
+
+
+
+
+### АВР исполнители
+class avr_workers(models.Model):
+    avr = models.ForeignKey(avr, on_delete=models.PROTECT, verbose_name='АВР')
+    worker = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Исполнитель")
+    h = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Кол-во ч. в раб. время', default=0.00)
+    h_day = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Кол-во ч. не раб. вр.день', default=0.00)
+    h_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Кол-во ч. не раб. вр.ночь', default=0.00)
+    summa = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Итоговая сумма в руб.', default=0.00)
+    comment = models.CharField(max_length=100, default="", verbose_name="Комментарий")
+    datetime_create = models.DateTimeField(auto_now_add=True, db_index=True)

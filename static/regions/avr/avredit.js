@@ -20,9 +20,24 @@ $(document).ready(function() {
     // Удаление материала
     $("#page-1 table[group=stuff-list] tbody").on("click", "a[delete-stuff]", DeleteStuff);
 
+    // Удаление ГСМ
+    $("#page-5 table[group=gsm-list] tbody").on("click", "a[delete-gsm]", DeleteGSM);
+
+    // Удаление трудозатрат
+    $("#page-6 table[group=staff-list] tbody").on("click", "a[delete-staff]", DeleteStaff);
+
+
 
     // Добавление материалов
     $("button#addstuff").bind("click", StuffUpload);
+
+    // Добавление материалов
+    $("button#addgsm").bind("click", AddGSM);
+
+    // Добавление трудозатрат
+    $("button#addstaff").bind("click", AddWorker);
+
+
 
 
     // Отображение списко логов
@@ -33,7 +48,10 @@ $(document).ready(function() {
     GetListFiles();
     // Отображение списка материалов
     GetListStuff();
-
+    // Отображение списка ГСМ
+    GetListGSM();
+    // Отображение списка трудозатрат
+    GetListWorker();
     // загрузка возможных статусов
     GetAllowStatus();
 
@@ -200,6 +218,210 @@ function StuffUpload() {
 
 
 
+// Добавление GSM
+function AddGSM() {
+
+
+    // Идентификатор АВР
+    var avr_id = $("input#id_avr_id").val();
+
+    $("#gsm input#id_consumer").val("");
+    $("#gsm input#id_km").val(0);
+    $("#gsm input#id_h").val(0);
+    $("#gsm input#id_kg").val(0);
+    $("#gsm input#id_petrol").val(0);
+    $("#gsm input#id_comment").val("");
+
+
+
+
+
+    $("#gsm").dialog({
+        title:"Добавление ГСМ",
+        buttons:[{ text:"Добавить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+
+            var consumer = $("#gsm input#id_consumer").val();
+            var km = $("#gsm input#id_km").val();
+            var h = $("#gsm input#id_h").val();
+            var petrol = $("#gsm input#id_petrol").val();
+            var kg = $("#gsm input#id_kg").val();
+            var comment = $("#gsm input#id_comment").val();
+
+
+            if ( consumer != "" && (km > 0 || h > 0) && kg > 0  && petrol > 0 ) {
+
+                var data = {};
+                data.avr_id = avr_id;
+                data.consumer = consumer;
+                data.km = km;
+                data.h = h;
+                data.petrol = petrol;
+                data.kg = kg;
+                data.comment = comment;
+                data.action = "avr-add-gsm";
+
+
+                $.ajax({
+                  url: "/regions/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok") {
+
+                            $("#gsm").dialog("close");
+                            GetListLogs();
+                            GetListGSM();
+
+                        }
+                    }
+
+                });
+
+
+            }
+
+            else { alert("Необходимо заполнить поля!");}
+
+
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:400,
+        width:600,
+        height:270
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+// Добавление трудозатрат
+function AddWorker() {
+
+
+    // Идентификатор АВР
+    var avr_id = $("input#id_avr_id").val();
+
+    $("#worker select#id_staff").val("");
+    $("#worker input#id_h").val(0);
+    $("#worker input#id_h_day").val(0);
+    $("#worker input#id_h_night").val(0);
+    $("#worker input#id_comment").val("");
+
+
+
+
+
+    $("#worker").dialog({
+        title:"Добавление трудозатрат",
+        buttons:[{ text:"Добавить",click: function() {
+
+            var csrftoken = getCookie('csrftoken');
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+
+            var worker = $("#worker select#id_staff").val();
+            var h = $("#worker input#id_h").val();
+            var h_day = $("#worker input#id_h_day").val();
+            var h_night = $("#worker input#id_h_night").val();
+            var comment = $("#worker input#id_comment").val();
+
+
+            if ( worker != "" && ( h > 0 || h_day > 0 || h_night > 0)) {
+
+                var data = {};
+                data.avr_id = avr_id;
+                data.worker = worker;
+                data.h = h;
+                data.h_day = h_day;
+                data.h_night = h_night;
+                data.comment = comment;
+                data.action = "avr-add-worker";
+
+
+                $.ajax({
+                  url: "/regions/jsondata/",
+                  type: "POST",
+                  dataType: 'json',
+                  data:$.toJSON(data),
+                    success: function(result) {
+                        if (result["result"] == "ok") {
+
+                            $("#worker").dialog("close");
+                            GetListLogs();
+                            GetListWorker();
+
+                        }
+                    }
+
+                });
+
+
+            }
+
+            else { alert("Необходимо заполнить поля!");}
+
+
+
+        }},
+
+
+            {text:"Закрыть",click: function() {
+            $(this).dialog("close")}}
+        ],
+        modal:true,
+        minWidth:400,
+        width:600,
+        height:270
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // Список возможных статусов
 function GetAllowStatus() {
@@ -287,6 +509,94 @@ function GetListStuff() {
 }
 
 
+
+
+
+
+
+// Список ГСМ
+function GetListGSM() {
+
+    var avr_id = $("input#id_avr_id").val();
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-gsm&avr_id="+avr_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка
+            $("table[group=gsm-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr gsm_id="+value["row_id"]+">"
+                +"<td>"+value['consumer']+"</td>"
+                +"<td>"+value['km']+"</td>"
+                +"<td>"+value['h']+"</td>"
+                +"<td>"+value['petrol']+"</td>"
+                +"<td>"+value['kg']+"</td>"
+                +"<td>"+value['norma']+"</td>"
+                +"<td>"+value['summa']+"</td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td><a delete-gsm><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=gsm-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+
+
+// Список трудозатрат
+function GetListWorker() {
+
+    var avr_id = $("input#id_avr_id").val();
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-worker&avr_id="+avr_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка
+            $("table[group=staff-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr staff_id="+value["row_id"]+">"
+                +"<td>"+value['worker']+"</td>"
+                +"<td>"+value['h']+"</td>"
+                +"<td>"+value['h_day']+"</td>"
+                +"<td>"+value['h_night']+"</td>"
+                +"<td>"+value['summa']+"</td>"
+                +"<td>"+value['comment']+"</td>"
+                +"<td><a delete-staff><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +"</tr>";
+
+                $("table[group=staff-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
 
 
 
@@ -609,6 +919,70 @@ function DeleteStuff(e) {
 
 
 
+// Удаление ГСМ
+function DeleteGSM(e) {
+
+    var gsm_id = $(this).parents("tr").attr("gsm_id");
+    var gsmname = $(this).parents("tr").children("td").eq(0).text();
+    var deletegsm = confirm("Удаляем "+gsmname+" ?");
+    var avr_id = $("input#id_avr_id").val();
+
+
+    if (deletegsm) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=avr-delete-gsm&gsm_id="+gsm_id+"&avr_id="+avr_id,
+        function(data) {
+
+            if (data["result"] == "ok") {
+
+                GetListLogs();
+                GetListGSM();
+            }
+
+        })
+
+    }
+
+
+}
+
+
+
+
+
+
+// Удаление Трудозатрат
+function DeleteStaff(e) {
+
+    var staff_id = $(this).parents("tr").attr("staff_id");
+    var staffname = $(this).parents("tr").children("td").eq(0).text();
+    var deletestaff = confirm("Удаляем "+staffname+" ?");
+    var avr_id = $("input#id_avr_id").val();
+
+
+    if (deletestaff) {
+
+        var jqxhr = $.getJSON("/regions/jsondata/?action=avr-delete-staff&staff_id="+staff_id+"&avr_id="+avr_id,
+        function(data) {
+
+            if (data["result"] == "ok") {
+
+                GetListLogs();
+                GetListWorker();
+            }
+
+        })
+
+    }
+
+
+}
+
+
+
+
+
+
 
 // Переключение закладок
 function ChangeNav(e) {
@@ -620,6 +994,8 @@ function ChangeNav(e) {
     $("#nav-3").toggleClass("active",false);
     $("#nav-4").toggleClass("active",false);
     $("#nav-5").toggleClass("active",false);
+    $("#nav-6").toggleClass("active",false);
+    $("#nav-7").toggleClass("active",false);
 
     $(this).parent("li").toggleClass("active",true);
 
@@ -628,6 +1004,8 @@ function ChangeNav(e) {
     $("#page-3").hide();
     $("#page-4").hide();
     $("#page-5").hide();
+    $("#page-6").hide();
+    $("#page-7").hide();
 
 
     // Название отображаемой страницы (на закладке)

@@ -24,7 +24,7 @@ from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry
-from iss.regions.models import avr, avr_logs, avr_files, status_avr, avr_status_history
+from iss.regions.models import avr, avr_logs, avr_files, status_avr, avr_status_history, avr_gsm, avr_workers
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type, address_city
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -1483,6 +1483,56 @@ def get_json(request):
 
 
 
+        ### АВР: список ГСМ
+        if r.has_key("action") and rg("action") == 'get-avr-list-gsm':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            gsm_list = []
+            for row in avr_gsm.objects.filter(avr=avr_obj).order_by("-datetime_create"):
+                gsm_list.append({
+                    "row_id": row.id,
+                    "consumer": row.consumer,
+                    "km": "%.2f" % row.km,
+                    "h": "%.2f" % row.h,
+                    "petrol": "%.2f" % row.petrol,
+                    "kg": "%.2f" % row.kg,
+                    "norma": "%.2f" % row.morma,
+                    "summa": "%.2f" % row.summa,
+                    "comment": row.comment
+                })
+
+
+            response_data = {"result": "ok", "data": gsm_list}
+
+
+
+
+
+
+        ### АВР: список трудозатрат
+        if r.has_key("action") and rg("action") == 'get-avr-list-worker':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            worker_list = []
+            for row in avr_workers.objects.filter(avr=avr_obj).order_by("-datetime_create"):
+                worker_list.append({
+                    "row_id": row.id,
+                    "worker": row.worker.get_full_name(),
+                    "h": "%.2f" % row.h,
+                    "h_day": "%.2f" % row.h_day,
+                    "h_night": "%.2f" % row.h_night,
+                    "summa": "%.2f" % row.summa,
+                    "comment": row.comment
+                })
+
+
+            response_data = {"result": "ok", "data": worker_list}
+
+
+
+
+
+
         ### АВР: Удаление материала
         if r.has_key("action") and rg("action") == 'avr-delete-stuff':
             avr_id = request.GET["avr_id"]
@@ -1507,6 +1557,55 @@ def get_json(request):
                 action=u"Удаление материала {} {}".format(srest.eisup, srest.name),
                 log=True
             )
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### АВР: Удаление ГСМ
+        if r.has_key("action") and rg("action") == 'avr-delete-gsm':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            gsm_id = request.GET["gsm_id"]
+            gsm_obj = avr_gsm.objects.get(pk=int(gsm_id,10))
+
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=avr_obj,
+                user=request.user,
+                action=u"Удаление ГСМ {}".format(gsm_obj.consumer),
+                log=True
+            )
+
+            gsm_obj.delete()
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### АВР: Удаление трудозатрат
+        if r.has_key("action") and rg("action") == 'avr-delete-staff':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            staff_id = request.GET["staff_id"]
+            staff_obj = avr_workers.objects.get(pk=int(staff_id,10))
+
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=avr_obj,
+                user=request.user,
+                action=u"Удаление трудозатрат {}".format(staff_obj.worker.get_full_name()),
+                log=True
+            )
+
+            staff_obj.delete()
+
 
             response_data = {"result": "ok"}
 
@@ -2603,6 +2702,83 @@ def get_json(request):
                     )
 
 
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+
+        ### Добавление ГСМ по АВР
+        if data.has_key("action") and data["action"] == 'avr-add-gsm':
+
+            avr_obj = avr.objects.get(pk=int(data["avr_id"],10))
+
+            consumer = data["consumer"].strip()
+            km = data["km"].strip()
+            h = data["h"].strip()
+            petrol = data["petrol"].strip()
+            kg = data["kg"].strip()
+            comment = data["comment"].strip()
+
+            avr_gsm.objects.create(
+                avr = avr_obj,
+                consumer = consumer,
+                km = Decimal(km),
+                petrol = Decimal(petrol),
+                h = Decimal(h),
+                kg = Decimal(kg),
+                comment = comment
+            )
+
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr = avr_obj,
+                user = request.user,
+                action = "Добаление ГСМ {}".format(consumer),
+                log = True
+            )
+
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### Добавление трудозатрат по АВР
+        if data.has_key("action") and data["action"] == 'avr-add-worker':
+
+            avr_obj = avr.objects.get(pk=int(data["avr_id"],10))
+
+            worker_id = data["worker"]
+            worker_obj = User.objects.get(pk=int(worker_id,10))
+
+            h = data["h"].strip()
+            h_day = data["h_day"].strip()
+            h_night = data["h_night"].strip()
+            comment = data["comment"].strip()
+
+            avr_workers.objects.create(
+                avr = avr_obj,
+                worker = worker_obj,
+                h = Decimal(h),
+                h_day = Decimal(h_day),
+                h_night = Decimal(h_night),
+                comment = comment
+            )
+
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr = avr_obj,
+                user = request.user,
+                action = u"Добаление трудозатрат {}".format(worker_obj.get_full_name()),
+                log = True
+            )
 
 
             response_data = {"result": "ok"}

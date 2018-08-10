@@ -24,7 +24,7 @@
 
 
     <div class="row">
-        <h3>Карточка АВР <a class="small" href="/regions/avr/page/1/" title="Вернуться к списку"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a></h3>
+        <h3>Карточка АВР <a class="small" href="/regions/avr/page/1/" title="Вернуться к списку"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a> <a class="small" href="/regions/avr-print/{{ avr.id }}/" title="Печатная форма"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a></h3>
     </div>
 
     <div class="row col-sm-6">
@@ -56,6 +56,9 @@
         <button id="avr-save" class="btn btn-default btn-xs">Сохранить</button>
     </div>
 
+    <div>
+        <h2></h2>
+    </div>
 
 
     <div class="row col-md-8 small">
@@ -64,7 +67,9 @@
           <li id="nav-2"><a href="#">Статус</a></li>
           <li id="nav-3"><a href="#">Документы</a></li>
           <li id="nav-4"><a href="#">Комментарии</a></li>
-          <li id="nav-5"><a href="#">Лог</a></li>
+          <li id="nav-5"><a href="#">ГСМ</a></li>
+          <li id="nav-6"><a href="#">Трудозатраты</a></li>
+          <li id="nav-7"><a href="#">Лог</a></li>
         </ul>
     </div>
 
@@ -74,6 +79,8 @@
 {% include "regions/avr/pages/page3.html" %}
 {% include "regions/avr/pages/page4.html" %}
 {% include "regions/avr/pages/page5.html" %}
+{% include "regions/avr/pages/page6.html" %}
+{% include "regions/avr/pages/page7.html" %}
 
 
 
@@ -91,5 +98,7 @@
 
 {% include "saving.html" %}
 {% include "regions/avr/upload_stuff.html" %}
+{% include "regions/avr/newgsm_form.html" %}
+{% include "regions/avr/newworker_form.html" %}
 
 {% endblock %}
