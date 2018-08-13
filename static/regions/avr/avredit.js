@@ -14,6 +14,9 @@ $(document).ready(function() {
     // Добавление комментария
     $("#page-4 button#addcomment").bind("click", AddComment);
 
+    // Установка статуса
+    $("#page-2 button#setstatus").bind("click", SetStatus);
+
     // Удаление файла
     $("#page-3 table[group=file-list] tbody").on("click", "a[delete-file]", DeleteFile);
 
@@ -38,6 +41,18 @@ $(document).ready(function() {
     $("button#addstaff").bind("click", AddWorker);
 
 
+    // Установка цены материала
+    $("#page-1 table").on("click", "a[save-price]", SetPrice);
+
+    // Установка нормы ГСМ
+    $("#page-5 table").on("click", "a[save-norma]", SetNorma);
+
+    // Установка суммы ГСМ
+    $("#page-5 table").on("click", "a[save-summa]", SetSumma);
+
+    // Установка итоговой суммы по трудозатратам
+    $("#page-6 table").on("click", "a[save-salary]", SetSalary);
+
 
 
     // Отображение списко логов
@@ -54,8 +69,142 @@ $(document).ready(function() {
     GetListWorker();
     // загрузка возможных статусов
     GetAllowStatus();
+    // Отображение истории статусов
+    GetListStatus();
 
 });
+
+
+
+
+
+
+
+
+
+// Установка цены материалов
+function SetPrice(e) {
+
+
+    var stuff_id = $(this).parents("tr").attr("stuff_id");
+    var input = $(this).parent("td").children("input").eq(0);
+
+
+    // Установка цены материала
+    var jqxhr = $.getJSON("/regions/jsondata/?action=avr-stuff-price-set&stuff_id="+stuff_id+"&price="+input.val(),
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            input.css("background-color","yellow");
+            GetListLogs();
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Установка нормы расхода по ГСМ
+function SetNorma(e) {
+
+
+    var gsm_id = $(this).parents("tr").attr("gsm_id");
+    var input = $(this).parent("td").children("input").eq(0);
+
+
+    // Установка нормы расхода
+    var jqxhr = $.getJSON("/regions/jsondata/?action=avr-gsm-norma-set&gsm_id="+gsm_id+"&norma="+input.val(),
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            input.css("background-color","yellow");
+            GetListLogs();
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Установка суммы расхода по ГСМ
+function SetSumma(e) {
+
+
+    var gsm_id = $(this).parents("tr").attr("gsm_id");
+    var input = $(this).parent("td").children("input").eq(0);
+
+
+    // Установка суммы расхода
+    var jqxhr = $.getJSON("/regions/jsondata/?action=avr-gsm-summa-set&gsm_id="+gsm_id+"&summa="+input.val(),
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            input.css("background-color","yellow");
+            GetListLogs();
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+// Установка итоговой суммы по исполнителю
+function SetSalary(e) {
+
+
+    var staff_id = $(this).parents("tr").attr("staff_id");
+    var input = $(this).parent("td").children("input").eq(0);
+
+
+    // Установка суммы
+    var jqxhr = $.getJSON("/regions/jsondata/?action=avr-salary-summa-set&staff_id="+staff_id+"&summa="+input.val(),
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            input.css("background-color","yellow");
+            GetListLogs();
+
+        }
+
+    })
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -305,7 +454,7 @@ function AddGSM() {
         modal:true,
         minWidth:400,
         width:600,
-        height:270
+        height:290
     });
 
 
@@ -428,16 +577,18 @@ function GetAllowStatus() {
 
     var status_id = $("input#id_status").val();
 
+
     var jqxhr = $.getJSON("/regions/jsondata/?action=avr-get-status-list&status_id="+status_id,
     function(data) {
+
 
         if (data["result"] == "ok") {
 
             // Отображение списка
-            $("select#status").empty();
+            $("#page-2 select#status").empty();
             $.each(data["status-list"], function(key,value) {
 
-                $('select#status').append($('<option>', { value : value["id"] }).text(value["name"]));
+                $('#page-2 select#status').append($('<option>', { value : value["id"] }).text(value["name"]));
 
             });
 
@@ -446,6 +597,8 @@ function GetAllowStatus() {
 
             // Доступ к установке цен
             $("input#id_price_allow").val(data["price"]);
+
+            CheckEditing(data["stuff"], data["price"]);
 
         }
 
@@ -456,8 +609,44 @@ function GetAllowStatus() {
 
 
 
-// Проверка разрешений
-function CheckAllow() {
+// Проверка разрешений показывать некоторые кнопки и поля редактирования сумм
+function CheckEditing(stuff,price) {
+
+    if (stuff == "yes") {
+        // Кнопка добавления материалов
+        $("#page-1 form button#addstuff").show();
+
+        // ГСМ
+        // Кнопка добавления ГСМ
+        $("#page-5 form button#addgsm").show();
+
+        // Трудозатраты
+        // Кнопка добавления трудозатрат
+        $("#page-6 form button#addstaff").show();
+    }
+    else {
+        // Кнопка добавления материалов
+        $("#page-1 form button#addstuff").hide();
+
+        // ГСМ
+        // Кнопка добавления ГСМ
+        $("#page-5 form button#addgsm").hide();
+
+        // Трудозатраты
+        // Кнопка добавления трудозатрат
+        $("#page-6 form button#addstaff").hide();
+
+    }
+
+
+
+    // Освежить список материалов
+    GetListStuff();
+    // Освежить список затрат ГСМ
+    GetListGSM();
+    // Освежить список трудозатрат
+    GetListWorker();
+
 
 
 
@@ -474,6 +663,10 @@ function GetListStuff() {
 
     var avr_id = $("input#id_avr_id").val();
 
+    var stuff_allow = $("input#id_stuff_allow").val();
+    var price_allow = $("input#id_price_allow").val();
+
+
     var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-stuff&avr_id="+avr_id,
     function(data) {
 
@@ -484,15 +677,31 @@ function GetListStuff() {
             $.each(data["data"], function(key,value) {
 
 
+                // Ссылки удаления материала
+                if (stuff_allow == "yes") {
+                    delete_link = "<td><a delete-stuff><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>";
+                }
+                else { delete_link = "<td></td>"; }
+
+                // Поля ввода цены
+                if (price_allow == "yes") {
+                    price_input =  "<td nowrap price-edit><input value="+value['price']+" /><a save-price><span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></a></td>";
+
+                }
+                else {
+                    price_input = "<td price-show>"+value['price']+"</td>";
+                }
+
+
                 var t = "<tr stuff_id="+value["row_id"]+">"
                 +"<td>"+value['eisup']+"</td>"
                 +"<td>"+value['accounting_code']+"</td>"
                 +"<td>"+value['name']+"</td>"
                 +"<td>"+value['q']+"</td>"
                 +"<td>"+value['dimension']+"</td>"
-                +"<td>"+value['price']+"</td>"
+                +price_input
                 +"<td>"+value['store']+"</td>"
-                +"<td><a delete-stuff><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +delete_link
                 +"</tr>";
 
                 $("table[group=stuff-list] tbody").append(t);
@@ -519,6 +728,10 @@ function GetListGSM() {
 
     var avr_id = $("input#id_avr_id").val();
 
+    var stuff_allow = $("input#id_stuff_allow").val();
+    var price_allow = $("input#id_price_allow").val();
+
+
     var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-gsm&avr_id="+avr_id,
     function(data) {
 
@@ -529,16 +742,36 @@ function GetListGSM() {
             $.each(data["data"], function(key,value) {
 
 
+                // Ссылки удаления ГСМ
+                if (stuff_allow == "yes") {
+                    delete_link = "<td><a delete-gsm><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>";
+                }
+                else { delete_link = "<td></td>"; }
+
+                // Поля нормы и ссуммы
+                if (price_allow == "yes") {
+                    norma =  "<td nowrap gsm-norma><input value="+value['norma']+" /><a save-norma><span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></a></td>";
+                    summa =  "<td nowrap gsm-summa><input value="+value['summa']+" /><a save-summa><span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></a></td>";
+
+                }
+                else {
+                    norma = "<td>"+value['norma']+"</td>";
+                    summa = "<td>"+value['summa']+"</td>";
+                }
+
+
+
+
                 var t = "<tr gsm_id="+value["row_id"]+">"
                 +"<td>"+value['consumer']+"</td>"
                 +"<td>"+value['km']+"</td>"
                 +"<td>"+value['h']+"</td>"
                 +"<td>"+value['petrol']+"</td>"
                 +"<td>"+value['kg']+"</td>"
-                +"<td>"+value['norma']+"</td>"
-                +"<td>"+value['summa']+"</td>"
+                +norma
+                +summa
                 +"<td>"+value['comment']+"</td>"
-                +"<td><a delete-gsm><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +delete_link
                 +"</tr>";
 
                 $("table[group=gsm-list] tbody").append(t);
@@ -565,6 +798,9 @@ function GetListWorker() {
 
     var avr_id = $("input#id_avr_id").val();
 
+    var stuff_allow = $("input#id_stuff_allow").val();
+    var price_allow = $("input#id_price_allow").val();
+
     var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-worker&avr_id="+avr_id,
     function(data) {
 
@@ -574,15 +810,31 @@ function GetListWorker() {
             $("table[group=staff-list] tbody").empty();
             $.each(data["data"], function(key,value) {
 
+                // Ссылки удаления Трудозатрат
+                if (stuff_allow == "yes") {
+                    delete_link = "<td><a delete-staff><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>";
+                }
+                else { delete_link = "<td></td>"; }
+
+                // Поля ссуммы
+                if (price_allow == "yes") {
+                    summa =  "<td nowrap staff-summa><input value="+value['summa']+" /><a save-salary><span class=\"glyphicon glyphicon-save\" aria-hidden=\"true\"></span></a></td>";
+
+                }
+                else {
+                    summa = "<td>"+value['summa']+"</td>";
+                }
+
+
 
                 var t = "<tr staff_id="+value["row_id"]+">"
                 +"<td>"+value['worker']+"</td>"
                 +"<td>"+value['h']+"</td>"
                 +"<td>"+value['h_day']+"</td>"
                 +"<td>"+value['h_night']+"</td>"
-                +"<td>"+value['summa']+"</td>"
+                +summa
                 +"<td>"+value['comment']+"</td>"
-                +"<td><a delete-staff><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span></a></td>"
+                +delete_link
                 +"</tr>";
 
                 $("table[group=staff-list] tbody").append(t);
@@ -639,6 +891,41 @@ function GetListLogs() {
 }
 
 
+
+
+// История статусов
+function GetListStatus() {
+
+    var avr_id = $("input#id_avr_id").val();
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=get-avr-list-status&avr_id="+avr_id,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            // Отображение списка
+            $("table[group=status-list] tbody").empty();
+            $.each(data["data"], function(key,value) {
+
+
+                var t = "<tr>"
+                +"<td>"+value['date']+"</td>"
+                +"<td>"+value['status']+"</td>"
+                +"<td>"+value['user']+"</td>"
+                +"</tr>";
+
+                $("table[group=status-list] tbody").append(t);
+
+            });
+
+
+
+        }
+
+    })
+
+
+}
 
 
 
@@ -773,6 +1060,31 @@ function AddComment(e) {
 
 }
 
+
+
+
+
+// Установка статуса
+function SetStatus(e) {
+
+
+    var avr_id = $("input#id_avr_id").val();
+    var status = $("#page-2 select#status").val();
+
+    var jqxhr = $.getJSON("/regions/jsondata/?action=avr-set-status&avr_id="+avr_id+"&status_id="+status,
+    function(data) {
+
+        if (data["result"] == "ok") {
+
+            $("input#id_status").val(status);
+            GetAllowStatus();
+            GetListStatus();
+        }
+
+    })
+
+
+}
 
 
 

@@ -790,7 +790,7 @@ class avr_gsm(models.Model):
     h = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Кол-во мото часов', default=0.00)
     petrol = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='ГСМ, л.', default=0.00)
     kg = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Полная масса груза в кг.', default=0.00)
-    morma = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='либо л./100км либо л./час', default=0.00)
+    norma = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='либо л./100км либо л./час', default=0.00)
     summa = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Итоговая сумма в руб.', default=0.00)
     comment = models.CharField(max_length=100, default="", verbose_name="Комментарий")
     datetime_create = models.DateTimeField(auto_now_add=True, db_index=True)

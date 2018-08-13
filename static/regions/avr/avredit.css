@@ -121,3 +121,27 @@ table[group=stuff-list] > tbody > tr > td > a:hover {
 #worker input {
     width: 100%;
 }
+
+
+/* Поля корректировки цены */
+#page-1 table[group=stuff-list] td input {
+    width:80px;
+    background-color: #00FFFF;
+    border: none;
+}
+
+
+/* Поля корректировки нормы и суммы ГСМ */
+#page-5 table[group=gsm-list] td input {
+    width:80px;
+    background-color: #00FFFF;
+    border: none;
+}
+
+
+/* Поля корректировки трудозатрат */
+#page-6 table[group=staff-list] td input {
+    width:80px;
+    background-color: #00FFFF;
+    border: none;
+}

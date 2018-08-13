@@ -1496,7 +1496,7 @@ def get_json(request):
                     "h": "%.2f" % row.h,
                     "petrol": "%.2f" % row.petrol,
                     "kg": "%.2f" % row.kg,
-                    "norma": "%.2f" % row.morma,
+                    "norma": "%.2f" % row.norma,
                     "summa": "%.2f" % row.summa,
                     "comment": row.comment
                 })
@@ -1528,6 +1528,24 @@ def get_json(request):
 
             response_data = {"result": "ok", "data": worker_list}
 
+
+
+
+
+        ### АВР: история статусов
+        if r.has_key("action") and rg("action") == 'get-avr-list-status':
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            status_list = []
+            for row in avr_status_history.objects.filter(avr=avr_obj).order_by("-datetime_create"):
+                status_list.append({
+                    "date" : datetime.datetime.strftime(row.datetime_create,"%d.%m.%Y"),
+                    "status": row.status.name,
+                    "user": row.user.get_full_name()
+                })
+
+
+            response_data = {"result": "ok", "data": status_list}
 
 
 
@@ -1590,6 +1608,7 @@ def get_json(request):
 
         ### АВР: Удаление трудозатрат
         if r.has_key("action") and rg("action") == 'avr-delete-staff':
+
             avr_id = request.GET["avr_id"]
             avr_obj = avr.objects.get(pk=int(avr_id, 10))
             staff_id = request.GET["staff_id"]
@@ -1610,6 +1629,136 @@ def get_json(request):
             response_data = {"result": "ok"}
 
 
+
+
+        ### АВР: Установка статуса
+        if r.has_key("action") and rg("action") == 'avr-set-status':
+
+            avr_id = request.GET["avr_id"]
+            avr_obj = avr.objects.get(pk=int(avr_id, 10))
+            status_id = request.GET["status_id"]
+            status_obj = status_avr.objects.get(pk=int(status_id,10))
+
+            ### Если это не тот же самый статус
+            if avr_obj.status != status_obj:
+
+                avr_obj.status = status_obj
+                avr_obj.save()
+
+
+                avr_status_history.objects.create(
+                    avr = avr_obj,
+                    user = request.user,
+                    status = status_obj
+                )
+
+
+                response_data = {"result": "ok"}
+
+            else:
+
+                response_data = {"result": "error"}
+
+
+
+
+
+        ### АВР: Установка цены материала
+        if r.has_key("action") and rg("action") == 'avr-stuff-price-set':
+
+            price = request.GET["price"]
+
+            stuff_id = request.GET["stuff_id"]
+            stuff_obj = store_out.objects.get(pk=int(stuff_id,10))
+
+            stuff_obj.price = Decimal(price)
+            stuff_obj.save()
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=stuff_obj.avr,
+                user=request.user,
+                action=u"Установка цены {} материала {}".format(price, stuff_obj.store_rest.name),
+                log=True
+            )
+
+            response_data = {"result": "ok"}
+
+
+
+
+
+        ### АВР: Установка нормы расхода ГСМ
+        if r.has_key("action") and rg("action") == 'avr-gsm-norma-set':
+
+            norma = request.GET["norma"]
+
+            gsm_id = request.GET["gsm_id"]
+            gsm_obj = avr_gsm.objects.get(pk=int(gsm_id,10))
+
+
+            gsm_obj.norma = Decimal(norma)
+            gsm_obj.save()
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=gsm_obj.avr,
+                user=request.user,
+                action=u"Установка нормы {} гсм {}".format(norma, gsm_obj.consumer),
+                log=True
+            )
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### АВР: Установка суммы расхода ГСМ
+        if r.has_key("action") and rg("action") == 'avr-gsm-summa-set':
+
+            summa = request.GET["summa"]
+
+            gsm_id = request.GET["gsm_id"]
+            gsm_obj = avr_gsm.objects.get(pk=int(gsm_id,10))
+
+
+            gsm_obj.summa = Decimal(summa)
+            gsm_obj.save()
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=gsm_obj.avr,
+                user=request.user,
+                action=u"Установка суммы {} гсм {}".format(summa, gsm_obj.consumer),
+                log=True
+            )
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### АВР: Установка суммы по трудозатратам
+        if r.has_key("action") and rg("action") == 'avr-salary-summa-set':
+
+            summa = request.GET["summa"]
+
+            staff_id = request.GET["staff_id"]
+            staff_obj = avr_workers.objects.get(pk=int(staff_id,10))
+
+
+            staff_obj.summa = Decimal(summa)
+            staff_obj.save()
+
+            ### Регистрация в логе
+            avr_logs.objects.create(
+                avr=staff_obj.avr,
+                user=request.user,
+                action=u"Установка итоговой суммы {} исполнителя {}".format(summa, staff_obj.worker.get_full_name()),
+                log=True
+            )
+
+            response_data = {"result": "ok"}
 
 
 
