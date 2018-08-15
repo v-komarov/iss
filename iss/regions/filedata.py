@@ -22,6 +22,7 @@ from operator import itemgetter
 import pandas as pd
 from pandas import ExcelFile
 
+
 from matplotlib import rc
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as font_manager
@@ -31,9 +32,13 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import numpy as np
 from docx import Document
+from docx.shared import Pt
+from docx.shared import RGBColor
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 
 from snakebite.client import Client
+
 
 from iss.regions.models import orders, load_proj_files, proj_stages, proj, reestr_proj_files, reestr_proj, reestr_proj_comment, store_list, store_rest, store_rest_log, avr, avr_logs, avr_files
 from iss.localdicts.models import regions, ProjDocTypes
@@ -923,8 +928,76 @@ def get_avr_print(request,avr_id):
     f = StringIO.StringIO()
 
     document = Document()
-    document.add_heading(u'Акт АВР № %s' % avr_id, level=2)
-    document.add_paragraph(u'Проверка')
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.left_indent = Pt(250)
+    p.add_run(u'УТВЕРЖДАЮ:\nТехнический директор\nЗАО «СибТрансТелеКом»\nА.П. Ляднов\n\n\n"____" _____________ 20 _____ г.\n').bold = True
+
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.add_run(u'Акт АВР № %s\nорганизации и выполнения АВР и расследования причин аварии' % avr_id).bold = True
+
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Место проведения работ: {} {}\n{}".format(avr_obj.city.name, avr_obj.address, avr_obj.objnet)).font.size = Pt(9)
+
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Мы, нижеподписавшиеся: Начальник СЭ «Красноярская» Бочериков А.П.\n\nсоставили настоящий акт в том, что по результатам анализа причин и характера повреждения, произошедшего {}\nна участке\nвыявлено следующее:".format(datetime.datetime.strftime(avr_obj.datetime_avr,"%d.%m.%Y"))).font.size = Pt(9)
+
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Хронология аварийно-восстановительных работ:").font.size = Pt(9)
+
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Перечень материалов, израсходованных при проведении АВР:").font.size = Pt(9)
+
+
+    table = document.add_table(1,5, style="TableGrid")
+    table.columns[0].width = Pt(40)
+    table.columns[1].width = Pt(200)
+    table.columns[2].width = Pt(50)
+    table.autofit = False
+    heading_cells = table.rows[0].cells
+    heading_cells[0].text = u"№пп"
+    heading_cells[1].text = u"Наименование материала"
+    heading_cells[2].text = u"Ед.из."
+    heading_cells[3].text = u"Расход"
+    heading_cells[4].text = u"Из состава\nоборудования"
+    heading_cells[0].paragraphs[0].runs[0].font.size = Pt(7)
+    heading_cells[1].paragraphs[0].runs[0].font.size = Pt(7)
+    heading_cells[2].paragraphs[0].runs[0].font.size = Pt(7)
+    heading_cells[3].paragraphs[0].runs[0].font.size = Pt(7)
+    heading_cells[4].paragraphs[0].runs[0].font.size = Pt(7)
+
+
+    n = 1
+    for row in avr_obj.store_out_set.all():
+        table.add_row()
+        cells = table.rows[n].cells
+        cells[0].text = "%s" % n
+        cells[1].text = row.store_rest.name
+        cells[2].text = row.store_rest.dimension
+        cells[3].text = "%.2f" % row.q
+        cells[4].text = u""
+        cells[0].paragraphs[0].runs[0].font.size = Pt(7)
+        cells[1].paragraphs[0].runs[0].font.size = Pt(7)
+        cells[2].paragraphs[0].runs[0].font.size = Pt(7)
+        cells[3].paragraphs[0].runs[0].font.size = Pt(7)
+        cells[4].paragraphs[0].runs[0].font.size = Pt(7)
+
+        n += 1
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"\nПодписи членов комиссии:").font.size = Pt(9)
 
 
     document.save(f)
