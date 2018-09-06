@@ -12,10 +12,8 @@ import iss.dbconn
 
 
 kafka_server = iss.dbconn.KAFKA_SERVER
-elsearch_server = iss.dbconn.ELASTICSEARCH
 
-
-consumer = KafkaConsumer('asterisk',bootstrap_servers=kafka_server, auto_offset_reset='earliest')
+consumer = KafkaConsumer('asterisk',bootstrap_servers=kafka_server, auto_offset_reset='latest')
 
 
 
