@@ -12,6 +12,9 @@
    events
    commands
    api
+   es
+   kafka
+   spark
    zkl
    other_systems
    tools

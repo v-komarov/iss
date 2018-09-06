@@ -208,6 +208,12 @@ LOGGING = {
             'filename': BASE_DIR + '/log/projects.log',
             'formatter': 'users',
         },
+        'devices': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/log/devices.log',
+            'formatter': 'users',
+        },
     },
     'loggers': {
         'monitor': {
@@ -237,6 +243,11 @@ LOGGING = {
         },
         'projects': {
             'handlers': ['projects'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'devices': {
+            'handlers': ['devices'],
             'level': 'INFO',
             'propagate': True,
         },

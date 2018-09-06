@@ -22,12 +22,14 @@ logger = logging.getLogger('loadding')
 
 class Command(BaseCommand):
     args = '< >'
-    help = 'Создание индекса в Elasticsearch'
+    help = 'Наполнение документов индекса в Elasticsearch'
 
 
 
 
     def handle(self, *args, **options):
+
+        index = args[1]
 
         """
 
@@ -36,64 +38,92 @@ class Command(BaseCommand):
         :return:
         """
 
+
         """
 
         """
         es = Elasticsearch(['http://10.6.0.88:9200'])
 
+        ### Загрузка улиц
+        if args[0] == "street":
+
+            ### Загрузка всех улиц из справочника
+            if args[1] == "all":
+                ### Загрузка улиц
+                for street in address_street.objects.all():
+                    data = {
+                        'id': street.id,
+                        'name': street.name,
+                        'synonyms':[]
+                    }
+
+                    res = es.index(index="iss2", doc_type='street', id=street.id, body=data)
+                    es.indices.refresh(index="iss2")
+
+            ### загрузка конкретной улице по id
+            else:
+                street = address_street.objects.get(pk=int(args[1],10))
+                res = es.index(index="iss2", doc_type='street', id=street.id, body={"id": street.id, "name": street.name, "synonyms": []})
+                es.indices.refresh(index="iss2")
 
 
 
-        """
-        ### Загрузка улиц        
-        for street in address_street.objects.all():
-            data = {
-                'id': street.id,
-                'name': street.name
-            }
-
-            res = es.index(index="iss2", doc_type='street', id=street.id, body=data)
-            es.indices.refresh(index="iss2")
-        """
+        elif args[0] == 'city':
 
 
+            ### Загрузка всех городов из справочника
+            if args[1] == "all":
 
 
+                ### Загрузка городов
+                for city in address_city.objects.all():
 
 
+                    data = {
+                        'id': city.id,
+                        'name': city.name,
+                        'synonyms': []
+                    }
+
+                    res = es.index(index="iss2", doc_type='city', id=city.id, body=data)
+                    es.indices.refresh(index="iss2")
 
 
-
-
-
-
-        """
-        ### Загрузка городов
-        for city in address_city.objects.all():
-
-            c = city.name
-
-            c = c.replace(u"пос.",u"")
-            c = c.replace(u"пос. ",u"")
-            c = c.replace(u"г.",u"")
-            c = c.replace(u"г. ",u"")
-            c = c.replace(u"пгт.",u"")
-            c = c.replace(u"пгт. ",u"")
-            c = c.replace(u"ст.",u"")
-            c = c.replace(u"ст. ",u"")
-
-            data = {
-                'id': city.id,
-                'name': c
-            }
-
-            res = es.index(index="iss2", doc_type='city', id=city.id, body=data)
-            es.indices.refresh(index="iss2")
-        """
+            ### загрузка конкретного города по id
+            else:
+                city = address_city.objects.get(pk=int(args[1],10))
+                res = es.index(index="iss2", doc_type='city', id=city.id, body={"id": city.id, "name": city.name, "synonyms": []})
+                es.indices.refresh(index="iss2")
 
 
 
 
+        elif args[0] == 'device':
+
+
+            ### Загрузка всех моделей из справочника
+            if args[1] == "all":
+
+
+                for model in devices_scheme.objects.all():
+
+
+                    data = {
+                        'id': model.id,
+                        'name': model.name,
+                        'synonyms': []
+                    }
+
+                    res = es.index(index="iss2", doc_type='device', id=model.id, body=data)
+                    es.indices.refresh(index="iss2")
+
+
+            ### загрузка конкретной модели по id
+            else:
+                model = devices_scheme.objects.get(pk=int(args[1],10))
+
+                res = es.index(index="iss2", doc_type='device', id=model.id, body={"id": model.id, "name": model.name, "synonyms": [model.name]})
+                es.indices.refresh(index="iss2")
 
 
 
@@ -158,8 +188,7 @@ class Command(BaseCommand):
 
 
 
-
-
+        """
         ### Поиск названия улиц
         with open('iss/equipment/csv/street_chi.csv', 'rb') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=';')
@@ -202,6 +231,7 @@ class Command(BaseCommand):
 
 
 
+        """
 
 
 
