@@ -10,6 +10,7 @@ import datetime
 import random
 import networkx as nx
 from decimal import Decimal
+from chardet.universaldetector import UniversalDetector
 
 from django.utils import timezone
 from django.db import models
@@ -465,7 +466,7 @@ class reestr_proj(models.Model):
     date_service = models.DateField(verbose_name='Дата оказания услуги', null=True)
     data = JSONField(default={}, verbose_name='Данные')
     main_proj = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='Родительский элемент', null=True, related_name="level")
-    search_index = models.TextField(verbose_name='Родительский элемент', null=True, default="")
+    search_index = models.TextField(verbose_name='Поисковый индекс', null=True, default="")
     object_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость объекта (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
     smr_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость СМР (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))])
     other_price = models.DecimalField(default=Decimal('0.00'), max_digits=9, decimal_places=2, verbose_name='Стоимость оборудования, инструментов (руб.коп.)', validators=[MinValueValidator(Decimal('0.00'))] )
@@ -482,51 +483,91 @@ class reestr_proj(models.Model):
     def create_search_index(self):
         search_index = set()
 
+        detector = UniversalDetector()
+
         ### Код проекта
-        search_index.add(self.proj_kod.decode("utf-8"))
+        try:
+            search_index.add(self.proj_kod.decode("utf-8"))
+        except:
+            search_index.add(self.proj_kod)
+
 
         ## Название проекта
         for w in self.proj_name.split():
-            search_index.add(w.decode("utf-8"))
+            try:
+                search_index.add(w.decode("utf-8"))
+            except:
+                search_index.add(w)
+
 
         ### Инициатор проекта
         if self.proj_init:
-            search_index.add(self.proj_init.name)
+            try:
+                search_index.add(self.proj_init.name.decode("utf-8"))
+            except:
+                search_index.add(self.proj_init.name)
 
         ### Реализатор проекта
         if self.executor:
-            search_index.add(self.executor.name)
+            try:
+                search_index.add(self.executor.name.decode("utf-8"))
+            except:
+                search_index.add(self.executor.name)
 
         ### Этапы
         if self.stage:
-            search_index.add(self.stage.getfullname())
+            try:
+                search_index.add(self.stage.getfullname().decode("utf-8"))
+            except:
+                search_index.add(self.stage.getfullname())
+
 
         ### Адрес
         if self.data.has_key('address'):
             for addr in self.data["address"]:
-                search_index.add(addr["city"])
-                search_index.add(addr["street"])
+                try:
+                    search_index.add(addr["city"].decode("utf-8"))
+                except:
+                    search_index.add(addr["city"])
+                try:
+                    search_index.add(addr["street"].decode("utf-8"))
+                except:
+                    search_index.add(addr["street"])
 
         ### Контрагент
         for w in self.contragent.split():
-            search_index.add(w.decode("utf-8"))
+            try:
+                search_index.add(w.decode("utf-8"))
+            except:
+                search_index.add(w)
 
         ### Исполнители
         for ex in self.reestr_proj_exec_date_set.all():
-            for w in ex.worker.get_full_name().split():
-                search_index.add(w)
+            if ex.worker:
+                for w in ex.worker.get_full_name().split():
+                    try:
+                        search_index.add(w.decode("utf-8"))
+                    except:
+                        search_index.add(w)
 
         ### Связь с другими системами
         if self.data.has_key('other_system'):
             for code in self.data['other_system']:
-                search_index.add(code['other_name'])
-                search_index.add(code['other_code'])
+                try:
+                    search_index.add(code['other_name'].decode("utf-8"))
+                except:
+                    search_index.add(code['other_name'])
+                try:
+                    search_index.add(code['other_code'].decode("utf-8"))
+                except:
+                    search_index.add(code['other_code'])
 
 
+        detector.close()
 
-        self.search_index = u" ".join(list(search_index))
+
+        self.search_index = u"".join(list(search_index))
         self.save()
-
 
 
 

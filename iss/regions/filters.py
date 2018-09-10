@@ -12,6 +12,8 @@ from iss.regions.models import reestr_proj_exec_date, stages_history
 
 
 
+
+
 ### Фильтрация для реестра проектов
 def reestr_proj_filter(data,filter_dict):
 

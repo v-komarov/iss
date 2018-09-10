@@ -122,7 +122,8 @@ class Command(BaseCommand):
             print "call_a = {} call_b = {} call_c = {} mark = {} user = {} comment = {}".format(call_a, call_b, call_c, mark, user, comment)
 
             ### Запись в базу
-            #self.senddb(user, mark, comment, sec)
+            if user != None and mark != None:
+                self.senddb(user, mark, comment, sec)
 
-            p = Process(target=self.senddb, arg=(user, mark, comment, sec,))
-            p.start()
+            #p = Process(target=self.senddb, args=(user, mark, comment, sec,))
+            #p.start()
