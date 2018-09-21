@@ -186,3 +186,25 @@ Topic asterisk
     /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic asterisk
 
 
+
+Topic circuit
+-------------
+
+Назначение: обмен информацией с инвентори gamma о занятых портах абонентами на оборудовании абонентского доступа на основании тега **circuit**.
+
+ Пример записей
+ ::
+ 
+    AC:F1:DF:D3:44:73::55.34.3.66::12
+    C8:D3:A3:28:21:75::55.20.5.43::1
+    10:7B:44:E1:1D:78::55.66.2.37::18
+    C4:A8:1D:44:15:8F::55.50.4.55::8
+    64:5A:04:98:73:0E::55.49.4.16::7
+
+
+ Просмотр сообщений топика
+ ::
+ 
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic circuit
+    
+ Наполнение топика: 10.6.0.88 (скрипты по сбору информации с радиус серверов - cron)

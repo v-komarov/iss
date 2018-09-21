@@ -346,7 +346,7 @@ class devices_properties(models.Model):
 class devices_ports(models.Model):
     device = models.ForeignKey(devices,on_delete=models.PROTECT)
     port = models.ForeignKey(ports,on_delete=models.PROTECT)
-    num = models.CharField(max_length=5,default="")
+    num = models.CharField(max_length=20,default="")
     status = models.ForeignKey(port_status,on_delete=models.PROTECT)
     author = models.CharField(max_length=100,default="")
     datetime_update = models.DateTimeField(auto_now=True,null=True)
@@ -379,7 +379,7 @@ class devices_ports(models.Model):
 class devices_slots(models.Model):
     device = models.ForeignKey(devices,related_name="device_link",on_delete=models.PROTECT)
     slot = models.ForeignKey(slots,on_delete=models.PROTECT)
-    num = models.CharField(max_length=5,default="")
+    num = models.CharField(max_length=20,default="")
     status = models.ForeignKey(slot_status,on_delete=models.PROTECT)
     device_component = models.ForeignKey(devices,null=True,related_name="slots_link")
     author = models.CharField(max_length=100,default="")
@@ -401,7 +401,7 @@ class devices_combo(models.Model):
     device = models.ForeignKey(devices,on_delete=models.PROTECT)
     slot = models.ForeignKey(slots,on_delete=models.PROTECT)
     port = models.ForeignKey(ports,on_delete=models.PROTECT)
-    num = models.CharField(max_length=5,default="")
+    num = models.CharField(max_length=20,default="")
     status_slot = models.ForeignKey(slot_status,on_delete=models.PROTECT)
     status_port = models.ForeignKey(port_status,on_delete=models.PROTECT)
     author = models.CharField(max_length=100,default="")
