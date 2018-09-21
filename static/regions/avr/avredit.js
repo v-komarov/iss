@@ -408,7 +408,7 @@ function AddGSM() {
             var comment = $("#gsm input#id_comment").val();
 
 
-            if ( consumer != "" && (km > 0 || h > 0) && kg > 0  && petrol > 0 ) {
+            if ( consumer != "" && ((km > 0 && kg > 0) || h > 0) && petrol > 0 ) {
 
                 var data = {};
                 data.avr_id = avr_id;
