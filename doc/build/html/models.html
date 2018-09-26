@@ -1,34 +1,33 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Расположение и краткое описание моделей &#8212; Документация iss 1.0</title>
-    
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
-    <link rel="top" title="Документация iss 1.0" href="index.html" />
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
     <link rel="next" title="Инвентори" href="inventory.html" />
     <link rel="prev" title="Схема взаимодействия сетевых элементов" href="net_stru.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Навигация</h3>
       <ul>
@@ -58,6 +57,8 @@
 <li><a class="reference internal" href="#localdicts" id="id5">Приложение localdicts (большенство справочников отображены в стандартном административном интерфейсе)</a></li>
 <li><a class="reference internal" href="#equipment" id="id6">Приложение equipment</a></li>
 <li><a class="reference internal" href="#inventory" id="id7">Приложение inventory</a></li>
+<li><a class="reference internal" href="#regions" id="id8">Приложение regions</a></li>
+<li><a class="reference internal" href="#working" id="id9">Приложение working (учет рабочего времени)</a></li>
 </ul>
 </li>
 </ul>
@@ -78,8 +79,8 @@
 <h2><a class="toc-backref" href="#id5">Приложение localdicts (большенство справочников отображены в стандартном административном интерфейсе)</a><a class="headerlink" href="#localdicts" title="Ссылка на этот заголовок">¶</a></h2>
 <ol class="arabic simple">
 <li><strong>TzList</strong> - Список часовых поясов для выбора отображения даты и времени пользователем.</li>
-<li><strong>Status</strong> - для &#8220;расшифровки&#8221; статусов событий events</li>
-<li><strong>Severity</strong> - для &#8220;расшифровки&#8221; важности событий events</li>
+<li><strong>Status</strong> - для «расшифровки» статусов событий events</li>
+<li><strong>Severity</strong> - для «расшифровки» важности событий events</li>
 <li><strong>accident_group</strong> - Название группы аварий (унаследован от iss)</li>
 <li><strong>accident_list</strong>  - Название аварии (унаследован от iss)</li>
 <li><strong>accident_cats</strong> - Категории аварий (унаследован от iss)</li>
@@ -96,6 +97,18 @@
 <li><strong>port_status</strong> - Статусы портов (справочник)</li>
 <li><strong>device_status</strong> - Статусы устройства в целом (справочник)</li>
 <li><strong>logical_interfaces_prop_list</strong> - Справочник свойств логических интерфейсов (справочник)</li>
+<li><strong>regions</strong> - Справочник регионов (для Реестра проектов)</li>
+<li><strong>blocks</strong> - Справочник блоков (для Реестра проектов)</li>
+<li><strong>proj_other_system</strong> - Справочник перечня «Других систем» (для Реестра проектов)</li>
+<li><strong>business</strong> - Справочник направления бизнеса (для Реестра проектов)</li>
+<li><strong>passing</strong> - Справочник признака переходящего проекта (для Реестра проектов)</li>
+<li><strong>ProjDocTypes</strong> - Справочник типов проектных документов (для Реестра проектов)</li>
+<li><strong>rates</strong> - Справочник видов доходности (для Реестра проектов)</li>
+<li><strong>message_type</strong> - Справочник видов email уведомлений (для Реестра проектов)</li>
+<li><strong>stages</strong> - Справочник стадий (для Реестра проектов)</li>
+<li><strong>init_reestr_proj</strong> - Справочник инициаторов проекта (для Реестра проектов)</li>
+<li><strong>proj_temp</strong> - Справочник типовых шаблонов проекта (Проекты)</li>
+<li><strong>cal</strong> - Производственный календарь (не используется)</li>
 </ol>
 </div>
 <div class="section" id="equipment">
@@ -125,7 +138,7 @@
 <div class="section" id="lldp">
 <h4>Формат хранения lldp данных<a class="headerlink" href="#lldp" title="Ссылка на этот заголовок">¶</a></h4>
 <p>Данные результатов lldp хранятся в 2-полях <strong>lldp_neighbor_mac</strong>, <strong>ports</strong></p>
-<p><strong>lldp_neighbor_mac</strong> (формат поля array) - хранятся списки mac адресов соседей, которые &#8220;увидел&#8221; lldp</p>
+<p><strong>lldp_neighbor_mac</strong> (формат поля array) - хранятся списки mac адресов соседей, которые «увидел» lldp</p>
 <p><strong>ports</strong> (формат поля json) - хранятся mac адреса соседей с привязкой к порту. Пример ниже:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;ac:f1:df:a4:ce:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;ec:22:80:2d:c5:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;00:21:91:92:e7:26&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d5:00&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:91:c0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d4:60&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:fc:59:80&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;00:22:b0:04:52:f2&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:fc:57:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;1c:af:f7:7c:bc:68&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:76:20&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d3:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;84:c9:b2:1c:a6:00&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:d4:20&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;ac:f1:df:a4:cd:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="s2">&quot;c8:be:19:ff:90:e0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}]}</span>
 </pre></div>
@@ -148,6 +161,33 @@
 <li><strong>netelems</strong> - Сетевые элементы</li>
 <li><strong>logical_interfaces</strong> - Логические интерфейсы</li>
 <li><strong>logical_interfaces_prop</strong> - Свойства логических интерфейсов</li>
+</ol>
+</div>
+<div class="section" id="regions">
+<h2><a class="toc-backref" href="#id8">Приложение regions</a><a class="headerlink" href="#regions" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>orders</strong> - Заказы ЗИП по регионам (возможно не используется)</li>
+<li><strong>reestr</strong> - Таблица для Инвенторизации (не используется)</li>
+<li><strong>proj</strong> - Список проектов (Для управления проектами - не используется)</li>
+<li><strong>proj_stages</strong> - Стадии проектов (Для управления проектами - не используется)</li>
+<li><strong>load_proj_files</strong> - Приложенные файлы к проекту (Для управления проектами - не используется)</li>
+<li><strong>proj_notes</strong> - Заменки по этапу проекта (Для управления проектами - не используется)</li>
+<li><strong>reestr_proj</strong> - Основная таблица данных (Для реестра и проработки проектов)</li>
+<li><strong>stages_history</strong> - История этапов проекта (Для реестра и проработки проектов)</li>
+<li><strong>reestr_proj_files</strong> - Файлы приложенные к элементу проекта (Для реестра и проработки проектов)</li>
+<li><strong>reestr_proj_comment</strong> - Комментарии по элементу проекта (Для реестра и проработки проектов)</li>
+<li><strong>reestr_proj_exec_date</strong> - Исполнители по этапам элемента проекта (Для реестра и проработки проектов)</li>
+<li><strong>reestr_proj_messages_history</strong> - История отправки сообщений по элементу проекта (Для реестра и проработки проектов)</li>
+</ol>
+</div>
+<div class="section" id="working">
+<h2><a class="toc-backref" href="#id9">Приложение working (учет рабочего времени)</a><a class="headerlink" href="#working" title="Ссылка на этот заголовок">¶</a></h2>
+<ol class="arabic simple">
+<li><strong>marks</strong> - Показатели (справочник)</li>
+<li><strong>working_log</strong> - Хранение информации по показателям</li>
+<li><strong>working_time</strong> - Основная таблица регистрации работы</li>
+<li><strong>working_relax</strong> - Учет перерывов в работе</li>
+<li><strong>working_reports</strong> - Отчеты по результатам работы</li>
 </ol>
 </div>
 </div>
@@ -175,6 +215,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#inventory">Приложение inventory</a></li>
+<li><a class="reference internal" href="#regions">Приложение regions</a></li>
+<li><a class="reference internal" href="#working">Приложение working (учет рабочего времени)</a></li>
 </ul>
 </li>
 </ul>
@@ -188,7 +230,7 @@
   <div role="note" aria-label="source link">
     <h3>Эта страница</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/models.txt"
+      <li><a href="_sources/models.rst.txt"
             rel="nofollow">Исходный текст</a></li>
     </ul>
    </div>
@@ -223,7 +265,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Vladimir Komarov.
-      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

@@ -1,34 +1,33 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Расчет ЗКЛ &#8212; Документация iss 1.0</title>
-    
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
         VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/translations.js"></script>
-    <link rel="top" title="Документация iss 1.0" href="index.html" />
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
     <link rel="next" title="Взаимодействие с другими системами" href="other_systems.html" />
-    <link rel="prev" title="Описание API" href="api.html" /> 
+    <link rel="prev" title="Spark" href="spark.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Навигация</h3>
       <ul>
@@ -39,7 +38,7 @@
           <a href="other_systems.html" title="Взаимодействие с другими системами"
              accesskey="N">вперёд</a> |</li>
         <li class="right" >
-          <a href="api.html" title="Описание API"
+          <a href="spark.html" title="Spark"
              accesskey="P">назад</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
       </ul>
@@ -54,8 +53,8 @@
 <p class="topic-title first">Оглавление</p>
 <ul class="simple">
 <li><a class="reference internal" href="#id2" id="id5">Расчет ЗКЛ</a><ul>
-<li><a class="reference internal" href="#id3" id="id6">Вывод ЗКЛ из Интерфейса &#8220;Оперативный журнал&#8221; -&gt; выпадающее меню для каждого события -&gt; &#8220;Расчет ЗКЛ&#8221;</a></li>
-<li><a class="reference internal" href="#id4" id="id7">Вывод ЗКЛ из Интерфейса &#8220;Оперативный журнал&#8221; -&gt; выпадающее меню для каждого события -&gt; &#8220;Оповещение об аварии на мсс&#8221;</a></li>
+<li><a class="reference internal" href="#id3" id="id6">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Расчет ЗКЛ»</a></li>
+<li><a class="reference internal" href="#id4" id="id7">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Оповещение об аварии на мсс»</a></li>
 </ul>
 </li>
 </ul>
@@ -63,10 +62,10 @@
 <div class="section" id="id2">
 <h1><a class="toc-backref" href="#id5">Расчет ЗКЛ</a><a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h1>
 <blockquote class="epigraph">
-<div>Сейчас используется временная схема, &#8220;собранная на коленке&#8221;.
+<div>Сейчас используется временная схема, «собранная на коленке».
 Выводится ЗКЛ в двух местах интерфейса.</div></blockquote>
 <div class="section" id="id3">
-<h2><a class="toc-backref" href="#id6">Вывод ЗКЛ из Интерфейса &#8220;Оперативный журнал&#8221; -&gt; выпадающее меню для каждого события -&gt; &#8220;Расчет ЗКЛ&#8221;</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Расчет ЗКЛ»</a><a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
 <blockquote>
 <div><p>Исходный код</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">prop</span> <span class="o">=</span> <span class="n">logical_interfaces_prop_list</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ipv4&#39;</span><span class="p">)</span>
@@ -112,7 +111,7 @@
 </div>
 </div>
 <div class="section" id="id4">
-<h2><a class="toc-backref" href="#id7">Вывод ЗКЛ из Интерфейса &#8220;Оперативный журнал&#8221; -&gt; выпадающее меню для каждого события -&gt; &#8220;Оповещение об аварии на мсс&#8221;</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Оповещение об аварии на мсс»</a><a class="headerlink" href="#id4" title="Ссылка на этот заголовок">¶</a></h2>
 <blockquote>
 <div><p>Исходный код</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#### Данные по аварии для отправки email сообщения МСС</span>
@@ -266,22 +265,22 @@
   <h3><a href="index.html">Оглавление</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Расчет ЗКЛ</a><ul>
-<li><a class="reference internal" href="#id3">Вывод ЗКЛ из Интерфейса &#8220;Оперативный журнал&#8221; -&gt; выпадающее меню для каждого события -&gt; &#8220;Расчет ЗКЛ&#8221;</a></li>
-<li><a class="reference internal" href="#id4">Вывод ЗКЛ из Интерфейса &#8220;Оперативный журнал&#8221; -&gt; выпадающее меню для каждого события -&gt; &#8220;Оповещение об аварии на мсс&#8221;</a></li>
+<li><a class="reference internal" href="#id3">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Расчет ЗКЛ»</a></li>
+<li><a class="reference internal" href="#id4">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Оповещение об аварии на мсс»</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Предыдущий раздел</h4>
-  <p class="topless"><a href="api.html"
-                        title="предыдущая глава">Описание API</a></p>
+  <p class="topless"><a href="spark.html"
+                        title="предыдущая глава">Spark</a></p>
   <h4>Следующий раздел</h4>
   <p class="topless"><a href="other_systems.html"
                         title="следующая глава">Взаимодействие с другими системами</a></p>
   <div role="note" aria-label="source link">
     <h3>Эта страница</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/zkl.txt"
+      <li><a href="_sources/zkl.rst.txt"
             rel="nofollow">Исходный текст</a></li>
     </ul>
    </div>
@@ -309,14 +308,14 @@
           <a href="other_systems.html" title="Взаимодействие с другими системами"
              >вперёд</a> |</li>
         <li class="right" >
-          <a href="api.html" title="Описание API"
+          <a href="spark.html" title="Spark"
              >назад</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Документация iss 1.0</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, Vladimir Komarov.
-      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+      Создано с помощью <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
     </div>
   </body>
 </html>

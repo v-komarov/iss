@@ -124,7 +124,12 @@ def find_address(d):
 
         city_obj = find_city(address[1])
         street_obj = find_street(address[2])
-        house = translit(address[3], 'ru').upper().replace("-","/")
+        """
+        Символ разделения номера дома и литеры (например Хабаровская 4б-1) 
+        необходимо привести к единому виду с символом разделениея /
+        пример: Хабаровская 4б/1
+        """
+        house = translit(address[3], 'ru').upper().replace("-","/").replace(" ","/").replace("_","/")
 
         if not city_obj == False and not street_obj == False:
 
