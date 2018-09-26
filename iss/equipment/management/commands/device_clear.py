@@ -39,10 +39,10 @@ def CompareSerial(serial1,serial2):
 def Oldest(dev1,dev2):
 
     if dev1.datetime_create == None:
-        return dev2
+        return dev1
 
     if dev2.datetime_create == None:
-        return dev1
+        return dev2
 
     if dev1.datetime_create >= dev2.datetime_create:
         return dev2

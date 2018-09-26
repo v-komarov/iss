@@ -454,10 +454,10 @@ class Command(BaseCommand):
                     if netel:
 
                         ### Проверка есть ли привязанное к данному сетевому элементу оборудование с соответствующей моделью, но с другим адресом размещения
-                        if netel.device.filter(device_scheme=dev_schema).exists():
+                        if netel.device.filter(device_scheme=dev_schema, serial=d["serial"]).exclude(address=address).exists():
 
                             ### Выбор первого элемента , совпадающего по модели
-                            dev = netel.device.filter(device_scheme=dev_schema).first()
+                            dev = netel.device.filter(device_scheme=dev_schema, serial=d["serial"]).exclude(address=address).first()
 
                             ### Перемещение устройства на другой адрес
                             MoveDevice(dev, address)
