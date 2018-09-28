@@ -94,10 +94,11 @@ class Command(BaseCommand):
                         p.status = port_use
 
                         print ip, device, p.num, p.status
-                        logger.info("IP адрес устройства {} порт {} статус {}".format(ip, p.num, p.status))
+                        logger.info("IP адрес устройства {} сетевой элемент {} порт {} статус {}".format(ip, ne.name, p.num, p.status))
 
-                    p.datetime_update = krsk_tz.localize(datetime.datetime.now())
-                    p.save()
+                        p.datetime_update = krsk_tz.localize(datetime.datetime.now())
+                        p.author = "circuit"
+                        p.save()
 
 
 

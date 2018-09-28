@@ -18,22 +18,6 @@ logger = logging.getLogger('devices')
 
 
 
-### Сравнение серийный номеров
-def CompareSerial(serial1,serial2):
-
-    if serial1.find(serial2) == -1:
-
-        ### Соответствие не найдено
-        if serial2.find(serial1) == -1:
-
-            ### Соответствие не найдено
-            return False
-        else:
-            return True
-
-    else:
-        return True
-
 
 ### Определение наиболее "древнего" устройства
 def Oldest(dev1,dev2):
@@ -48,9 +32,6 @@ def Oldest(dev1,dev2):
         return dev2
     else:
         return dev1
-
-
-
 
 
 
@@ -127,16 +108,12 @@ class Command(BaseCommand):
                 dev1 = net.device.all()[0]
                 dev2 = net.device.all()[1]
 
-                if CompareSerial(dev1.serial,dev2.serial):
+                ### Определение наиболее раннего добавленного устройства
+                old = Oldest(dev1,dev2)
 
-                    ### серийный номера совпадают
+                ### Удаление связи между старым устройством и сетевым элементом
+                net.device.remove(old)
 
-                    ### Определение наиболее раннего добавленного устройства
-                    old = Oldest(dev1,dev2)
-
-                    ### Удаление связи между старым устройством и сетевым элементом
-                    net.device.remove(old)
-
-                    print u"Удален дубль {} сетевого элемента {}".format(old.name, net.name)
-                    logger.info(u"Удален дубль {} сетевого элемента {}".format(old.name, net.name))
+                print u"Удален дубль {} сетевого элемента {}".format(old.name, net.name)
+                logger.info(u"Удален дубль {} сетевого элемента {}".format(old.name, net.name))
 

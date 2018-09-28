@@ -306,6 +306,15 @@ def NetIntrIp(net,ip):
         ip_prop.val = ip
         ip_prop.comment = "saved by device_check"
         ip_prop.save()
+    else:
+        ### Создание свойства для интерфейса manage
+        logical_interfaces_prop.objects.create(
+            logical_interface = logintr,
+            prop = prop,
+            val = ip,
+            comment = "device_check"
+        )
+
 
     logger.info(u"Установлен ip адрес управления {} для сетевого элемента {}".format(ip, net.name))
 
