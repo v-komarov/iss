@@ -16,6 +16,7 @@ import datetime
 import logging
 import hashlib
 from pytz import timezone
+from kafka import KafkaProducer
 from iss.localdicts.models import Status,Severity
 import json
 
@@ -34,9 +35,50 @@ logger = logging.getLogger('debugging')
 loggerjson = logging.getLogger('events')
 
 
+kafka_server = iss.dbconn.KAFKA_SERVER
+producer = KafkaProducer(bootstrap_servers=kafka_server)
+
+
 #tz = 'Asia/Irkutsk'
 tz = 'Europe/Moscow'
 irk_tz = timezone(tz)
+
+
+
+
+
+
+
+
+#### Отправка сообщений в топик
+def SendMsgTopic(evid,first_seen,last_seen,event_class,severity,device_net_address,device_location,uuid,device_class,device_group,device_system,element_identifier,status,summary):
+
+    msg = {
+        "evid":evid,
+        "first_seen":first_seen.strftime("%d.%m.%Y %H:%M %z"),
+        "last_seen":last_seen.strftime("%d.%m.%Y %H:%M %z"),
+        "event_class":event_class,
+        "severity":severity.name,
+        "device_net_address":device_net_address,
+        "device_location":device_location,
+        "uuid":uuid,
+        "device_class":device_class,
+        "device_group":device_group,
+        "device_system":device_system,
+        "element_identifier":element_identifier,
+        "status":status.name,
+        "summary":summary
+    }
+
+
+    producer.send("zenoss-irk", json.dumps(msg))
+
+
+
+
+
+
+
 
 
 
@@ -142,6 +184,13 @@ class Command(BaseCommand):
                         'key:{key} action:{action} lasttime:{lasttime} firsttime:{firsttime} last_action:{last_action} severity:{severity} location:{location}'.format(
                             key=key,action=action,last_action=last_action,severity=severity.id,firsttime=firsttime,lasttime=lasttime,location=location)
                     )
+
+
+
+
+
+                ### Запись сообщения в топик
+                SendMsgTopic(evid,firsttime,lasttime,eventclass,severity,ipaddress,location,uuid,deviceclass,devicegroup,devicesystem,device,status,summary)
 
 
 
@@ -255,6 +304,8 @@ class Command(BaseCommand):
                         cache.set(key,"update", 360000)
 
 
+
+        producer.flush()
 
         print "ok"
 
