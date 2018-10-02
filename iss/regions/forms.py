@@ -9,7 +9,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 
-from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date, avr, avr_gsm, avr_workers
+from iss.regions.models import orders, proj, proj_stages, reestr_proj, reestr_proj_exec_date, avr, avr_gsm, avr_workers, avr_commission
 from iss.localdicts.models import stages, regions, address_city
 
 
@@ -104,15 +104,18 @@ class AVRForm(ModelForm):
     region = forms.ChoiceField(label="Регион")
     city = forms.ChoiceField(label="Город")
     objnet = forms.CharField(label="Объект сети", widget=forms.TextInput(attrs={'class':'input-sm class100' }))
+    area = forms.CharField(label="Участок", widget=forms.TextInput(attrs={'class':'input-sm class100' }))
+    complex = forms.CharField(label="Пусковой комплекс", widget=forms.TextInput(attrs={'class':'input-sm class100' }))
     address = forms.CharField(label="Адрес", widget=forms.TextInput(attrs={'class':'input-sm class100'}))
     datetime_avr = forms.CharField(label="Дата АВР", widget=forms.DateTimeInput(attrs={'class':'input-sm class100'}, format="%d.%m.%Y"))
     datetime_work = forms.CharField(label="Дата выезда", widget=forms.DateTimeInput(attrs={'class':'input-sm class100'}, format="%d.%m.%Y"))
     staff = forms.ChoiceField(label="МОЛ")
+    commission = forms.ChoiceField(label="Комиссия")
 
 
     class Meta:
         model = avr
-        fields = ['region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'status', 'staff']
+        fields = ['region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'status', 'staff', 'area', 'complex', 'commission']
 
 
 
@@ -127,6 +130,7 @@ class NewAVRForm(AVRForm):
         self.fields['region'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
         self.fields['city'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
         self.fields['staff'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
+        self.fields['commission'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
 
         users = User.objects.order_by("first_name")
         user_list = [("","-------")]
@@ -146,12 +150,17 @@ class NewAVRForm(AVRForm):
 
         self.fields['city'].choices = city_list
 
+        comm = avr_commission.objects.order_by("name")
+        comm_list = [("","-------")]
+        comm_list.extend([(x.id, x.name) for x in comm])
+        self.fields['commission'].choices = comm_list
+
 
 
 
     class Meta:
         model = avr
-        fields = ['region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'staff']
+        fields = ['region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'staff', 'area', 'complex', 'commission']
 
 
 
@@ -172,6 +181,7 @@ class EditAVRForm(AVRForm):
         self.fields['region'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
         self.fields['city'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
         self.fields['staff'].widget.attrs = {'class':'form-control input-sm col-sm-2', 'disabled':'disabled'}
+        self.fields['commission'].widget.attrs = {'class':'form-control input-sm col-sm-2'}
 
         users = User.objects.order_by("first_name")
         user_list = [("","-------")]
@@ -196,10 +206,18 @@ class EditAVRForm(AVRForm):
         self.fields["stuff_allow"].initial = "yes" if self.instance.status.stuff else "no"
         self.fields["price_allow"].initial = "yes" if self.instance.status.price else "no"
 
+        comm = avr_commission.objects.order_by("name")
+        comm_list = [("","-------")]
+        comm_list.extend([(x.id, x.name) for x in comm])
+        self.fields['commission'].choices = comm_list
+
+
+
+
     class Meta:
 
         model = avr
-        fields = ['avr_id', 'region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'staff']
+        fields = ['avr_id', 'region', 'city', 'objnet', 'address', 'datetime_avr', 'datetime_work', 'staff', 'area', 'complex', 'commission']
 
 
 

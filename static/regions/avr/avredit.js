@@ -1115,10 +1115,13 @@ function EditAVR(e) {
     var region = $("select#id_region").val();
     var city = $("select#id_city").val();
     var objnet = $("input#id_objnet").val();
+    var area = $("input#id_area").val();
+    var complex = $("input#id_complex").val();
     var address = $("input#id_address").val();
     var datetime_avr = $("input#id_datetime_avr").val();
     var datetime_work = $("input#id_datetime_work").val();
     var staff = $("select#id_staff").val();
+    var commission = $("select#id_commission").val();
 
 
     if (region != "" && city != "" && objnet != "" && address != "" && datetime_avr != "" && staff != "") {
@@ -1129,9 +1132,12 @@ function EditAVR(e) {
         data.city = city;
         data.address = address;
         data.objnet = objnet;
+        data.area = area;
+        data.complex = complex;
         data.datetime_avr = datetime_avr;
         data.datetime_work = datetime_work;
         data.staff = staff;
+        data.commission = commission;
         data.action = "avr-save";
 
 

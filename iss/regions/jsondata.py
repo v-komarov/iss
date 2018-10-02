@@ -24,7 +24,7 @@ from django.db.models import Q
 
 from iss.regions.forms import OrderForm, WorkersDatesStagesForm
 from iss.regions.models import orders, proj, proj_stages, proj_notes, reestr_proj, reestr_proj_files, reestr_proj_comment, stages_history, reestr_proj_exec_date, reestr_proj_messages_history, store_rest, store_rest_log, store_list, store_out, store_in, store_carry
-from iss.regions.models import avr, avr_logs, avr_files, status_avr, avr_status_history, avr_gsm, avr_workers
+from iss.regions.models import avr, avr_logs, avr_files, status_avr, avr_status_history, avr_gsm, avr_workers, avr_commission
 from iss.localdicts.models import regions, proj_temp, regions, blocks, address_companies, stages as stages_list, address_house, init_reestr_proj, business, rates, passing, proj_other_system, message_type, address_city
 from iss.regions.sendmail import send_proj_worker, send_proj_worker2, send_problem, send_reestr_proj, send_reestr_proj_work
 
@@ -2730,17 +2730,21 @@ def get_json(request):
             region_obj = regions.objects.get(pk=int(data["region"],10))
             city_obj = address_city.objects.get(pk=int(data["city"],10))
             staff_obj = User.objects.get(pk=int(data["staff"],10))
+            commission_obj = None if data["commission"] == "" else avr_commission.objects.get(pk=int(data["commission"],10))
 
             avr_obj = avr.objects.create(
                 region = region_obj,
                 city = city_obj,
                 staff = staff_obj,
                 objnet = data["objnet"].strip(),
+                area = data["area"].strip(),
+                complex = data["complex"].strip(),
                 address = data["address"].strip(),
                 author = request.user,
                 datetime_avr = datetime.datetime.strptime(data["datetime_avr"], "%d.%m.%Y"),
                 datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y"),
-                status = status
+                status = status,
+                commission = commission_obj
 
             )
 
@@ -2768,6 +2772,7 @@ def get_json(request):
             region_obj = regions.objects.get(pk=int(data["region"],10))
             city_obj = address_city.objects.get(pk=int(data["city"],10))
             staff_obj = User.objects.get(pk=int(data["staff"],10))
+            commission_obj = None if data["commission"] == "" else avr_commission.objects.get(pk=int(data["commission"],10))
 
             avr_obj = avr.objects.get(pk=int(data["avr_id"],10))
 
@@ -2775,10 +2780,13 @@ def get_json(request):
             avr_obj.city = city_obj
             avr_obj.staff = staff_obj
             avr_obj.objnet = data["objnet"].strip()
+            avr_obj.area = data["area"].strip()
+            avr_obj.complex = data["complex"].strip()
             avr_obj.address = data["address"].strip()
             avr_obj.author = request.user
             avr_obj.datetime_avr = datetime.datetime.strptime(data["datetime_avr"], "%d.%m.%Y")
             avr_obj.datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y")
+            avr_obj.commission = commission_obj
             avr_obj.save()
 
 

@@ -929,20 +929,33 @@ def get_avr_print(request,avr_id):
 
     document = Document()
 
+    ### УТВЕРЖДАЮ
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p.paragraph_format.left_indent = Pt(250)
-    p.add_run(u'УТВЕРЖДАЮ:\nТехнический директор\nЗАО «СибТрансТелеКом»\nА.П. Ляднов\n\n\n"____" _____________ 20 _____ г.\n').bold = True
+    p.add_run(u'УТВЕРЖДАЮ:\nТехнический директор\nАО «СибТрансТелеКом»\nА.П. Ляднов\n\n\n"____" _____________ 20 _____ г.\n').bold = True
 
-
+    ### Заголовок
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run(u'Акт АВР № %s\nорганизации и выполнения АВР и расследования причин аварии' % avr_id).bold = True
+    p.add_run(u'Акт АВР № %s\nорганизации и выполнения АВР и расследования причин аварии корпоративного заказа' % avr_id).bold = True
+
+    ### АО и дата
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.add_run(u'АО «СибТрансТелеКом»                                                   {}'.format(avr_obj.datetime_avr.strftime("%d.%m.%Y"))).bold = True
+
 
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Место проведения работ: {} {}\n{}".format(avr_obj.city.name, avr_obj.address, avr_obj.objnet)).font.size = Pt(9)
+    p.add_run(u"Место проведения работ: {} {}\n".format(avr_obj.city.name, avr_obj.address, avr_obj.objnet)).font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Участок: {}\n".format(avr_obj.objnet)).font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Пусковой комплекс: {}\n".format(avr_obj.objnet)).font.size = Pt(9)
 
 
     p = document.add_paragraph()

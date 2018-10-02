@@ -781,6 +781,9 @@ class avr(models.Model):
     datetime_work = models.DateTimeField(null=True, verbose_name="Дата выезда")
     status = models.ForeignKey(status_avr, on_delete=models.PROTECT, verbose_name='Статус')
     staff = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="МОЛ", related_name="mol")
+    area = models.CharField(max_length=200, default="", verbose_name="Участок")
+    complex = models.CharField(max_length=200, default="", verbose_name="Пусковой комплекс")
+    commission = models.ForeignKey("avr_commission", on_delete=models.PROTECT, verbose_name="Коммиссия", null=True, default=None)
 
     datetime_create = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Автор")
@@ -849,3 +852,17 @@ class avr_workers(models.Model):
     summa = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Итоговая сумма в руб.', default=0.00)
     comment = models.CharField(max_length=100, default="", verbose_name="Комментарий")
     datetime_create = models.DateTimeField(auto_now_add=True, db_index=True)
+
+
+
+### АВР справочник комиссий
+class avr_commission(models.Model):
+    name = models.CharField(max_length=100, default="", verbose_name="Название")
+    position = models.TextField(default="", verbose_name="Должность") # Формат заполнения - разделитель записей - точка с запятой
+    sign = models.TextField(default="", verbose_name="Подпись") # Формат заполнения - разделитель записей - точка с запятой
+
+    class Meta:
+        verbose_name = 'Состав комиссии'
+        verbose_name_plural = 'Составы комиссий'
+
+
