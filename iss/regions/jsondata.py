@@ -2783,7 +2783,6 @@ def get_json(request):
             avr_obj.area = data["area"].strip()
             avr_obj.complex = data["complex"].strip()
             avr_obj.address = data["address"].strip()
-            avr_obj.author = request.user
             avr_obj.datetime_avr = datetime.datetime.strptime(data["datetime_avr"], "%d.%m.%Y")
             avr_obj.datetime_work = None if data["datetime_work"] == "" else datetime.datetime.strptime(data["datetime_work"], "%d.%m.%Y")
             avr_obj.commission = commission_obj

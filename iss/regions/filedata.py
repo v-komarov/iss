@@ -943,34 +943,82 @@ def get_avr_print(request,avr_id):
     ### АО и дата
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run(u'АО «СибТрансТелеКом»                                                   {}'.format(avr_obj.datetime_avr.strftime("%d.%m.%Y"))).bold = True
+    p.add_run(u'АО «СибТрансТелеКом»                                                   {}\n'.format(avr_obj.datetime_avr.strftime("%d.%m.%Y"))).bold = True
 
 
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Место проведения работ: {} {}\n".format(avr_obj.city.name, avr_obj.address, avr_obj.objnet)).font.size = Pt(9)
+    p.add_run(u"Место проведения работ: {} {}".format(avr_obj.city.name, avr_obj.address, avr_obj.objnet)).font.size = Pt(9)
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Участок: {}\n".format(avr_obj.objnet)).font.size = Pt(9)
+    p.add_run(u"Участок: {}".format(avr_obj.area)).font.size = Pt(9)
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Пусковой комплекс: {}\n".format(avr_obj.objnet)).font.size = Pt(9)
-
-
-    p = document.add_paragraph()
-    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Мы, нижеподписавшиеся: Начальник СЭ «Красноярская» Бочериков А.П.\n\nсоставили настоящий акт в том, что по результатам анализа причин и характера повреждения, произошедшего {}\nна участке\nвыявлено следующее:".format(datetime.datetime.strftime(avr_obj.datetime_avr,"%d.%m.%Y"))).font.size = Pt(9)
+    p.add_run(u"Пусковой комплекс: {}\n".format(avr_obj.complex)).font.size = Pt(9)
 
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Хронология аварийно-восстановительных работ:").font.size = Pt(9)
+    p.add_run(u"Мы, нижеподписавшиеся:").font.size = Pt(9)
 
+    ### Состав комиссии , должности
+    if avr_obj.commission:
+        pos = avr_obj.commission.position.split(";")
+        for po in pos:
+            p = document.add_paragraph()
+            p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            p.add_run(u"{}".format(po)).font.size = Pt(9)
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Перечень материалов, израсходованных при проведении АВР:").font.size = Pt(9)
+    p.add_run(u"составили настоящий акт в том, что по результатам анализа причин и характера повреждения, произошедшего {}\nна участке {}\nвыявлено следующее:".format(datetime.datetime.strftime(avr_obj.datetime_avr, "%d.%m.%Y"),avr_obj.area)).font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1. Хронология аварийно-восстановительных работ:\n1.1. Регистрация аварии:\n").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"предварительная диагностика типа аварийной ситуации и локализация повреждения:\n").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.2. Регистрация отказа: в ___ час ___ мин").font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.3. Оповещение  ______: в ___ час ___ мин    Сбор в  ___ час ___ мин").font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.4. Определено место повреждения\nна расстоянии __________ метров от оптического кросса _____________").font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.5. Выезд на место повреждения {} в ____ час ____ мин  Прибытие ____ час _____ мин".format("" if  avr_obj.datetime_work == None else avr_obj.datetime_work.strftime("%d.%m.%Y"))).font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.6. На месте повреждения\nОбнаружено:\nпо причине:\n").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.7. Восстановительные работы по временной схеме не проводились\nначаты в _____ час _____ мин ___________ 2018г\nзаконченыв _____ час _____ мин ___________ 2018г").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Потери на восстановление связи по временной схеме составили ________ час _______ мин.\n c ______ по _______").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Способ временного восстановления связи:\nПричины задержек в восстановлении связи:").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"1.8. Восстановительные работы по постоянной схеме составили: ____ часов ____ мин\nc ____ час _____ мин      _____________ 2018г.\nпо ____ час _____ мин      _____________ 2018г.").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"2. Перечень материалов, израсходованных при проведении АВР:").font.size = Pt(9)
+
 
 
     table = document.add_table(1,5, style="TableGrid")
@@ -1010,7 +1058,36 @@ def get_avr_print(request,avr_id):
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"\nПодписи членов комиссии:").font.size = Pt(9)
+    p.add_run(u"\n3. Выводы комиссии:").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"3.1. Причины повреждения:").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"3.2. Ответственные за повреждения, принятые меры:").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"3.3. Оценка организации аварийно-восстановительных работ (указать, при наличии таковых, причины задержки восстановления действия связи):").font.size = Pt(9)
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"3.4. Принятые меры по оптимизации аварийно-восстановительных работ и профилактике повреждений:").font.size = Pt(9)
+
+
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"\n4. Подписи членов комиссии:").font.size = Pt(9)
+
+    ### Подписи комиссии
+    if avr_obj.commission:
+        sign = avr_obj.commission.sign.split(";")
+        for s in sign:
+            p = document.add_paragraph()
+            p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+            p.add_run(u"{}".format(s)).font.size = Pt(9)
 
 
     document.save(f)
