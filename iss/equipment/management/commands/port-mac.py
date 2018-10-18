@@ -84,7 +84,7 @@ class Command(BaseCommand):
 
                 ### Поиск по ip адресу на интерфейсе manager
                 if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
-                    p = logical_interfaces_prop.objects.get(prop=prop, val=ip)
+                    p = logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').first()
                     #### Определение серевого элемента
                     ne = p.logical_interface.netelem
     
