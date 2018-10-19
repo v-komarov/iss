@@ -32,7 +32,7 @@ krsk_tz = timezone(tz)
 
 
 kafka_server = iss.dbconn.KAFKA_SERVER
-consumer = KafkaConsumer('circuit',bootstrap_servers=kafka_server, auto_offset_reset='earliest')
+consumer = KafkaConsumer('port-mac',bootstrap_servers=kafka_server, auto_offset_reset='earliest')
 
 
 
@@ -70,44 +70,42 @@ class Command(BaseCommand):
         Отметка пользовательских и технологических портов
 
         """
-        with open("iss/equipment/csv/port-mac.json","r") as f:
+        for m in consumer:
 
-            for line in f.readlines():
+            data = json.loads(m.value)
 
-                data = json.loads(line)
+            ip = data["ip"]
+            port = data["port"]
+            mode = data["mode"]
 
-                ip = data["ip"]
-                port = data["port"]
-                mode = data["mode"]
+            #print ip,port,mode
 
-                #print ip,port,mode
+            ### Поиск по ip адресу на интерфейсе manager
+            if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+                p = logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').first()
+                #### Определение серевого элемента
+                ne = p.logical_interface.netelem
 
-                ### Поиск по ip адресу на интерфейсе manager
-                if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
-                    p = logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').first()
-                    #### Определение серевого элемента
-                    ne = p.logical_interface.netelem
-    
-                    ### Поиск связанного устройства
-                    device = ne.device.all().first()
-    
-                    ### Обход портов устройства
-                    for p in devices_ports.objects.filter(device=device):
-                        ### Проверка порта , исключение отмеченный через circuit
-                        if p.num == port and p.author != "circuit":
-                            p.status = port_use if mode == "use" else port_tech
-    
-                            print ip, device, p.num, p.status
-                            logger.info("IP адрес устройства {} сетевой элемент {} порт {} статус {}".format(ip, ne.name, p.num, p.status))
-    
-                            p.datetime_update = krsk_tz.localize(datetime.datetime.now())
-                            p.author = "port-mac"
-                            p.save()
-    
-    
-    
-                ### ip адрес не найден
-                else:
-                    logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=ip))
-    
+                ### Поиск связанного устройства
+                device = ne.device.all().first()
+
+                ### Обход портов устройства
+                for p in devices_ports.objects.filter(device=device):
+                    ### Проверка порта , исключение отмеченный через circuit
+                    if p.num == port and p.author != "circuit":
+                        p.status = port_use if mode == "use" else port_tech
+
+                        print ip, device, p.num, p.status
+                        logger.info("IP адрес устройства {} сетевой элемент {} порт {} статус {}".format(ip, ne.name, p.num, p.status))
+
+                        p.datetime_update = krsk_tz.localize(datetime.datetime.now())
+                        p.author = "port-mac"
+                        p.save()
+
+
+
+            ### ip адрес не найден
+            else:
+                logger.info("IP адрес {ipaddress} не найден!".format(ipaddress=ip))
+
 
