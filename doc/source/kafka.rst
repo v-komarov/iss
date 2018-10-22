@@ -208,3 +208,86 @@ Topic circuit
     /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic circuit
     
  Наполнение топика: 10.6.0.88 (скрипты по сбору информации с радиус серверов - cron)
+
+
+Топик port-mac
+--------------
+
+Назначение: обмен информацией с инвентори gamma о занятых портах абонентами на оборудовании абонентского доступа на основании активности mac адресов на портах.
+
+ Пример записей
+ ::
+ 
+    {"ip": "33.80.9.86", "port": "7", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "0", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "16", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "17", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "18", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "2", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "22", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "23", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "24", "mode": "use"}
+    {"ip": "33.80.9.87", "port": "25", "mode": "tech"}
+    {"ip": "33.80.9.87", "port": "26", "mode": "tech"}
+    {"ip": "33.80.9.87", "port": "6", "mode": "use"}
+
+ Просмотр сообщений топика
+ ::
+ 
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic port-mac
+
+
+
+Топик zenoss-krsk
+-----------------
+
+Наполнение топика на 10.6.0.22 - получение данных с zenoss Красноярска
+
+Назначенние: обмен записями событий zenoss Красноярска
+
+
+ Просмотр сообщений топика
+ ::
+ 
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic zenoss-krsk
+
+
+
+
+Топик zenoss-irk
+----------------
+
+Наполнение топика на 10.6.0.22 - получение данных с zenoss Иркутска
+
+Назначенние: обмен записями событий zenoss Иркутска
+
+
+ Просмотр сообщений топика
+ ::
+ 
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic zenoss-irk
+
+
+Топик zenoss-chi
+----------------
+
+Наполнение топика на 10.6.0.22 - получение данных с zenoss Читы
+
+Назначенние: обмен записями событий zenoss Читы
+
+
+ Просмотр сообщений топика
+ ::
+ 
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic zenoss-chi
+
+
+
+
+Ключевый изменения в server.properties
+--------------------------------------
+
+ ::
+ 
+    num.network.threads=16
+    num.io.threads=32

@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = 'get list of device'
 
     """
-    Формирует список устройств в формате ip, serial, model, address
+    Формирует список устройств в формате ip, serial, model, address, количество портов, количество слотов, количество комбо, количество занятых портов, процент занятых портов
     Сохраняет в файл filename (передается как параметр)
     """
 
@@ -24,11 +24,36 @@ class Command(BaseCommand):
 
         with open("iss/equipment/csv/%s" % filename, 'w') as f:
 
-            for device in devices.objects.order_by("device_scheme__name"):
+            ### Заголовок
+            f.write("Адрес;Модель;Сетевой элемент;Серийный номер;ip;портов;портов используемые;портов технологических;портов в резерве;комбо портов;комбо используется;комбо технологических;комбо в резерве;% использования\n")
+
+            for device in devices.objects.order_by("address__city","address__street"):
                 ip = device.get_manage_ip()
                 address = device.getaddress().encode("utf-8")
+                netelems = []
+                for nel in device.get_netelems():
+                    netelems.append(nel["name"])
+
+                ports = device.get_ports_count()
+                ports_use = device.get_use_ports()
+                ports_tech = device.get_tech_ports()
+                ports_reserv = device.get_reserv_ports()
+
+                combo = device.get_combo_count()
+                combo_use = device.get_use_combo()
+                combo_tech = device.get_tech_combo()
+                combo_reserv = device.get_reserv_combo()
+
+                # Процент использования
+                using = 0 if ports+combo == 0 else round((ports_use + combo_use)/float(ports + combo) * 100, 2)
+                print "using: {} % ports : {} ports_use : {}".format(using,ports,ports_use)
+
                 try:
-                    row = "{ip};{serial};{model};{address}\n".format(ip=u" ,".join(ip), model=device.device_scheme.name, serial=device.serial, address=address)
+                    row = "{address};{model};{netelem};{serial};{ip};{ports};{ports_use};{ports_tech};{ports_reserv};{combo};{combo_use};{combo_tech};{combo_reserv};{using}\n".format(
+                        ip=u" ,".join(ip), model=device.device_scheme.name, serial=device.serial, address=address, netelem=", ".join(netelems),
+                        ports = ports, ports_use = ports_use, ports_tech = ports_tech, ports_reserv = ports_reserv,
+                        combo = combo, combo_use = combo_use, combo_tech = combo_tech, combo_reserv = combo_reserv, using = using
+                    )
                     f.write(row)
                 except:
                     print u"%s NOT SUCCESS" % device.serial
