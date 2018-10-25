@@ -249,7 +249,7 @@ Topic circuit
  Просмотр сообщений топика
  ::
  
-    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic zenoss-krsk
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --topic zenoss-krsk
 
 
 
@@ -265,7 +265,7 @@ Topic circuit
  Просмотр сообщений топика
  ::
  
-    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic zenoss-irk
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --topic zenoss-irk
 
 
 Топик zenoss-chi
@@ -279,7 +279,21 @@ Topic circuit
  Просмотр сообщений топика
  ::
  
-    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --from-beginning --topic zenoss-chi
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --topic zenoss-chi
+
+
+Топик zenoss
+------------
+
+Наполнение: процессами compresszenoss 
+
+Назначение: обмен данными с web интерфейсом по websocket
+
+
+ Просмотр сообщений топика
+ ::
+ 
+    /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server 10.6.0.88:9092 --topic zenoss
 
 
 

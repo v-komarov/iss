@@ -14,6 +14,7 @@
    api
    es
    kafka
+   ws
    spark
    zkl
    other_systems

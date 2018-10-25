@@ -1021,38 +1021,47 @@ def get_avr_print(request,avr_id):
 
 
 
-    table = document.add_table(1,5, style="TableGrid")
+    nn = avr_obj.store_out_set.count() ### Количество строк с материалом
+
+
+    table = document.add_table(1+nn,6, style="TableGrid")
     table.columns[0].width = Pt(40)
     table.columns[1].width = Pt(200)
-    table.columns[2].width = Pt(50)
+    table.columns[2].width = Pt(30)
+    table.columns[3].width = Pt(40)
+    table.columns[4].width = Pt(100)
+    table.columns[5].width = Pt(60)
     table.autofit = False
     heading_cells = table.rows[0].cells
     heading_cells[0].text = u"№пп"
     heading_cells[1].text = u"Наименование материала"
-    heading_cells[2].text = u"Ед.из."
+    heading_cells[2].text = u"Ед.\nиз."
     heading_cells[3].text = u"Расход"
-    heading_cells[4].text = u"Из состава\nоборудования"
+    heading_cells[4].text = u"Название склада"
+    heading_cells[5].text = u"Из состава\nоборудо-\nвания"
     heading_cells[0].paragraphs[0].runs[0].font.size = Pt(7)
     heading_cells[1].paragraphs[0].runs[0].font.size = Pt(7)
     heading_cells[2].paragraphs[0].runs[0].font.size = Pt(7)
     heading_cells[3].paragraphs[0].runs[0].font.size = Pt(7)
     heading_cells[4].paragraphs[0].runs[0].font.size = Pt(7)
+    heading_cells[5].paragraphs[0].runs[0].font.size = Pt(7)
 
 
     n = 1
     for row in avr_obj.store_out_set.all():
-        table.add_row()
         cells = table.rows[n].cells
         cells[0].text = "%s" % n
         cells[1].text = row.store_rest.name
         cells[2].text = row.store_rest.dimension
         cells[3].text = "%.2f" % row.q
-        cells[4].text = u""
+        cells[4].text = row.store_rest.store.name
+        cells[5].text = ""
         cells[0].paragraphs[0].runs[0].font.size = Pt(7)
         cells[1].paragraphs[0].runs[0].font.size = Pt(7)
         cells[2].paragraphs[0].runs[0].font.size = Pt(7)
         cells[3].paragraphs[0].runs[0].font.size = Pt(7)
         cells[4].paragraphs[0].runs[0].font.size = Pt(7)
+        cells[5].paragraphs[0].runs[0].font.size = Pt(7)
 
         n += 1
 
