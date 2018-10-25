@@ -38,6 +38,30 @@ http://10.6.0.22:8000/equipment/devices/apidata/?action=get_zkllist&ipaddress=55
 
 
 
+Вывод строки георгафических адресов
+-----------------------------------
+
+http://10.6.0.22:8000/equipment/devices/apidata/
+
+Запрос **POST**
+
+Параметры:
+
+#. "action":"writeaddressstr" (JSON)
+#. "iplist":[] (JSON)
+
+ Пример запроса
+ ::
+
+    curl --header "Content-Type: application/json" -X POST --data '{"action":"writeaddressstr","iplist":['55.33.8.2','55.33.10.2']}' http://10.6.0.22:8000/equipment/devices/apidata/
+
+ Пример ответа
+ ::
+ 
+    {"address": " \u0433.\u0410\u0431\u0430\u043a\u0430\u043d [\u0414\u0440\u0443\u0436\u0431\u044b \u041d\u0430\u0440\u043e\u0434\u043e\u0432] 16, [\u041f\u0443\u0448\u043a\u0438\u043d\u0430] 99, "}
+
+
+
 
 Список сетевых элементов без ip адреса управления
 -------------------------------------------------

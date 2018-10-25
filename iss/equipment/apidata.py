@@ -14,9 +14,11 @@ from pytz import timezone
 
 from django.http import HttpResponse
 from django.core.cache import cache
+from django import template
+from django.views.decorators.csrf import csrf_exempt
 
 from iss.equipment.models import devices_ip,footnodes,agregators,client_mac_log,client_login_log
-from iss.localdicts.models import logical_interfaces_prop_list,address_house
+from iss.localdicts.models import logical_interfaces_prop_list,address_house,address_templates
 from iss.inventory.models import logical_interfaces_prop,logical_interfaces,devices,netelems
 
 from transliterate import translit
@@ -32,10 +34,89 @@ tz = 'Asia/Krasnoyarsk'
 krsk_tz = timezone(tz)
 
 
-prop = logical_interfaces_prop_list.objects.get(name='ipv4')
 
 
 
+
+
+
+def ip2address(ip):
+    """Определение id адреса по ip"""
+
+    ### Поиск по ip адресу на интерфейсе manager
+    if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+        p = logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').first()
+        #### Определение серевого элемента
+        ne = p.logical_interface.netelem
+
+        if ne.device.all().count() != 0:
+            ### Поиск связанного устройства
+            device = ne.device.all().first()
+
+            return device.address.id
+
+        else:
+            return None
+
+
+    else:
+
+        return None
+
+
+
+
+
+def address_dict2(ip_list):
+    """Формирование словаря адресов аварии (по списку id адресов)"""
+
+    addressid_list = []
+    for ip in ip_list:
+        address_id = ip2address(ip)
+        if address_id != None:
+            addressid_list.append(address_id)
+
+    data = {}
+
+    address_list = []
+
+    for item in addressid_list:
+        addr = address_house.objects.get(pk=item)
+
+        ### Может город и улица в адресе отсутствовать . Про город - маловероятно
+        if addr.city:
+            city = addr.city.name
+        else:
+            city = ''
+        if addr.street:
+            street = addr.street.name
+        else:
+            street = ''
+        if addr.house:
+            house = addr.house
+        else:
+            house = ""
+        address_list.append(
+            {
+                'city' : city,
+                'street' : street,
+                'house' : house
+            }
+        )
+
+    data["address_list"] = address_list
+
+    return data
+
+
+
+
+
+
+
+
+
+@csrf_exempt
 def get_apidata(request):
 
     response_data = {}
@@ -46,7 +127,6 @@ def get_apidata(request):
         rg = request.GET.get
 
 
-        result = []
 
 
 
@@ -66,7 +146,24 @@ def get_apidata(request):
 
 
 
+    if request.method == "POST":
 
+        data = eval(request.body)
+
+        if data.has_key("action") and data["action"] == 'writeaddressstr':
+            """Формирование адресной строки: Город, улица, номер дома"""
+
+            ip_list = data["iplist"]
+
+            ### Формирование через шаблонизатор
+            address_str = ""
+            if address_templates.objects.filter(name="accidentname").count() == 1:
+                templ = address_templates.objects.get(name="accidentname").template
+                t = template.Template(templ)
+                c = template.Context({'data': address_dict2(ip_list)})
+                address_str = t.render(c)
+
+            response_data = {'address':address_str}
 
 
 
@@ -143,6 +240,14 @@ def get_apidata2(request):
                         status=dev.getstatus(),
                         ports=dev.get_ports_count(), combo=dev.get_combo_count(), slots=dev.get_slots_count(),
                         city=dev.address.city.name, street=dev.address.street.name, house=dev.address.house)
+
+
+
+
+
+
+
+
 
 
 
