@@ -9,8 +9,8 @@ from kafka import KafkaConsumer,TopicPartition
 
 from django.core.management.base import BaseCommand, CommandError
 
-from iss.inventory.models import logical_interfaces_prop, netelems, devices, logical_interfaces, devices_ports
-from iss.localdicts.models import logical_interfaces_prop_list,port_status,device_status
+from iss.inventory.models import logical_interfaces_prop, netelems, devices, logical_interfaces, devices_ports, devices_slots, devices_combo
+from iss.localdicts.models import logical_interfaces_prop_list,port_status,device_status, slot_status
 
 import iss.dbconn
 
@@ -22,6 +22,10 @@ prop = logical_interfaces_prop_list.objects.get(name='ipv4')
 port_use = port_status.objects.get(name='Используется')
 port_tech = port_status.objects.get(name='Технологический')
 port_rez = port_status.objects.get(name='Резерв')
+slot_use = slot_status.objects.get(name='Используется')
+slot_rez = slot_status.objects.get(name='Резерв')
+
+
 device_use = device_status.objects.get(name='Используется')
 
 tz = 'Asia/Krasnoyarsk'
@@ -99,6 +103,31 @@ class Command(BaseCommand):
                         p.datetime_update = krsk_tz.localize(datetime.datetime.now())
                         p.author = "circuit"
                         p.save()
+
+                for st in devices_slots.objects.filter(device=device):
+                    ### Проверка слотов
+                    if st.num == port:
+                        st.status = slot_use
+
+                        print ip, device, st.num, st.status
+                        logger.info("IP адрес устройства {} сетевой элемент {} слот {} статус {}".format(ip, ne.name, st.num, st.status))
+                        st.datetime_update = krsk_tz.localize(datetime.datetime.now())
+                        st.author = "circuit"
+                        st.save()
+
+                for p in devices_combo.objects.filter(device=device):
+                    ### Проверка комбо
+                    if p.num == port:
+                        p.status = port_use
+
+                        print ip, device, p.num, p.status
+                        logger.info(
+                            "IP адрес устройства {} сетевой элемент {} комбо {} статус {}".format(ip, ne.name, p.num, p.status))
+
+                        p.datetime_update = krsk_tz.localize(datetime.datetime.now())
+                        p.author = "circuit"
+                        p.save()
+
 
 
 

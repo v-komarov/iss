@@ -14,6 +14,8 @@ from iss.localdicts.models import address_companies,address_house,ports,slots,po
 port_use = port_status.objects.get(name='Используется')
 port_reserv = port_status.objects.get(name='Резерв')
 port_tech = port_status.objects.get(name='Технологический')
+slot_use = slot_status.objects.get(name='Используется')
+slot_reserv = slot_status.objects.get(name='Резерв')
 prop = logical_interfaces_prop_list.objects.get(name='ipv4')
 onyma = logical_interfaces_prop_list.objects.get(name='onyma')
 
@@ -112,6 +114,19 @@ class devices(models.Model):
     #### Комбо порты пользовательские
     def get_reserv_combo(self):
         return self.devices_combo_set.filter(status_port=port_reserv).count()
+
+
+    #### Слотов используется
+    def get_use_slots(self):
+        return self.device_link.filter(status=slot_use).count()
+
+
+    #### Слотов резерве
+    def get_reserv_slots(self):
+        return self.device_link.filter(status=slot_reserv).count()
+
+
+
 
 
     #### Список связанных сетевых элементов

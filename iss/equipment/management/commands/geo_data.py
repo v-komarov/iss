@@ -65,3 +65,7 @@ class Command(BaseCommand):
                     "result": "failure"
                 }
                 addr.save()
+
+
+            print url+param,addr.geo
+
