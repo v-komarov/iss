@@ -124,9 +124,9 @@ class Command(BaseCommand):
                     if p.num == port:
                         p.status_port = port_use if mode == "use" else port_tech
 
-                        print ip, device, p.num, p.status
+                        print ip, device, p.num, p.status_port
                         logger.info(
-                            "IP адрес устройства {} сетевой элемент {} комбо {} статус {}".format(ip, ne.name, p.num, p.status))
+                            "IP адрес устройства {} сетевой элемент {} комбо {} статус {}".format(ip, ne.name, p.num, p.status_port))
 
                         p.datetime_update = krsk_tz.localize(datetime.datetime.now())
                         p.author = "port-mac"
