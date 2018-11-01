@@ -50,6 +50,20 @@ device_list
 
 
 
+.. index:: device-reserv
+
+
+device-reserv
+~~~~~~~~~~~~~
+
+Проверяет количсетво используемых портов, слотов, комбо и если таких нет, переводит устройство в статус **Хранение**
+
+ Пример:
+ ::
+ 
+    python manage.py device-reserv
+
+
 
 .. index:: device_check
 
@@ -110,6 +124,36 @@ device_clear
    python manage.py device_clear
 
 
+
+.. index:: port-mac
+
+
+port-mac
+~~~~~~~~
+
+Читает топик **port-mac** , расставляет статусы портов (слотов, комбо) **Используется** и **Технологический**
+
+ Пример:
+ ::
+ 
+    python manage.py port-mac
+    
+
+
+.. index:: port-reserv
+
+port-reserv
+~~~~~~~~~~~
+
+Проверяет время установки статусов портов (слотов, комбо) **Используется** и **Технологический** и если время установки статуса более 90 дней устанавливает статус **Резерв**
+
+ Пример:
+ ::
+ 
+    python manage.py port-reserv
+
+
+ 
 
 
 .. index:: geo_data
