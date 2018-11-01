@@ -122,7 +122,7 @@ class Command(BaseCommand):
                 for p in devices_combo.objects.filter(device=device):
                     ### Проверка комбо
                     if p.num == port:
-                        p.status = port_use if mode == "use" else port_tech
+                        p.status_port = port_use if mode == "use" else port_tech
 
                         print ip, device, p.num, p.status
                         logger.info(
