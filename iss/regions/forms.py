@@ -78,7 +78,7 @@ class WorkersDatesStagesForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(WorkersDatesStagesForm, self).__init__(*args, **kwargs)
-        users = User.objects.order_by("first_name")
+        users = User.objects.filter(is_active=True).order_by("first_name")
         workers = [("","-------")]
         workers.extend([(user.pk, user.get_full_name()) for user in users])
 

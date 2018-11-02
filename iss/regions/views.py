@@ -339,7 +339,7 @@ class ReestrProjList(ListView):
         context['stages'] = stages_pretty()
         context['init'] = init_reestr_proj.objects.order_by('name')
 
-        users = User.objects.order_by("first_name")
+        users = User.objects.filter(is_active=True).order_by("first_name")
         workers = [("","---")]
         workers.extend([(user.pk, user.get_full_name()) for user in users])
         context['users'] = workers
@@ -449,7 +449,7 @@ class ProcessProjList(ListView):
         context['stages'] = stages_pretty()
         context['init'] = init_reestr_proj.objects.order_by('name')
 
-        users = User.objects.order_by("first_name")
+        users = User.objects.filter(is_active=True).order_by("first_name")
         workers = [("","---")]
         workers.extend([(user.pk, user.get_full_name()) for user in users])
         context['users'] = workers
