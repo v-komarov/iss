@@ -129,7 +129,7 @@ def find_address(d):
         необходимо привести к единому виду с символом разделениея /
         пример: Хабаровская 4б/1
         """
-        house = translit(address[3], 'ru').upper().replace("-","/").replace(" ","/").replace("_","/")
+        house = translit(address[3], 'ru').upper().replace("-","/").replace(" ","/").replace("_","/").replace("К","")
 
         if not city_obj == False and not street_obj == False:
 

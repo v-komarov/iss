@@ -2,7 +2,7 @@
 
 
 from django.conf.urls import url
-from iss.working.views import WorkCard, MakeReports, Events, Reports, StartDesktop, PhoneHistory, GraphHistory
+from iss.working.views import WorkCard, MakeReports, Events, Reports, StartDesktop, PhoneHistory, GraphHistory, PhoneHistory1
 from iss.working.jsondata import get_json
 
 
@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'card/$', WorkCard.as_view()),
     url(r'desktop/$', StartDesktop.as_view()),
     url(r'phone/$', PhoneHistory.as_view()),
+    url(r'phonehistory1/$', PhoneHistory1.as_view()),
     url(r'graph/$', GraphHistory.as_view()),
     url(r'jsondata/$', get_json),
     url(r'makereports/(?P<page>\d+)/$', MakeReports.as_view()),

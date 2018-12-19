@@ -1,0 +1,75 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<link href="{{ MY_STATIC_URL }}working/phonehistory1.css" type="text/css" rel="stylesheet">
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+    <div class="row">
+        <h4>История телефонных вызовов группы 1</h4>
+    </div>
+
+
+</div>
+
+
+    <table group="phonehistory1" class="table table-bordered table-striped draggable" width="100%">
+
+
+        <thead class="small">
+
+            <tr style="background-color:gainsboro;" row_id="{{ row.id }}">
+                <th style="border: solid 1px gray;padding-left: 2px;">Город</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Дата</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Номер</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Всего вызовов</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Всего входящих</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Всего исходящих</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Входящих принятых</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Исходящих принятых</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Входящих принятых %</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Исходящих принятых %</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Средняя<br>длительность<br>входящих (сек.)</th>
+                <th style="border: solid 1px gray;padding-left: 2px;">Средняя<br>длительность<br>исходящих (сек.)</th>
+            </tr>
+
+        </thead>
+
+        <tbody class="small">
+             {% for index,row in df.iterrows %}
+                <tr>
+                    <td>{{ row.city }}</td>
+                    <td>{{ row.date|date:"d.m.Y" }}</td>
+                    <td>{{ row.phone }}</td>
+                    <td>{{ row.calls }}</td>
+                    <td>{{ row.calls_in }}</td>
+                    <td>{{ row.calls_out }}</td>
+                    <td>{{ row.calls_in_ok }}</td>
+                    <td>{{ row.calls_out_ok }}</td>
+                    <td>{{ row.calls_in_per }}</td>
+                    <td>{{ row.calls_out_per }}</td>
+                    <td>{{ row.talk_in_avg }}</td>
+                    <td>{{ row.talk_out_avg }}</td>
+                </tr>
+             {% endfor %}
+        </tbody>
+
+
+
+
+    </table>
+
+
+
+
+{% endblock %}

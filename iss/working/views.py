@@ -14,7 +14,7 @@ from django.utils.timezone import now
 
 from iss.working.models import marks, working_time, working_log, working_reports
 from iss.working.forms  import phonefilter
-
+from iss.working.cassandratools import phone1history
 
 
 
@@ -353,6 +353,53 @@ class GraphHistory(TemplateView):
 
 
 
+
+
+
+### Отчет по телефонным вызовам группы 1
+class PhoneHistory1(ListView):
+
+
+
+    #model = reestr_proj
+    template_name = "working/phonehistory1.html"
+
+    paginate_by = 0
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    #@method_decorator(group_required(group='working',redirect_url='/begin/access-refused/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+
+    def get_queryset(self):
+
+        data = []
+
+        return data
+
+
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(PhoneHistory1, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+
+        context['df'] = phone1history()
+
+        return context
 
 
 
