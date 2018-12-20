@@ -7,6 +7,7 @@
 {% load tz %}
 
 
+<script type="text/javascript" src="{{ MY_STATIC_URL }}working/phonehistory1.js"></script>
 <link href="{{ MY_STATIC_URL }}working/phonehistory1.css" type="text/css" rel="stylesheet">
 
 
@@ -18,6 +19,52 @@
     <div class="row">
         <h4>История телефонных вызовов группы 1</h4>
     </div>
+
+    <div class="row">
+        <dl  class="dl-horizontal">
+        <div class="form-inline">
+            <div id="manager" class="form-group">
+
+                <dt>
+                    <label for="city">Город</label>
+                </dt>
+                <dd>
+                    <select id="city" class="form-control input-sm">
+                        <option value="" selected>Все</option>
+                        {% for c in cities %}
+                            <option value="{{ c }}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button id="filter" title="Фильтровать" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span></button>
+                    <button id="clear-filter" title="Очистить" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+                </dd>
+
+                <dt>
+                    <label for="phone">Телефон</label>
+                </dt>
+                <dd>
+                    <select id="phone" class="form-control input-sm">
+                        <option value="" selected>Все</option>
+                        {% for p in phones %}
+                            <option value="{{ p }}">{{ p }}</option>
+                        {% endfor %}
+                    </select>
+                </dd>
+
+
+                <dt>
+                    <label for="date">Дата</label>
+                </dt>
+                <dd>
+                    <input id="date" class="form-control input-sm" value="" width="100%" type="text" />
+                </dd>
+
+            </div>
+        </div>
+        </dl>
+    </div>
+
 
 
 </div>

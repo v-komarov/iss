@@ -397,7 +397,11 @@ class PhoneHistory1(ListView):
         context = super(PhoneHistory1, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
 
-        context['df'] = phone1history()
+
+        df = phone1history()
+        context['df'] = df
+        context['cities'] = df["city"].unique()
+        context['phones'] = df["phone"].unique()
 
         return context
 

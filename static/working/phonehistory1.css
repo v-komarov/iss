@@ -12,3 +12,8 @@ table[group=phonehistory1] > tbody > tr > td {
     background-color:  #96fcf1;
 }
 
+
+select#city, select#phone, input#date {
+ 	width: 150px;
+
+}
