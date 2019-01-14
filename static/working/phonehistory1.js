@@ -19,14 +19,13 @@ function Filter(e) {
     var city = $("select#city").val();
 
     var trs = $("table[group=phonehistory1] tbody tr");
-    //trs.hide();
+
 
     trs.each(function(i,elem) {
 
         var row_city = $(elem).children("td").eq(0).text();
         var row_date = $(elem).children("td").eq(1).text();
         var row_phone = $(elem).children("td").eq(2).text();
-
 
 
         if ( ( date == "" || date == row_date ) && ( phone == "" || phone == row_phone ) && ( city == "" || city == row_city ) ) {

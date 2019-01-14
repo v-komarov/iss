@@ -17,3 +17,17 @@ select#city, select#phone, input#date {
  	width: 150px;
 
 }
+
+
+/* Курсор */
+a {
+    cursor:pointer;
+    text-decoration:none;
+    color: blue;
+}
+
+
+a:hover {
+    text-decoration:none;
+    color: blue;
+}
