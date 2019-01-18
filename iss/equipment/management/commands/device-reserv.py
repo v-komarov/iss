@@ -28,6 +28,13 @@ predel = timezone.now() - datetime.timedelta(days=90)
 
 
 
+"""Серийные номера коммутаторов"""
+import iss.equipment.aggr_serials as aggr
+
+serials = aggr.serials
+
+
+
 class Command(BaseCommand):
     args = '< >'
     help = 'Установка статуса резерв для устройст если порты , слоты , комбо не используются'
@@ -52,28 +59,30 @@ class Command(BaseCommand):
         ### Обход устройств
         for device in devices.objects.filter(status=device_use):
 
-            # Проверка портов
-            ports = devices_ports.objects.filter(Q(device=device) & (Q(status=port_use) | Q(status=port_tech))).count()
+            if device.serial not in serials:
 
-            # Проверка слотов
-            slots = devices_slots.objects.filter(Q(device=device) & Q(status=slot_use)).count()
+                # Проверка портов
+                ports = devices_ports.objects.filter(Q(device=device) & (Q(status=port_use) | Q(status=port_tech))).count()
 
-            # Проверка комбо
-            combo = devices_combo.objects.filter(Q(device=device) & (Q(status_port=port_use) | Q(status_port=port_tech))).count()
+                # Проверка слотов
+                slots = devices_slots.objects.filter(Q(device=device) & Q(status=slot_use)).count()
 
-            if (ports + slots + combo) == 0:
-                """Установка статуса резерв для устройства"""
-                devices_statuses.objects.create(
-                    device=device,
-                    author="device-reserv",
-                    comment="dosnt have any fact of using",
-                    status=device_store
-                )
+                # Проверка комбо
+                combo = devices_combo.objects.filter(Q(device=device) & (Q(status_port=port_use) | Q(status_port=port_tech))).count()
 
-                device.status = device_store
-                device.save()
+                if (ports + slots + combo) == 0:
+                    """Установка статуса резерв для устройства"""
+                    devices_statuses.objects.create(
+                        device=device,
+                        author="device-reserv",
+                        comment="dosnt have any fact of using",
+                        status=device_store
+                    )
 
-                logger.info(u"Устройство {} серийный номер {} установлен статус {}".format(device.name, device.serial, device.status))
+                    device.status = device_store
+                    device.save()
+
+                    logger.info(u"Устройство {} серийный номер {} установлен статус {}".format(device.name, device.serial, device.status))
 
 
 
@@ -82,12 +91,15 @@ class Command(BaseCommand):
         
         """
         for device in devices.objects.filter(status=device_store):
-            # Проверка даты установки последнего статуса
-            if devices_statuses.objects.filter(status=device_store).exists():
-                if devices_statuses.objects.filter(status=device_store).order_by("datetime_create").last() < predel:
-                    # Удаление связи с сетевым элементом
-                    for ne in device.netelems_set.all():
-                        ne.device.remove(device)
-                    #device.relations.through.objects.all().delete()
 
-                    logger.info(u"Устройство {} серийный номер {} подготовлено к удалению".format(device.name, device.serial))
+            if device.serial not in serials:
+
+                # Проверка даты установки последнего статуса
+                if devices_statuses.objects.filter(status=device_store).exists():
+                    if devices_statuses.objects.filter(status=device_store).order_by("datetime_create").last() < predel:
+                        # Удаление связи с сетевым элементом
+                        for ne in device.netelems_set.all():
+                            ne.device.remove(device)
+                        #device.relations.through.objects.all().delete()
+
+                        logger.info(u"Устройство {} серийный номер {} подготовлено к удалению".format(device.name, device.serial))
