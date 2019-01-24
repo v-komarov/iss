@@ -43,6 +43,16 @@
 
         </ul>
       </li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+          Электрооборудование
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li class="divider"></li>
+          <li id="electrostru" {% if request.path|slice:'0:22' == "/electro/devicestypes/"><a href="/electro/devicestypes/">Типы устройств</a></li>
+        </ul>
+      </li>
       {% comment %}
       <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">

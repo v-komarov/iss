@@ -11,6 +11,62 @@
    Система пользовательских команд
 
 
+
+Приложение working
+------------------
+
+.. epigraph::
+
+   Расположение команд iss/working/management/commands
+
+
+.. index:: working_log
+
+
+Выводит события в csv файл
+
+
+
+ Пример:
+ ::
+
+   python manage.py working_log w.csv
+
+
+
+
+
+Приложение blocks
+-----------------
+
+.. epigraph::
+
+   Расположение команд iss/blocks/management/commands
+
+
+.. index:: houses_ports
+
+
+houses_ports
+~~~~~~~~~~~~
+
+Выводит в csv файл :
+
+#. Название управляющей компании
+#. Город
+#. Улица
+#. Номер дома
+#. Количество устройств
+#. Количсетво используемых портов
+
+
+ Пример:
+ ::
+
+   python manage.py houses_ports company.csv
+
+
+
 Приложение equipment
 --------------------
 

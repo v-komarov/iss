@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}equipment/agregators.js"></script>
+<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
+<link href="{{ MY_STATIC_URL }}equipment/agregators.css" type="text/css" rel="stylesheet">
+
+
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+</div>
+
+
+
+
+
+{% endblock %}
+

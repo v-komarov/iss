@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^begin/', include('iss.begin.urls')),
     url(r'^mainmenu/$', MainMenu),
     url(r'^monitor/',include('iss.monitor.urls')),
+    url(r'^electro/', include('iss.electro.urls')),
     url(r'^working/',include('iss.working.urls')),
     url(r'^blocks/',include('iss.blocks.urls')),
     url(r'^equipment/',include('iss.equipment.urls')),
