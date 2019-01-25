@@ -105,10 +105,19 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Команды</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commands.html#working">Приложение working</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands.html#blocks">Приложение blocks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="commands.html#houses-ports">houses_ports</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html#equipment">Приложение equipment</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#device-list">device_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="commands.html#device-reserv">device-reserv</a></li>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#device-check">device_check</a></li>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#circuit">circuit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="commands.html#device-clear">device_clear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="commands.html#port-mac">port-mac</a></li>
+<li class="toctree-l3"><a class="reference internal" href="commands.html#port-reserv">port-reserv</a></li>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#geo-data">geo_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#geo-city">geo_city</a></li>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#data-to-es">data_to_es</a></li>
@@ -116,6 +125,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html#localdicts">Приложение localdicts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="commands.html#check-full-address">check_full_address</a></li>
+<li class="toctree-l3"><a class="reference internal" href="commands.html#addressadd">addressadd</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html#monitor">Приложение monitor</a><ul>
@@ -135,25 +145,26 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Описание API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api.html#id2">Проверка списка ЗКЛ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-client-mac-log">Вывод строки георгафических адресов</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#ip">Список сетевых элементов без ip адреса управления</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#id3">Список устройств без связанных сетевых элементов</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#id4">Список устройств без связанных сетевых элементов</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#onyma">Запросы к Onyma</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id4">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id5">Тест</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id6">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id7">Получение справочника групп (городов)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id8">Создание договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id9">Установка даты договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id10">Установка ФИО договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id11">Установка телефона договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id12">Установка адреса договора 2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id13">Установка адреса договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id14">Установка номера договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id15">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id5">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру лицевого счета</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id6">Тест</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id7">Получение баланса (в валюте лицевого счета) на лицевом счете на текущую дату по номеру договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id8">Получение справочника групп (городов)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id9">Создание договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id10">Установка даты договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id11">Установка ФИО договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id12">Установка телефона договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id13">Установка адреса договора 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id14">Установка адреса договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id15">Установка номера договора</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id16">Получение учетного имени, тарифного плана, ресурса, логина, даты начала</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api.html#id">Получение id договора по номеру договора</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id16">Получение id тарифного плана по его названию</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id17">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html#id18">Получение списка доменов</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id17">Получение id тарифного плана по его названию</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id18">Получение учетного имени, тарифного плана, ресурса, логина, даты начала (по id договора)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html#id19">Получение списка доменов</a></li>
 </ul>
 </li>
 </ul>
@@ -185,8 +196,16 @@
 <li class="toctree-l2"><a class="reference internal" href="kafka.html#topic-avaya">Topic avaya</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kafka.html#topic-asterisk">Topic asterisk</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kafka.html#topic-circuit">Topic circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kafka.html#port-mac">Топик port-mac</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kafka.html#zenoss-krsk">Топик zenoss-krsk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kafka.html#zenoss-irk">Топик zenoss-irk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kafka.html#zenoss-chi">Топик zenoss-chi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kafka.html#zenoss">Топик zenoss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kafka.html#server-properties">Ключевый изменения в server.properties</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ws.html">websocket server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ws.html#id2">Службы сжатия данных</a></li>
 <li class="toctree-l1"><a class="reference internal" href="spark.html">Spark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zkl.html">Расчет ЗКЛ</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="zkl.html#id3">Вывод ЗКЛ из Интерфейса «Оперативный журнал» -&gt; выпадающее меню для каждого события -&gt; «Расчет ЗКЛ»</a></li>

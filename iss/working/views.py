@@ -97,11 +97,13 @@ class MakeReports(ListView):
 
     def get_queryset(self):
 
-        data = working_time.objects.order_by('-datetime_begin')
 
         if self.session.has_key("worker"):
             worker_id = self.session["worker"]
-            data = data.filter(user_id=worker_id)
+            data = working_time.objects.filter(user_id=worker_id).order_by('-datetime_begin')
+
+        else:
+            data = working_time.objects.order_by('-datetime_begin')
 
         return data
 

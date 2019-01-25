@@ -1,0 +1,15 @@
+/* Курсор */
+a#new-devicetype,
+ul.root a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+a#new-devicetype:hover,
+ul.root a:hover {
+    text-decoration:none;
+}
+
+ul.root {
+    padding-top: 30px;
+}

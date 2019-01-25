@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'iss.exams',
     'iss.blocks',
     'iss.electro',
+    'mptt',
 
 ]
 

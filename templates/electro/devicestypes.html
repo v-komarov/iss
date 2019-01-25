@@ -5,11 +5,11 @@
 
 
 {% load tz %}
+{% load mptt_tags %}
 
 
-<script type="text/javascript" src="{{ MY_STATIC_URL }}equipment/agregators.js"></script>
-<script type="text/javascript" src="{{ MY_STATIC_URL }}monitor/jquery.tablescroll.js"></script>
-<link href="{{ MY_STATIC_URL }}equipment/agregators.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{{ MY_STATIC_URL }}electro/devicestypes.js"></script>
+<link href="{{ MY_STATIC_URL }}electro/devicestypes.css" type="text/css" rel="stylesheet">
 
 
 
@@ -19,11 +19,38 @@
 
     {% include "menu.html" %}
 
+
+</div>
+
+
+<div class="container">
+
+    <a class="small" id="new-devicetype" href="#">Добавить</a>
+
+
+    <ul class="root">
+        {% recursetree all_nodes %}
+            <li>
+                <a item-id={{ node.id }} href="#">{{ node.name }}</a>
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        <a item-id={{ node.id }} href="#">{{ children }}</a>
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+
 </div>
 
 
 
+{% include "electro/editelem_devicetype.html" %}
+
 
 
 {% endblock %}
+
+
+
 
