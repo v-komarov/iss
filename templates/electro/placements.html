@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+{% load mptt_tags %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}electro/placements.js"></script>
+<link href="{{ MY_STATIC_URL }}electro/placements.css" type="text/css" rel="stylesheet">
+
+
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+
+</div>
+
+
+<div class="container">
+
+    <a class="small" id="new-placement" href="#">Добавить</a>
+
+
+    <ul class="root">
+        {% recursetree all_nodes %}
+            <li>
+                <a item-id={{ node.id }} href="#">{{ node.name }}</a>
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        <a item-id={{ node.id }} href="#">{{ children }}</a>
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+
+</div>
+
+
+
+{% include "electro/editelem_placement.html" %}
+
+
+
+{% endblock %}
+
+
+
+

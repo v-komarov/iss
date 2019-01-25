@@ -19,4 +19,23 @@ class devicestypes(MPTTModel):
         order_insertion_by=['name']
 
 
+
+
+### Структура размещения устройств электрооборудования
+class placements(MPTTModel):
+    name = models.CharField(max_length=200,verbose_name='Размещение')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class MPTTMeta:
+        level_attr = 'mptt_level'
+        order_insertion_by=['name']
+
+
+mptt.register(placements, order_insertion_by=['name'])
 mptt.register(devicestypes, order_insertion_by=['name'])
+
+
+

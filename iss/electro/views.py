@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from iss.mydecorators import group_required,anonymous_required
 from django.utils.decorators import method_decorator
 
-from iss.electro.models import devicestypes
-from iss.electro.forms import DevicesTypesForm
+from iss.electro.models import devicestypes, placements
+from iss.electro.forms import DevicesTypesForm, PlacementForm
 
 
 
@@ -46,6 +46,49 @@ class DevicesTypes(ListView):
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
         context['all_nodes'] = devicestypes.objects.all()
         context['form'] = DevicesTypesForm()
+
+
+        return context
+
+
+
+
+
+# Структура размещения
+class Placements(ListView):
+
+    model = placements
+    template_name = "electro/placements.html"
+
+    paginate_by = 0
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='electro',redirect_url='/begin/access-refused/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+
+
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+    def get_queryset(self):
+
+        data = []
+
+        return data
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(Placements, self).get_context_data(**kwargs)
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
+        context['all_nodes'] = placements.objects.all()
+        context['form'] = PlacementForm()
 
 
         return context

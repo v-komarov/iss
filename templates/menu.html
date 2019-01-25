@@ -51,7 +51,7 @@
         <ul class="dropdown-menu">
           <li class="divider"></li>
           <li id="electrostru" {% if request.path|slice:'0:22' == "/electro/devicestypes/" %}class="active"{% endif %}><a href="/electro/devicestypes/">Типы устройств</a></li>
-          <li id="placestru"><a href="#">Структура размещения</a></li>
+          <li id="placestru" {% if request.path|slice:'0:20' == "/electro/placements/" %}class="active"{% endif %}><a href="/electro/placements/">Структура размещения</a></li>
         </ul>
       </li>
       {% comment %}
