@@ -15,12 +15,13 @@ def createdate(year,month,day):
     return datetime.date(year=year, month=month, day=day)
 
 
-def phone1history():
-    """Отчетные данные телефонных вызовов группы 1"""
+def phonehistory(group):
 
+
+    """Отчетные данные телефонных вызовов по группам группы """
     cluster = Cluster(iss.dbconn.CASSANDRA_SERVER, iss.dbconn.CASSANDRA_PORT)
 
-    query = """SELECT year,month,day,city,phone,calls,calls_in,calls_out,calls_in_ok,calls_out_ok,calls_in_per,calls_out_per,talk_in_avg,talk_out_avg FROM phone_report WHERE group=1 AND mode='day' ALLOW FILTERING;"""
+    query = "SELECT year,month,day,city,phone,calls,calls_in,calls_out,calls_in_ok,calls_out_ok,calls_in_per,calls_out_per,talk_in_avg,talk_out_avg FROM phone_report WHERE group={} AND mode='day' ALLOW FILTERING;".format(group)
 
     session = cluster.connect()
     session.set_keyspace(iss.dbconn.CASSANDRA_KEYSPACE)

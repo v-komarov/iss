@@ -14,7 +14,7 @@ from django.utils.timezone import now
 
 from iss.working.models import marks, working_time, working_log, working_reports
 from iss.working.forms  import phonefilter
-from iss.working.cassandratools import phone1history
+from iss.working.cassandratools import phonehistory
 
 
 
@@ -358,13 +358,13 @@ class GraphHistory(TemplateView):
 
 
 
-### Отчет по телефонным вызовам группы 1
-class PhoneHistory1(ListView):
+### Отчет по телефонным вызовам группы
+class PhoneHistoryGroup(ListView):
 
 
 
-    #model = reestr_proj
-    template_name = "working/phonehistory1.html"
+    model = working_reports
+    template_name = "working/phonehistory.html"
 
     paginate_by = 0
 
@@ -373,14 +373,13 @@ class PhoneHistory1(ListView):
     @method_decorator(login_required(login_url='/'))
     #@method_decorator(group_required(group='working',redirect_url='/begin/access-refused/'))
     def dispatch(self, request, *args, **kwargs):
+        request.session['group'] = kwargs.get('group')
         self.request = request
         self.session = request.session
         self.user = request.user
 
 
         return super(ListView, self).dispatch(request, *args, **kwargs)
-
-
 
 
 
@@ -396,14 +395,15 @@ class PhoneHistory1(ListView):
 
 
     def get_context_data(self, **kwargs):
-        context = super(PhoneHistory1, self).get_context_data(**kwargs)
+        context = super(PhoneHistoryGroup, self).get_context_data(**kwargs)
         context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
 
 
-        df = phone1history()
+        df = phonehistory(self.session['group'])
         context['df'] = df
         context['cities'] = df["city"].unique()
         context['phones'] = df["phone"].unique()
+        context['group'] = self.session['group']
 
         return context
 

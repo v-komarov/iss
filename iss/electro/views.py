@@ -164,6 +164,7 @@ class EditDevice(UpdateView):
     success_url = '/electro/deviceslist/1/'
 
     @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='electro',redirect_url='/begin/access-refused/'))
     def dispatch(self, request, *args, **kwargs):
         self.request = request
         self.session = request.session
