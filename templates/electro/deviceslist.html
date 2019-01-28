@@ -30,11 +30,11 @@
     </div>
 
     <div class="row">
-        <dl id="search_d" value="{{ search }}" class="dl-horizontal small">
+        <dl id="search_d" value="{{ search_d }}" class="dl-horizontal small">
             <dt>{{ filter.filter_d.label }}</dt>
             <dd>{{ filter.filter_d }}</dd>
         </dl>
-        <dl id="search_p" value="{{ search }}" class="dl-horizontal small">
+        <dl id="search_p" value="{{ search_p }}" class="dl-horizontal small">
             <dt>{{ filter.filter_p.label }}</dt>
             <dd>{{ filter.filter_p }}</dd>
         </dl>
@@ -69,6 +69,8 @@
                     <th>Тип оборудования</th>
                     <th>Размещение</th>
                     <th>Адрес</th>
+                    <th>Создан</th>
+                    <th>Создал</th>
                 </tr>
 
             </thead>
@@ -76,24 +78,26 @@
             <tbody class="small">
                 {% for row in object_list %}
                     <tr row_id={{ row.id }}>
-                        <td>{{ row.store_rest.eisup }}</td>
-                        <td>{{ row.store_rest.name }}</td>
-                        <td>{{ row.q }}</td>
-                        <td>{{ row.dimansion }}</td>
+                        <td><a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.serial }}</a></td>
+                        <td><a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.name }}</a></td>
+                        <td>
+                            {% if row.devicetype %}
+                            <a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.devicetype }}</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.placement %}
+                            <a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.placement }}</a>
+                            {% endif %}
+                        </td>
+                        <td><a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.address }}</a></td>
                         {% timezone tz %}
-                        <td>{{ row.datetime_update|date:"d.m.Y H:i e" }}</td>
+                        <td><a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td>{{ row.store_rest.store.name }}</td>
-                        <td>{{ row.store_rest.store.region }}</td>
-                        <td>{{ row.store_rest.mol.get_full_name }}</td>
-                        <td>{{ row.store_to.name }}</td>
-                        <td>{{ row.user.get_full_name }}</td>
-                        <td>{{ row.comment }}</td>
+                        <td><a href="/electro/editdevice/{{ row.id }}/" target="_blank">{{ row.author.get_full_name }}</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
-
-
 
 
         </table>

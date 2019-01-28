@@ -4,7 +4,7 @@ from django.forms import ModelForm
 from django import forms
 from mptt.forms import TreeNodeChoiceField
 
-from iss.electro.models import devicestypes, placements
+from iss.electro.models import devicestypes, placements, deviceslist
 
 
 ### Форма добавления и редактирования элемента типа оборудования
@@ -79,4 +79,26 @@ class FilterDevicesForm(ModelForm):
         self.fields['filter_d'].widget.attrs = {'class':'form-control input-sm'}
         self.fields['filter_p'].widget.attrs = {'class':'form-control input-sm'}
 
+
+
+### Форма редактирования устройства
+class EditDeviceForm(ModelForm):
+    devicetype = TreeNodeChoiceField(queryset=devicestypes.objects.all(),level_indicator=u'+--', label="Тип устройства")
+    placement = TreeNodeChoiceField(queryset=placements.objects.all(),level_indicator=u'+--', label="Размещение")
+
+    class Meta:
+        model = deviceslist
+        fields = ['serial','name', 'devicetype', 'placement', 'address', 'comment']
+
+    def __init__(self, *args, **kwargs):
+        super(EditDeviceForm, self).__init__(*args, **kwargs)
+        self.fields['devicetype'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['placement'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['name'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['serial'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['address'].widget.attrs = {'class':'form-control input-sm'}
+        self.fields['comment'].widget.attrs = {'class':'form-control input-sm'}
+
+        self.fields['devicetype'].initial = self.instance.devicetype
+        self.fields['placement'].initial = self.instance.placement
 

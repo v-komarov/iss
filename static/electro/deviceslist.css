@@ -1,9 +1,22 @@
 /* Курсор */
-a#new-device,
-ul.root a {
+a#new-device {
     cursor:pointer;
     text-decoration:none;
 }
+
+
+/* Курсор */
+table[group=devices-list] > tbody > tr > td > a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+
+table[group=devices-list] > tbody > tr > td > a:hover {
+    text-decoration:none;
+}
+
+
 
 a#new-device:hover,
 ul.root a:hover {
@@ -21,3 +34,12 @@ table[group=devices-list] > thead > tr > th {
     text-align: left;
     vertical-align: top;
 }
+
+
+table[group=devices-list] > tbody > tr > td {
+    background-color: #ffe6cc;
+    padding: 1px;
+    vertical-align: top;
+}
+
+

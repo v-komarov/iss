@@ -43,12 +43,12 @@ mptt.register(devicestypes, order_insertion_by=['name'])
 
 ### Список устройств
 class deviceslist(models.Model):
-    serial = models.CharField(max_length=50,verbose_name='Серийный номер')
-    devicetype = models.ForeignKey('devicestypes', verbose_name='Тип устройства')
-    placement = models.ForeignKey('placements', verbose_name='Размещение')
+    serial = models.CharField(max_length=50,verbose_name='Серийный номер', default="")
+    devicetype = models.ForeignKey('devicestypes', verbose_name='Тип устройства', null=True)
+    placement = models.ForeignKey('placements', verbose_name='Размещение', null=True)
     name = models.CharField(max_length=200,verbose_name='Название')
-    comment = models.TextField(default="")
-    address = models.CharField(max_length=200,verbose_name='Адрес')
+    comment = models.TextField(default="", verbose_name='Комментарий')
+    address = models.CharField(max_length=200,verbose_name='Адрес', default="")
     datetime_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     author = models.ForeignKey(User, on_delete=models.PROTECT)
 

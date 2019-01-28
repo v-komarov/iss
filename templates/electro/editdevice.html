@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+
+{% load tz %}
+{% load mptt_tags %}
+
+
+<script type="text/javascript" src="{{ MY_STATIC_URL }}electro/editdevice.js"></script>
+<link href="{{ MY_STATIC_URL }}electro/editdevice.css" type="text/css" rel="stylesheet">
+
+
+
+
+
+<div class="container">
+
+    {% include "menu.html" %}
+
+    <h4>Карточка устройства</h4>
+
+    <div id="common" device-id={{ device.id }}></div>
+
+    <div class="row col-md-7">
+
+
+        <dl class="dl-horizontal small">
+
+            <dt>{{ form.serial.label }}</dt>
+            <dd>{{ form.serial }}</dd>
+
+            <dt>{{ form.name.label }}</dt>
+            <dd>{{ form.name }}</dd>
+
+            <dt>{{ form.devicetype.label }}</dt>
+            <dd>{{ form.devicetype }}</dd>
+
+            <dt>{{ form.placement.label }}</dt>
+            <dd>{{ form.placement }}</dd>
+
+            <dt>{{ form.address.label }}</dt>
+            <dd>{{ form.address }}</dd>
+
+            <dt>{{ form.comment.label }}</dt>
+            <dd>{{ form.comment }}</dd>
+
+
+        </dl>
+    </div>
+
+    <div class="row col-md-2">
+        <button id="btn-save" class="btn btn-default">Сохранить</button>
+    </div>
+
+</div>
+
+
+{% include "saving.html" %}
+
+{% endblock %}

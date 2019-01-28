@@ -4,7 +4,7 @@ import json
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from iss.electro.models import devicestypes, placements
+from iss.electro.models import devicestypes, placements, deviceslist
 
 
 
@@ -46,6 +46,44 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+        ### Создание нового устройства
+        if r.has_key("action") and rg("action") == 'create-device':
+
+            ob = deviceslist.objects.create(
+                name = u"Новое устройство",
+                author = request.user
+            )
+
+            response_data = {"result": "ok", "id":ob.id}
+
+
+
+        ### Фильтр по типу устройств для списка устройств
+        if r.has_key("action") and rg("action") == 'filter-deviceslist-d':
+            search = request.GET["search"].strip()
+
+            if search == "" and request.session.has_key("filter-deviceslist-d"):
+                del request.session["filter-deviceslist-d"]
+            else:
+                request.session["filter-deviceslist-d"] = search
+
+            response_data = {"result": "ok"}
+
+
+
+
+        ### Фильтр по размещению для списка устройств
+        if r.has_key("action") and rg("action") == 'filter-deviceslist-p':
+            search = request.GET["search"].strip()
+
+            if search == "" and request.session.has_key("filter-deviceslist-p"):
+                del request.session["filter-deviceslist-p"]
+            else:
+                request.session["filter-deviceslist-p"] = search
+
+            response_data = {"result": "ok"}
 
 
 
@@ -118,6 +156,26 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+
+
+        # Редактирование карточки устройства
+        if data.has_key("action") and data["action"] == 'device-common-save':
+
+            devicetype_ob = None if data["devicetype"] == "" else devicestypes.objects.get(pk=int(data["devicetype"],10))
+            placement_ob = None if data["placement"] == "" else placements.objects.get(pk=int(data["placement"],10))
+
+            dv = deviceslist.objects.get(pk=int(data['device_id'],10))
+            dv.name = data['name'].strip()
+            dv.serial = data['serial'].strip()
+            dv.devicetype = devicetype_ob
+            dv.placement = placement_ob
+            dv.address = data['address'].strip()
+            dv.comment = data['comment'].strip()
+            dv.save()
+
+            response_data = {"result": "ok"}
 
 
 
