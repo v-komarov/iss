@@ -25,21 +25,33 @@
 
 <div class="container">
 
-    <a class="small" id="new-devicetype" href="#">Добавить</a>
+    <div class="row">
+        <a class="small" id="new-devicetype" href="#">Добавить</a>
+    </div>
 
+    <div class="row">
+        <dl id="search" value="{{ search }}" class="dl-horizontal small">
+            <dt>{{ filter.label }}</dt>
+            <dd>{{ filter }}</dd>
+        </dl>
+    </div>
 
-    <ul class="root">
-        {% recursetree all_nodes %}
-            <li>
-                <a item-id={{ node.id }} href="#">{{ node.name }}</a>
-                {% if not node.is_leaf_node %}
-                    <ul class="children">
-                        <a item-id={{ node.id }} href="#">{{ children }}</a>
-                    </ul>
-                {% endif %}
-            </li>
-        {% endrecursetree %}
-    </ul>
+    <div class="row">
+
+        <ul class="root">
+            {% recursetree all_nodes %}
+                <li>
+                    <a item-id={{ node.id }} href="#">{{ node.name }}</a>
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            <a item-id={{ node.id }} href="#">{{ children }}</a>
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+        </ul>
+
+    </div>
 
 </div>
 

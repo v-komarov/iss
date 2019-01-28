@@ -49,6 +49,7 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
+          <li id="devlist" {% if request.path|slice:'0:21' == "/electro/deviceslist/1/" %}class="active"{% endif %}><a href="/electro/deviceslist/1/">Список оборудования</a></li>
           <li class="divider"></li>
           <li id="electrostru" {% if request.path|slice:'0:22' == "/electro/devicestypes/" %}class="active"{% endif %}><a href="/electro/devicestypes/">Типы устройств</a></li>
           <li id="placestru" {% if request.path|slice:'0:20' == "/electro/placements/" %}class="active"{% endif %}><a href="/electro/placements/">Структура размещения</a></li>

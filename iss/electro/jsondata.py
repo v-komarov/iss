@@ -22,6 +22,32 @@ def get_json(request):
         r = request.GET
         rg = request.GET.get
 
+        ### Фильтр по справочнику размещения
+        if r.has_key("action") and rg("action") == 'filter-placement':
+            search = request.GET["search"].strip()
+
+            if search == "" and request.session.has_key("filter-placement"):
+                del request.session["filter-placement"]
+            else:
+                request.session["filter-placement"] = search
+
+            response_data = {"result": "ok"}
+
+
+
+        ### Фильтр по справочнику типов устройств
+        if r.has_key("action") and rg("action") == 'filter-devicetype':
+            search = request.GET["search"].strip()
+
+            if search == "" and request.session.has_key("filter-devicetype"):
+                del request.session["filter-devicetype"]
+            else:
+                request.session["filter-devicetype"] = search
+
+            response_data = {"result": "ok"}
+
+
+
 
 
     if request.method == "POST":

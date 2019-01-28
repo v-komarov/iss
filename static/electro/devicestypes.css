@@ -13,3 +13,9 @@ ul.root a:hover {
 ul.root {
     padding-top: 30px;
 }
+
+
+select#id_filter {
+    width: 500px;
+}
+

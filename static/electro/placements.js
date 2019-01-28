@@ -4,7 +4,37 @@ $(document).ready(function() {
     $("a#new-placement").bind("click", NewPlacement);
     $("ul.root a[item-id]").bind("click", EditPlacement);
 
+    $( "select#id_filter").change(function() {
+        Search();
+    });
+
+    $("select#id_filter").val($("dl#search").attr("value"));
+
 });
+
+
+
+
+
+
+
+// Поиск / фильтр
+function Search(e) {
+
+
+    var search = $("select#id_filter").val();
+
+    var jqxhr = $.getJSON("/electro/jsondata/?action=filter-placement&search="+search,
+    function(data) {
+
+        if (data["result"] == "ok") { location.href="/electro/placements/"; }
+
+    })
+
+}
+
+
+
 
 
 

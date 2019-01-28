@@ -4,7 +4,37 @@ $(document).ready(function() {
     $("a#new-devicetype").bind("click", NewDeviceType);
     $("ul.root a[item-id]").bind("click", EditDeviceType);
 
+
+    $( "select#id_filter").change(function() {
+        Search();
+    });
+
+
+    $("select#id_filter").val($("dl#search").attr("value"));
+
 });
+
+
+
+
+
+// Поиск / фильтр
+function Search(e) {
+
+
+    var search = $("select#id_filter").val();
+
+    var jqxhr = $.getJSON("/electro/jsondata/?action=filter-devicetype&search="+search,
+    function(data) {
+
+        if (data["result"] == "ok") { location.href="/electro/devicestypes/"; }
+
+    })
+
+}
+
+
+
 
 
 

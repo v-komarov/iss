@@ -1,0 +1,23 @@
+/* Курсор */
+a#new-device,
+ul.root a {
+    cursor:pointer;
+    text-decoration:none;
+}
+
+a#new-device:hover,
+ul.root a:hover {
+    text-decoration:none;
+}
+
+select#id_filter_d, select#id_filter_p {
+    width: 500px;
+}
+
+
+table[group=devices-list] > thead > tr > th {
+    background-color:#DCDCDC;
+    padding: 2px;
+    text-align: left;
+    vertical-align: top;
+}
