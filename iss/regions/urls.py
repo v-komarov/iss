@@ -39,5 +39,5 @@ urlpatterns = [
     url(r'avr/(?P<pk>\d+)/$', AVREdit.as_view()),
     url(r'avr/upload-file/$', uploadfile_avr),
     url(r'readfileavr/$', get_avr_file),
-    url(r'avr-print/(?P<avr_id>\d+)/$', get_avr_print),
+    url(r'avr-print/(?P<avr_id>\d+)/(?P<printform>\d+)/$', get_avr_print),
 ]

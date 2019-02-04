@@ -133,10 +133,16 @@ class DevicesList(ListView):
         data = deviceslist.objects.order_by('devicetype','placement','name')
 
         if self.session.has_key('filter-deviceslist-d'):
-            data = data.filter(devicetype__in=devicestypes.objects.get(pk=int(self.session['filter-deviceslist-d'])).get_descendants(include_self=True))
+            try:
+                data = data.filter(devicetype__in=devicestypes.objects.get(pk=int(self.session['filter-deviceslist-d'])).get_descendants(include_self=True))
+            except:
+                del self.session['filter-deviceslist-d']
 
         if self.session.has_key('filter-deviceslist-p'):
-            data = data.filter(placement__in=placements.objects.get(pk=int(self.session['filter-deviceslist-p'])).get_descendants(include_self=True))
+            try:
+                data = data.filter(placement__in=placements.objects.get(pk=int(self.session['filter-deviceslist-p'])).get_descendants(include_self=True))
+            except:
+                del self.session['filter-deviceslist-p']
 
 
         return data
