@@ -25,7 +25,7 @@ class Command(BaseCommand):
         with open("iss/equipment/csv/%s" % filename, 'w') as f:
 
             ### Заголовок
-            f.write("Адрес;Модель;Сетевой элемент;Серийный номер;ip;портов;портов используемые;портов технологических;портов в резерве;комбо портов;комбо используется;комбо технологических;комбо в резерве;слотов;слотов используется;слотов в резерве;% использования\n")
+            f.write("Адрес;Модель;Сетевой элемент;Серийный номер;ip;портов;портов используемые;портов технологических;портов в резерве;комбо портов;комбо используется;комбо технологических;комбо в резерве;слотов;слотов используется;слотов в резерве;% использования;дата создания\n")
 
             for device in devices.objects.order_by("address__city","address__street"):
                 ip = device.get_manage_ip()
@@ -54,11 +54,12 @@ class Command(BaseCommand):
                 print "using: {} % ports : {} ports_use : {}".format(using,ports,ports_use)
 
                 try:
-                    row = "{address};{model};{netelem};{serial};{ip};{ports};{ports_use};{ports_tech};{ports_reserv};{combo};{combo_use};{combo_tech};{combo_reserv};{slots};{slots_use};{slots_reserv};{using}\n".format(
+                    row = "{address};{model};{netelem};{serial};{ip};{ports};{ports_use};{ports_tech};{ports_reserv};{combo};{combo_use};{combo_tech};{combo_reserv};{slots};{slots_use};{slots_reserv};{using};{create}\n".format(
                         ip=u" ,".join(ip), model=device.device_scheme.name, serial=device.serial, address=address, netelem=", ".join(netelems),
                         ports = ports, ports_use = ports_use, ports_tech = ports_tech, ports_reserv = ports_reserv,
                         combo = combo, combo_use = combo_use, combo_tech = combo_tech, combo_reserv = combo_reserv,
-                        slots = slots, slots_use=slots_use, slots_reserv=slots_reserv,  using = using
+                        slots = slots, slots_use=slots_use, slots_reserv=slots_reserv,  using = using,
+                        create=device.datetime_create.strftime("%d.%m.%Y") if device.datetime_create else ""
                     )
                     f.write(row)
                 except:

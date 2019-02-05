@@ -40,6 +40,7 @@
           <li class="divider"></li>
           <li id="menuphone" {% if request.path|slice:'0:15' == "/working/phone/" %}class="active"{% endif %}><a href="/working/phone/">Телефонные звонки (Красноярск)</a></li>
           <li id="menuphone1" {% if request.path|slice:'0:24' == "/working/phonehistory/1/" %}class="active"{% endif %}><a href="/working/phonehistory/1/">Телефонные звонки (Группа 1)</a></li>
+          <li id="menuphone2" {% if request.path|slice:'0:24' == "/working/phonehistory/2/" %}class="active"{% endif %}><a href="/working/phonehistory/2/">Телефонные звонки (Группа 2)</a></li>
 
         </ul>
       </li>
@@ -112,7 +113,7 @@
           <li class="divider"></li>
           <li id="menustore" {% if request.path|slice:'0:14' == "/regions/store" %}class="active"{% endif %}><a href="/regions/store/page/1/">Склад</a></li>
           <li class="divider"></li>
-          <li id="menuavr" {% if request.path|slice:'0:13' == "/regions/avr/" %}class="active"{% endif %}><a href="/regions/avr/page/1/">Акты АВР</a></li>
+          <li id="menuavr" {% if request.path|slice:'0:13' == "/regions/avr/" %}class="active"{% endif %}><a href="/regions/avr/page/1/">Акты АВР\РР</a></li>
         </ul>
       </li>
       <li class="dropdown">

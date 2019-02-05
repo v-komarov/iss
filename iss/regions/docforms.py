@@ -15,6 +15,32 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 """
 
 
+
+
+def monthname(n):
+    """Преобразование номера месяца в название"""
+
+    mon = {
+        1: u"Января",
+        2: u"Февраля",
+        3: u"Марта",
+        4: u"Апреля",
+        5: u"Мая",
+        6: u"Июня",
+        7: u"Июля",
+        8: u"Августа",
+        9: u"Сентября",
+        10: u"Октября",
+        11: u"Ноября",
+        12: u"Декабря",
+    }
+
+    return mon[n]
+
+
+
+
+
 # Печатная форма для акта АВР
 def doc1(avr_obj):
 
@@ -37,7 +63,7 @@ def doc1(avr_obj):
     ### АО и дата
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run(u'АО «СибТрансТелеКом»                                                   {}\n'.format(avr_obj.datetime_avr.strftime("%d.%m.%Y"))).bold = True
+    p.add_run(u'АО «СибТрансТелеКом»                                    «{}» {} {} г.\n'.format(avr_obj.datetime_avr.day, monthname(avr_obj.datetime_avr.month), avr_obj.datetime_avr.year)).bold = True
 
 
     p = document.add_paragraph()
@@ -50,7 +76,10 @@ def doc1(avr_obj):
     p.add_run(u"Участок: {}".format(avr_obj.area)).font.size = Pt(9)
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"Пусковой комплекс: {}\n".format(avr_obj.complex)).font.size = Pt(9)
+    p.add_run(u"Пусковой комплекс: {}".format(avr_obj.complex)).font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Номер ЛР\ЛРП и наименование (суть) работ: «{}» {} {} г.\n".format(avr_obj.datetime_avr.day, monthname(avr_obj.datetime_avr.month), avr_obj.datetime_avr.year)).font.size = Pt(9)
 
 
     p = document.add_paragraph()
@@ -67,7 +96,7 @@ def doc1(avr_obj):
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"составили настоящий акт в том, что по результатам анализа причин и характера повреждения, произошедшего {}\nна участке {}\nвыявлено следующее:".format(datetime.datetime.strftime(avr_obj.datetime_avr, "%d.%m.%Y"),avr_obj.area)).font.size = Pt(9)
+    p.add_run(u"составили настоящий акт в том, что по результатам анализа причин и характера повреждения, произошедшего «{}» {} {} г.\nна участке {}\nвыявлено следующее:".format(avr_obj.datetime_avr.day, monthname(avr_obj.datetime_avr.month), avr_obj.datetime_avr.year,avr_obj.area)).font.size = Pt(9)
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -88,7 +117,9 @@ def doc1(avr_obj):
     p.add_run(u"1.4. Определено место повреждения\nна расстоянии __________ метров от оптического кросса _____________").font.size = Pt(9)
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"1.5. Выезд на место повреждения {} в ____ час ____ мин  Прибытие ____ час _____ мин".format("" if  avr_obj.datetime_work == None else avr_obj.datetime_work.strftime("%d.%m.%Y"))).font.size = Pt(9)
+    ## дата выезда
+    date_out = u"" if avr_obj.datetime_work == None else u"«{}» {} {}".format(avr_obj.datetime_work.day,monthname(avr_obj.datetime_work.month),avr_obj.datetime_work.year)
+    p.add_run(u"1.5. Выезд на место повреждения {} в ____ час ____ мин  Прибытие ____ час _____ мин".format(date_out)).font.size = Pt(9)
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -226,7 +257,7 @@ def doc2(avr_obj):
     ### АО и дата
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run(u'АО «СибТрансТелеКом»                                                   {}\n'.format(avr_obj.datetime_avr.strftime("%d.%m.%Y"))).bold = True
+    p.add_run(u'АО «СибТрансТелеКом»                                    «{}» {} {} г.\n'.format(avr_obj.datetime_avr.day, monthname(avr_obj.datetime_avr.month), avr_obj.datetime_avr.year)).bold = True
 
 
     p = document.add_paragraph()
@@ -234,12 +265,14 @@ def doc2(avr_obj):
     p.add_run(u"Место проведения работ: Адрес: {} {}".format(avr_obj.city.name, avr_obj.address, avr_obj.objnet)).font.size = Pt(9)
 
     p = document.add_paragraph()
-    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    p.add_run(u"Зона ______________________________________________").font.size = Pt(9)
-
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Участок: {}".format(avr_obj.area)).font.size = Pt(9)
     p = document.add_paragraph()
-    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    p.add_run(u"Сегмент ______________________________________________").font.size = Pt(9)
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Пусковой комплекс: {}".format(avr_obj.complex)).font.size = Pt(9)
+    p = document.add_paragraph()
+    p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.add_run(u"Номер ЛР\ЛРП и наименование (суть) работ: «{}» {} {} г.\n".format(avr_obj.datetime_avr.day, monthname(avr_obj.datetime_avr.month), avr_obj.datetime_avr.year)).font.size = Pt(9)
 
 
     p = document.add_paragraph()
@@ -256,7 +289,7 @@ def doc2(avr_obj):
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"составили настоящий акт в том, что по результатам анализа причин и характера работ, произошедших {}\nвыявлено следующее: ______________________________________________________________".format(datetime.datetime.strftime(avr_obj.datetime_avr, "%d.%m.%Y"))).font.size = Pt(9)
+    p.add_run(u"составили настоящий акт в том, что по результатам анализа причин и характера работ, произошедших «{}» {} {} г.\nвыявлено следующее: ______________________________________________________________".format(avr_obj.datetime_avr.day, monthname(avr_obj.datetime_avr.month), avr_obj.datetime_avr.year)).font.size = Pt(9)
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -330,15 +363,16 @@ def doc2(avr_obj):
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"\n3. Выводы комиссии:").font.size = Pt(9)
+    p.add_run(u"\n3. Выполнены работы:").font.size = Pt(9)
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"3.1. ______________________________________________________").font.size = Pt(9)
+    p.add_run(u"3.1. Причины работ: ___________________________________________").font.size = Pt(9)
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.add_run(u"3.2. Причины работ: ___________________________________________").font.size = Pt(9)
+    p.add_run(u"3.2. Выводы комиссии: ______________________________________________").font.size = Pt(9)
+
 
     p = document.add_paragraph()
     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
