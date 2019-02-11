@@ -98,16 +98,20 @@ def UserAttrs(request):
             if form.is_valid():
                 first_name = form.cleaned_data["first_name"]
                 last_name = form.cleaned_data["last_name"]
+                surname = form.cleaned_data["surname"]
+                job = form.cleaned_data["job"]
                 email = form.cleaned_data["email"]
                 phone = form.cleaned_data["phone"]
 
-                user.first_name = first_name
-                user.last_name = last_name
-                user.email = email
+                user.first_name = first_name.strip()
+                user.last_name = last_name.strip()
+                user.email = email.strip()
                 user.save()
 
                 prof = user.profile
                 prof.phone = phone
+                prof.surname = surname.strip()
+                prof.job = job.strip()
                 prof.save()
 
 
@@ -115,7 +119,7 @@ def UserAttrs(request):
         else:
             form = UserAttrsForm(
                 initial={"first_name": user.first_name, "last_name": user.last_name, "email": user.email,
-                         "phone": user.profile.phone})
+                         "phone": user.profile.phone, "surname": user.profile.surname, "job": user.profile.job})
 
         c = RequestContext(request, locals())
         return render_to_response("begin/userattrs.html", c)

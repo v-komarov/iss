@@ -51,7 +51,15 @@ class deviceslist(models.Model):
     address = models.CharField(max_length=200,verbose_name='Адрес', default="")
     datetime_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     author = models.ForeignKey(User, on_delete=models.PROTECT)
+    status = models.ForeignKey('devicestatus', on_delete=models.PROTECT, null=True, verbose_name='Состояние устройства')
 
     def __unicode__(self):
         return self.name
 
+
+### Статусы состояния устройства
+class devicestatus(models.Model):
+    name = models.CharField(max_length=200,verbose_name='Название')
+
+    def __unicode__(self):
+        return self.name

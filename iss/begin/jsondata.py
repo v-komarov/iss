@@ -8,6 +8,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django import template
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.contrib.auth import authenticate,login,logout
+
 
 from iss.begin.forms import NewUserForm
 
@@ -35,7 +37,7 @@ def get_json(request):
         rg = request.GET.get
 
 
-        ### Отображение пустой формы (добавление позиции) заказов
+        ### Отображение пустой формы
         if r.has_key("action") and rg("action") == 'new-user-form':
             form = NewUserForm()
             t = template.Template("{{ form.as_table }}")
@@ -67,6 +69,30 @@ def get_json(request):
 
 
 
+        # Авторизация для пользователей КИС
+        if r.has_key("action") and rg("action") == 'user-kis':
+            login = request.GET["login"]
+            passwd = request.GET["passwd"]
+
+            user = authenticate(username=login, password=passwd)
+            if user is not None and user.is_active:
+                prof = user.profile
+                response_data = {
+                    "result": "ok",
+                    "firstname": user.first_name,
+                    "lastname": user.last_name,
+                    "surname": prof.surname,
+                    "job": prof.job,
+                    "phone": prof.phone,
+                    "email": user.email,
+                    "id": prof.userkiscode,
+                    "groups": [g.name for g in user.groups.all()]
+                }
+            else:
+                response_data = {"result": "error"}
+
+
+
 
 
     if request.method == "POST":
@@ -74,7 +100,7 @@ def get_json(request):
 
         data = eval(request.body)
 
-        # Создание новой позиции заказа
+        # Создание новой учетной записи
         if data.has_key("action") and data["action"] == 'user-adding':
             login = data["login"]
             passwd = data["passwd"]
@@ -98,6 +124,8 @@ def get_json(request):
                     response_data = {"result": "error", "comment": "Видимо такой пользователь уже есть!"}
             else:
                 response_data = {"result": "error", "comment": "Не правильно заполнены поля формы!"}
+
+
 
 
 

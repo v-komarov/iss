@@ -39,6 +39,8 @@ class UserAttrsForm(forms.Form):
     id = forms.CharField(label="id", widget=forms.TextInput(attrs={'hidden':'hidden'}), required = False)
     first_name = forms.CharField(label="Имя", required = False)
     last_name = forms.CharField(label="Фамилия", required = False)
+    surname = forms.CharField(label="Отчетсво", required = False)
+    job = forms.CharField(label="Должность", required = False)
     email = forms.CharField(label="Email", required = False)
     phone = forms.CharField(label="Внутренний телефон", required = False)
 

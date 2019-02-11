@@ -21,6 +21,9 @@ from iss.localdicts.models import Status,Severity,accident_cats,accident_list
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     phone = models.CharField(max_length=10,db_index=True,default="", verbose_name="Внутренний телефонный номер")
+    job = models.CharField(max_length=100,default="", verbose_name="Должность")
+    surname = models.CharField(max_length=100,default="", verbose_name="Отчество")
+    userkiscode = models.CharField(max_length=50, default=uuid.uuid4, verbose_name="Идентификатор пользователя в системе КИС")
     work_status = models.BooleanField(default=False, verbose_name="Статус смены") ### Для личной карточки учета рабочего времени
     relax_status = models.BooleanField(default=False, verbose_name="Статус перевыва в работе") ### Для личной карточки учета рабочего времени
     settings = JSONField(default={})
