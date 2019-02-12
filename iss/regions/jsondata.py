@@ -2390,7 +2390,7 @@ def get_json(request):
                 "create_date2": data["create_date2"]
 
             }
-            print filter_dict
+
             request.session["filter_dict"] = pickle.dumps(filter_dict)
 
 
@@ -2441,8 +2441,8 @@ def get_json(request):
                     st = store_list.objects.create(name=row["store"], region=region_obj)
 
                 ### Поиск записей остатков
-                if store_rest.objects.filter(eisup=row["eisup"],store=st,mol=staff_obj,serial="", dimension=row["dimension"]).exists():
-                    st_rest = store_rest.objects.filter(eisup=row["eisup"],store=st,mol=staff_obj, serial="", dimension=row["dimension"]).first()
+                if store_rest.objects.filter(eisup=row["eisup"],store=st,mol=staff_obj,serial="", dimension=row["dimension"], accounting_code=row["accounting_code"]).exists():
+                    st_rest = store_rest.objects.filter(eisup=row["eisup"],store=st,mol=staff_obj, serial="", dimension=row["dimension"], accounting_code=row["accounting_code"]).first()
                     data_send.append({
                         'id': st_rest.id,
                         'name': row["name"],
@@ -2450,11 +2450,12 @@ def get_json(request):
                         'store': row["store"],
                         'rest': row["rest"],
                         'dimension': row["dimension"],
+                        'accounting_code': row['accounting_code'],
                         'load': "no"
                     })
 
                 else:
-                    st_rest = store_rest.objects.create(eisup=row["eisup"],store=st,mol=staff_obj,name=row["name"],rest=Decimal(row["rest"]), dimension=row["dimension"])
+                    st_rest = store_rest.objects.create(eisup=row["eisup"],store=st,mol=staff_obj,name=row["name"],rest=Decimal(row["rest"]), dimension=row["dimension"], accounting_code=row["accounting_code"])
                     data_send.append({
                         'id': st_rest.id,
                         'name': row["name"],
@@ -2462,6 +2463,7 @@ def get_json(request):
                         'store': row["store"],
                         'rest': row["rest"],
                         'dimension': row["dimension"],
+                        'accounting_code': row['accounting_code'],
                         'load': "yes"
                     })
 

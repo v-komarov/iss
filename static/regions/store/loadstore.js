@@ -208,6 +208,7 @@ function DiffUpload(data) {
         var t = "<tr row_id="+value["id"]+">"
         +"<td "+color_style+">"+ checked_tag +"</td>"
         +"<td "+color_style+">"+value["eisup"]+"</td>"
+        +"<td "+color_style+">"+value["accounting_code"]+"</td>"
         +"<td "+color_style+">"+value["name"]+"</td>"
         +"<td "+color_style+">"+value["rest"]+"</td>"
         +"<td "+color_style+">"+value["dimension"]+"</td>"
