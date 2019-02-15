@@ -17,7 +17,7 @@ from iss.monitor.models import Profile
 
 class Command(BaseCommand):
     args = '<>'
-    help = 'Рассылква сообщений пользователям КИС'
+    help = 'Рассылка сообщений пользователям КИС'
 
 
 
