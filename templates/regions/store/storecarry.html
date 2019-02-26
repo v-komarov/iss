@@ -80,6 +80,7 @@
                 <th>МОЛ передавший</th>
                 <th>На склад</th>
                 <th>МОЛ принявший</th>
+                <th>Счет учета</th>
                 <th>Комментарий</th>
                 <th></th>
             </tr>
@@ -101,6 +102,7 @@
                     <td>{{ row.store_rest.mol.get_full_name }}</td>
                     <td>{{ row.store_to.name }}</td>
                     <td>{{ row.user.get_full_name }}</td>
+                    <td>{{ row.store_rest.accounting_code }}</td>
                     <td>{{ row.comment }}</td>
                 </tr>
             {% endfor %}

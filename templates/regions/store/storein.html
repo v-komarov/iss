@@ -81,6 +81,7 @@
                 <th>Склад</th>
                 <th>Адрес</th>
                 <th>МОЛ</th>
+                <th>Счет учета</th>
                 <th></th>
             </tr>
 
@@ -102,6 +103,7 @@
                     <td>{{ row.store_rest.store.name }}</td>
                     <td>{{ row.store_rest.store.comment }}</td>
                     <td>{{ row.store_rest.mol.get_full_name }}</td>
+                    <td>{{ row.store_rest.accounting_code }}</td>
                     <td><a title="Удалить"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a></td>
                 </tr>
             {% endfor %}
