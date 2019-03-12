@@ -104,7 +104,10 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'delete-test':
             test_id = request.GET["test_id"]
 
-            tests.objects.get(pk=int(test_id, 10)).delete()
+            #tests.objects.get(pk=int(test_id, 10)).delete()
+            t = tests.objects.get(pk=int(test_id, 10))
+            t.visible = False
+            t.save()
 
             response_data = {"result": "ok"}
 

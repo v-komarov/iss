@@ -96,6 +96,7 @@ class tests(models.Model):
     testtime = models.IntegerField(default=0, verbose_name='Продолжительность теста в минутах')
     mistakes = models.IntegerField(default=0, verbose_name='Максимальное количество ошибок для сдачи')
     learning = models.BooleanField(default=False, verbose_name='Доступен для тренировки, обучения')
+    visible = models.BooleanField(default=True, verbose_name='Для удаления из видимости теста')
 
     def __unicode__(self):
         return self.name
