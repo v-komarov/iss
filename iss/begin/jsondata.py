@@ -59,7 +59,7 @@ def get_json(request):
                     user.set_password(passwd)
                     user.save()
                     send_mail('http://10.6.0.22:8000 was changed password', 'new password %s for login %s' % (passwd,login), 'GAMMA <gamma@baikal-ttk.ru>', [user.email,])
-                    response_data = {"result": "ok", "comment": u"Пароль изменен и отправлен<br>по адресу %s" % user.email }
+                    response_data = {"result": "ok", "comment": u"Пароль изменен и отправлен по адресу %s" % user.email }
                 else:
                     response_data = {"result": "error", "comment": "Нет email адреса!"}
 

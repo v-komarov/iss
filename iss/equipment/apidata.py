@@ -128,8 +128,6 @@ def get_apidata(request):
 
 
 
-
-
         ### Проверка расчета ЗКЛ по ip адресу
         if r.has_key("action") and rg("action") == 'get_zkllist'  and r.has_key("ipaddress"):
             ipaddress = request.GET["ipaddress"]
@@ -148,23 +146,20 @@ def get_apidata(request):
 
     if request.method == "POST":
 
-        data = eval(request.body)
+        action = request.POST['action']
+        ip_list = request.POST['iplist'].split(";")
 
-        if data.has_key("action") and data["action"] == 'writeaddressstr':
-            """Формирование адресной строки: Город, улица, номер дома"""
+        response_data = {'result':'ok'}
 
-            ip_list = data["iplist"]
-
-            ### Формирование через шаблонизатор
-            address_str = ""
-            if address_templates.objects.filter(name="accidentname").count() == 1:
-                templ = address_templates.objects.get(name="accidentname").template
-                t = template.Template(templ)
-                c = template.Context({'data': address_dict2(ip_list)})
-                address_str = t.render(c)
+        ### Формирование через шаблонизатор
+        address_str = ""
+        if address_templates.objects.filter(name="accidentname").count() == 1:
+            templ = address_templates.objects.get(name="accidentname").template
+            t = template.Template(templ)
+            c = template.Context({'data': address_dict2(ip_list)})
+            address_str = t.render(c)
 
             response_data = {'address':address_str}
-
 
 
 
