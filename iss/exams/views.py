@@ -367,7 +367,7 @@ class ExamList(ListView):
 
         if self.session.has_key('exams-section'):
             section = sections.objects.get(pk=int(self.session["exams-section"], 10))
-            data = tests.objects.filter(section=section).order_by('name')
+            data = tests.objects.filter(section=section,visible=True).order_by('name')
         else:
             data = []
 
