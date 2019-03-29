@@ -40,7 +40,7 @@ producer = KafkaProducer(bootstrap_servers=kafka_server)
 
 
 
-#tz = 'Europe/Moscow'
+new_tz = 'Etc/GMT+3'
 tz = 'UTC'
 chi_tz = timezone(tz)
 
@@ -53,8 +53,8 @@ def SendMsgTopic(evid,first_seen,last_seen,event_class,severity,device_net_addre
 
     msg = {
         "evid":evid,
-        "first_seen":first_seen.strftime("%d.%m.%Y %H:%M %z"),
-        "last_seen":last_seen.strftime("%d.%m.%Y %H:%M %z"),
+        "first_seen":first_seen.astimezone(timezone(new_tz)).strftime("%d.%m.%Y %H:%M %z"),
+        "last_seen":last_seen.astimezone(timezone(new_tz)).strftime("%d.%m.%Y %H:%M %z"),
         "event_class":event_class,
         "severity":severity.name,
         "device_net_address":device_net_address,
