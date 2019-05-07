@@ -81,22 +81,22 @@
                     <tr class="small" marked="no" row_id={{ row.id }}>
 
 
-                        <td><a>{{ row.name }}</a></td>
-                        <td><a>
+                        <td><a href="/inventory/netelementdata/{{ row.id }}/">{{ row.name }}</a></td>
+                        <td><a href="/inventory/netelementdata/{{ row.id }}/">
                             {% for item in row.logical_interfaces_set.all %}
                                 {{ item.name }}
                             {% endfor %}
                         </a></td>
-                        <td><a>
+                        <td><a href="/inventory/netelementdata/{{ row.id }}/">
                             {% for item in row.device.all %}
                                 {{ item.name }}<br>
                             {% endfor %}
                         </a></td>
-                        <td><a>{{ row.get_dogcode_list }}</a></td>
+                        <td><a href="/inventory/netelementdata/{{ row.id }}/">{{ row.get_dogcode_list }}</a></td>
                         {% timezone tz %}
-                        <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
+                        <td><a href="/inventory/netelementdata/{{ row.id }}/">{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td><a>{{ row.author }}</a></td>
+                        <td><a href="/inventory/netelementdata/{{ row.id }}/">{{ row.author }}</a></td>
 
                     </tr>
 

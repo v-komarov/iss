@@ -64,6 +64,7 @@ $(document).ready(function() {
     ListInterfacesData();
 
 
+
 });
 
 
@@ -99,11 +100,20 @@ function getCookie(name) {
 
 
 
+// Определение id элемента
+function GetId() {
+
+    return ($("netelemid").text());
+
+}
+
+
+
 
 // Отображение названия сетевого элемента
 function ShowElemName(e) {
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=getelemname",
+    var jqxhr = $.getJSON("/inventory/jsondata?action=getelemname&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") { $("#elem").val(data["name"]); }
@@ -121,7 +131,7 @@ function SaveElemName(e) {
 
     var name = $("#elem").val();
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=saveelemname&name="+name,
+    var jqxhr = $.getJSON("/inventory/jsondata?action=saveelemname&name="+name+"&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") { alert("Название сохранено!");}
@@ -139,7 +149,7 @@ function SaveElemName(e) {
 // Добавление устройства
 function AddDevice(e) {
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=adddevice&deviceid="+window.device_id,
+    var jqxhr = $.getJSON("/inventory/jsondata?action=adddevice&deviceid="+window.device_id+"&netelemid="+GetId(),
     function(data) {
 
         ListDevice();
@@ -165,7 +175,7 @@ function DelDevice(e) {
 
     if (a) {
 
-        var jqxhr = $.getJSON("/inventory/jsondata?action=deldevice&deviceid="+device_id,
+        var jqxhr = $.getJSON("/inventory/jsondata?action=deldevice&deviceid="+device_id+"&netelemid="+GetId(),
         function(data) {
 
             if (data["result"] == "ok") { ListDevice();}
@@ -184,14 +194,7 @@ function DelDevice(e) {
 function DeviceData(e) {
 
     var device_id = $(this).attr("device_id");
-    var jqxhr = $.getJSON("/inventory/jsondata?dev_id="+device_id+"&action=savedevid",
-    function(data) {
-        if (data["result"] == "ok")
-
-        win = window.open("/inventory/devicedata/","device");
-
-    });
-
+    win = window.open("/inventory/devicedata/"+device_id+"/","device");
 
 }
 
@@ -205,7 +208,7 @@ function DeviceData(e) {
 // Список устройств
 function ListDevice(e) {
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=listdevice",
+    var jqxhr = $.getJSON("/inventory/jsondata?action=listdevice&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") {
@@ -240,7 +243,7 @@ function ListDevice(e) {
 // Данные по логическим интерфейсам
 function ListInterfacesData() {
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=interfacedata",
+    var jqxhr = $.getJSON("/inventory/jsondata?action=interfacedata&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") {
@@ -353,7 +356,7 @@ function AddLogicalInterface(e) {
     $("#nameinterface").val("");
     $("#commentinterface").val("");
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=interfaceform",
+    var jqxhr = $.getJSON("/inventory/jsondata?action=interfaceform&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") {
@@ -406,7 +409,7 @@ function EditLogicalInterface(e) {
 
 
     // Получение данные по названию интерфейса, коментария, массива выбранных (связанных) портов
-    var jqxhr = $.getJSON("/inventory/jsondata?action=interfaceform2&interface_id="+interface_id,
+    var jqxhr = $.getJSON("/inventory/jsondata?action=interfaceform2&interface_id="+interface_id+"&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") {
@@ -424,7 +427,7 @@ function EditLogicalInterface(e) {
 
 
 
-    var jqxhr = $.getJSON("/inventory/jsondata?action=interfaceform",
+    var jqxhr = $.getJSON("/inventory/jsondata?action=interfaceform&netelemid="+GetId(),
     function(data) {
 
         if (data["result"] == "ok") {
@@ -501,6 +504,7 @@ function LogicalInterfaceData() {
                 data.action = $("#logicalinterface").attr("action");
                 data.interfaceid = $("#logicalinterface").attr("interface-id");
                 data.ports = port_id;
+                data.netelemid = GetId();
 
                 $.ajax({
                   url: "/inventory/jsondata/",
@@ -619,6 +623,7 @@ function PropInterfaceData() {
                 data.value = $("form#interfacepropform table tbody tr td input#value").val();
                 data.comment = $("form#interfacepropform table tbody tr td input#comment").val();
                 data.action = $("#interfaceprop").attr("action");
+                data.netelemid = GetId();
 
 
                 $.ajax({

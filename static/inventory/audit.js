@@ -5,10 +5,10 @@ $(document).ready(function() {
     $("#getdevices").bind("click", GetDevices);
 
     // Редактировать устройства
-    $("table[group=audit] tbody tr td a[device]").bind("click",DeviceEdit);
+    //$("table[group=audit] tbody tr td a[device]").bind("click",DeviceEdit);
 
     // Редактировать сетевые элементы
-    $("table[group=audit] tbody tr td a[netelem]").bind("click",NetelemEdit);
+    //$("table[group=audit] tbody tr td a[netelem]").bind("click",NetelemEdit);
 
 
     // Поиск адреса

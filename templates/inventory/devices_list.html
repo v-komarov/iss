@@ -87,19 +87,19 @@
                     <tr class="small" marked="no" row_id="{{ row.id }}">
 
 
-                        <td><a>{{ row.id }}</a></td>
-                        <td><a>{{ row.device_scheme }}</a></td>
-                        <td><a>{{ row.serial }}</a></td>
-                        <td><a>{{ row.status.name }}</a></td>
-                        <td><a>{{ row.company }}</a></td>
-                        <td><a>{{ row.devices_ports_set.all.count }}</a></td>
-                        <td><a>{{ row.device_link.all.count }}</a></td>
-                        <td><a>{{ row.devices_combo_set.all.count }}</a></td>
-                        <td><a>{{ row.address.city.name }} {{ row.address.street.name }} {{ row.address.house }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.id }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.device_scheme }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.serial }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.status.name }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.company }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.devices_ports_set.all.count }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.device_link.all.count }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.devices_combo_set.all.count }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.address.city.name }} {{ row.address.street.name }} {{ row.address.house }}</a></td>
                         {% timezone tz %}
-                        <td><a>{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.datetime_create|date:"d.m.Y H:i e" }}</a></td>
                         {% endtimezone %}
-                        <td><a>{{ row.author }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/">{{ row.author }}</a></td>
                     </tr>
 
             {% endfor %}

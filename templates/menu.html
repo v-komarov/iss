@@ -135,6 +135,8 @@
           <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
+          <li id="menudevicesip" {% if request.path|slice:'0:21' == "/inventory/devicesip/" %}class="active"{% endif %}><a href="/inventory/devicesip/">Поиск по ip</a></li>
+          <li class="divider"></li>
           <li id="menu4devices" {% if request.path|slice:'0:19' == "/inventory/devices/" %}class="active"{% endif %}><a href="/inventory/devices/page/1/">Устройства</a></li>
           <li id="menunetelements" {% if request.path|slice:'0:23' == "/inventory/netelements/" %}class="active"{% endif %}><a href="/inventory/netelements/page/1/">Сетевые элементы</a></li>
           <li id="menuauditports" {% if request.path|slice:'0:22' == "/inventory/auditports/" %}class="active"{% endif %}><a href="/inventory/auditports/">Аудит портов</a></li>

@@ -10,6 +10,7 @@
    inventory
    working
    events
+   monitor-events
    commands
    api
    es

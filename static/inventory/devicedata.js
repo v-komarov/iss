@@ -99,6 +99,16 @@ function getCookie(name) {
 
 
 
+
+function GetId() {
+
+    return ($("deviceid").text());
+
+}
+
+
+
+
 // Переключение закладок
 function ChangeNav(e) {
     $("#nav-ports").toggleClass("active",false);
@@ -135,7 +145,7 @@ function ChangeNav(e) {
 
 // Отображение данных по устройству
 function ShowDeviceData() {
-    var jqxhr = $.getJSON("/inventory/jsondata?action=getdevicedata",
+    var jqxhr = $.getJSON("/inventory/jsondata?action=getdevicedata&deviceid="+GetId(),
     function(data) {
         //console.log(data);
         if (data["result"] != "error") {
@@ -280,7 +290,7 @@ function ShowDeviceData() {
 
 
                 var t = "<tr row_id=" + value["id"] +">"
-                +"<td><a>"+value['name']+"</a></td>"
+                +"<td><a href=\'/inventory/netelementdata/"+value["id"]+"/\'>"+value['name']+"</a></td>"
                 +"</tr>";
 
                 $("table[group=netelems] tbody").append(t);
@@ -624,6 +634,7 @@ function SetDeviceStatus(e) {
         data.status_id = $("form#add-device-statusform table tbody tr td select#device-status2").val();
         data.comment = $("form#add-device-statusform table tbody tr td textarea#device-status-comment").val();
         data.action = "set-device-status";
+        data.deviceid = GetId();
 
 
         var csrftoken = getCookie('csrftoken');
@@ -668,6 +679,7 @@ function DeviceRemoval(e) {
         data.address_id = window.address_id;
         data.comment = $("form#add-device-removal table tbody tr td textarea#device-removal-comment").val();
         data.action = "device-removal";
+        data.deviceid = GetId();
 
         var csrftoken = getCookie('csrftoken');
 

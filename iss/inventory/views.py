@@ -170,7 +170,7 @@ class NetElement(TemplateView):
         self.request = request
         self.session = request.session
         self.user = request.user
-
+        self.pk = kwargs.get('pk')
 
         return super(NetElement, self).dispatch(request, *args, **kwargs)
 
@@ -187,8 +187,9 @@ class NetElement(TemplateView):
 
         context["interface_prop_list"] = logical_interfaces_prop_list.objects.all()
 
-        context["elem"] = self.session["netelemid"]
-        #elem = netelems.objects.get(pk=self.request["elem"])
+        #context["elem"] = self.session["netelemid"]
+
+        context["elem"] = self.pk
 
         return context
 
@@ -289,7 +290,7 @@ class Device(TemplateView):
         self.request = request
         self.session = request.session
         self.user = request.user
-
+        self.dev = kwargs.get('pk')
         #if self.request.GET.has_key("dev"):
         #    self.session["dev"] = self.request.GET["dev"]
 
@@ -311,8 +312,8 @@ class Device(TemplateView):
         context['status_slot_list'] = slot_status.objects.all()
         context['status_device_list'] = device_status.objects.all()
 
-        #context["elem"] = self.session["elem"]
-        #elem = netelems.objects.get(pk=self.request["elem"])
+        context["device"] = self.dev
+
 
         return context
 
@@ -384,6 +385,42 @@ class DevicesAuditPorts(ListView):
         context["address_label"] = self.session["address_label"] if self.session.has_key("address_label") else ''
 
 
+
+        return context
+
+
+
+
+
+
+
+
+
+### Поиск по ip
+class DevicesIp(ListView):
+
+    model = devices
+    template_name = "inventory/devicesip.html"
+
+    paginate_by = 0
+
+
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(group_required(group='inventory',redirect_url='/mainmenu/'))
+    def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.session = request.session
+        self.user = request.user
+        return super(ListView, self).dispatch(request, *args, **kwargs)
+
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super(DevicesIp, self).get_context_data(**kwargs)
+
+        context['tz']= self.session['tz'] if self.session.has_key('tz') else 'UTC'
 
         return context
 

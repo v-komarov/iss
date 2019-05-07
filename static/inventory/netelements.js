@@ -4,9 +4,9 @@ $(document).ready(function() {
     $("#additem").bind("click",AddNetElement);
     //$("#edititem").bind("click",EditScheme);
     // Для списка сетевых элементов
-    $("table[group=netelements] tbody tr").bind("click",ClickEventRow);
+    //$("table[group=netelements] tbody tr").bind("click",ClickEventRow);
     // Редактирование сетевого элемента
-    $("#edititem").bind("click",EditNetElement);
+    //$("#edititem").bind("click",EditNetElement);
 
     // Для интерфейса списка сетевых элементов
     $("#edititem").hide();
@@ -164,7 +164,7 @@ function AddNetElement(e) {
                   data:$.toJSON(data),
                     success: function(result) {
                         if (result["result"] == "error") { alert("Возможно элемент\nс таким именем уже существует!"); }
-                        else {window.location.href = "/inventory/netelementdata/";}
+                        else {window.location.href = "/inventory/netelementdata/"+result["netelemid"]+"/";}
                     }
 
                 });

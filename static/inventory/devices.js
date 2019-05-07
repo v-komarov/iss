@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
     // Для списка устройств
-    $("table[group=devices] tbody tr").bind("click",ClickEventRow);
+    //$("table[group=devices] tbody tr").bind("click",ClickEventRow);
 
     // Для интерфейса списка устройств
     $("#edititem").hide();
 
-    $("#edititem").bind("click",DeviceData);
+    //$("#edititem").bind("click",DeviceData);
 
     // Форма создания устройства
     $("#additem").bind("click",AddDevice);
@@ -128,7 +128,7 @@ function ClickEventRow(e) {
 
 
 
-
+/*
 // устройства - переход
 function DeviceData(e) {
     var dev_id = $("table[group=devices] tbody tr[marked=yes]").attr("row_id");
@@ -139,7 +139,7 @@ function DeviceData(e) {
 
     });
 }
-
+*/
 
 
 
@@ -191,7 +191,7 @@ function AddDevice() {
                   data:$.toJSON(data),
                     success: function(result) {
                         if (result["result"] == "ok")
-                        { window.location.href = "/inventory/devicedata/"; }
+                        { window.location.href = "/inventory/devicedata/"+result["dev_id"]+"/"; }
                     }
 
                 });

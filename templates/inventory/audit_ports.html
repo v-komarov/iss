@@ -75,10 +75,10 @@
 
                         <td>{{ row.getaddress }}</td>
                         <td>{{ row.device_scheme }}</td>
-                        <td><a device="{{ row.id }}">{{ row.serial }}</a></td>
+                        <td><a href="/inventory/devicedata/{{ row.id }}/" target="_blank">{{ row.serial }}</a></td>
                         <td>
                             {% for item in row.get_netelems %}
-                                <a netelem="{{ item.id }}">{{ item.name }}</a>
+                                <a href="/inventory/netelementdata/{{ item.id }}/" target="_blank">{{ item.name }}</a>
                             {% endfor %}
                         </td>
                         <td>

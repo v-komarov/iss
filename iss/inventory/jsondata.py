@@ -288,29 +288,27 @@ def get_json(request):
 
             tz = request.session['tz']
 
-            if request.session.has_key("dev_id"):
-                dev_id = request.session["dev_id"]
-                d = devices.objects.get(pk=dev_id)
+
+            dev_id = request.GET["deviceid"]
+            d = devices.objects.get(pk=dev_id)
 
 
-                data = {
-                    "id":d.id,
-                    "serial":d.serial,
-                    "model":d.device_scheme.name,
-                    "address":d.address.getaddress(),
-                    "status":d.getstatus(),
-                    "company":d.company.name,
-                    "ports": Ports_List(d,request),
-                    "slots": Slots_List(d,request),
-                    "combo": Combo_List(d,request),
-                    "properties": properties_list(d,request),
-                    "statuses": statuses_list(d,request),
-                    "removal": removal_list(d,request),
-                    "netelems":d.get_netelems()
-                }
-                response_data = {"result": data}
-            else:
-                response_data = {"result": "error"}
+            data = {
+                "id":d.id,
+                "serial":d.serial,
+                "model":d.device_scheme.name,
+                "address":d.address.getaddress(),
+                "status":d.getstatus(),
+                "company":d.company.name,
+                "ports": Ports_List(d,request),
+                "slots": Slots_List(d,request),
+                "combo": Combo_List(d,request),
+                "properties": properties_list(d,request),
+                "statuses": statuses_list(d,request),
+                "removal": removal_list(d,request),
+                "netelems":d.get_netelems()
+            }
+            response_data = {"result": data}
 
 
 
@@ -338,6 +336,7 @@ def get_json(request):
 
 
 
+        """
         ### Сохранение id сетевого элемента
         if r.has_key("savenetelem") and rg("savenetelem") != '':
 
@@ -345,13 +344,13 @@ def get_json(request):
             request.session["netelemid"] = netelemid
 
             response_data = {"result":"ok"}
-
+        """
 
 
 
         ### Получение названия сетевого элемента
         if r.has_key("action") and rg("action") == 'getelemname':
-            netelemid = request.session["netelemid"]
+            netelemid = request.GET["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
 
             response_data = {"result": "ok","name":ne.name}
@@ -359,11 +358,12 @@ def get_json(request):
 
 
 
-        ### Получение названия сетевого элемента
+        ### Изменение названия сетевого элемента
         if r.has_key("action") and rg("action") == 'saveelemname':
             name = request.GET["name"]
-            netelemid = request.session["netelemid"]
+            netelemid = request.GET["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
+
 
             if netelems.objects.filter(name=name).exclude(pk=netelemid).count() == 0:
                 ne.name = name
@@ -378,7 +378,7 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'adddevice':
             deviceid = request.GET["deviceid"]
             d = devices.objects.get(pk=deviceid)
-            netelemid = request.session["netelemid"]
+            netelemid = int(request.GET["netelemid"],10)
             ne = netelems.objects.get(pk=netelemid)
 
             # Проверка есть ли уже такая запись
@@ -395,7 +395,7 @@ def get_json(request):
         if r.has_key("action") and rg("action") == 'deldevice':
             deviceid = request.GET["deviceid"]
             d = devices.objects.get(pk=deviceid)
-            netelemid = request.session["netelemid"]
+            netelemid = request.GET["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
 
             ne.device.remove(d)
@@ -408,7 +408,7 @@ def get_json(request):
 
         ### Список устройств по сетевому элементу
         if r.has_key("action") and rg("action") == 'listdevice':
-            netelemid = request.session["netelemid"]
+            netelemid = int(request.GET["netelemid"], 10)
             ne = netelems.objects.get(pk=netelemid)
             device_list = []
             for item in ne.device.all():
@@ -429,7 +429,7 @@ def get_json(request):
 
         ### Список портов на основе списка устройств
         if r.has_key("action") and rg("action") == 'interfaceform':
-            netelemid = request.session["netelemid"]
+            netelemid = int(request.GET["netelemid"], 10)
             ne = netelems.objects.get(pk=netelemid)
             ports_list = []
             for item in ne.device.all():
@@ -454,7 +454,7 @@ def get_json(request):
         ### Список связанных портов , название интерфейса, комментарий
         if r.has_key("action") and rg("action") == 'interfaceform2':
             interface_id = request.GET["interface_id"]
-            netelemid = request.session["netelemid"]
+            netelemid = int(request.GET["netelemid"], 10)
             ne = netelems.objects.get(pk=netelemid)
             interface = logical_interfaces.objects.get(pk=int(interface_id,10))
             ports_list = []
@@ -483,7 +483,7 @@ def get_json(request):
 
         ### Список логических интерфейсов по текущему сетевому элементу
         if r.has_key("action") and rg("action") == 'interfacedata':
-            netelemid = request.session["netelemid"]
+            netelemid = int(request.GET["netelemid"], 10)
             ne = netelems.objects.get(pk=netelemid)
             interfaces_list = []
 
@@ -548,6 +548,33 @@ def get_json(request):
 
             response_data = {"result": "ok"}
 
+
+
+
+
+        ### Поиск устройства по ip адресу
+        if r.has_key("action") and rg("action") == 'searchdeviceip':
+            ip = request.GET['ip']
+
+            prop = logical_interfaces_prop_list.objects.get(name='ipv4')
+
+            ### Поиск по ip адресу на интерфейсе manager
+            if logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').exists():
+                p = logical_interfaces_prop.objects.filter(prop=prop, val=ip, logical_interface__name='manage').first()
+                #### Определение серевого элемента
+                ne = p.logical_interface.netelem
+
+                ### Поиск связанного устройства
+                if ne.device.exists():
+                    device = ne.device.all().first()
+                    response_data = {"result": "ok", "dev_id": device.id}
+                else:
+                    response_data = {"result": "error"}
+
+
+            else:
+
+                response_data = {"result": "error"}
 
 
 
@@ -629,9 +656,8 @@ def get_json(request):
             d.mkcombo(author=u)
             d.mkprop(author=u)
 
-            request.session["dev_id"] = d.id
 
-            response_data = {"result": "ok" }
+            response_data = {"result": "ok" , "dev_id": d.id}
 
 
 
@@ -731,10 +757,11 @@ def get_json(request):
 
             status_id = int(data["status_id"],10)
             comment = data["comment"]
+            dev_id = data["deviceid"]
 
             ds = device_status.objects.get(pk=status_id)
 
-            d = devices.objects.get(pk=request.session["dev_id"])
+            d = devices.objects.get(pk=dev_id)
 
             u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
 
@@ -759,10 +786,11 @@ def get_json(request):
         if data.has_key("action") and data["action"] == 'device-removal':
             address_id = data["address_id"]
             comment = data["comment"]
+            dev_id = data["deviceid"]
 
             a = address_house.objects.get(pk=address_id)
 
-            d = devices.objects.get(pk=request.session["dev_id"])
+            d = devices.objects.get(pk=dev_id)
 
             u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
 
@@ -790,8 +818,7 @@ def get_json(request):
 
                 u = request.user.get_username() + " (" + request.user.get_full_name() + ")"
                 ne = netelems.objects.create(name=name,author=u)
-                request.session["netelemid"] = ne.id
-                response_data = {"result": "ok"}
+                response_data = {"result": "ok", "netelemid": ne.id}
 
             else:
 
@@ -822,7 +849,7 @@ def get_json(request):
 
         # Создание логического интерфейса
         if data.has_key("action") and data["action"] == 'createinterface':
-            netelemid = request.session["netelemid"]
+            netelemid = data["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
 
             # Проверка есть ли такой интерфейс
@@ -848,7 +875,7 @@ def get_json(request):
 
         # редактирование логического интерфейса
         if data.has_key("action") and data["action"] == 'editinterface':
-            netelemid = request.session["netelemid"]
+            netelemid = data["netelemid"]
             ne = netelems.objects.get(pk=netelemid)
             interfaceid = data["interfaceid"]
 
