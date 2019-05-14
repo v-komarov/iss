@@ -184,12 +184,12 @@ class Command(BaseCommand):
                 SendMsgTopic(evid,firsttime,lasttime,eventclass,severity,ipaddress,location,uuid,deviceclass,devicegroup,devicesystem,device,status,summary)
 
 
-
+                """
 
                 ### Формирование нового события или запись в существующие
-                """
-                    Для severity: info, debug, clear (0,1,4) нет необходимости создавать новое событие
-                """
+                
+                ###    Для severity: info, debug, clear (0,1,4) нет необходимости создавать новое событие
+                
                 if action == "insert":
                     events.objects.create(
                         evid=evid,
@@ -230,10 +230,10 @@ class Command(BaseCommand):
                     #    )
 
                     #### Завершение события (очистка) или нет - определение в зависимости от статуса
-                    """
-                        для статусов closed , cleared (4,5) при обновлении открытого (с finished_date = None)
-                        аварийного события фиксируем завершение этого события установкой finished_date
-                    """
+                    
+                    ##    для статусов closed , cleared (4,5) при обновлении открытого (с finished_date = None)
+                    ##    аварийного события фиксируем завершение этого события установкой finished_date
+                    
                     if status.id == 4 or status.id == 5:
                         ### Перенос данных в events_history при определенных условиях
                         r0 = events.objects.filter(evid=evid, source='zenoss_krsk')
@@ -279,9 +279,9 @@ class Command(BaseCommand):
                         cache.delete(key)
 
                         #### Если событие не завершено
-                        """
-                            Обновление открытых аварийных событий
-                        """
+                        
+                        ###    Обновление открытых аварийных событий
+                        
                     else:
                         events.objects.filter(evid=evid, source='zenoss_krsk').update(
                             first_seen=firsttime,
@@ -293,6 +293,9 @@ class Command(BaseCommand):
                         )
                         # Запись кэш об обновлении события для evid
                         cache.set(key, "update", 360000)
+
+
+                """
 
         producer.flush()
 
