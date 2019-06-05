@@ -171,11 +171,11 @@ class Command(BaseCommand):
 
 
                 ### Отладка
-                if iss.settings.DEBUG == True:
-                    logger.debug(
-                        'key:{key} action:{action} lasttime:{lasttime} firsttime:{firsttime} last_action:{last_action} severity:{severity} location:{location}'.format(
-                            key=key,action=action,last_action=last_action,severity=severity.id,firsttime=firsttime,lasttime=lasttime,location=location)
-                    )
+                #if iss.settings.DEBUG == True: 2019-05-15
+                #    logger.debug(
+                #        'key:{key} action:{action} lasttime:{lasttime} firsttime:{firsttime} last_action:{last_action} severity:{severity} location:{location}'.format(
+                #            key=key,action=action,last_action=last_action,severity=severity.id,firsttime=firsttime,lasttime=lasttime,location=location)
+                #    )
 
 
 
@@ -183,7 +183,6 @@ class Command(BaseCommand):
                 SendMsgTopic(evid,firsttime,lasttime,eventclass,severity,ipaddress,location,uuid,deviceclass,devicegroup,devicesystem,device,status,summary)
 
 
-                """
 
                 ### Формирование нового события или запись в существующие
                 
@@ -293,7 +292,6 @@ class Command(BaseCommand):
                         # Запись кэш об обновлении события для evid
                         cache.set(key,"update", 360000)
 
-                """
 
         producer.flush()
 

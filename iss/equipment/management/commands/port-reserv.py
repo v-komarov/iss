@@ -24,13 +24,13 @@ slot_rez = slot_status.objects.get(name='Резерв')
 device_use = device_status.objects.get(name='Используется')
 
 
-predel = timezone.now() - datetime.timedelta(days=90)
+predel = timezone.now() - datetime.timedelta(days=180)
 
 
 
 class Command(BaseCommand):
     args = '< >'
-    help = 'Отметка портов которые не используются 3 месяца и более'
+    help = 'Отметка портов которые не используются 6 месяцев и более'
 
 
 
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 p.datetime_update = timezone.now()
                 p.status = port_rez
                 p.author = "port-reserv"
-                p.comment = "havent used for 3 months"
+                p.comment = "havent used for 6 months"
                 p.save()
 
                 logger.info(u"Устройство {} серийный номер {} порт {} статус {}".format(device.name, device.serial, p.num, p.status))
@@ -74,7 +74,7 @@ class Command(BaseCommand):
                 st.datetime_update = timezone.now()
                 st.status = slot_rez
                 st.author = "port-reserv"
-                st.comment = "havent used for 3 months"
+                st.comment = "havent used for 6 months"
                 st.save()
 
                 logger.info(u"Устройство {} серийный номер {} слот {} статус {}".format(device.name, device.serial, st.num, st.status))
@@ -89,7 +89,7 @@ class Command(BaseCommand):
                 p.datetime_update = timezone.now()
                 p.status_port = port_rez
                 p.author = "port-reserv"
-                p.comment = "havent used for 3 months"
+                p.comment = "havent used for 6 months"
                 p.save()
 
                 logger.info(u"Устройство {} серийный номер {} порт {} статус {}".format(device.name, device.serial, p.num, p.status_port))

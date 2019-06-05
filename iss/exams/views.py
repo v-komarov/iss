@@ -357,6 +357,8 @@ class ExamList(ListView):
         self.request = request
         self.session = request.session
         self.user = request.user
+        self.ip = self.request.META.get('HTTP_X_FORWARDED_FOR')
+
         return super(ListView, self).dispatch(request, *args, **kwargs)
 
 
@@ -389,6 +391,10 @@ class ExamList(ListView):
         context['section'] = self.session['exams-section'] if self.session.has_key('exams-section') else "0"
         context['exam_page'] = self.session['exam_page']
 
+
+        if self.ip == '10.6.3.86':
+            context['MY_STATIC_URL'] = settings.MY_STATIC_URL2
+
         return context
 
 
@@ -406,7 +412,7 @@ class TestExamining(TemplateView):
         self.request = request
         self.session = request.session
         self.user = request.user
-
+        self.ip = self.request.META.get('HTTP_X_FORWARDED_FOR')
 
         return super(TestExamining, self).dispatch(request, *args, **kwargs)
 
@@ -426,6 +432,8 @@ class TestExamining(TemplateView):
 
         context['form'] = ExamForm()
 
+        if self.ip == '10.6.3.86':
+            context['MY_STATIC_URL'] = settings.MY_STATIC_URL2
 
         return context
 
