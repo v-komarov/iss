@@ -392,7 +392,7 @@ class ExamList(ListView):
         context['exam_page'] = self.session['exam_page']
 
 
-        if self.ip == '10.6.3.86':
+        if self.ip == settings.EXAM_IP:
             context['MY_STATIC_URL'] = settings.MY_STATIC_URL2
 
         return context
@@ -432,7 +432,7 @@ class TestExamining(TemplateView):
 
         context['form'] = ExamForm()
 
-        if self.ip == '10.6.3.86':
+        if self.ip == settings.EXAM_IP:
             context['MY_STATIC_URL'] = settings.MY_STATIC_URL2
 
         return context

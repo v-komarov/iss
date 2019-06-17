@@ -65,7 +65,8 @@ def SendMsgTopic(evid,first_seen,last_seen,event_class,severity,device_net_addre
     }
 
 
-    producer.send("zenoss-krsk", json.dumps(msg))
+    #producer.send("zenoss-krsk", json.dumps(msg))
+    producer.send("zenoss", json.dumps(msg))
 
 
 
